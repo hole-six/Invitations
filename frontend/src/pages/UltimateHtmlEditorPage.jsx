@@ -719,7 +719,7 @@ const UltimateHtmlEditorPage = () => {
               </div>
 
               <div>
-                <label className="flex items-center gap-3 px-4 py-3 bg-pink-50 dark:bg-pink-900/20 rounded-xl cursor-pointer hover:bg-pink-100 dark:hover:bg-pink-900/30 transition-all">
+                <label className="flex items-center gap-3 px-4 py-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl cursor-pointer hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-all">
                   <input
                     type="checkbox"
                     name="music_autoplay"
