@@ -1,0 +1,428 @@
+/* Editor Styles */
+
+/* Canvas Grid Background */
+.canvas-grid {
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Smooth Transitions */
+.editor-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Element Selection Ring */
+.element-selected {
+  box-shadow: 0 0 0 2px #e91e63, 0 0 0 4px rgba(233, 30, 99, 0.2);
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0%, 100% {
+    box-shadow: 0 0 0 2px #e91e63, 0 0 0 4px rgba(233, 30, 99, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 2px #e91e63, 0 0 0 8px rgba(233, 30, 99, 0.1);
+  }
+}
+
+/* Drag and Drop */
+.dragging {
+  cursor: grabbing !important;
+  opacity: 0.8;
+}
+
+.drop-zone {
+  border: 2px dashed #e91e63;
+  background: rgba(233, 30, 99, 0.05);
+}
+
+/* Resize Handles */
+.resize-handle {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border: 2px solid #e91e63;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 10;
+}
+
+.resize-handle:hover {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 2px rgba(233, 30, 99, 0.3);
+}
+
+/* Toolbar Buttons */
+.toolbar-btn {
+  @apply flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all;
+  @apply hover:bg-gray-100 dark:hover:bg-gray-700;
+  @apply active:scale-95;
+}
+
+.toolbar-btn-active {
+  @apply bg-primary text-white;
+  @apply hover:bg-primary-dark;
+}
+
+/* Property Input */
+.property-input {
+  @apply w-full px-3 py-2 rounded-lg text-sm;
+  @apply bg-gray-50 dark:bg-gray-700;
+  @apply border border-gray-200 dark:border-gray-600;
+  @apply focus:ring-2 focus:ring-primary focus:border-transparent;
+  @apply transition-all;
+}
+
+/* Color Picker */
+input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+  cursor: pointer;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+/* Range Slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #e5e7eb;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #e91e63;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.2);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #e91e63;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Context Menu */
+.context-menu {
+  @apply absolute bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700;
+  @apply py-2 min-w-[200px];
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.context-menu-item {
+  @apply px-4 py-2 text-sm cursor-pointer;
+  @apply hover:bg-gray-100 dark:hover:bg-gray-700;
+  @apply flex items-center gap-3;
+}
+
+/* Loading Spinner */
+.spinner {
+  border: 3px solid rgba(233, 30, 99, 0.1);
+  border-top-color: #e91e63;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Toast Notification */
+.toast {
+  @apply fixed bottom-4 right-4 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700;
+  @apply px-4 py-3 flex items-center gap-3;
+  animation: slideInRight 0.3s ease-out;
+  z-index: 9999;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Zoom Controls */
+.zoom-control {
+  @apply flex items-center gap-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700;
+  @apply px-3 py-2;
+}
+
+/* Layer Panel */
+.layer-item {
+  @apply flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer;
+  @apply hover:bg-gray-100 dark:hover:bg-gray-700;
+  @apply transition-colors;
+}
+
+.layer-item-active {
+  @apply bg-primary/10 border-l-2 border-primary;
+}
+
+/* Keyboard Shortcuts Hint */
+.shortcut-hint {
+  @apply inline-flex items-center gap-1 px-2 py-1 rounded bg-gray-100 dark:bg-gray-700;
+  @apply text-xs font-mono text-gray-600 dark:text-gray-400;
+}
+
+/* Smooth Scroll */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Dark mode scrollbar */
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Glassmorphism Effect */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass-effect {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Floating Action Button */
+.fab {
+  @apply fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary text-white shadow-2xl;
+  @apply flex items-center justify-center cursor-pointer;
+  @apply hover:scale-110 active:scale-95;
+  @apply transition-transform;
+  z-index: 1000;
+}
+
+/* Tooltip */
+.tooltip {
+  @apply absolute bg-gray-900 text-white text-xs px-2 py-1 rounded;
+  @apply opacity-0 pointer-events-none transition-opacity;
+  z-index: 9999;
+}
+
+.tooltip-trigger:hover .tooltip {
+  @apply opacity-100;
+}
+
+/* Selection Box */
+.selection-box {
+  position: absolute;
+  border: 2px dashed #e91e63;
+  background: rgba(233, 30, 99, 0.1);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Grid Snap Indicator */
+.snap-indicator {
+  position: absolute;
+  width: 1px;
+  height: 100%;
+  background: #e91e63;
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* Ruler */
+.ruler {
+  @apply bg-gray-100 dark:bg-gray-800 border-b border-r border-gray-300 dark:border-gray-600;
+  @apply text-xs text-gray-500;
+}
+
+/* Animation Presets */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideLeft {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideRight {
+  from { transform: translateX(-20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes rotateIn {
+  from { transform: rotate(-180deg) scale(0.5); opacity: 0; }
+  to { transform: rotate(0deg) scale(1); opacity: 1; }
+}
+
+/* Continuous Animations */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Apply animations with .animate-demo class */
+[data-element-id].animate-demo {
+  animation-duration: 1s !important;
+  animation-timing-function: ease-out !important;
+  animation-fill-mode: both !important;
+}
+
+/* Entry animations based on data-animation attribute */
+[data-element-id][data-animation="fadeIn"].animate-demo {
+  animation-name: fadeIn !important;
+}
+
+[data-element-id][data-animation="slideUp"].animate-demo {
+  animation-name: slideUp !important;
+}
+
+[data-element-id][data-animation="slideDown"].animate-demo {
+  animation-name: slideDown !important;
+}
+
+[data-element-id][data-animation="slideLeft"].animate-demo {
+  animation-name: slideLeft !important;
+}
+
+[data-element-id][data-animation="slideRight"].animate-demo {
+  animation-name: slideRight !important;
+}
+
+[data-element-id][data-animation="scaleIn"].animate-demo {
+  animation-name: scaleIn !important;
+}
+
+[data-element-id][data-animation="rotateIn"].animate-demo {
+  animation-name: rotateIn !important;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s ease-out;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out;
+}
+
+/* Slide In from Left */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate World Wedding Passport Creator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-editor: #1e1e1e;
+            --sidebar-width: 450px;
+            --accent-color: #d4af37; /* Gold */
+            --passport-blue: #1a2639;
+        }
+
+        /* --- GLOBAL RESET & LAYOUT --- */
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #121212; /* Dark Theme Background */
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* --- LEFT SIDE: IDE / EDITOR (Professional Look) --- */
+        .editor-pane {
+            width: var(--sidebar-width);
+            background: var(--bg-editor);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #333;
+            box-shadow: 5px 0 20px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        .editor-header {
+            padding: 20px;
+            background: #252526;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .editor-header h2 {
+            margin: 0;
+            font-size: 16px;
+            color: #ccc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .badge {
+            background: var(--accent-color);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .code-area {
+            flex: 1;
+            position: relative;
+            background: #1e1e1e;
+            overflow: hidden;
+        }
+        textarea#jsonInput {
+            width: 100%;
+            height: 100%;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: none;
+            padding: 20px;
+            font-family: 'Courier Prime', monospace; /* Monospace font like VS Code */
+            font-size: 13px;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+        }
+        /* Custom Scrollbar for Editor */
+        textarea::-webkit-scrollbar { width: 10px; }
+        textarea::-webkit-scrollbar-track { background: #1e1e1e; }
+        textarea::-webkit-scrollbar-thumb { background: #444; border-radius: 5px; }
+        textarea::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        .editor-footer {
+            padding: 15px;
+            background: #252526;
+            border-top: 1px solid #333;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .btn-refresh { background: #0e639c; color: white; }
+        .btn-refresh:hover { background: #1177bb; }
+        .btn-copy { background: #2d2d2d; color: #ccc; border: 1px solid #444; }
+        .btn-copy:hover { background: #3d3d3d; color: white; }
+
+        /* --- RIGHT SIDE: PREVIEW CANVAS --- */
+        .preview-pane {
+            flex: 1;
+            background: url('https://images.unsplash.com/photo-1519750783826-e2420f4d687f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80') center/cover no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden; /* For floating elements */
+        }
+        /* Overlay to darken background image */
+        .preview-pane::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        /* THE PHONE MOCKUP */
+        .phone-frame {
+            position: relative;
+            width: 415px; /* Border included */
+            height: 850px;
+            background: #000;
+            border-radius: 50px;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.8), inset 0 0 0 2px #333;
+            border: 12px solid #111;
+            overflow: hidden;
+            z-index: 5;
+            transition: transform 0.3s ease;
+        }
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background: #111;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            z-index: 100;
+        }
+        .canvas-scroll-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            background: #fdfbf7;
+            /* Hide scrollbar */
+            scrollbar-width: none; 
+            -ms-overflow-style: none;
+        }
+        .canvas-scroll-wrapper::-webkit-scrollbar { display: none; }
+
+        /* THE RENDER CANVAS */
+        #canvas {
+            position: relative;
+            margin: 0 auto;
+            overflow: hidden;
+            transform-origin: top left;
+            /* Noise texture for paper feel */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        /* --- SPECIAL EFFECTS CLASSES (Used by JS Renderer) --- */
+        .element {
+            position: absolute;
+            box-sizing: border-box;
+            transition: transform 0.3s ease; /* Smooth hover effects if needed */
+        }
+        
+        /* Gold Foil Effect */
+        .gold-text {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent !important;
+            text-shadow: 0px 1px 1px rgba(0,0,0,0.2);
+        }
+
+        /* Air Mail Border Animation */
+        @keyframes border-march {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+
+        /* Floating Cloud Animation */
+        @keyframes floatCloud {
+            0% { transform: translateX(-100%) translateY(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateX(450px) translateY(20px); opacity: 0; }
+        }
+        .anim-cloud {
+            animation: floatCloud 25s linear infinite;
+        }
+        
+        /* Stamp Ink Effect */
+        .stamp-effect {
+            mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxmaWx0ZXIgaWQ9Im5vaXNlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMSIgbnVtT2N0YXZlcz0iMSIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNub2lzZSkiIG9wYWNpdHk9IjAuNSIvPjwvc3ZnPg==");
+            mask-mode: alpha;
+            opacity: 0.85;
+            mix-blend-mode: multiply;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="editor-pane">
+        <div class="editor-header">
+            <h2><i class="fa-solid fa-code"></i> JSON Configuration <span class="badge">PRO</span></h2>
+            <div style="font-size: 12px; color: #666;">Lines: 2000+ Simulated</div>
+        </div>
+        <div class="code-area">
+            <textarea id="jsonInput"></textarea>
+        </div>
+        <div class="editor-footer">
+            <button class="btn btn-refresh" onclick="renderTemplate()">
+                <i class="fa-solid fa-play"></i> Run / Refresh
+            </button>
+            <button class="btn btn-copy" onclick="copySQL()">
+                <i class="fa-solid fa-database"></i> Copy SQL
+            </button>
+        </div>
+    </div>
+
+    <div class="preview-pane">
+        <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <div class="canvas-scroll-wrapper">
+                <div id="canvas"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* * --------------------------------------------------------------------------
+         * THEME DEFINITION: "PASSPORT TO LOVE" (ULTIMATE LUXURY EDITION)
+         * --------------------------------------------------------------------------
+         * Description: A complex, multi-layered design resembling a high-end
+         * vintage passport and boarding pass. Uses gradients, blending modes,
+         * and extensive geometric positioning.
+         */
+
+        const worldThemeTemplate = {
+            "canvas": {
+                "width": 390,
+                "height": 1300, // Long scroll layout
+                "background": "#fdfbf7" // Vintage cream paper
+            },
+            "elements": [
+                // --- SECTION 1: PASSPORT COVER HEADER ---
+                {
+                    "id": "bg-texture-map",
+                    "type": "image",
+                    "url": "https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&w=800&q=80",
+                    "x": 0, "y": 0, "width": 390, "height": 1300,
+                    "opacity": 0.08, "zIndex": 0, "isBackground": true
+                },
+                {
+                    "id": "top-navy-block",
+                    "type": "shape",
+                    "shapeType": "rectangle",
+                    "x": 0, "y": 0, "width": 390, "height": 280,
+                    "fill": "#1a2639", // Deep Navy
+                    "zIndex": 1
+                },
+                {
+                    "id": "passport-crest-bg",
+                    "type": "image",
+                    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Coat_of_arms_of_Vietnam.svg/1200px-Coat_of_arms_of_Vietnam.svg.png",
+                    "x": 95, "y": 40, "width": 200, "height": 200,
+                    "opacity": 0.05,
+                    "zIndex": 1
+                },
+                {
+                    "id": "passport-title",
+                    "type": "text",
+                    "content": "PASSPORT\nTO LOVE",
+                    "x": 0, "y": 60, "width": 390, "height": 80,
+                    "fontSize": 28,
+                    "fontFamily": "Cinzel",
+                    "fontWeight": "700",
+                    "color": "gold", // Will use class .gold-text
+                    "textAlign": "center",
+                    "letterSpacing": 4,
+                    "lineHeight": 1.2,
+                    "className": "gold-text",
+                    "zIndex": 2
+                },
+                {
+                    "id": "wedding-invitation-sub",
+                    "type": "text",
+                    "content": "WEDDING INVITATION",
+                    "x": 0, "y": 140, "width": 390, "height": 30,
+                    "fontSize": 12,
+                    "fontFamily": "Montserrat",
+                    "fontWeight": "400",
+                    "color": "#a8b2c1",
+                    "textAlign": "center",
+                    "letterSpacing": 3,
+                    "zIndex": 2
+                },
+                // Decorative Gold Line
+                {
+                    "id": "gold-line-header",
+                    "type": "shape",
+                    "shapeType": "rectangle",
+                    "x": 120, "y": 170, "width": 150, "height": 2,
+                    "fill": "linear-gradient(90deg, transparent, #d4af37, transparent)",
+                    "zIndex": 2
+                },
+
+                // --- SECTION 2: THE "PHOTO ID" PAGE ---
+                {
+                    "id": "photo-container-shadow",
+                    "type": "shape",
+                    "shapeType": "rectangle",
+                    "x": 35, "y": 240, "width": 320, "height": 450,
+                    "fill": "#fff",
+                    "borderRadius": 4,
+                    "boxShadow": "0 10px 25px rgba(0,0,0,0.1)",
+                    "zIndex": 3
+                },
+                // Guilloche Pattern (Simulated by border)
+                {
+                    "id": "security-pattern",
+                    "type": "shape",
+                    "shapeType": "rectangle",
+                    "x": 45, "y": 250, "width": 300, "height": 430,
+                    "fill": "transparent",
+                    "stroke": "#d4af37",
+                    "strokeWidth": 1,
+                    "borderRadius": 2,
+                    "opacity": 0.3,
+                    "zIndex": 4
+                },
+                // Couple Photo
+                {
+                    "id": "couple-img",
+                    "type": "image",
+                    "url": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    "x": 65, "y": 270, "width": 260, "height": 260,
+                    "borderRadius": 2,
+                    "zIndex": 5
+                },
+                // Photo Corners (Gold)
+                { "id": "cn-1", "type": "shape", "shapeType": "rectangle", "x": 60, "y": 265, "width": 20, "height": 2, "fill": "#d4af37", "zIndex": 6 },
+                { "id": "cn-2", "type": "shape", "shapeType": "rectangle", "x": 60, "y": 265, "width": 2, "height": 20, "fill": "#d4af37", "zIndex": 6 },
+                { "id": "cn-3", "type": "shape", "shapeType": "rectangle", "x": 310, "y": 265, "width": 20, "height": 2, "fill": "#d4af37", "zIndex": 6 },
+                { "id": "cn-4", "type": "shape", "shapeType": "rectangle", "x": 328, "y": 265, "width": 2, "height": 20, "fill": "#d4af37", "zIndex": 6 },
+
+                // Couple Names (Signature Style)
+                {
+                    "id": "names-sig",
+                    "type": "text",
+                    "content": "Hoàng Nam & Minh Thư",
+                    "x": 35, "y": 550, "width": 320, "height": 50,
+                    "fontSize": 36,
+                    "fontFamily": "Great Vibes",
+                    "color": "#1a2639",
+                    "textAlign": "center",
+                    "zIndex": 5
+                },
+                
+                // Passport Data Block
+                {
+                    "id": "data-label-date",
+                    "type": "text",
+                    "content": "DATE OF HAPPINESS",
+                    "x": 60, "y": 610, "width": 120, "height": 15,
+                    "fontSize": 9,
+                    "fontFamily": "Courier Prime",
+                    "color": "#888",
+                    "zIndex": 5
+                },
+                {
+                    "id": "data-val-date",
+                    "type": "text",
+                    "content": "25 DEC 2025",
+                    "x": 60, "y": 625, "width": 120, "height": 20,
+                    "fontSize": 14,
+                    "fontFamily": "Montserrat",
+                    "fontWeight": "700",
+                    "color": "#c0392b",
+                    "zIndex": 5
+                },
+                {
+                    "id": "data-label-loc",
+                    "type": "text",
+                    "content": "PLACE OF UNION",
+                    "x": 200, "y": 610, "width": 120, "height": 15,
+                    "fontSize": 9,
+                    "fontFamily": "Courier Prime",
+                    "color": "#888",
+                    "textAlign": "right",
+                    "zIndex": 5
+                },
+                {
+                    "id": "data-val-loc",
+                    "type": "text",
+                    "content": "PARIS CENTER, HCM",
+                    "x": 160, "y": 625, "width": 160, "height": 20,
+                    "fontSize": 12,
+                    "fontFamily": "Montserrat",
+                    "fontWeight": "700",
+                    "color": "#1a2639",
+                    "textAlign": "right",
+                    "zIndex": 5
+                },
+
+                // Machine Readable Zone (Bottom of ID Page)
+                {
+                    "id": "mrz-text",
+                    "type": "text",
+                    "content": "P<VNNAM<<THU<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n1234567897VNM8512258M2512315<<<<<<<<<<<<<<04",
+                    "x": 45, "y": 655, "width": 300, "height": 40,
+                    "fontSize": 11,
+                    "fontFamily": "Courier Prime",
+                    "color": "#333",
+                    "textAlign": "left",
+                    "letterSpacing": 1,
+                    "lineHeight": 1.4,
+                    "zIndex": 5
+                },
+
+                // --- DECORATIVE STAMPS ---
+                {
+                    "id": "stamp-1",
+                    "type": "shape",
+                    "shapeType": "circle",
+                    "x": 280, "y": 500, "width": 80, "height": 80,
+                    "fill": "transparent",
+                    "stroke": "#c0392b",
+                    "strokeWidth": 3,
+                    "rotation": -15,
+                    "className": "stamp-effect",
+                    "zIndex": 6
+                },
+                {
+                    "id": "stamp-text-1",
+                    "type": "text",
+                    "content": "APPROVED\nLOVE",
+                    "x": 285, "y": 525, "width": 70, "height": 30,
+                    "fontSize": 10,
+                    "fontFamily": "Courier Prime",
+                    "fontWeight": "700",
+                    "color": "#c0392b",
+                    "textAlign": "center",
+                    "rotation": -15,
+                    "zIndex": 6
+                },
+
+                // --- SECTION 3: BOARDING PASS (The Ticket) ---
+                {
+                    "id": "boarding-pass-bg",
+                    "type": "shape",
+                    "shapeType": "rectangle",
+                    "x": 20, "y": 720, "width": 350, "height": 350,
+                    "fill": "#fff",
+                    "borderRadius": 10,
+                    "boxShadow": "0 5px 15px rgba(0,0,0,0.1)",
+                    "zIndex": 3
+                },
+                // Dashed Line (Tear off)
+                {
+                    "id": "dash-line",
+                    "type": "shape",
+                    "shapeType": "rectangle",
+                    "x": 20, "y": 810, "width": 350, "height": 0,
+                    "fill": "transparent",
+                    "stroke": "#ccc",
+                    "strokeWidth": 2,
+                    "strokeDasharray": "5,5",
+                    "zIndex": 4
+                },
+                // Header of Boarding Pass
+                {
+                    "id": "airline-name",
+                    "type": "text",
+                    "content": "AIRLINES OF LOVE",
+                    "x": 40, "y": 740, "width": 200, "height": 30,
+                    "fontSize": 14,
+                    "fontFamily": "Montserrat",
+                    "fontWeight": "800",
+                    "color": "#1a2639",
+                    "letterSpacing": 2,
+                    "zIndex": 4
+                },
+                {
+                    "id": "class-ticket",
+                    "type": "text",
+                    "content": "FIRST CLASS",
+                    "x": 250, "y": 740, "width": 100, "height": 20,
+                    "fontSize": 10,
+                    "fontFamily": "Montserrat",
+                    "fontWeight": "600",
+                    "color": "#d4af37",
+                    "textAlign": "right",
+                    "zIndex": 4
+                },
+                
+                // Flight Details Grid
+                {
+                    "id": "label-passenger",
+                    "type": "text",
+                    "content": "PASSENGER",
+                    "x": 40, "y": 830, "width": 100, "height": 15,
+                    "fontSize": 10,
+                    "color": "#888", "zIndex": 4
+                },
+                {
+                    "id": "val-passenger",
+                    "type": "text",
+                    "content": "QUÝ KHÁCH MỜI",
+                    "x": 40, "y": 845, "width": 200, "height": 20,
+                    "fontSize": 14,
+                    "fontWeight": "700", "color": "#1a2639", "zIndex": 4
+                },
+
+                {
+                    "id": "label-gate",
+                    "type": "text",
+                    "content": "GATE",
+                    "x": 40, "y": 880, "width": 50, "height": 15,
+                    "fontSize": 10, "color": "#888", "zIndex": 4
+                },
+                {
+                    "id": "val-gate",
+                    "type": "text",
+                    "content": "01",
+                    "x": 40, "y": 895, "width": 50, "height": 20,
+                    "fontSize": 18, "fontWeight": "700", "color": "#c0392b", "zIndex": 4
+                },
+
+                {
+                    "id": "label-time",
+                    "type": "text",
+                    "content": "TIME",
+                    "x": 120, "y": 880, "width": 80, "height": 15,
+                    "fontSize": 10, "color": "#888", "zIndex": 4
+                },
+                {
+                    "id": "val-time",
+                    "type": "text",
+                    "content": "17:30",
+                    "x": 120, "y": 895, "width": 80, "height": 20,
+                    "fontSize": 18, "fontWeight": "700", "color": "#1a2639", "zIndex": 4
+                },
+                
+                {
+                    "id": "label-seat",
+                    "type": "text",
+                    "content": "SEAT",
+                    "x": 220, "y": 880, "width": 50, "height": 15,
+                    "fontSize": 10, "color": "#888", "zIndex": 4
+                },
+                {
+                    "id": "val-seat",
+                    "type": "text",
+                    "content": "VIP",
+                    "x": 220, "y": 895, "width": 50, "height": 20,
+                    "fontSize": 18, "fontWeight": "700", "color": "#d4af37", "zIndex": 4
+                },
+
+                // Barcode simulation
+                {
+                    "id": "barcode",
+                    "type": "text",
+                    "content": "|| ||| || ||| || ||| || |||",
+                    "x": 40, "y": 940, "width": 310, "height": 40,
+                    "fontSize": 30,
+                    "fontFamily": "Libre Barcode 39 Text", // Using font fallback to Arial stretch
+                    "color": "#1a2639",
+                    "textAlign": "center",
+                    "letterSpacing": 2,
+                    "zIndex": 4,
+                    "opacity": 0.8
+                },
+
+                // --- SECTION 4: FOOTER / RSVP ---
+                {
+                    "id": "rsvp-circle",
+                    "type": "shape",
+                    "shapeType": "circle",
+                    "x": 145, "y": 1100, "width": 100, "height": 100,
+                    "fill": "#1a2639",
+                    "zIndex": 3
+                },
+                {
+                    "id": "rsvp-icon",
+                    "type": "text",
+                    "content": "✈",
+                    "x": 145, "y": 1120, "width": 100, "height": 40,
+                    "fontSize": 30,
+                    "color": "white",
+                    "textAlign": "center",
+                    "rotation": -45,
+                    "zIndex": 4
+                },
+                {
+                    "id": "rsvp-text",
+                    "type": "text",
+                    "content": "XÁC NHẬN",
+                    "x": 145, "y": 1160, "width": 100, "height": 20,
+                    "fontSize": 10,
+                    "fontWeight": "700",
+                    "color": "#d4af37",
+                    "textAlign": "center",
+                    "zIndex": 4
+                },
+                {
+                    "id": "footer-text",
+                    "type": "text",
+                    "content": "Rất hân hạnh được đón tiếp!",
+                    "x": 0, "y": 1220, "width": 390, "height": 30,
+                    "fontSize": 14,
+                    "fontFamily": "Great Vibes",
+                    "color": "#1a2639",
+                    "textAlign": "center",
+                    "zIndex": 3
+                },
+
+                // --- ANIMATED ELEMENTS (Clouds) ---
+                {
+                    "id": "cloud-1",
+                    "type": "image",
+                    "url": "https://cdn-icons-png.flaticon.com/512/414/414927.png",
+                    "x": -100, "y": 150, "width": 100, "height": 60,
+                    "opacity": 0.6,
+                    "zIndex": 10,
+                    "className": "anim-cloud"
+                },
+                {
+                    "id": "cloud-2",
+                    "type": "image",
+                    "url": "https://cdn-icons-png.flaticon.com/512/414/414927.png",
+                    "x": -150, "y": 100, "width": 80, "height": 50,
+                    "opacity": 0.4,
+                    "zIndex": 9,
+                    "className": "anim-cloud",
+                    "animationDelay": "5s" // Handled in render logic if extended
+                }
+            ]
+        };
+
+        // --- CORE RENDER ENGINE ---
+        
+        window.onload = function() {
+            const input = document.getElementById('jsonInput');
+            input.value = JSON.stringify(worldThemeTemplate, null, 2);
+            renderTemplate();
+        };
+
+        function renderTemplate() {
+            try {
+                const json = document.getElementById('jsonInput').value;
+                const data = JSON.parse(json);
+                const canvas = document.getElementById('canvas');
+                
+                // Clear previous
+                canvas.innerHTML = '';
+                
+                // 1. Setup Canvas Attributes
+                canvas.style.width = data.canvas.width + 'px';
+                canvas.style.height = data.canvas.height + 'px';
+                canvas.style.backgroundColor = data.canvas.background;
+                
+                // 2. Sort Elements by zIndex (Layering)
+                const sortedElements = data.elements.sort((a, b) => (a.zIndex || 0) - (b.zIndex || 0));
+                
+                // 3. Render Loop
+                sortedElements.forEach(el => {
+                    if (el.visible === false) return;
+
+                    const domEl = document.createElement('div');
+                    domEl.className = 'element ' + (el.className || '');
+                    domEl.id = el.id;
+
+                    // Basic Positioning
+                    domEl.style.left = `${el.x}px`;
+                    domEl.style.top = `${el.y}px`;
+                    domEl.style.width = `${el.width}px`;
+                    domEl.style.height = `${el.height}px`;
+                    
+                    // Transforms
+                    if (el.rotation) domEl.style.transform = `rotate(${el.rotation}deg)`;
+                    if (el.opacity !== undefined) domEl.style.opacity = el.opacity;
+                    if (el.zIndex) domEl.style.zIndex = el.zIndex;
+
+                    // Specific Type Handling
+                    if (el.type === 'text') {
+                        domEl.textContent = el.content;
+                        domEl.style.fontSize = `${el.fontSize}px`;
+                        domEl.style.fontFamily = el.fontFamily || 'Montserrat';
+                        domEl.style.fontWeight = el.fontWeight || 'normal';
+                        domEl.style.fontStyle = el.fontStyle || 'normal';
+                        domEl.style.color = el.color || '#000';
+                        domEl.style.textAlign = el.textAlign || 'left';
+                        domEl.style.letterSpacing = `${el.letterSpacing || 0}px`;
+                        domEl.style.lineHeight = el.lineHeight || 1.2;
+                        
+                        // Flex centering for text boxes
+                        domEl.style.display = 'flex';
+                        domEl.style.flexDirection = 'column';
+                        domEl.style.justifyContent = 'center';
+                        // Horizontal align
+                        if(el.textAlign === 'center') domEl.style.alignItems = 'center';
+                        else if(el.textAlign === 'right') domEl.style.alignItems = 'flex-end';
+                        else domEl.style.alignItems = 'flex-start';
+
+                        domEl.style.whiteSpace = 'pre-wrap';
+                    } 
+                    else if (el.type === 'image') {
+                        const img = document.createElement('img');
+                        img.src = el.url;
+                        img.style.width = '100%';
+                        img.style.height = '100%';
+                        img.style.objectFit = 'cover';
+                        img.style.display = 'block';
+                        if (el.borderRadius) img.style.borderRadius = `${el.borderRadius}px`;
+                        domEl.appendChild(img);
+                    } 
+                    else if (el.type === 'shape') {
+                        domEl.style.background = el.fill || 'transparent';
+                        if (el.stroke) {
+                            domEl.style.border = `${el.strokeWidth || 1}px ${el.strokeDasharray ? 'dashed' : 'solid'} ${el.stroke}`;
+                        }
+                        if (el.borderRadius) domEl.style.borderRadius = `${el.borderRadius}px`;
+                        if (el.boxShadow) domEl.style.boxShadow = el.boxShadow;
+                        
+                        if (el.shapeType === 'circle') {
+                            domEl.style.borderRadius = '50%';
+                        }
+                    }
+
+                    // Special Animation Delay override
+                    if (el.animationDelay) {
+                        domEl.style.animationDelay = el.animationDelay;
+                    }
+
+                    canvas.appendChild(domEl);
+                });
+
+            } catch (err) {
+                console.error(err);
+                alert("JSON Error: " + err.message);
+            }
+        }
+
+        function copySQL() {
+            const json = document.getElementById('jsonInput').value;
+            // Escape single quotes for SQL
+            const escapedJson = JSON.stringify(JSON.parse(json)).replace(/'/g, "\\'");
+            
+            const sql = `
+INSERT INTO templates (
+    uuid, name, slug, description, thumbnail_url, category_id,
+    is_premium, design_data, tags, is_active, created_at, updated_at
+) VALUES (
+    UUID(),
+    'Ultimate Passport Luxury',
+    'ultimate-passport-invitation',
+    'World class travel themed wedding invitation with gold foil and stamps.',
+    'https://images.unsplash.com/photo-1544642899-f0d6e5f6ed6f?w=500',
+    1, 1,
+    '${escapedJson}',
+    '["passport", "travel", "gold", "luxury"]',
+    1, NOW(), NOW()
+);`;
+            navigator.clipboard.writeText(sql).then(() => alert("SQL đã được copy!"));
+        }
+    </script>
+</body>
+</html>
