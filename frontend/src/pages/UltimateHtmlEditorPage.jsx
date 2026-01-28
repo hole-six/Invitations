@@ -430,40 +430,40 @@ const UltimateHtmlEditorPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-amber-50 to-white dark:from-stone-950 dark:via-stone-900 dark:to-stone-950">
-      {/* Header - Clean & Modern */}
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* Header - Minimal */}
       <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
-        <div className="max-w-full px-6 py-3 flex items-center justify-between">
+        <div className="max-w-full px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate('/management')}
-              className="flex items-center justify-center w-9 h-9 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              className="flex items-center justify-center w-10 h-10 border border-gray-300 dark:border-gray-700 hover:border-gray-900 dark:hover:border-gray-300 transition-colors"
             >
-              <svg className="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+              <svg className="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
             </button>
             <div className="flex items-center gap-3">
-              <img width="50" height="50" src="https://img.icons8.com/bubbles/50/create-new.png" alt="create-new" />
+              <div className="w-2 h-2 bg-gray-900 dark:bg-white rounded-full"></div>
               <div>
-                <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+                <h2 className="text-base font-medium text-gray-900 dark:text-white">
                   {invitation?.title || 'Chỉnh Sửa Thiệp Mời'}
                 </h2>
                 <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                  <span className="w-1 h-1 rounded-full bg-green-500"></span>
                   Đang chỉnh sửa
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <button
               onClick={handleSave}
               disabled={saving}
-              className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-2 bg-gray-900 hover:bg-gray-800 text-white font-medium transition-colors disabled:opacity-50 flex items-center gap-2"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
               </svg>
               {saving ? 'Đang lưu...' : 'Lưu'}
@@ -471,9 +471,9 @@ const UltimateHtmlEditorPage = () => {
             <button
               onClick={handlePreview}
               disabled={saving}
-              className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-medium transition-colors flex items-center gap-2 disabled:opacity-50"
+              className="px-6 py-2 border border-gray-300 dark:border-gray-700 hover:border-gray-900 dark:hover:border-gray-300 text-gray-900 dark:text-white font-medium transition-colors flex items-center gap-2 disabled:opacity-50"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
@@ -482,9 +482,9 @@ const UltimateHtmlEditorPage = () => {
             <button
               onClick={handlePublish}
               disabled={saving}
-              className="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-semibold transition-colors disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold transition-colors disabled:opacity-50 flex items-center gap-2"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
               </svg>
               Xuất Bản
@@ -678,9 +678,9 @@ const UltimateHtmlEditorPage = () => {
                       key={index}
                       type="button"
                       onClick={() => setFormData(prev => ({ ...prev, music_url: song.url }))}
-                      className={`text-left px-4 py-3 rounded-xl border-2 transition-all duration-300 ${formData.music_url === song.url
-                        ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300'
-                        : 'border-stone-200 dark:border-stone-700 hover:border-amber-300 dark:hover:border-amber-600 text-stone-700 dark:text-stone-300'
+                      className={`text-left px-4 py-3 border-2 transition-all duration-300 ${formData.music_url === song.url
+                        ? 'border-gray-900 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100'
+                        : 'border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-gray-700 dark:text-gray-300'
                         }`}
                     >
                       <div className="flex items-center gap-3">
@@ -689,7 +689,7 @@ const UltimateHtmlEditorPage = () => {
                         </svg>
                         <span className="font-medium">{song.name}</span>
                         {formData.music_url === song.url && (
-                          <svg className="w-5 h-5 ml-auto text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-5 h-5 ml-auto text-gray-900" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                           </svg>
                         )}
@@ -711,7 +711,7 @@ const UltimateHtmlEditorPage = () => {
                   value={formData.music_url}
                   onChange={handleChange}
                   placeholder="https://example.com/music.mp3 hoặc https://youtube.com/watch?v=..."
-                  className="w-full px-4 py-3.5 border-2 border-stone-200 dark:border-stone-700 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-stone-800 dark:text-white outline-none transition-all duration-300 hover:border-amber-300 dark:hover:border-amber-600 font-medium"
+                  className="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-gray-900 focus:border-gray-900 dark:bg-gray-800 dark:text-white outline-none transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500 font-medium"
                 />
                 <p className="mt-2 text-xs text-stone-500 dark:text-stone-400">
                   💡 Hỗ trợ: MP3, WAV, OGG, YouTube link. Paste link YouTube để tự động chuyển đổi.
@@ -719,18 +719,18 @@ const UltimateHtmlEditorPage = () => {
               </div>
 
               <div>
-                <label className="flex items-center gap-3 px-4 py-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl cursor-pointer hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-all">
+                <label className="flex items-center gap-3 px-4 py-3 bg-gray-100 dark:bg-gray-800 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-all">
                   <input
                     type="checkbox"
                     name="music_autoplay"
                     checked={formData.music_autoplay}
                     onChange={(e) => setFormData(prev => ({ ...prev, music_autoplay: e.target.checked }))}
-                    className="w-5 h-5 text-amber-600 rounded focus:ring-2 focus:ring-amber-500"
+                    className="w-5 h-5 text-gray-900 focus:ring-2 focus:ring-gray-900"
                   />
                   <img width="30" height="30" src="https://img.icons8.com/clouds/100/play.png" alt="play" />
                   <div className="flex-1">
-                    <span className="text-sm font-semibold text-pink-800 dark:text-pink-300">Tự động phát nhạc</span>
-                    <p className="text-xs text-pink-600 dark:text-pink-400 mt-0.5">
+                    <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">Tự động phát nhạc</span>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
                       Nhạc sẽ tự động phát khi mở thiệp (một số trình duyệt có thể chặn autoplay)
                     </p>
                   </div>
@@ -738,8 +738,8 @@ const UltimateHtmlEditorPage = () => {
               </div>
 
               {formData.music_url && !formData.music_url.includes('youtube') && !formData.music_url.includes('youtu.be') && (
-                <div className="p-4 bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20 rounded-xl border-2 border-pink-200 dark:border-pink-800">
-                  <p className="flex items-center gap-2 text-sm font-semibold text-pink-800 dark:text-pink-300 mb-2">
+                <div className="p-4 bg-gray-100 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700">
+                  <p className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     <img width="30" height="30" src="https://img.icons8.com/clouds/100/high-volume.png" alt="high-volume" /> Nghe thử:
                   </p>
                   <audio controls className="w-full" src={formData.music_url}>

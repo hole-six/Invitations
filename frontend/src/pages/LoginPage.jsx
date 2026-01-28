@@ -35,7 +35,7 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen flex">
       {/* LEFT SIDE - IMAGE SHOWCASE */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-pink-50 to-rose-100 overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-white overflow-hidden">
         {/* Background Image */}
         <img 
           src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=1200&q=80" 
@@ -43,39 +43,39 @@ const LoginPage = () => {
           className="absolute inset-0 w-full h-full object-cover"
         />
         
-        {/* Elegant Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-900/40 via-pink-800/30 to-purple-900/40"></div>
+        {/* Monochrome Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-gray-100/80 to-gray-200/70"></div>
         
         {/* Content */}
-        <div className="relative z-10 flex flex-col justify-center items-center text-white p-12 text-center">
+        <div className="relative z-10 flex flex-col justify-center items-center text-gray-900 p-12 text-center">
           <div className="max-w-md space-y-6">
-            <div className="inline-block p-4 bg-white/10 backdrop-blur-sm rounded-2xl mb-4">
+            <div className="inline-block p-4 bg-gray-900 mb-4">
               <svg className="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
               </svg>
             </div>
             
-            <h1 className="text-5xl font-bold mb-6 leading-tight">
+            <h1 className="text-5xl font-light mb-6 leading-tight text-gray-900" style={{fontFamily: "'Playfair Display', serif"}}>
               Create Beautiful<br/>Wedding Invitations
             </h1>
             
-            <p className="text-xl text-white/90 leading-relaxed">
+            <p className="text-xl text-gray-700 leading-relaxed">
               Thiết kế thiệp cưới đẹp trong vài phút.<br/>
               Hàng trăm mẫu sang trọng, dễ dàng tùy chỉnh.
             </p>
             
             <div className="grid grid-cols-3 gap-6 pt-8 text-center">
               <div>
-                <div className="text-3xl font-bold mb-1">500+</div>
-                <div className="text-sm text-white/80">Templates</div>
+                <div className="text-3xl font-light mb-1 text-gray-900">500+</div>
+                <div className="text-sm text-gray-600">Templates</div>
               </div>
               <div>
-                <div className="text-3xl font-bold mb-1">50K+</div>
-                <div className="text-sm text-white/80">Happy Couples</div>
+                <div className="text-3xl font-light mb-1 text-gray-900">50K+</div>
+                <div className="text-sm text-gray-600">Happy Couples</div>
               </div>
               <div>
-                <div className="text-3xl font-bold mb-1">100%</div>
-                <div className="text-sm text-white/80">Free</div>
+                <div className="text-3xl font-light mb-1 text-gray-900">100%</div>
+                <div className="text-sm text-gray-600">Free</div>
               </div>
             </div>
           </div>
@@ -137,7 +137,7 @@ const LoginPage = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition"
                   placeholder="you@example.com"
                 />
               </div>
@@ -162,7 +162,7 @@ const LoginPage = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition"
                   placeholder="••••••••"
                 />
               </div>
@@ -175,7 +175,7 @@ const LoginPage = () => {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-rose-500 focus:ring-rose-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
                   Remember me
@@ -183,7 +183,7 @@ const LoginPage = () => {
               </div>
 
               <div className="text-sm">
-                <Link to="/forgot-password" className="font-medium text-rose-400 hover:text-rose-500 transition">
+                <Link to="/forgot-password" className="font-medium text-gray-600 hover:text-gray-900 transition">
                   Forgot password?
                 </Link>
               </div>
@@ -193,7 +193,7 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {loading ? (
                 <>
@@ -244,7 +244,7 @@ const LoginPage = () => {
           {/* Sign up link */}
           <p className="mt-8 text-center text-sm text-gray-500">
             Don't have an account?{' '}
-            <Link to="/register" className="font-medium text-rose-400 hover:text-rose-500 transition">
+            <Link to="/register" className="font-medium text-gray-600 hover:text-gray-900 transition">
               Sign up for free
             </Link>
           </p>
