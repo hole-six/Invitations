@@ -203,46 +203,80 @@ const UltimateHtmlEditorPage = () => {
       const style = doc.createElement('style')
       style.textContent = `
           [data-editable] {
-            cursor: text;
+            cursor: text !important;
             transition: all 0.2s;
             position: relative;
+            z-index: 50; /* Ensure it floats above simple backgrounds */
+            pointer-events: auto !important; /* Force interaction */
+            min-height: 1em; /* Ensure empty fields are clickable */
+            min-width: 20px;
+            display: inline-block; /* Ensure layout triggers */
           }
           [data-editable]:hover {
-            outline: 2px solid #a855f7 !important; /* Purple for Hover */
-            background: rgba(168, 85, 247, 0.05);
-            z-index: 10;
+            outline: 2px dashed #a855f7 !important; /* Pulse dashed for visibility */
+            background: rgba(168, 85, 247, 0.1);
+            z-index: 100 !important;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
           }
           [data-editable]:focus {
             outline: 2px solid #f59e0b !important; /* Amber/Yellow for Active Edit */
-            background: rgba(251, 191, 36, 0.05);
-            z-index: 20;
-            min-width: 1px;
+            background: rgba(251, 191, 36, 0.1);
+            z-index: 1000 !important;
+            min-width: 10px;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+          }
+          /* Ensure Ladipage layers don't block us */
+          .ladi-overlay {
+            pointer-events: none !important;
           }
         `
       doc.head.appendChild(style)
 
       // Attach Listeners
-      doc.querySelectorAll('[data-editable]').forEach(el => {
+      const editableElements = doc.querySelectorAll('[data-editable]')
+      console.log(`Found ${editableElements.length} editable elements in iframe`)
+
+      editableElements.forEach(el => {
         const fieldId = el.getAttribute('data-editable')
 
         // Click to edit
-        el.addEventListener('click', (e) => {
+        const activateEdit = (e) => {
           e.stopPropagation() // Stop bubbling
-          if (!el.isContentEditable) {
+          // Don't toggle if already true (prevents cursor jump)
+          if (el.contentEditable !== 'true') {
             e.preventDefault()
-            el.contentEditable = true
+            el.contentEditable = 'true'
             el.focus()
+
+            // Log for debugging
+            console.log(`Activated edit for: ${fieldId}`)
+
+            // Notify parent
+            window.parent.postMessage({
+              type: 'FOCUS_FIELD',
+              id: fieldId
+            }, '*');
           }
-        })
+        }
+
+        el.addEventListener('click', activateEdit)
+        // Also listen for dblclick just in case single click is swallowed
+        el.addEventListener('dblclick', activateEdit)
 
         // Blur to save
         el.addEventListener('blur', () => {
           if (el.isContentEditable) {
-            el.contentEditable = false
+            el.contentEditable = 'false'
+            // Use innerText but fall back to textContent if weird
             const newContent = el.innerText
             // Send update to parent logic
             setCustomFieldData(prev => ({ ...prev, [fieldId]: newContent }))
           }
+        })
+
+        // Input Listener for Real-time Height Adjustment or sync (optional)
+        el.addEventListener('input', () => {
+          // Optional: visual feedback
         })
       })
 
@@ -621,6 +655,8 @@ const UltimateHtmlEditorPage = () => {
   // AUTO-SAVE: State for auto-save functionality
   const [autoSaveTimer, setAutoSaveTimer] = useState(null)
   const [lastSavedData, setLastSavedData] = useState(null)
+  const [isUserEditing, setIsUserEditing] = useState(false) // Track if user is actively editing
+  const editingTimerRef = useRef(null) // Timer for editing state
 
   // (Removed Duplicate Debounce hooks - Moved to top)
 
@@ -629,8 +665,18 @@ const UltimateHtmlEditorPage = () => {
   }, [])
 
   useEffect(() => {
-    updatePreview()
-  }, [debouncedFormData, debouncedImageData, debouncedCustomFieldData, htmlCode])
+    // Don't update preview if user is actively editing to prevent focus loss
+    if (!isUserEditing) {
+      updatePreview()
+    }
+  }, [debouncedFormData, debouncedImageData, debouncedCustomFieldData, htmlCode, isUserEditing])
+
+  // Update preview when user stops editing
+  useEffect(() => {
+    if (!isUserEditing) {
+      updatePreview()
+    }
+  }, [isUserEditing])
 
   // AUTO-SAVE: Debounced auto-save when data changes
   useEffect(() => {
@@ -646,7 +692,7 @@ const UltimateHtmlEditorPage = () => {
       clearTimeout(autoSaveTimer)
     }
 
-    // Set new timer for auto-save after 2 seconds of inactivity
+    // Set new timer for auto-save after 3 seconds of inactivity (increased from 2s)
     const timer = setTimeout(async () => {
       try {
         console.log('🔄 Auto-saving...')
@@ -672,7 +718,7 @@ const UltimateHtmlEditorPage = () => {
         console.error('❌ Auto-save failed:', error)
         // Don't show error toast for auto-save failures to avoid annoying user
       }
-    }, 2000) // 2 seconds delay
+    }, 3000) // 3 seconds delay (increased for better UX)
 
     setAutoSaveTimer(timer)
 
@@ -698,9 +744,18 @@ const UltimateHtmlEditorPage = () => {
       if (invitationId) {
         const res = await invitationService.getById(invitationId)
         setInvitation(res.data)
-        setHtmlCode(res.data.html_content || '')
 
-        setFormData({
+        // Handle html_content - if null or empty, use empty string
+        const htmlContent = res.data.html_content || ''
+        setHtmlCode(htmlContent)
+
+        // If html_content is empty but we have a template, try to load template HTML
+        if (!htmlContent && res.data.template_id) {
+          console.warn('⚠️ Invitation has no HTML content, this may cause editing issues')
+          toast.warning('Thiệp mời chưa có nội dung HTML. Vui lòng liên hệ admin.')
+        }
+
+        const loadedFormData = {
           title: res.data.title || '',
           groom_name: res.data.groom_name || '',
           bride_name: res.data.bride_name || '',
@@ -710,7 +765,9 @@ const UltimateHtmlEditorPage = () => {
           event_address: res.data.event_address || '',
           music_url: res.data.music_url || '',
           music_autoplay: res.data.music_autoplay !== undefined ? res.data.music_autoplay : true
-        })
+        }
+
+        setFormData(loadedFormData)
 
         if (res.data.image_data) {
           try {
@@ -727,6 +784,15 @@ const UltimateHtmlEditorPage = () => {
             console.error('Failed to parse custom_field_data:', e)
           }
         }
+
+        // IMPORTANT: Set lastSavedData to prevent auto-save from running immediately
+        const initialData = JSON.stringify({
+          formData: loadedFormData,
+          imageData: res.data.image_data ? JSON.parse(res.data.image_data) : {},
+          customFieldData: res.data.custom_field_data ? JSON.parse(res.data.custom_field_data) : {},
+          htmlCode: htmlContent
+        })
+        setLastSavedData(initialData)
       }
     } catch (error) {
       console.error('Failed to load invitation:', error)
@@ -1000,11 +1066,43 @@ const UltimateHtmlEditorPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    console.log('📝 Input changed:', name, '=', value)
+
+    // Mark user as editing
+    setIsUserEditing(true)
+
+    // Clear previous timer
+    if (editingTimerRef.current) {
+      clearTimeout(editingTimerRef.current)
+    }
+
+    setFormData(prev => {
+      const newData = { ...prev, [name]: value }
+      console.log('📝 New formData:', newData)
+      return newData
+    })
+
+    // Clear editing flag after 1 second of inactivity
+    editingTimerRef.current = setTimeout(() => {
+      setIsUserEditing(false)
+    }, 1000)
   }
 
   const handleCustomFieldChange = (fieldId, value) => {
+    // Mark user as editing
+    setIsUserEditing(true)
+
+    // Clear previous timer
+    if (editingTimerRef.current) {
+      clearTimeout(editingTimerRef.current)
+    }
+
     setCustomFieldData(prev => ({ ...prev, [fieldId]: value }))
+
+    // Clear editing flag after 1 second of inactivity
+    editingTimerRef.current = setTimeout(() => {
+      setIsUserEditing(false)
+    }, 1000)
   }
 
   const handleImageUpload = async (imageId, file) => {
@@ -1055,9 +1153,9 @@ const UltimateHtmlEditorPage = () => {
         custom_field_data: JSON.stringify(customFieldData),
         status: invitation.status // Keep current status
       })
-      
+
       toast.success('✅ Đã lưu thành công!')
-      
+
       // Redirect to management page
       setTimeout(() => {
         navigate('/management')
@@ -1138,14 +1236,14 @@ const UltimateHtmlEditorPage = () => {
         custom_field_data: JSON.stringify(customFieldData),
         status: 'published'
       })
-      
+
       // Publish
       await invitationService.publish(invitation.id)
-      
+
       // Get updated invitation with new slug
       const updatedInvitation = updateResponse.data || invitation
       const newSlug = updatedInvitation.slug || invitation.slug
-      
+
       toast.success('🎉 Đã xuất bản thiệp mời!')
       setTimeout(() => {
         navigate(`/invitation/${newSlug}`)
@@ -1182,11 +1280,11 @@ const UltimateHtmlEditorPage = () => {
         custom_field_data: JSON.stringify(customFieldData),
         status: invitation.status // Keep current status
       })
-      
+
       // Get updated slug from response
       const updatedInvitation = updateResponse.data || invitation
       const newSlug = updatedInvitation.slug || invitation.slug
-      
+
       toast.success('✅ Đã lưu! Đang mở xem trước...')
 
       setTimeout(() => {
@@ -1233,8 +1331,8 @@ const UltimateHtmlEditorPage = () => {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <button 
-            onClick={handleSaveAndExit} 
+          <button
+            onClick={handleSaveAndExit}
             disabled={saving}
             className="px-4 py-1.5 rounded-full bg-blue-500 text-white text-xs font-bold uppercase hover:bg-blue-600 transition-colors disabled:opacity-50"
           >
