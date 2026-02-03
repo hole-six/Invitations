@@ -27,7 +27,7 @@ class AuthService
         // Create user
         $userData = [
             'email' => $data['email'],
-            'password_hash' => Hash::make($data['password']),
+            'password' => Hash::make($data['password']),
             'full_name' => $data['full_name'],
             'phone' => $data['phone'] ?? null,
             'role' => 'user',
@@ -56,10 +56,10 @@ class AuthService
         }
         
         error_log("Login attempt: User found - ID: {$user->id}, Email: {$user->email}");
-        error_log("Password hash from DB: {$user->password_hash}");
+        error_log("Password hash from DB: {$user->password}");
         
         // Verify password
-        if (!Hash::verify($password, $user->password_hash)) {
+        if (!Hash::verify($password, $user->password)) {
             error_log("Login failed: Password verification failed for user: {$user->email}");
             throw new \Exception('Invalid credentials');
         }

@@ -183,15 +183,64 @@ class TemplateController
         $request = new Request();
         $data = $request->input();
         
+        $db = $GLOBALS['app']->getDatabase();
+        
+        // Get existing template
+        $existingTemplate = $db->fetchOne('SELECT * FROM templates WHERE id = ?', [$id]);
+        if (!$existingTemplate) {
+            Response::notFound('Template not found');
+            return;
+        }
+        
+        // Handle large HTML content - store as file if too large
+        if (isset($data['html_content'])) {
+            $htmlContent = $data['html_content'];
+            $htmlContentSize = strlen($htmlContent);
+            $maxDbSize = 1048576; // 1MB
+            
+            if ($htmlContentSize > $maxDbSize && !empty($htmlContent)) {
+                // Store HTML as file
+                $storageDir = __DIR__ . '/../../storage/templates';
+                if (!is_dir($storageDir)) {
+                    mkdir($storageDir, 0755, true);
+                }
+                
+                $filename = ($existingTemplate['uuid'] ?? \App\Helpers\Uuid::generate()) . '.html';
+                $filepath = $storageDir . '/' . $filename;
+                
+                if (file_put_contents($filepath, $htmlContent) !== false) {
+                    // Store file path instead of content
+                    $data['html_template'] = 'storage/templates/' . $filename;
+                    unset($data['html_content']); // Remove from DB update
+                    error_log("Large HTML template updated to file: $filename (" . round($htmlContentSize/1024/1024, 2) . " MB)");
+                } else {
+                    Response::error('Failed to save HTML template file', 500);
+                    return;
+                }
+            } else {
+                // Store in database (rename field)
+                $data['html_template'] = $htmlContent;
+                unset($data['html_content']);
+            }
+        }
+        
         if (isset($data['design_data']) && is_array($data['design_data'])) {
             $data['design_data'] = json_encode($data['design_data']);
         }
         
-        $db = $GLOBALS['app']->getDatabase();
-        $db->update('templates', $data, 'id = ?', [$id]);
+        if (isset($data['tags']) && is_array($data['tags'])) {
+            $data['tags'] = json_encode($data['tags']);
+        }
         
-        $template = $db->fetchOne('SELECT * FROM templates WHERE id = ?', [$id]);
-        Response::success($template, 'Template updated successfully');
+        try {
+            $db->update('templates', $data, 'id = ?', [$id]);
+            
+            $template = $db->fetchOne('SELECT * FROM templates WHERE id = ?', [$id]);
+            Response::success($template, 'Template updated successfully');
+        } catch (\Exception $e) {
+            error_log('Template update error: ' . $e->getMessage());
+            Response::error('Failed to update template: ' . $e->getMessage(), 500);
+        }
     }
     
     public function destroy(string $id): void

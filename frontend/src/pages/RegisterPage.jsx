@@ -6,7 +6,7 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const { register, error } = useAuth();
   const [formData, setFormData] = useState({
-    name: '',
+    full_name: '',
     email: '',
     password: '',
     password_confirmation: '',
@@ -161,11 +161,11 @@ const RegisterPage = () => {
                 </div>
                 <input
                   id="name"
-                  name="name"
+                  name="full_name"
                   type="text"
                   autoComplete="name"
                   required
-                  value={formData.name}
+                  value={formData.full_name}
                   onChange={handleChange}
                   className="block w-full pl-10 pr-3 py-3 border-2 border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-gray-900 dark:focus:border-white outline-none transition bg-white dark:bg-black text-gray-900 dark:text-white"
                   placeholder="Nguyễn Văn A"
