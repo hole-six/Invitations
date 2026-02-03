@@ -26,6 +26,7 @@ class AuthService
         
         // Create user
         $userData = [
+            'uuid' => \App\Helpers\Uuid::generate(),
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'full_name' => $data['full_name'],
