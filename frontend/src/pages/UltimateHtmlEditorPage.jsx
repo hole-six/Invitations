@@ -200,58 +200,71 @@ const UltimateHtmlEditorPage = () => {
 
     // 4. Inject Styles & Listeners
     try {
-      const style = doc.createElement('style')
-      style.textContent = `
-          [data-editable] {
-            cursor: text !important;
-            transition: all 0.2s;
-            position: relative;
-            z-index: 50; /* Ensure it floats above simple backgrounds */
-            pointer-events: auto !important; /* Force interaction */
-            min-height: 1em; /* Ensure empty fields are clickable */
-            min-width: 20px;
-            display: inline-block; /* Ensure layout triggers */
-          }
-          [data-editable]:hover {
-            outline: 2px dashed #a855f7 !important; /* Pulse dashed for visibility */
-            background: rgba(168, 85, 247, 0.1);
-            z-index: 100 !important;
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
-          }
-          [data-editable]:focus {
-            outline: 2px solid #f59e0b !important; /* Amber/Yellow for Active Edit */
-            background: rgba(251, 191, 36, 0.1);
-            z-index: 1000 !important;
-            min-width: 10px;
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
-          }
-          /* Ensure Ladipage layers don't block us */
-          .ladi-overlay {
-            pointer-events: none !important;
-          }
-        `
-      doc.head.appendChild(style)
+      const injectStyles = () => {
+        if (doc.getElementById('editor-styles')) return; // Already exists
+        const style = doc.createElement('style')
+        style.id = 'editor-styles'
+        style.textContent = `
+            [data-editable] {
+              cursor: text !important;
+              transition: all 0.2s;
+              position: relative;
+              z-index: 50;
+              pointer-events: auto !important;
+              min-height: 1em; /* Ensure empty fields are clickable */
+              min-width: 20px;
+              display: inline-block;
+            }
+            [data-editable]:hover {
+              outline: 2px dashed #a855f7 !important;
+              background: rgba(168, 85, 247, 0.1);
+              z-index: 100 !important;
+              box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+            }
+            [data-editable]:focus {
+              outline: 2px solid #f59e0b !important;
+              background: rgba(251, 191, 36, 0.1);
+              z-index: 1000 !important;
+              min-width: 10px;
+              box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+            }
+            /* Ensure Ladipage layers don't block us */
+            .ladi-overlay {
+              pointer-events: none !important;
+            }
+          `
+        doc.head.appendChild(style)
+      }
 
-      // Attach Listeners
-      const editableElements = doc.querySelectorAll('[data-editable]')
-      console.log(`Found ${editableElements.length} editable elements in iframe`)
+      injectStyles()
 
-      editableElements.forEach(el => {
+      // OBSERVER: Watch for head changes (scripts wiping head) and re-inject styles
+      const observer = new MutationObserver((mutations) => {
+        if (!doc.getElementById('editor-styles')) {
+          console.log(' styles lost, re-injecting...')
+          injectStyles()
+        }
+      })
+      observer.observe(doc.head, { childList: true })
+
+      // EVENT DELEGATION: Listen on Body to handle dynamic DOM replacements
+      // This fixes the "sometimes works" issue caused by scripts replacing nodes after we attached listeners.
+
+      const handleInteraction = (e) => {
+        // Find closest editable element
+        const el = e.target.closest('[data-editable]')
+        if (!el) return
+
         const fieldId = el.getAttribute('data-editable')
 
-        // Click to edit
-        const activateEdit = (e) => {
-          e.stopPropagation() // Stop bubbling
-          // Don't toggle if already true (prevents cursor jump)
+        if (e.type === 'click' || e.type === 'dblclick') {
+          e.stopPropagation()
           if (el.contentEditable !== 'true') {
             e.preventDefault()
             el.contentEditable = 'true'
             el.focus()
+            console.log(`Activated edit for: ${fieldId} (via ${e.type})`)
 
-            // Log for debugging
-            console.log(`Activated edit for: ${fieldId}`)
-
-            // Notify parent
             window.parent.postMessage({
               type: 'FOCUS_FIELD',
               id: fieldId
@@ -259,26 +272,27 @@ const UltimateHtmlEditorPage = () => {
           }
         }
 
-        el.addEventListener('click', activateEdit)
-        // Also listen for dblclick just in case single click is swallowed
-        el.addEventListener('dblclick', activateEdit)
-
-        // Blur to save
-        el.addEventListener('blur', () => {
+        if (e.type === 'focusout' || e.type === 'blur') {
           if (el.isContentEditable) {
             el.contentEditable = 'false'
-            // Use innerText but fall back to textContent if weird
             const newContent = el.innerText
             // Send update to parent logic
+            // Note: Since we are inside the iframe logic in scope, we need access to setCustomFieldData 
+            // OR dispatch a message. Since we are in React scope here, we can use setCustomFieldData directly.
             setCustomFieldData(prev => ({ ...prev, [fieldId]: newContent }))
           }
-        })
+        }
+      }
 
-        // Input Listener for Real-time Height Adjustment or sync (optional)
-        el.addEventListener('input', () => {
-          // Optional: visual feedback
-        })
-      })
+      // Remove existing listeners if any (though likely fresh doc)
+      // Attach delegated listeners
+      doc.body.removeEventListener('click', handleInteraction)
+      doc.body.removeEventListener('dblclick', handleInteraction)
+      doc.body.removeEventListener('focusout', handleInteraction) // focusout bubbles, blur does not
+
+      doc.body.addEventListener('click', handleInteraction)
+      doc.body.addEventListener('dblclick', handleInteraction)
+      doc.body.addEventListener('focusout', handleInteraction)
 
       // 5. Global Key Listener for Undo/Redo inside Iframe
       doc.addEventListener('keydown', (e) => {
