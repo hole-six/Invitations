@@ -1,0 +1,266 @@
+{
+  "source_file": "generate-html\\mau37.html",
+  "total_elements": 36,
+  "stats": {
+    "total_elements": 36,
+    "text_elements": 36,
+    "image_elements": 0,
+    "video_elements": 0,
+    "other_elements": 0
+  },
+  "elements": [
+    {
+      "id": "audio",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_audio"
+    },
+    {
+      "id": "musicToggle",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_musictoggle"
+    },
+    {
+      "id": "hero-day",
+      "type": "text",
+      "content": "Ngày",
+      "method": "id_pattern",
+      "column_name": "event_date"
+    },
+    {
+      "id": "hero-month",
+      "type": "text",
+      "content": "Ngày",
+      "method": "id_pattern",
+      "column_name": "event_date_2"
+    },
+    {
+      "id": "hero-year",
+      "type": "text",
+      "content": "Ngày",
+      "method": "id_pattern",
+      "column_name": "event_date_3"
+    },
+    {
+      "id": "display-weekday",
+      "type": "text",
+      "content": "Chủ Nhật",
+      "method": "id_pattern",
+      "column_name": "text_display-weekday"
+    },
+    {
+      "id": "display-time",
+      "type": "text",
+      "content": "Chủ Nhật",
+      "method": "id_pattern",
+      "column_name": "text_display-time"
+    },
+    {
+      "id": "calendar-month-label",
+      "type": "text",
+      "content": "Our wedding day",
+      "method": "id_pattern",
+      "column_name": "text_calendar-month-label"
+    },
+    {
+      "id": "calendar-year-label",
+      "type": "text",
+      "content": "Our wedding day",
+      "method": "id_pattern",
+      "column_name": "text_calendar-year-label"
+    },
+    {
+      "id": "calendarOverlay",
+      "type": "text",
+      "content": "Tháng",
+      "method": "id_pattern",
+      "column_name": "event_month"
+    },
+    {
+      "id": "inline-day",
+      "type": "text",
+      "content": "Save the date",
+      "method": "id_pattern",
+      "column_name": "save_the_date"
+    },
+    {
+      "id": "inline-month",
+      "type": "text",
+      "content": "Vân Anh &amp; Gia Sơn",
+      "method": "id_pattern",
+      "column_name": "text_inline-month"
+    },
+    {
+      "id": "inline-year",
+      "type": "text",
+      "content": "Thân mời bạn đến dự lời thành hôn được tổ chức vào",
+      "method": "id_pattern",
+      "column_name": "and_text"
+    },
+    {
+      "id": "rsvp",
+      "type": "text",
+      "content": "Xác nhận tham dự",
+      "method": "id_pattern",
+      "column_name": "confirm_button"
+    },
+    {
+      "id": "rsvpForm",
+      "type": "text",
+      "content": "Xác nhận tham dự",
+      "method": "id_pattern",
+      "column_name": "confirm_button_2"
+    },
+    {
+      "id": "guestName",
+      "type": "text",
+      "content": "Hãy cho chúng mình biết bạn sẽ đến để chuẩn bị chu đáo nhất.",
+      "method": "id_pattern",
+      "column_name": "text_guestname"
+    },
+    {
+      "id": "guestCount",
+      "type": "text",
+      "content": "Xin phép vắng mặt",
+      "method": "id_pattern",
+      "column_name": "text_guestcount"
+    },
+    {
+      "id": "cf-chl-widget-2dmuy_response",
+      "type": "text",
+      "content": "Hộp quà mừng",
+      "method": "id_pattern",
+      "column_name": "text_cf-chl-widget-2dmuy_response"
+    },
+    {
+      "id": "lunar-date-banner",
+      "type": "text",
+      "content": "Countdown",
+      "method": "id_pattern",
+      "column_name": "text_lunar-date-banner"
+    },
+    {
+      "id": "countdown-days",
+      "type": "text",
+      "content": "Tức ngày 13 tháng 09 năm Ất Tỵ",
+      "method": "id_pattern",
+      "column_name": "event_date_4"
+    },
+    {
+      "id": "countdown-hours",
+      "type": "text",
+      "content": "Ngày",
+      "method": "id_pattern",
+      "column_name": "event_date_5"
+    },
+    {
+      "id": "countdown-minutes",
+      "type": "text",
+      "content": "Giờ",
+      "method": "id_pattern",
+      "column_name": "event_time"
+    },
+    {
+      "id": "countdown-seconds",
+      "type": "text",
+      "content": "Phút",
+      "method": "id_pattern",
+      "column_name": "text_countdown-seconds"
+    },
+    {
+      "id": "successModal",
+      "type": "text",
+      "content": "Giây",
+      "method": "id_pattern",
+      "column_name": "text_successmodal"
+    },
+    {
+      "id": "successModalBackdrop",
+      "type": "text",
+      "content": "Trân trọng cảm ơn",
+      "method": "id_pattern",
+      "column_name": "sincerely_text"
+    },
+    {
+      "id": "successModalTitle",
+      "type": "text",
+      "content": "Trân trọng cảm ơn",
+      "method": "id_pattern",
+      "column_name": "sincerely_text_2"
+    },
+    {
+      "id": "successModalGuest",
+      "type": "text",
+      "content": "Thiệp đã nhận",
+      "method": "id_pattern",
+      "column_name": "text_successmodalguest"
+    },
+    {
+      "id": "successModalSubtitle",
+      "type": "text",
+      "content": "Khách mời",
+      "method": "id_pattern",
+      "column_name": "text_successmodalsubtitle"
+    },
+    {
+      "id": "successModalClose",
+      "type": "text",
+      "content": "Khách mời",
+      "method": "id_pattern",
+      "column_name": "text_successmodalclose"
+    },
+    {
+      "id": "eJOY__extension_ai_adv_root",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_ai_adv_root"
+    },
+    {
+      "id": "mask0_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask0_427_34"
+    },
+    {
+      "id": "mask1_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask1_427_34"
+    },
+    {
+      "id": "mask2_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask2_427_34"
+    },
+    {
+      "id": "eJOY__extension_root",
+      "type": "text",
+      "content": "0 / 10",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_root"
+    },
+    {
+      "id": "eJOY__extension_shadow",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_shadow"
+    },
+    {
+      "id": "rsvpSubmit",
+      "type": "text",
+      "content": "Gửi xác nhận",
+      "method": "dom_tree",
+      "tag": "button",
+      "column_name": "confirm_button_3"
+    }
+  ]
+}

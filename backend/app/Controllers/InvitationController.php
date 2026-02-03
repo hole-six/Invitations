@@ -24,17 +24,52 @@ class InvitationController
         $auth = AuthMiddleware::handle();
         if (!$auth) return;
         $userId = $auth['user_id'];
+        $userRole = $auth['role'] ?? 'user';
         
         $request = new Request();
         $filters = [
             'status' => $request->query('status'),
             'event_type' => $request->query('event_type'),
             'limit' => $request->query('limit', 20),
+            'user_id' => $request->query('user_id'), // Admin can filter by user_id
+            'search' => $request->query('search'),
+            'sortBy' => $request->query('sort_by', 'created_at'),
+            'sortOrder' => $request->query('sort_order', 'desc'),
         ];
         
         try {
+            // ALWAYS show only user's own invitations in /management
+            // Admin can view all invitations in dashboard admin panel
             $invitations = $this->invitationService->getUserInvitations($userId, $filters);
+            
             Response::success($invitations);
+        } catch (\Exception $e) {
+            Response::error($e->getMessage(), 500);
+        }
+    }
+    
+    public function getAllUsers(): void
+    {
+        $auth = AuthMiddleware::handle();
+        if (!$auth) return;
+        
+        // Only admin can access this
+        if (($auth['role'] ?? 'user') !== 'admin') {
+            Response::error('Unauthorized', 403);
+            return;
+        }
+        
+        try {
+            $db = $GLOBALS['app']->getDatabase();
+            $users = $db->fetchAll(
+                'SELECT id, full_name, email, role, 
+                        (SELECT COUNT(*) FROM invitations WHERE user_id = users.id) as invitation_count
+                 FROM users 
+                 WHERE status = "active"
+                 ORDER BY full_name ASC'
+            );
+            
+            Response::success($users);
         } catch (\Exception $e) {
             Response::error($e->getMessage(), 500);
         }
@@ -155,15 +190,9 @@ class InvitationController
     
     public function publish(string $id): void
     {
-        // TEMPORARY: Skip auth check for development
-        // TODO: Re-enable auth in production
-        $userId = 1; // Use correct user ID from database
-        
-        /* Original auth code - uncomment for production
         $auth = AuthMiddleware::handle();
         if (!$auth) return;
         $userId = $auth['user_id'];
-        */
         
         try {
             $invitation = $this->invitationService->publishInvitation((int)$id, $userId);

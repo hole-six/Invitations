@@ -8,6 +8,7 @@ use App\Controllers\RsvpController;
 use App\Controllers\MediaController;
 use App\Controllers\AnalyticsController;
 use App\Controllers\SubscriptionController;
+use App\Controllers\AdminController;
 
 // Get router from global
 $router = $GLOBALS['router'];
@@ -32,6 +33,7 @@ $router->post('/api/auth/reset-password', [AuthController::class, 'resetPassword
 // INVITATION ROUTES
 // ============================================
 $router->get('/api/invitations', [InvitationController::class, 'index']);
+$router->get('/api/invitations/users', [InvitationController::class, 'getAllUsers']); // Admin get all users
 $router->post('/api/invitations', [InvitationController::class, 'store']);
 $router->post('/api/invitations/from-template', [InvitationController::class, 'createFromTemplate']);
 $router->get('/api/invitations/{id}', [InvitationController::class, 'show']);
@@ -89,3 +91,23 @@ $router->get('/api/subscriptions/plans', [SubscriptionController::class, 'plans'
 $router->post('/api/subscriptions/subscribe', [SubscriptionController::class, 'subscribe']);
 $router->get('/api/subscriptions/current', [SubscriptionController::class, 'current']);
 $router->post('/api/subscriptions/cancel', [SubscriptionController::class, 'cancel']);
+
+// ============================================
+// ADMIN ROUTES
+// ============================================
+$router->get('/api/admin/dashboard/stats', [AdminController::class, 'dashboardStats']);
+
+// Admin User Management
+$router->get('/api/admin/users', [AdminController::class, 'getUsers']);
+$router->post('/api/admin/users', [AdminController::class, 'createUser']);
+$router->put('/api/admin/users/{id}', [AdminController::class, 'updateUser']);
+$router->delete('/api/admin/users/{id}', [AdminController::class, 'deleteUser']);
+
+// Admin Invitation Management
+$router->get('/api/admin/invitations', [AdminController::class, 'getAllInvitations']);
+$router->put('/api/admin/invitations/{id}/status', [AdminController::class, 'updateInvitationStatus']);
+$router->delete('/api/admin/invitations/{id}', [AdminController::class, 'deleteInvitation']);
+
+// Admin Template Management
+$router->get('/api/admin/templates', [AdminController::class, 'getAllTemplates']);
+$router->put('/api/admin/templates/{id}/status', [AdminController::class, 'updateTemplateStatus']);

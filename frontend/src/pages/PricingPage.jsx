@@ -10,59 +10,64 @@ const PricingPage = () => {
   return (
     <div className="bg-white dark:bg-black text-gray-900 dark:text-gray-100 overflow-x-hidden">
       <Header />
-      
-      {/* Hero Section - Minimal */}
-      <div className="relative w-full min-h-[70vh] flex items-center justify-center overflow-hidden mt-20 bg-gray-50 dark:bg-gray-900">
-        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center py-20">
-          <div className="inline-flex items-center gap-2 px-6 py-2.5 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-8">
-            <svg className="w-4 h-4 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <span className="text-gray-700 dark:text-gray-300 text-sm font-medium tracking-widest uppercase">Gói Dịch Vụ Premium</span>
-          </div>
-          
-          <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 dark:text-white leading-[1.05] mb-8" style={{fontFamily: "'Playfair Display', serif"}}>
-            Kiệt Tác Cho<br/>
-            <span className="text-gray-600 dark:text-gray-400">
-              Ngày Chung Đôi
+
+      {/* Hero Section - Wedding Background */}
+      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-gray-900 border-b border-gray-800">
+        {/* Wedding Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: "url('https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=2070')",
+          }}
+        ></div>
+
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80"></div>
+
+        {/* Technical Grid Overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black,transparent)]"></div>
+
+        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center py-20 mt-16">
+       
+
+          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white leading-[1.1] mb-8 drop-shadow-2xl">
+            Nâng Cấp <br />
+            <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/50 font-sans font-bold">
+              Trải Nghiệm
             </span>
           </h1>
-          
-          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed font-light mb-12" style={{fontFamily: "'Playfair Display', serif"}}>
-            Trải nghiệm thiết kế thiệp cưới đẳng cấp với sự hỗ trợ của AI và các chuyên gia hàng đầu.<br/>
-            <span className="text-gray-900 dark:text-white font-medium">Chọn gói phù hợp với câu chuyện tình yêu của bạn.</span>
+
+          <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed font-light mb-12 tracking-wide">
+            Mở khóa toàn bộ tính năng cao cấp của hệ thống. <br />
+            Thiết kế chuyên nghiệp. Không giới hạn.
           </p>
-          
-          {/* Billing Toggle */}
-          <div className="inline-flex items-center gap-4 p-2 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+
+          {/* Billing Toggle - Tech Style */}
+          <div className="inline-flex items-center p-1.5 bg-black/60 backdrop-blur-xl border border-white/10 rounded-lg">
             <button
               onClick={() => setBillingCycle('monthly')}
-              className={`px-8 py-3 font-semibold transition-all ${
-                billingCycle === 'monthly'
-                  ? 'bg-white dark:bg-black text-gray-900 dark:text-white shadow-lg'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-              }`}
+              className={`px-6 py-2.5 text-sm font-bold uppercase tracking-wider rounded-[4px] transition-all ${billingCycle === 'monthly'
+                ? 'bg-white text-black shadow-lg'
+                : 'text-gray-400 hover:text-white'
+                }`}
             >
-              Theo Tháng
+              Monthly
             </button>
             <button
               onClick={() => setBillingCycle('yearly')}
-              className={`px-8 py-3 font-semibold transition-all relative ${
-                billingCycle === 'yearly'
-                  ? 'bg-gray-900 dark:bg-white text-white dark:text-black shadow-lg'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-              }`}
+              className={`px-6 py-2.5 text-sm font-bold uppercase tracking-wider rounded-[4px] transition-all relative ${billingCycle === 'yearly'
+                ? 'bg-white text-black shadow-lg'
+                : 'text-gray-400 hover:text-white'
+                }`}
             >
-              Theo Năm
-              {billingCycle === 'yearly' && (
-                <span className="absolute -top-2 -right-2 px-2 py-0.5 bg-gray-900 dark:bg-white text-white dark:text-black text-xs font-bold">
-                  -40%
-                </span>
-              )}
+              Yearly
+              <span className="absolute -top-3 -right-3 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-[9px] text-black font-bold border-2 border-black">
+                %
+              </span>
             </button>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Pricing Cards - Minimal Layout */}
       <div className="w-full py-32 bg-white dark:bg-black relative">
@@ -83,22 +88,22 @@ const PricingPage = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="p-10 flex-1 flex flex-col">
                 <div className="mb-8">
-                  <h3 className="text-3xl font-bold font-serif text-gray-900 dark:text-white mb-2" style={{fontFamily: "'Playfair Display', serif"}}>
+                  <h3 className="text-3xl font-bold font-serif text-gray-900 dark:text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
                     Minimalist
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400">Sự khởi đầu tinh tế</p>
                 </div>
-                
+
                 <div className="mb-8">
                   <div className="flex items-baseline gap-2">
                     <span className="text-5xl font-bold text-gray-900 dark:text-white">Miễn phí</span>
                   </div>
                   <span className="text-sm text-gray-500 dark:text-gray-400">Trọn đời • Không giới hạn</span>
                 </div>
-                
+
                 <ul className="space-y-4 mb-10 flex-1">
                   <li className="flex items-start gap-3">
                     <svg className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -125,8 +130,8 @@ const PricingPage = () => {
                     <span className="text-gray-700 dark:text-gray-300">Hỗ trợ cộng đồng</span>
                   </li>
                 </ul>
-                
-                <button 
+
+                <button
                   onClick={() => navigate('/collection')}
                   className="w-full py-4 border-2 border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600 font-bold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-all flex items-center justify-center gap-2 group"
                 >
@@ -149,7 +154,7 @@ const PricingPage = () => {
                   ĐƯỢC CHỌN NHIỀU NHẤT
                 </div>
               </div>
-              
+
               {/* Header with AI Icon */}
               <div className="h-64 w-full relative overflow-hidden bg-gray-800 dark:bg-gray-100">
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -163,15 +168,15 @@ const PricingPage = () => {
                   <span className="mt-4 text-sm font-bold text-gray-300 dark:text-gray-700 tracking-[0.3em] uppercase">AI Powered</span>
                 </div>
               </div>
-              
+
               <div className="p-10 flex-1 flex flex-col -mt-8 relative z-10">
                 <div className="mb-8">
-                  <h3 className="text-3xl font-bold font-serif mb-2" style={{fontFamily: "'Playfair Display', serif"}}>
+                  <h3 className="text-3xl font-bold font-serif mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
                     Premium AI
                   </h3>
                   <p className="text-gray-300 dark:text-gray-700 font-semibold">Trí tuệ nhân tạo hỗ trợ</p>
                 </div>
-                
+
                 <div className="mb-8">
                   <div className="flex items-baseline gap-2">
                     <span className="text-6xl font-black">
@@ -179,11 +184,11 @@ const PricingPage = () => {
                     </span>
                   </div>
                   <span className="text-sm text-gray-400 dark:text-gray-600">
-                    /{billingCycle === 'yearly' ? 'năm' : 'tháng'} • 
+                    /{billingCycle === 'yearly' ? 'năm' : 'tháng'} •
                     {billingCycle === 'yearly' && <span className="font-bold ml-1">Tiết kiệm 40%</span>}
                   </span>
                 </div>
-                
+
                 <ul className="space-y-4 mb-10 flex-1">
                   <li className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-white dark:bg-black flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -228,8 +233,8 @@ const PricingPage = () => {
                     <span className="font-medium">Hỗ trợ ưu tiên 24/7</span>
                   </li>
                 </ul>
-                
-                <button 
+
+                <button
                   onClick={() => navigate('/collection')}
                   className="w-full py-5 bg-white dark:bg-black hover:bg-gray-100 dark:hover:bg-gray-900 text-black dark:text-white font-bold text-lg shadow-2xl hover:shadow-3xl transition-all hover:scale-105 flex items-center justify-center gap-2 group"
                 >
@@ -250,7 +255,7 @@ const PricingPage = () => {
                     <svg className="w-8 h-8 text-gray-400 dark:text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
-                    <span className="text-gray-400 dark:text-gray-600 font-serif italic text-2xl" style={{fontFamily: "'Playfair Display', serif"}}>
+                    <span className="text-gray-400 dark:text-gray-600 font-serif italic text-2xl" style={{ fontFamily: "'Playfair Display', serif" }}>
                       Signature
                     </span>
                   </div>
@@ -259,15 +264,15 @@ const PricingPage = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="p-10 flex-1 flex flex-col">
                 <div className="mb-8">
-                  <h3 className="text-3xl font-bold font-serif mb-2" style={{fontFamily: "'Playfair Display', serif"}}>
+                  <h3 className="text-3xl font-bold font-serif mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
                     Luxury VIP
                   </h3>
                   <p className="text-gray-400 dark:text-gray-600">Trải nghiệm độc quyền</p>
                 </div>
-                
+
                 <div className="mb-8">
                   <div className="flex items-baseline gap-2">
                     <span className="text-5xl font-bold">
@@ -276,7 +281,7 @@ const PricingPage = () => {
                   </div>
                   <span className="text-sm text-gray-400 dark:text-gray-600">Trọn đời • Không giới hạn</span>
                 </div>
-                
+
                 <ul className="space-y-4 mb-10 flex-1">
                   <li className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-white dark:bg-black flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -321,8 +326,8 @@ const PricingPage = () => {
                     <span className="text-gray-300 dark:text-gray-700">Tư vấn phong cách độc quyền</span>
                   </li>
                 </ul>
-                
-                <button 
+
+                <button
                   onClick={() => navigate('/contact')}
                   className="w-full py-5 bg-white dark:bg-black hover:bg-gray-100 dark:hover:bg-gray-900 text-black dark:text-white font-bold text-lg shadow-2xl hover:shadow-3xl transition-all hover:scale-105 flex items-center justify-center gap-2 group"
                 >

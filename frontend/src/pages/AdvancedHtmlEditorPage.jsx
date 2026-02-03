@@ -69,7 +69,8 @@ const AdvancedHtmlEditorPage = () => {
       setSaving(true)
       await invitationService.update(invitation.id, {
         ...formData,
-        html_content: htmlCode
+        html_content: htmlCode,
+        status: invitation.status // Keep current status
       })
       toast.success('✅ Đã lưu thành công!')
     } catch (error) {
@@ -90,15 +91,24 @@ const AdvancedHtmlEditorPage = () => {
     
     try {
       setSaving(true)
-      await invitationService.update(invitation.id, {
+      
+      // Update invitation
+      const updateResponse = await invitationService.update(invitation.id, {
         ...formData,
         html_content: htmlCode,
         status: 'published'
       })
+      
+      // Publish
       await invitationService.publish(invitation.id)
+      
+      // Get updated slug
+      const updatedInvitation = updateResponse.data || invitation
+      const newSlug = updatedInvitation.slug || invitation.slug
+      
       toast.success('🎉 Đã xuất bản thiệp mời!')
       setTimeout(() => {
-        navigate(`/invitation/${invitation.slug}`)
+        navigate(`/invitation/${newSlug}`)
       }, 1500)
     } catch (error) {
       console.error('Publish failed:', error)

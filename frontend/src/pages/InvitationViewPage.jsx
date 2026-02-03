@@ -19,12 +19,12 @@ const InvitationViewPage = () => {
     try {
       setLoading(true)
       setError(null)
-      
+
       const response = await invitationService.getPublicInvitation(slug, pwd)
       const invitationData = response.data
-      
+
       console.log('📧 Invitation loaded:', invitationData)
-      
+
       // Parse design_data if it's a string
       if (typeof invitationData.design_data === 'string') {
         try {
@@ -33,10 +33,10 @@ const InvitationViewPage = () => {
           console.error('Failed to parse design_data:', e)
         }
       }
-      
+
       setInvitation(invitationData)
       setShowPasswordPrompt(false)
-      
+
       // If this is an HTML template, render it in a container
       if (invitationData.html_content) {
         console.log('🌐 Rendering HTML template...')
@@ -44,7 +44,7 @@ const InvitationViewPage = () => {
       }
     } catch (err) {
       console.error('❌ Failed to load invitation:', err)
-      
+
       if (err.message?.includes('password')) {
         setShowPasswordPrompt(true)
       } else {
@@ -57,7 +57,7 @@ const InvitationViewPage = () => {
 
   const renderHtmlTemplate = (data) => {
     let html = data.html_content || ''
-    
+
     // Replace placeholders with actual data
     html = html.replace(/\{\{title\}\}/g, data.title || 'Wedding Invitation')
     html = html.replace(/\{\{groom_name\}\}/g, data.groom_name || 'Chú Rể')
@@ -67,33 +67,33 @@ const InvitationViewPage = () => {
     html = html.replace(/\{\{event_location\}\}/g, data.event_location || '')
     html = html.replace(/\{\{event_address\}\}/g, data.event_address || '')
     html = html.replace(/\{\{music_url\}\}/g, data.music_url || '')
-    
+
     // Replace images from image_data
     if (data.image_data) {
       try {
-        const imageData = typeof data.image_data === 'string' 
-          ? JSON.parse(data.image_data) 
+        const imageData = typeof data.image_data === 'string'
+          ? JSON.parse(data.image_data)
           : data.image_data
-        
+
         console.log('🖼️ Image data:', imageData)
-        
+
         // Replace images by data-editable attribute
         Object.keys(imageData).forEach(key => {
           const imageUrl = imageData[key]
           console.log(`🔄 Replacing image ${key} with:`, imageUrl.substring(0, 50) + '...')
-          
+
           // Method 1: Replace by data-editable attribute (most reliable)
           const regex1 = new RegExp(`(<img[^>]*data-editable=["']${key}["'][^>]*src=["'])([^"']+)(["'])`, 'gi')
           const before1 = html
           html = html.replace(regex1, `$1${imageUrl}$3`)
           if (html !== before1) console.log(`✅ Replaced using data-editable="${key}"`)
-          
+
           // Method 2: Replace by src attribute containing data-editable nearby
           const regex2 = new RegExp(`(<img[^>]*)(src=["'])([^"']+)(["'][^>]*data-editable=["']${key}["'])`, 'gi')
           const before2 = html
           html = html.replace(regex2, `$1$2${imageUrl}$4`)
           if (html !== before2) console.log(`✅ Replaced using src before data-editable`)
-          
+
           // Method 3: Replace by class name (fallback)
           const regex3 = new RegExp(`(<img[^>]*class=["'][^"']*${key}[^"']*["'][^>]*src=["'])([^"']+)(["'])`, 'gi')
           const before3 = html
@@ -104,16 +104,16 @@ const InvitationViewPage = () => {
         console.error('Failed to parse image_data:', e)
       }
     }
-    
+
     // Replace custom fields from custom_field_data
     if (data.custom_field_data) {
       try {
         const customFieldData = typeof data.custom_field_data === 'string'
           ? JSON.parse(data.custom_field_data)
           : data.custom_field_data
-        
+
         console.log('✏️ Custom field data:', customFieldData)
-        
+
         Object.keys(customFieldData).forEach(key => {
           const value = customFieldData[key]
           const regex = new RegExp(`(data-editable="${key}"[^>]*>)([^<]+)(<)`, 'g')
@@ -123,15 +123,15 @@ const InvitationViewPage = () => {
         console.error('Failed to parse custom_field_data:', e)
       }
     }
-    
+
     // Inject music player if music_url is provided
     if (data.music_url) {
       console.log('🎵 Adding music player:', data.music_url)
-      
+
       // Check if it's a YouTube link
       const isYouTube = data.music_url.includes('youtube.com') || data.music_url.includes('youtu.be')
       let videoId = ''
-      
+
       if (isYouTube) {
         // Extract YouTube video ID
         if (data.music_url.includes('youtu.be/')) {
@@ -141,7 +141,7 @@ const InvitationViewPage = () => {
         }
         console.log('🎬 YouTube video ID:', videoId)
       }
-      
+
       const musicPlayer = isYouTube ? `
         <!-- YouTube Music Player -->
         <div id="music-player" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: ${data.music_autoplay ? 'none' : 'block'};">
@@ -460,13 +460,13 @@ const InvitationViewPage = () => {
           })();
         </script>
       `
-      
+
       // Inject before closing body tag
       html = html.replace('</body>', `${musicPlayer}</body>`)
     }
-    
+
     console.log('📝 Final HTML length:', html.length)
-    
+
     // Replace entire document with the HTML template
     // This is necessary because templates have their own <html>, <head>, <body> structure
     setTimeout(() => {
@@ -480,19 +480,19 @@ const InvitationViewPage = () => {
   const formatDate = (dateString) => {
     if (!dateString) return ''
     const date = new Date(dateString)
-    return date.toLocaleDateString('vi-VN', { 
+    return date.toLocaleDateString('vi-VN', {
       weekday: 'long',
-      day: '2-digit', 
-      month: '2-digit', 
-      year: 'numeric' 
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
     })
   }
 
   const formatTime = (dateString) => {
     if (!dateString) return ''
     const date = new Date(dateString)
-    return date.toLocaleTimeString('vi-VN', { 
-      hour: '2-digit', 
+    return date.toLocaleTimeString('vi-VN', {
+      hour: '2-digit',
       minute: '2-digit'
     })
   }
@@ -607,10 +607,10 @@ const InvitationViewPage = () => {
               </h1>
               {event_date && (
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {new Date(event_date).toLocaleDateString('vi-VN', { 
-                    day: '2-digit', 
-                    month: '2-digit', 
-                    year: 'numeric' 
+                  {new Date(event_date).toLocaleDateString('vi-VN', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
                   })}
                 </p>
               )}
@@ -644,12 +644,21 @@ const InvitationViewPage = () => {
       </header>
 
       {/* Canvas */}
-      <main className="py-12 px-4">
-        <div className="max-w-7xl mx-auto flex justify-center">
-          <div 
+      <main className="py-12 px-4 overflow-hidden min-h-screen flex items-start justify-center">
+        <div
+          className="relative transition-transform origin-top duration-300 ease-out"
+          style={{
+            transform: `scale(${Math.min(1, (window.innerWidth - 32) / (canvas.width || 450))})`,
+            width: `${canvas.width || 450}px`,
+            minHeight: `${canvas.height || 630}px`,
+            height: `${canvas.height || 630}px`, // Explicit height to maintain aspect ratio
+            marginBottom: `${((canvas.height || 630) * Math.min(1, (window.innerWidth - 32) / (canvas.width || 450))) - (canvas.height || 630)}px` // Negative margin to reduce white space caused by scaling
+          }}
+        >
+          <div
             style={{
-              width: `${canvas.width || 450}px`,
-              minHeight: `${canvas.height || 630}px`,
+              width: '100%',
+              height: '100%',
               background: canvas.background || '#ffffff',
               backgroundImage: canvas.backgroundImage ? `url(${canvas.backgroundImage})` : 'none',
               backgroundSize: 'cover',
@@ -662,14 +671,14 @@ const InvitationViewPage = () => {
                 key={element.id}
                 element={element}
                 isSelected={false}
-                onSelect={() => {}}
-                onUpdate={() => {}}
-                onDelete={() => {}}
-                onDuplicate={() => {}}
-                onBringForward={() => {}}
-                onSendBackward={() => {}}
-                onBringToFront={() => {}}
-                onSendToBack={() => {}}
+                onSelect={() => { }}
+                onUpdate={() => { }}
+                onDelete={() => { }}
+                onDuplicate={() => { }}
+                onBringForward={() => { }}
+                onSendBackward={() => { }}
+                onBringToFront={() => { }}
+                onSendToBack={() => { }}
                 canvasSettings={canvas}
                 isPreview={true}
               />

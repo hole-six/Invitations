@@ -72,6 +72,11 @@ class ApiService {
           // Retry original request with new token
           console.log('✅ Token refreshed, retrying request...');
           return this.request(endpoint, options);
+        } else {
+          // Refresh failed, clear tokens and throw error
+          console.error('❌ Token refresh failed, clearing auth state');
+          this.removeAuthToken();
+          throw new Error('Unauthorized access');
         }
       }
 

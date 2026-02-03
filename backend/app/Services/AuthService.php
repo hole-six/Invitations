@@ -98,14 +98,25 @@ class AuthService
     
     private function generateTokens(int $userId): array
     {
+        // Get user role from database
+        $user = $this->userRepo->findById($userId);
+        $userRole = $user ? $user->role : 'user';
+        
         $accessToken = JWT::encode(
-            ['user_id' => $userId],
+            [
+                'user_id' => $userId,
+                'role' => $userRole
+            ],
             $this->config['jwt']['secret'],
             $this->config['jwt']['expiration']
         );
         
         $refreshToken = JWT::encode(
-            ['user_id' => $userId, 'type' => 'refresh'],
+            [
+                'user_id' => $userId,
+                'role' => $userRole,
+                'type' => 'refresh'
+            ],
             $this->config['jwt']['secret'],
             $this->config['jwt']['refresh_expiration']
         );

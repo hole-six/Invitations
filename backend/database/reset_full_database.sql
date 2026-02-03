@@ -246,4 +246,18 @@ SELECT COUNT(*) as total_templates FROM templates;
 SELECT COUNT(*) as total_invitations FROM invitations;
 ALTER TABLE `templates` 
 ADD COLUMN `template_type` enum('canvas','html') DEFAULT 'canvas' AFTER `is_premium`,
-ADD COLUMN `html_content` longtext DEFAULT NULL AFTER `template_type`;
+ADD COLUMN `html_template` longtext DEFAULT NULL AFTER `template_type`;
+
+-- Increase max_allowed_packet for large HTML content
+SET GLOBAL max_allowed_packet=67108864; -- 64MB
+
+-- Show current value
+SHOW VARIABLES LIKE 'max_allowed_packet';
+
+SELECT '✅ max_allowed_packet increased to 64MB' as status;
+SET GLOBAL max_allowed_packet = 67108864;
+SHOW VARIABLES LIKE 'max_allowed_packet';
+
+
+
+

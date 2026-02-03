@@ -1,0 +1,132 @@
+{
+  "source_file": "generate-html\\mau35.html",
+  "total_elements": 17,
+  "stats": {
+    "total_elements": 17,
+    "text_elements": 17,
+    "image_elements": 0,
+    "video_elements": 0,
+    "other_elements": 0
+  },
+  "elements": [
+    {
+      "id": "musicToggle",
+      "type": "text",
+      "content": "Made by Cinelove",
+      "method": "id_pattern",
+      "column_name": "love_text"
+    },
+    {
+      "id": "musicIcon",
+      "type": "text",
+      "content": "Made by Cinelove",
+      "method": "id_pattern",
+      "column_name": "love_text_2"
+    },
+    {
+      "id": "display-save-date",
+      "type": "text",
+      "content": "BÍCH THỦY",
+      "method": "id_pattern",
+      "column_name": "text_display-save-date"
+    },
+    {
+      "id": "display-time",
+      "type": "text",
+      "content": "Vào lúc",
+      "method": "id_pattern",
+      "column_name": "and_text"
+    },
+    {
+      "id": "display-day",
+      "type": "text",
+      "content": "12:00",
+      "method": "id_pattern",
+      "column_name": "text_display-day"
+    },
+    {
+      "id": "display-month-year",
+      "type": "text",
+      "content": "Ngày",
+      "method": "id_pattern",
+      "column_name": "event_date"
+    },
+    {
+      "id": "processing-wedding",
+      "type": "text",
+      "content": "Tháng/Năm",
+      "method": "id_pattern",
+      "column_name": "event_month"
+    },
+    {
+      "id": "countdown-container",
+      "type": "text",
+      "content": "Tháng/Năm",
+      "method": "id_pattern",
+      "column_name": "event_month_2"
+    },
+    {
+      "id": "display-weekday-text",
+      "type": "text",
+      "content": "Đã tổ chức",
+      "method": "id_pattern",
+      "column_name": "text_display-weekday-text"
+    },
+    {
+      "id": "rsvpForm",
+      "type": "text",
+      "content": "Mong bạn đến chia vui cùng chúng mình",
+      "method": "id_pattern",
+      "column_name": "text_rsvpform"
+    },
+    {
+      "id": "audio",
+      "type": "text",
+      "content": "Thank you!",
+      "method": "id_pattern",
+      "column_name": "text_audio"
+    },
+    {
+      "id": "eJOY__extension_ai_adv_root",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_ai_adv_root"
+    },
+    {
+      "id": "mask0_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask0_427_34"
+    },
+    {
+      "id": "mask1_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask1_427_34"
+    },
+    {
+      "id": "mask2_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask2_427_34"
+    },
+    {
+      "id": "eJOY__extension_root",
+      "type": "text",
+      "content": "0 / 10",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_root"
+    },
+    {
+      "id": "eJOY__extension_shadow",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_shadow"
+    }
+  ]
+}

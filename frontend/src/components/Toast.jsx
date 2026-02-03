@@ -10,7 +10,7 @@ const Toast = ({ toast }) => {
     setIsExiting(true)
     setTimeout(() => {
       removeToast(toast.id)
-    }, 400)
+    }, 300)
   }
 
   useEffect(() => {
@@ -39,44 +39,64 @@ const Toast = ({ toast }) => {
     switch (toast.type) {
       case 'success':
         return {
-          gradient: 'from-emerald-500 to-teal-500',
-          bgGradient: 'from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30',
-          borderColor: 'border-emerald-200 dark:border-emerald-800',
-          iconBg: 'bg-gradient-to-br from-emerald-500 to-teal-500',
-          icon: 'check_circle',
-          textColor: 'text-emerald-900 dark:text-emerald-100',
-          progressBg: 'bg-gradient-to-r from-emerald-500 to-teal-500'
+          bg: 'bg-white dark:bg-gray-900',
+          border: 'border-l-4 border-green-500',
+          icon: (
+            <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          ),
+          iconBg: 'bg-green-50 dark:bg-green-900/20',
+          title: 'Thành công',
+          titleColor: 'text-green-800 dark:text-green-400',
+          messageColor: 'text-gray-700 dark:text-gray-300',
+          progressBg: 'bg-green-500'
         }
       case 'error':
         return {
-          gradient: 'from-rose-500 to-pink-500',
-          bgGradient: 'from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/30',
-          borderColor: 'border-rose-200 dark:border-rose-800',
-          iconBg: 'bg-gradient-to-br from-rose-500 to-pink-500',
-          icon: 'cancel',
-          textColor: 'text-rose-900 dark:text-rose-100',
-          progressBg: 'bg-gradient-to-r from-rose-500 to-pink-500'
+          bg: 'bg-white dark:bg-gray-900',
+          border: 'border-l-4 border-red-500',
+          icon: (
+            <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ),
+          iconBg: 'bg-red-50 dark:bg-red-900/20',
+          title: 'Lỗi',
+          titleColor: 'text-red-800 dark:text-red-400',
+          messageColor: 'text-gray-700 dark:text-gray-300',
+          progressBg: 'bg-red-500'
         }
       case 'warning':
         return {
-          gradient: 'from-amber-500 to-orange-500',
-          bgGradient: 'from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30',
-          borderColor: 'border-amber-200 dark:border-amber-800',
-          iconBg: 'bg-gradient-to-br from-amber-500 to-orange-500',
-          icon: 'warning',
-          textColor: 'text-amber-900 dark:text-amber-100',
-          progressBg: 'bg-gradient-to-r from-amber-500 to-orange-500'
+          bg: 'bg-white dark:bg-gray-900',
+          border: 'border-l-4 border-yellow-500',
+          icon: (
+            <svg className="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          ),
+          iconBg: 'bg-yellow-50 dark:bg-yellow-900/20',
+          title: 'Cảnh báo',
+          titleColor: 'text-yellow-800 dark:text-yellow-400',
+          messageColor: 'text-gray-700 dark:text-gray-300',
+          progressBg: 'bg-yellow-500'
         }
       case 'info':
       default:
         return {
-          gradient: 'from-blue-500 to-indigo-500',
-          bgGradient: 'from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30',
-          borderColor: 'border-blue-200 dark:border-blue-800',
-          iconBg: 'bg-gradient-to-br from-blue-500 to-indigo-500',
-          icon: 'info',
-          textColor: 'text-blue-900 dark:text-blue-100',
-          progressBg: 'bg-gradient-to-r from-blue-500 to-indigo-500'
+          bg: 'bg-white dark:bg-gray-900',
+          border: 'border-l-4 border-blue-500',
+          icon: (
+            <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          ),
+          iconBg: 'bg-blue-50 dark:bg-blue-900/20',
+          title: 'Thông báo',
+          titleColor: 'text-blue-800 dark:text-blue-400',
+          messageColor: 'text-gray-700 dark:text-gray-300',
+          progressBg: 'bg-blue-500'
         }
     }
   }
@@ -86,39 +106,30 @@ const Toast = ({ toast }) => {
   return (
     <div
       className={`
-        relative overflow-hidden rounded-2xl shadow-2xl
-        bg-gradient-to-br ${config.bgGradient}
-        border-2 ${config.borderColor}
-        backdrop-blur-xl
+        ${config.bg} ${config.border}
+        rounded-lg shadow-lg
+        border border-gray-200 dark:border-gray-700
         min-w-[380px] max-w-md
-        transition-all duration-400 ease-out
+        transition-all duration-300 ease-out
         ${isExiting 
-          ? 'opacity-0 translate-x-full scale-90' 
-          : 'opacity-100 translate-x-0 scale-100 animate-toast-in'
+          ? 'opacity-0 translate-x-8 scale-95' 
+          : 'opacity-100 translate-x-0 scale-100'
         }
       `}
-      style={{
-        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
-      }}
     >
-      {/* Decorative gradient overlay */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${config.gradient} opacity-5`}></div>
-      
       {/* Content */}
-      <div className="relative flex items-start gap-4 p-5">
-        {/* Icon with glow effect */}
-        <div className="relative shrink-0">
-          <div className={`absolute inset-0 ${config.iconBg} blur-xl opacity-40 animate-pulse`}></div>
-          <div className={`relative w-12 h-12 rounded-xl ${config.iconBg} flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform`}>
-            <span className="material-symbols-outlined text-white text-2xl font-bold">
-              {config.icon}
-            </span>
-          </div>
+      <div className="flex items-start gap-3 p-4">
+        {/* Icon */}
+        <div className={`${config.iconBg} rounded-lg p-2 flex-shrink-0`}>
+          {config.icon}
         </div>
 
         {/* Message */}
-        <div className="flex-1 min-w-0 pt-1">
-          <p className={`text-sm font-semibold leading-relaxed ${config.textColor}`}>
+        <div className="flex-1 min-w-0 pt-0.5">
+          <p className={`text-sm font-semibold ${config.titleColor} mb-0.5`}>
+            {config.title}
+          </p>
+          <p className={`text-sm ${config.messageColor} leading-relaxed`}>
             {toast.message}
           </p>
         </div>
@@ -126,33 +137,23 @@ const Toast = ({ toast }) => {
         {/* Close Button */}
         <button
           onClick={handleClose}
-          className={`
-            shrink-0 w-8 h-8 rounded-lg
-            flex items-center justify-center
-            hover:bg-white/50 dark:hover:bg-black/20
-            transition-all duration-200
-            group
-          `}
+          className="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
         >
-          <span className="material-symbols-outlined text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 text-lg">
-            close
-          </span>
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+          </svg>
         </button>
       </div>
 
       {/* Progress Bar */}
       {toast.duration > 0 && (
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/5 dark:bg-white/5">
+        <div className="h-1 bg-gray-100 dark:bg-gray-800">
           <div
-            className={`h-full ${config.progressBg} transition-all duration-50 ease-linear shadow-lg`}
+            className={`h-full ${config.progressBg} transition-all duration-50 ease-linear`}
             style={{ width: `${progress}%` }}
           />
         </div>
       )}
-
-      {/* Decorative corner accents */}
-      <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${config.gradient} opacity-10 blur-2xl`}></div>
-      <div className={`absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr ${config.gradient} opacity-10 blur-2xl`}></div>
     </div>
   )
 }
@@ -161,7 +162,7 @@ const ToastContainer = () => {
   const { toasts } = useToast()
 
   return (
-    <div className="fixed top-20 right-6 z-[9999] flex flex-col gap-4 pointer-events-none">
+    <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none">
       {toasts.map(toast => (
         <div key={toast.id} className="pointer-events-auto">
           <Toast toast={toast} />

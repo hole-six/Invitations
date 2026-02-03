@@ -28,7 +28,9 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (err) {
       console.error('Auth check failed:', err);
+      // If auth check fails, clear auth state and logout
       authService.logout();
+      setUser(null);
     } finally {
       setLoading(false);
     }

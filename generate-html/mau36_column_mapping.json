@@ -1,0 +1,269 @@
+{
+  "source_file": "generate-html\\mau36.html",
+  "total_elements": 36,
+  "stats": {
+    "total_elements": 36,
+    "text_elements": 35,
+    "image_elements": 1,
+    "video_elements": 0,
+    "other_elements": 0
+  },
+  "elements": [
+    {
+      "id": "musicToggle",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_musictoggle"
+    },
+    {
+      "id": "musicIcon",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_musicicon"
+    },
+    {
+      "id": "display-weekday",
+      "type": "text",
+      "content": "Chủ Nhật",
+      "method": "id_pattern",
+      "column_name": "text_display-weekday"
+    },
+    {
+      "id": "display-day",
+      "type": "text",
+      "content": "Chủ Nhật",
+      "method": "id_pattern",
+      "column_name": "text_display-day"
+    },
+    {
+      "id": "display-month-year",
+      "type": "text",
+      "content": "Chủ Nhật",
+      "method": "id_pattern",
+      "column_name": "text_display-month-year"
+    },
+    {
+      "id": "display-time",
+      "type": "text",
+      "content": "Tháng 12",
+      "method": "id_pattern",
+      "column_name": "event_month"
+    },
+    {
+      "id": "groom-time",
+      "type": "text",
+      "content": "Chỉ Đường",
+      "method": "id_pattern",
+      "column_name": "text_groom-time"
+    },
+    {
+      "id": "groom-date",
+      "type": "text",
+      "content": "Chỉ Đường",
+      "method": "id_pattern",
+      "column_name": "text_groom-date"
+    },
+    {
+      "id": "groom-weekday",
+      "type": "text",
+      "content": "11h00",
+      "method": "id_pattern",
+      "column_name": "text_groom-weekday"
+    },
+    {
+      "id": "groom-lunar",
+      "type": "text",
+      "content": "11h00",
+      "method": "id_pattern",
+      "column_name": "text_groom-lunar"
+    },
+    {
+      "id": "bride-time",
+      "type": "text",
+      "content": "Chỉ Đường",
+      "method": "id_pattern",
+      "column_name": "text_bride-time"
+    },
+    {
+      "id": "bride-date",
+      "type": "text",
+      "content": "Chỉ Đường",
+      "method": "id_pattern",
+      "column_name": "text_bride-date"
+    },
+    {
+      "id": "bride-weekday",
+      "type": "text",
+      "content": "09h00",
+      "method": "id_pattern",
+      "column_name": "text_bride-weekday"
+    },
+    {
+      "id": "bride-lunar",
+      "type": "text",
+      "content": "09h00",
+      "method": "id_pattern",
+      "column_name": "text_bride-lunar"
+    },
+    {
+      "id": "lunar-date-banner",
+      "type": "text",
+      "content": "Nhằm ngày 10 tháng 11 năm Ất Tỵ",
+      "method": "id_pattern",
+      "column_name": "event_date"
+    },
+    {
+      "id": "countdown-minutes",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_countdown-minutes"
+    },
+    {
+      "id": "countdown-seconds",
+      "type": "text",
+      "content": "phút",
+      "method": "id_pattern",
+      "column_name": "text_countdown-seconds"
+    },
+    {
+      "id": "rsvpForm",
+      "type": "text",
+      "content": "Xác nhận tham dự",
+      "method": "id_pattern",
+      "column_name": "confirm_button"
+    },
+    {
+      "id": "guestName",
+      "type": "text",
+      "content": "Xác nhận tham dự",
+      "method": "id_pattern",
+      "column_name": "confirm_button_2"
+    },
+    {
+      "id": "cf-chl-widget-7ndc6_response",
+      "type": "text",
+      "content": "Album ảnh cưới",
+      "method": "id_pattern",
+      "column_name": "album_title"
+    },
+    {
+      "id": "successModal",
+      "type": "text",
+      "content": "Sự hiện diện của bạn làm ngày hôm",
+      "method": "id_pattern",
+      "column_name": "event_date_2"
+    },
+    {
+      "id": "successModalBackdrop",
+      "type": "text",
+      "content": "Trân trọng cảm ơn",
+      "method": "id_pattern",
+      "column_name": "sincerely_text"
+    },
+    {
+      "id": "successModalTitle",
+      "type": "text",
+      "content": "Trân trọng cảm ơn",
+      "method": "id_pattern",
+      "column_name": "sincerely_text_2"
+    },
+    {
+      "id": "successModalGuest",
+      "type": "text",
+      "content": "Khách mời",
+      "method": "id_pattern",
+      "column_name": "text_successmodalguest"
+    },
+    {
+      "id": "successModalSubtitle",
+      "type": "text",
+      "content": "Khách mời",
+      "method": "id_pattern",
+      "column_name": "text_successmodalsubtitle"
+    },
+    {
+      "id": "successModalClose",
+      "type": "text",
+      "content": "Đừng quên:",
+      "method": "id_pattern",
+      "column_name": "text_successmodalclose"
+    },
+    {
+      "id": "eJOY__extension_ai_adv_root",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_ai_adv_root"
+    },
+    {
+      "id": "mask0_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask0_427_34"
+    },
+    {
+      "id": "mask1_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask1_427_34"
+    },
+    {
+      "id": "mask2_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask2_427_34"
+    },
+    {
+      "id": "eJOY__extension_root",
+      "type": "text",
+      "content": "0 / 10",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_root"
+    },
+    {
+      "id": "eJOY__extension_shadow",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_shadow"
+    },
+    {
+      "id": "rsvpSubmit",
+      "type": "text",
+      "content": "Gửi xác nhận",
+      "method": "dom_tree",
+      "tag": "button",
+      "column_name": "confirm_button_3"
+    },
+    {
+      "id": "countdown-days",
+      "type": "text",
+      "content": "00",
+      "method": "text_node",
+      "tag": "div",
+      "column_name": "text_countdown-days"
+    },
+    {
+      "id": "countdown-hours",
+      "type": "text",
+      "content": "00",
+      "method": "text_node",
+      "tag": "div",
+      "column_name": "text_countdown-hours"
+    },
+    {
+      "id": "countdown-minutes",
+      "type": "text",
+      "content": "00",
+      "method": "text_node",
+      "tag": "div",
+      "column_name": "text_countdown-minutes"
+    }
+  ]
+}

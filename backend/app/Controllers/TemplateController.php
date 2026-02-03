@@ -74,8 +74,23 @@ class TemplateController
             return;
         }
         
-        // Increment views
-        $db->query('UPDATE templates SET views_count = views_count + 1 WHERE id = ?', [$id]);
+        // If html_template is a file path, load the content
+        if (isset($template['html_template']) && strpos($template['html_template'], 'storage/templates/') === 0) {
+            $filepath = __DIR__ . '/../../' . $template['html_template'];
+            if (file_exists($filepath)) {
+                $template['html_content'] = file_get_contents($filepath);
+            }
+        } else if (isset($template['html_template'])) {
+            // If stored in DB, use it directly
+            $template['html_content'] = $template['html_template'];
+        }
+        
+        // Increment usage count if column exists
+        try {
+            $db->query('UPDATE templates SET usage_count = usage_count + 1 WHERE id = ?', [$id]);
+        } catch (\Exception $e) {
+            // Ignore if column doesn't exist
+        }
         
         Response::success($template);
     }
@@ -108,6 +123,38 @@ class TemplateController
         // Convert tags array to JSON if provided
         if (isset($data['tags']) && is_array($data['tags'])) {
             $data['tags'] = json_encode($data['tags']);
+        }
+        
+        // Handle large HTML content - store as file if too large
+        $htmlContent = $data['html_content'] ?? '';
+        $htmlContentSize = strlen($htmlContent);
+        $maxDbSize = 1048576; // 1MB - store in DB if smaller, as file if larger
+        
+        if ($htmlContentSize > $maxDbSize && !empty($htmlContent)) {
+            // Store HTML as file
+            $storageDir = __DIR__ . '/../../storage/templates';
+            if (!is_dir($storageDir)) {
+                mkdir($storageDir, 0755, true);
+            }
+            
+            $filename = $data['uuid'] . '.html';
+            $filepath = $storageDir . '/' . $filename;
+            
+            if (file_put_contents($filepath, $htmlContent) !== false) {
+                // Store file path instead of content
+                $data['html_template'] = 'storage/templates/' . $filename;
+                unset($data['html_content']); // Remove from DB insert
+                error_log("Large HTML template saved to file: $filename (" . round($htmlContentSize/1024/1024, 2) . " MB)");
+            } else {
+                Response::error('Failed to save HTML template file', 500);
+                return;
+            }
+        } else {
+            // Store in database (rename field)
+            if (isset($data['html_content'])) {
+                $data['html_template'] = $data['html_content'];
+                unset($data['html_content']);
+            }
         }
         
         // Convert design_data to JSON if provided

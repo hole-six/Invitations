@@ -27,11 +27,11 @@ class Database
     {
         $dsn = sprintf(
             '%s:host=%s;port=%s;dbname=%s;charset=%s',
-            $this->config['driver'],
+            $this->config['driver'] ?? 'mysql',
             $this->config['host'],
-            $this->config['port'],
+            $this->config['port'] ?? 3306,
             $this->config['database'],
-            $this->config['charset']
+            $this->config['charset'] ?? 'utf8mb4'
         );
         
         try {

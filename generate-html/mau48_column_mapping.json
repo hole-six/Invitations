@@ -1,0 +1,69 @@
+{
+  "source_file": "generate-html\\mau48.html",
+  "total_elements": 8,
+  "stats": {
+    "total_elements": 8,
+    "text_elements": 8,
+    "image_elements": 0,
+    "video_elements": 0,
+    "other_elements": 0
+  },
+  "elements": [
+    {
+      "id": "_next-ga",
+      "type": "text",
+      "content": "Mẫu \"Phương Hà &amp; Tuấn Hải\" | Thiệp cưới online | Tạo thiệp cưới điện tử | vesey.vn",
+      "method": "id_pattern",
+      "column_name": "text__next-ga"
+    },
+    {
+      "id": "__next-route-announcer__",
+      "type": "text",
+      "content": "Mẫu \"Phương Hà &amp; Tuấn Hải\" | Thiệp cưới online | Tạo thiệp cưới điện tử | vesey.vn",
+      "method": "id_pattern",
+      "column_name": "text___next-route-announcer__"
+    },
+    {
+      "id": "eJOY__extension_ai_adv_root",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_ai_adv_root"
+    },
+    {
+      "id": "mask0_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask0_427_34"
+    },
+    {
+      "id": "mask1_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask1_427_34"
+    },
+    {
+      "id": "mask2_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask2_427_34"
+    },
+    {
+      "id": "eJOY__extension_root",
+      "type": "text",
+      "content": "0 / 10",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_root"
+    },
+    {
+      "id": "eJOY__extension_shadow",
+      "type": "text",
+      "content": "Từ điển",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_shadow"
+    }
+  ]
+}

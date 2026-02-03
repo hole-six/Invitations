@@ -37,10 +37,28 @@ class InvitationRepository
     
     public function findPublicBySlug(string $slug): ?Invitation
     {
+        // Debug: Log the query
+        error_log("Finding public invitation with slug: {$slug}");
+        
+        // Find invitation by slug (published OR draft for preview)
         $data = $this->db->fetchOne(
-            'SELECT * FROM invitations WHERE slug = ? AND status = ? AND visibility IN (?, ?)',
-            [$slug, 'published', 'public', 'password']
+            'SELECT * FROM invitations WHERE slug = ? AND visibility IN (?, ?)',
+            [$slug, 'public', 'password']
         );
+        
+        // Debug: If not found, check if invitation exists with any status
+        if (!$data) {
+            $anyStatus = $this->db->fetchOne(
+                'SELECT slug, status, visibility FROM invitations WHERE slug = ?',
+                [$slug]
+            );
+            if ($anyStatus) {
+                error_log("Invitation exists but visibility not public/password: " . json_encode($anyStatus));
+            } else {
+                error_log("Invitation does not exist with slug: {$slug}");
+            }
+        }
+        
         return $data ? new Invitation($data) : null;
     }
     
@@ -86,12 +104,32 @@ class InvitationRepository
     
     public function update(int $id, array $data): bool
     {
+        // Log incoming data for debugging
+        error_log("Update invitation $id with data: " . json_encode($data));
+        
         // Convert design_data array to JSON
         if (isset($data['design_data']) && is_array($data['design_data'])) {
             $data['design_data'] = json_encode($data['design_data']);
         }
         
-        return $this->db->update('invitations', $data, 'id = ?', [$id]) > 0;
+        // Convert image_data array to JSON if needed
+        if (isset($data['image_data']) && is_array($data['image_data'])) {
+            $data['image_data'] = json_encode($data['image_data']);
+        }
+        
+        // Convert custom_field_data array to JSON if needed
+        if (isset($data['custom_field_data']) && is_array($data['custom_field_data'])) {
+            $data['custom_field_data'] = json_encode($data['custom_field_data']);
+        }
+        
+        try {
+            $result = $this->db->update('invitations', $data, 'id = ?', [$id]);
+            error_log("Update result: " . ($result > 0 ? 'success' : 'no rows affected'));
+            return $result > 0;
+        } catch (\Exception $e) {
+            error_log("Update error: " . $e->getMessage());
+            throw $e;
+        }
     }
     
     public function delete(int $id): bool

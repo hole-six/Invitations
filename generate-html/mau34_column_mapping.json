@@ -1,0 +1,146 @@
+{
+  "source_file": "generate-html\\mau34.html",
+  "total_elements": 19,
+  "stats": {
+    "total_elements": 19,
+    "text_elements": 19,
+    "image_elements": 0,
+    "video_elements": 0,
+    "other_elements": 0
+  },
+  "elements": [
+    {
+      "id": "musicToggle",
+      "type": "text",
+      "content": "svg{ pointer-events: none; color: #0CB1C7 }",
+      "method": "id_pattern",
+      "column_name": "text_musictoggle"
+    },
+    {
+      "id": "musicIcon",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_musicicon"
+    },
+    {
+      "id": "display-save-date",
+      "type": "text",
+      "content": "Save The Date",
+      "method": "id_pattern",
+      "column_name": "save_the_date"
+    },
+    {
+      "id": "display-time",
+      "type": "text",
+      "content": "Vào lúc",
+      "method": "id_pattern",
+      "column_name": "and_text"
+    },
+    {
+      "id": "display-day",
+      "type": "text",
+      "content": "Vào lúc",
+      "method": "id_pattern",
+      "column_name": "and_text_2"
+    },
+    {
+      "id": "display-month-year",
+      "type": "text",
+      "content": "Ngày",
+      "method": "id_pattern",
+      "column_name": "event_date"
+    },
+    {
+      "id": "countdown-container",
+      "type": "text",
+      "content": "Tháng / Năm",
+      "method": "id_pattern",
+      "column_name": "event_month"
+    },
+    {
+      "id": "display-weekday-text",
+      "type": "text",
+      "content": "Đã tổ chức",
+      "method": "id_pattern",
+      "column_name": "text_display-weekday-text"
+    },
+    {
+      "id": "calendar-month-label",
+      "type": "text",
+      "content": "Tháng 11",
+      "method": "id_pattern",
+      "column_name": "event_month_2"
+    },
+    {
+      "id": "calendar-year-label",
+      "type": "text",
+      "content": "Tháng 11",
+      "method": "id_pattern",
+      "column_name": "event_month_3"
+    },
+    {
+      "id": "calendar-grid",
+      "type": "text",
+      "content": "Thu",
+      "method": "id_pattern",
+      "column_name": "weekday"
+    },
+    {
+      "id": "rsvpForm",
+      "type": "text",
+      "content": "Xác nhận tham dự",
+      "method": "id_pattern",
+      "column_name": "confirm_button"
+    },
+    {
+      "id": "audio",
+      "type": "text",
+      "content": "Sự hiện diện của quý vị là niềm vui và vinh hạnh cho gia đình chúng tôi.",
+      "method": "id_pattern",
+      "column_name": "and_text_3"
+    },
+    {
+      "id": "eJOY__extension_ai_adv_root",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_ai_adv_root"
+    },
+    {
+      "id": "mask0_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask0_427_34"
+    },
+    {
+      "id": "mask1_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask1_427_34"
+    },
+    {
+      "id": "mask2_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask2_427_34"
+    },
+    {
+      "id": "eJOY__extension_root",
+      "type": "text",
+      "content": "0 / 10",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_root"
+    },
+    {
+      "id": "eJOY__extension_shadow",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_shadow"
+    }
+  ]
+}

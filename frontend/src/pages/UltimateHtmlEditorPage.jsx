@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import invitationService from '../services/invitation.service'
+import authService from '../services/auth.service'
 import { useToast } from '../context/ToastContext'
 
 // Custom debounce hook for smooth preview
@@ -30,12 +31,27 @@ const UltimateHtmlEditorPage = () => {
   const [invitation, setInvitation] = useState(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [showPublishConfirm, setShowPublishConfirm] = useState(false)
+
+  // Mobile Responsive State
+  const [activeMobileTab, setActiveMobileTab] = useState('preview')
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // HISTORY MANAGEMENT
+  const [history, setHistory] = useState([])
+  const [historyIndex, setHistoryIndex] = useState(-1)
+  const isUndoRedoAction = useRef(false) // Flag to prevent pushing history during undo/redo
 
   const [htmlCode, setHtmlCode] = useState('')
   const [previewHtml, setPreviewHtml] = useState('')
-
-  // Ref for preview iframe
-  const iframeRef = useRef(null)
+  const [imageData, setImageData] = useState({})
+  const [customFieldData, setCustomFieldData] = useState({})
 
   const [formData, setFormData] = useState({
     title: '',
@@ -49,6 +65,215 @@ const UltimateHtmlEditorPage = () => {
     music_autoplay: true
   })
 
+  // Debounce Hooks
+  const debouncedFormData = useDebounce(formData, 500)
+  const debouncedImageData = useDebounce(imageData, 500)
+  const debouncedCustomFieldData = useDebounce(customFieldData, 500)
+
+  // Push to history when state stabilizes
+  useEffect(() => {
+    // Skip if this effect update was caused by undo/redo itself
+    if (isUndoRedoAction.current) {
+      isUndoRedoAction.current = false
+      return
+    }
+
+    // Initial Load Guard
+    if (!invitation) return
+
+    const currentState = {
+      formData: debouncedFormData,
+      imageData: debouncedImageData,
+      customFieldData: debouncedCustomFieldData
+    }
+
+    // Get current head
+    const currentHead = history[historyIndex]
+
+    // Only push if different (JSON compare is safe here)
+    if (JSON.stringify(currentHead) !== JSON.stringify(currentState)) {
+      console.log("📸 Saving History Snapshot", historyIndex + 1)
+      const newHistory = history.slice(0, historyIndex + 1)
+      newHistory.push(currentState)
+
+      // Limit history size to 50
+      if (newHistory.length > 50) newHistory.shift()
+
+      setHistory(newHistory)
+      setHistoryIndex(newHistory.length - 1)
+    }
+  }, [debouncedFormData, debouncedImageData, debouncedCustomFieldData, invitation])
+
+  const performUndo = useCallback(() => {
+    if (historyIndex > 0) {
+      console.log("↺ Undoing...")
+      isUndoRedoAction.current = true // Set flag to ignore next debounce update
+      const prevState = history[historyIndex - 1]
+      setHistoryIndex(prev => prev - 1)
+
+      setFormData(prevState.formData)
+      setImageData(prevState.imageData)
+      setCustomFieldData(prevState.customFieldData)
+
+      // Force Iframe Refresh
+      if (lastRenderedHtmlRef.current) lastRenderedHtmlRef.current = ''
+    }
+  }, [history, historyIndex])
+
+  const performRedo = useCallback(() => {
+    if (historyIndex < history.length - 1) {
+      console.log("↻ Redoing...")
+      isUndoRedoAction.current = true
+      const nextState = history[historyIndex + 1]
+      setHistoryIndex(prev => prev + 1)
+
+      setFormData(nextState.formData)
+      setImageData(nextState.imageData)
+      setCustomFieldData(nextState.customFieldData)
+
+      // Force Iframe Refresh
+      if (lastRenderedHtmlRef.current) lastRenderedHtmlRef.current = ''
+    }
+  }, [history, historyIndex])
+
+  // Keyboard Shortcuts (Main Window)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+        e.preventDefault()
+        if (e.shiftKey) {
+          performRedo()
+        } else {
+          performUndo()
+        }
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+        e.preventDefault()
+        performRedo()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [performUndo, performRedo])
+
+  // Ref for preview iframe
+  const iframeRef = useRef(null)
+  const lastRenderedHtmlRef = useRef('')
+
+  // WYSIWYG Editor - Direct Edit Only (No Drag & Drop)
+  useEffect(() => {
+    const iframe = iframeRef.current
+    if (!iframe || !previewHtml) return
+
+    const doc = iframe.contentDocument || iframe.contentWindow.document
+    const win = iframe.contentWindow
+    if (!doc || !win) return
+
+    // 1. Check if user is currently editing (User Interaction Shield)
+    // If they are typing, we DO NOT want to re-render the iframe, 
+    // because that would kill their focus and cursor position.
+    // The visual update will happen naturally when they Blur/Click away.
+    if (doc.activeElement &&
+      (doc.activeElement.getAttribute('contenteditable') === 'true' ||
+        doc.activeElement.tagName === 'INPUT' ||
+        doc.activeElement.tagName === 'TEXTAREA')) {
+      // Only skip if the content is functionally different to avoid stale locks?
+      // Ideally we just skip. The user is "busy".
+      return
+    }
+
+    // 2. Diff Check: Don't re-render if content is identical
+    if (previewHtml === lastRenderedHtmlRef.current) {
+      return
+    }
+
+    // 3. Render Procedure
+    const scrollX = win.scrollX || 0
+    const scrollY = win.scrollY || 0
+
+    doc.open()
+    doc.write(previewHtml)
+    doc.close()
+
+    // Update Ref
+    lastRenderedHtmlRef.current = previewHtml
+
+    // 4. Inject Styles & Listeners
+    try {
+      const style = doc.createElement('style')
+      style.textContent = `
+          [data-editable] {
+            cursor: text;
+            transition: all 0.2s;
+            position: relative;
+          }
+          [data-editable]:hover {
+            outline: 2px solid #a855f7 !important; /* Purple for Hover */
+            background: rgba(168, 85, 247, 0.05);
+            z-index: 10;
+          }
+          [data-editable]:focus {
+            outline: 2px solid #f59e0b !important; /* Amber/Yellow for Active Edit */
+            background: rgba(251, 191, 36, 0.05);
+            z-index: 20;
+            min-width: 1px;
+          }
+        `
+      doc.head.appendChild(style)
+
+      // Attach Listeners
+      doc.querySelectorAll('[data-editable]').forEach(el => {
+        const fieldId = el.getAttribute('data-editable')
+
+        // Click to edit
+        el.addEventListener('click', (e) => {
+          e.stopPropagation() // Stop bubbling
+          if (!el.isContentEditable) {
+            e.preventDefault()
+            el.contentEditable = true
+            el.focus()
+          }
+        })
+
+        // Blur to save
+        el.addEventListener('blur', () => {
+          if (el.isContentEditable) {
+            el.contentEditable = false
+            const newContent = el.innerText
+            // Send update to parent logic
+            setCustomFieldData(prev => ({ ...prev, [fieldId]: newContent }))
+          }
+        })
+      })
+
+      // 5. Global Key Listener for Undo/Redo inside Iframe
+      doc.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'y')) {
+          e.preventDefault();
+          window.parent.postMessage({
+            type: 'KEY_COMMAND',
+            key: e.key,
+            ctrlKey: e.ctrlKey,
+            metaKey: e.metaKey,
+            shiftKey: e.shiftKey
+          }, '*');
+        }
+      })
+
+    } catch (err) {
+      console.error("Iframe setup error", err)
+    }
+
+    // Restore Scroll
+    try {
+      if (scrollX || scrollY) win.scrollTo(scrollX, scrollY)
+    } catch (e) { }
+
+  }, [previewHtml])
+
+
+  // (Removed Duplicate State Declarations - They are now moved to top for history access)
+
   // Function to scroll preview to specific field
   const scrollPreviewToField = useCallback((fieldName) => {
     if (!iframeRef.current) return
@@ -57,6 +282,9 @@ const UltimateHtmlEditorPage = () => {
       const iframeDoc = iframeRef.current.contentDocument || iframeRef.current.contentWindow.document
       if (!iframeDoc) return
 
+      let element = null
+
+      // 1. Try predefined selector map
       const selectorMap = {
         'title': '[data-field="title"], h1, .title',
         'groom_name': '[data-field="groom_name"], .groom-name, .groom',
@@ -67,111 +295,334 @@ const UltimateHtmlEditorPage = () => {
         'event_address': '[data-field="event_address"], .event-address, .address'
       }
 
-      const selector = selectorMap[fieldName]
-      if (!selector) return
+      if (selectorMap[fieldName]) {
+        const selectors = selectorMap[fieldName].split(', ')
+        for (const sel of selectors) {
+          element = iframeDoc.querySelector(sel)
+          if (element) break
+        }
+      }
 
-      const selectors = selector.split(', ')
-      let element = null
+      // 2. If not found, try data-editable attribute (Generated by Mapper Tool)
+      if (!element) {
+        element = iframeDoc.querySelector(`[data-editable="${fieldName}"]`)
+      }
 
-      for (const sel of selectors) {
-        element = iframeDoc.querySelector(sel)
-        if (element) break
+      // 3. Try data-image-editable attribute
+      if (!element) {
+        element = iframeDoc.querySelector(`[data-image-editable="${fieldName}"]`)
+      }
+
+      // 4. Try scanning for ID match (Direct match or case-insensitive)
+      if (!element) {
+        element = iframeDoc.getElementById(fieldName)
+      }
+
+      // 5. Try partial ID match or class match for images
+      if (!element) {
+        // Try finding any element that might relate to this ID
+        // e.g. fieldName="image_1" -> id="IMAGE1" or id="image1"
+        const normalizedId = fieldName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
+        const allElements = iframeDoc.querySelectorAll('[id]')
+        for (let el of allElements) {
+          const elId = el.id.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
+          if (elId === normalizedId) {
+            element = el
+            break
+          }
+        }
       }
 
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
-        const originalBg = element.style.backgroundColor
+        // Add highlight effect
         const originalTransition = element.style.transition
-        element.style.transition = 'background-color 0.3s ease'
-        element.style.backgroundColor = 'rgba(251, 191, 36, 0.3)'
+        const originalOutline = element.style.outline
+        const originalBoxShadow = element.style.boxShadow
+        const originalTransform = element.style.transform
+
+        element.style.transition = 'all 0.5s ease'
+        element.style.outline = '4px solid #f59e0b'
+        element.style.boxShadow = '0 0 20px rgba(245, 158, 11, 0.5)'
+        element.style.transform = 'scale(1.02)'
+        element.style.zIndex = '9999'
+        element.style.position = 'relative'
 
         setTimeout(() => {
-          element.style.backgroundColor = originalBg
+          element.style.outline = originalOutline
+          element.style.boxShadow = originalBoxShadow
+          element.style.transform = originalTransform
+          element.style.zIndex = ''
+          element.style.position = ''
+
           setTimeout(() => {
             element.style.transition = originalTransition
-          }, 300)
-        }, 1000)
+          }, 500)
+        }, 1500)
       }
     } catch (error) {
       console.log('Could not scroll preview:', error)
     }
   }, [])
 
-  // Phân tích template
+  // Phân tích template using DOMParser for accuracy
   const templateAnalysis = useMemo(() => {
     if (!htmlCode) return { placeholders: [], images: [], customFields: [] }
 
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(htmlCode, 'text/html')
+
+    // 1. Text Placeholders (Regex is still best for {{mustache}})
     const placeholderRegex = /\{\{([a-z_]+)\}\}/gi
     const matches = [...htmlCode.matchAll(placeholderRegex)]
     const placeholders = [...new Set(matches.map(m => m[1]))]
 
-    const imgWithEditableRegex = /<img[^>]*data-editable=["']([^"']+)["'][^>]*>/gi
-    const editableMatches = [...htmlCode.matchAll(imgWithEditableRegex)]
-    const imagesWithEditable = editableMatches.map((m) => {
-      const fullTag = m[0]
-      const editableId = m[1]
-      const srcMatch = fullTag.match(/src=["']([^"']+)["']/i)
-      const altMatch = fullTag.match(/alt=["']([^"']+)["']/i)
-      const classMatch = fullTag.match(/class=["']([^"']+)["']/i)
+    // 2. Images Analysis
+    const imageMap = new Map() // Use Map to prevent duplicates
 
-      return {
-        id: editableId,
-        originalSrc: srcMatch?.[1] || '',
-        currentSrc: srcMatch?.[1] || '',
-        alt: altMatch?.[1] || editableId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-        className: classMatch?.[1] || ''
+    // 2a. Scan images with data-editable
+    const editableImgs = doc.querySelectorAll('img[data-editable]')
+    editableImgs.forEach((img, idx) => {
+      const id = img.getAttribute('data-editable')
+      imageMap.set(id, {
+        id: id,
+        originalSrc: img.getAttribute('src') || '',
+        currentSrc: img.getAttribute('src') || '',
+        alt: img.getAttribute('alt') || id.replace(/_/g, ' '),
+        className: img.className || '',
+        type: 'img',
+        isManaged: true
+      })
+    })
+
+    // 2b. Scan background images with data-image-editable
+    const bgEditableEls = doc.querySelectorAll('[data-image-editable]')
+    bgEditableEls.forEach((el) => {
+      // IGNORE invalid tags and extension junk
+      if (['style', 'script', 'head', 'meta', 'link', 'title'].includes(el.tagName.toLowerCase())) return
+      if (el.id && (el.id.includes('eJOY') || el.id.includes('extension'))) return
+
+      const attrId = el.getAttribute('data-image-editable')
+
+      // Filter out SECTION elements to avoid duplicates
+      if (attrId.toUpperCase().includes('SECTION')) return
+
+      let bgUrl = ''
+
+      // Check if this is a Ladipage element
+      const isLadipage = el.classList.contains('ladi-element') || el.querySelector('.ladi-image-background') !== null
+
+      if (isLadipage) {
+        // Try to find the image URL from Child (Inline Style override)
+        const bgChild = el.querySelector('.ladi-image-background')
+        if (bgChild && bgChild.style.backgroundImage) {
+          const match = bgChild.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/)
+          if (match) bgUrl = match[1]
+        }
+
+        // CRITICAL FIX: 
+        // 1. If no inline URL found, SKIP adding it here. Let 2c (CSS Scan) find it with the CSS URL.
+        // This prevents "broken image" placeholders from showing up.
+        if (!bgUrl) return
+
+        // 2. Use the element's HTML ID as the Map Key if available.
+        // This ensures that if 2c finds #IMAGE1 later, it sees it's already added and won't duplicate.
+        // (The tool might have named it 'gallery_12' in attrId, but CSS knows it as 'IMAGE1')
+        const mapKey = el.id || attrId
+
+        imageMap.set(mapKey, {
+          id: mapKey,
+          originalSrc: bgUrl,
+          currentSrc: bgUrl,
+          alt: el.getAttribute('alt') || mapKey.replace(/_/g, ' '),
+          className: el.className || '',
+          type: 'ladi-background',
+          isManaged: true
+        })
+        return;
+      }
+
+      // Standard Background Image Logic
+      if (el.style.backgroundImage) {
+        const match = el.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/)
+        if (match) bgUrl = match[1]
+      }
+
+      // Similarly, if standard element has no background image, it's not useful to list it
+      if (!bgUrl) return
+
+      imageMap.set(attrId, {
+        id: attrId,
+        originalSrc: bgUrl,
+        currentSrc: bgUrl,
+        alt: attrId.replace(/_/g, ' '),
+        className: el.className || '',
+        type: 'background',
+        isManaged: true
+      })
+    })
+
+    // 2c. LADIPAGE SUPPORT: Scan #IMAGE elements defined in CSS
+    const styleTags = doc.querySelectorAll('style')
+    styleTags.forEach(style => {
+      const cssContent = style.innerHTML
+      // Relaxed Regex: Just find #IMAGE... with a background image URL inside its block
+      // Matches: #IMAGE1 ... { ... dist ... background ... url(...) }
+      const ladiRegex = /#(IMAGE\w+)[^{]*\{[\s\S]*?background(?:-image)?:\s*url\(['"]?([^'"\)]+)['"]?\)/gi
+
+      let match
+      while ((match = ladiRegex.exec(cssContent)) !== null) {
+        const id = match[1]
+        const url = match[2]
+
+        // Skip data URIs (svg icons) and chrome extensions
+        if (url.startsWith('data:') || url.startsWith('chrome-extension:')) continue
+
+        if (!imageMap.has(id)) {
+          imageMap.set(id, {
+            id: id,
+            originalSrc: url,
+            currentSrc: url,
+            alt: 'Ladipage Image ' + id,
+            className: 'ladi-image-element',
+            type: 'ladi-background',
+            isManaged: false
+          })
+        }
       }
     })
 
-    let images = imagesWithEditable
-    if (images.length === 0) {
-      const allImgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi
-      const allMatches = [...htmlCode.matchAll(allImgRegex)]
-      images = allMatches.map((m, idx) => {
-        const fullTag = m[0]
-        const src = m[1]
-        const altMatch = fullTag.match(/alt=["']([^"']+)["']/i)
-        const classMatch = fullTag.match(/class=["']([^"']+)["']/i)
+    // 2d. Scan ALL remaining img tags (Fallback for un-managed images)
+    const allImgs = doc.querySelectorAll('img')
+    allImgs.forEach((img, idx) => {
+      // Skip if already captured via data-editable
+      if (img.hasAttribute('data-editable')) return
 
-        let id = `image_${idx + 1}`
-        if (classMatch?.[1]) {
-          id = classMatch[1].split(' ')[0].replace(/[^a-z0-9_]/gi, '_')
-        } else if (altMatch?.[1]) {
-          id = altMatch[1].toLowerCase().replace(/[^a-z0-9_]/gi, '_')
-        }
+      // FILTER JUNK IMAGES
+      const src = img.getAttribute('src') || ''
+      if (!src || src.startsWith('data:') || src.startsWith('chrome-extension:') || src.includes('extension')) return
+      if (img.id && img.id.includes('eJOY')) return
+      if (img.className && typeof img.className === 'string' && img.className.includes('extension')) return
 
-        return {
-          id,
-          originalSrc: src,
-          currentSrc: src,
-          alt: altMatch?.[1] || `Ảnh ${idx + 1}`,
-          className: classMatch?.[1] || '',
-          index: idx
-        }
+      // Generate an ID if not present
+      let id = img.id || ''
+      if (!id) {
+        // Try to derive from class
+        if (img.className && typeof img.className === 'string') id = img.className.split(' ')[0]
+        // Try to derive from alt
+        if (!id && img.alt) id = img.alt.replace(/[^a-zA-Z0-9]/gi, '_').toLowerCase()
+        // Fallback to index
+        if (!id) id = `image_auto_${idx + 1}`
+      }
+
+      // Ensure ID is unique
+      let originalId = id
+      let counter = 1
+      while (imageMap.has(id)) {
+        id = `${originalId}_${counter}`
+        counter++
+      }
+
+      imageMap.set(id, {
+        id: id,
+        originalSrc: src,
+        currentSrc: src,
+        alt: img.getAttribute('alt') || `Ảnh ${idx + 1}`,
+        className: img.className || '',
+        index: idx, // Keep index for fallback replacement
+        type: 'img',
+        isManaged: false
       })
-    }
+    })
 
-    const customFieldRegex = /data-editable=["']([^"']+)["'][^>]*>([^<]+)</gi
-    const customMatches = [...htmlCode.matchAll(customFieldRegex)]
-    const customFields = customMatches
-      .filter(m => !m[0].includes('<img'))
-      .map((m, idx) => ({
-        id: m[1] || `custom-${idx}`,
-        label: m[1].replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-        value: m[2],
+    const images = Array.from(imageMap.values())
+
+    // 3. Custom Text Fields (data-editable on non-img tags)
+    const customFields = []
+
+    // Map to track content for deduplication (Shadow Layer Handling)
+    const contentToIdMap = new Map();
+
+    const editableTexts = doc.querySelectorAll('[data-editable]:not(img)')
+    editableTexts.forEach((el, idx) => {
+      let id = el.getAttribute('data-editable')
+
+      // FILTER STRUCTURAL ELEMENTS (User Friendly Filter)
+      // Ignore containers like Sections, Boxes, Shapes, Groups which contain raw HTML
+      if (/^(Section|Box|Shape|Group|Line|Item|Overlay|Container)/i.test(id)) return
+
+      // Ignore elements with too much HTML content (likely a wrapper)
+      if (el.children.length > 5 || el.innerHTML.length > 2000) return
+
+      // Ignore if it looks like an SVG or Code block
+      if (el.tagName === 'SVG' || el.tagName === 'PATH' || el.tagName === 'STYLE' || el.tagName === 'SCRIPT') return
+
+      // SMART VALUE EXTRACTION: Get clean text, ignoring HTML tags
+      let cleanValue = (el.innerText || '').trim()
+
+      // FIX: Filter out NON-TEXT elements (Decorations, Lines, Empty Boxes, Layout Containers)
+      if (!cleanValue) return
+
+      // FIX 2a: STRUCTURAL SAFETY CHECK
+      // If element contains media (Image, SVG) or layout (Iframe), it is a CONTAINER.
+      if (el.querySelector('img, svg, iframe, video, canvas')) return;
+
+      // Also check for Ladipage specific background image classes or overlays to screen out decoration containers
+      if (el.querySelector('.ladi-image, .ladi-image-background, .ladi-overlay')) return;
+
+      // FIX 2c: FORM SAFETY CHECK (Crucial for RSVP sections)
+      // If element contains form controls (Input, Button, etc.), it is a functional wrapper.
+      if (el.querySelector('input, select, textarea, button, form')) return;
+
+      // FIX 2b: PREVENT PARENT CONTAINERS (Aggregation Issue)
+      // LEAF NODE POLICY: If it has ANY block-level children, it is a wrapper -> SKIP IT.
+      // We rely on the inner elements (H3, P, etc.) being picked up individually.
+      const hasBlockChildren = Array.from(el.children).some(c =>
+        ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'LI', 'TABLE', 'SECTION', 'FORM', 'BLOCKQUOTE'].includes(c.tagName)
+      )
+
+      if (hasBlockChildren) return;
+
+      // Allow up to 3 children only if they are inline (br, b, span, icon)
+      // But if we passed the block check, we are mostly safe.
+      if (el.children.length > 5) return
+
+      // SHADOW LAYER & DUPLICATE DETECTION
+      // If we saw this exact text content before, REUSE the ID.
+      // This ensures editing one instance updates all identical instances (Shadows, Etc.)
+      if (cleanValue.length > 4 && contentToIdMap.has(cleanValue)) {
+        // Reuse ID
+        const existingId = contentToIdMap.get(cleanValue);
+        el.setAttribute('data-editable', existingId); // Update DOM to match
+        return; // Don't add a new field to sidebar, just link DOM
+      }
+
+      // Store primarily mapped ID
+      if (cleanValue.length > 4) {
+        contentToIdMap.set(cleanValue, id);
+      }
+
+      customFields.push({
+        id: id,
+        label: id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        value: cleanValue, // Always use clean text
         type: 'text'
-      }))
+      })
+    })
 
     return { placeholders, images, customFields }
   }, [htmlCode])
 
-  const [imageData, setImageData] = useState({})
-  const [customFieldData, setCustomFieldData] = useState({})
+  // (Removed Duplicate State Declarations - Moved to top)
 
-  const debouncedFormData = useDebounce(formData, 300)
-  const debouncedImageData = useDebounce(imageData, 300)
-  const debouncedCustomFieldData = useDebounce(customFieldData, 300)
+  // AUTO-SAVE: State for auto-save functionality
+
+  // AUTO-SAVE: State for auto-save functionality
+  const [autoSaveTimer, setAutoSaveTimer] = useState(null)
+  const [lastSavedData, setLastSavedData] = useState(null)
+
+  // (Removed Duplicate Debounce hooks - Moved to top)
 
   useEffect(() => {
     loadInvitation()
@@ -181,9 +632,67 @@ const UltimateHtmlEditorPage = () => {
     updatePreview()
   }, [debouncedFormData, debouncedImageData, debouncedCustomFieldData, htmlCode])
 
+  // AUTO-SAVE: Debounced auto-save when data changes
+  useEffect(() => {
+    // Skip auto-save if invitation not loaded yet
+    if (!invitation || loading) return
+
+    // Skip if data hasn't changed
+    const currentData = JSON.stringify({ formData, imageData, customFieldData, htmlCode })
+    if (currentData === lastSavedData) return
+
+    // Clear previous timer
+    if (autoSaveTimer) {
+      clearTimeout(autoSaveTimer)
+    }
+
+    // Set new timer for auto-save after 2 seconds of inactivity
+    const timer = setTimeout(async () => {
+      try {
+        console.log('🔄 Auto-saving...')
+
+        // Compress HTML
+        const compressedHtml = htmlCode
+          .replace(/\s+/g, ' ')
+          .replace(/>\s+</g, '><')
+          .trim()
+
+        // Auto-save without blocking UI (don't use setSaving)
+        await invitationService.update(invitation.id, {
+          ...formData,
+          html_content: compressedHtml,
+          image_data: JSON.stringify(imageData),
+          custom_field_data: JSON.stringify(customFieldData),
+          status: invitation.status // Keep current status
+        })
+
+        setLastSavedData(currentData)
+        console.log('✅ Auto-saved successfully')
+      } catch (error) {
+        console.error('❌ Auto-save failed:', error)
+        // Don't show error toast for auto-save failures to avoid annoying user
+      }
+    }, 2000) // 2 seconds delay
+
+    setAutoSaveTimer(timer)
+
+    // Cleanup
+    return () => {
+      if (timer) clearTimeout(timer)
+    }
+  }, [formData, imageData, customFieldData, htmlCode, invitation, loading])
+
   const loadInvitation = async () => {
     try {
       setLoading(true)
+
+      // Check if user is authenticated before making request
+      if (!authService.isAuthenticated()) {
+        toast.error('Vui lòng đăng nhập để tiếp tục')
+        navigate('/login')
+        return
+      }
+
       const invitationId = searchParams.get('invitationId')
 
       if (invitationId) {
@@ -221,7 +730,18 @@ const UltimateHtmlEditorPage = () => {
       }
     } catch (error) {
       console.error('Failed to load invitation:', error)
-      toast.error('Không thể tải thiệp mời')
+
+      // Check if it's an authentication error
+      if (error.message && error.message.includes('Unauthorized')) {
+        toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.')
+        // Clear auth state and redirect to login
+        authService.logout()
+        setTimeout(() => {
+          navigate('/login')
+        }, 1500)
+      } else {
+        toast.error('Không thể tải thiệp mời: ' + (error.message || 'Lỗi không xác định'))
+      }
     } finally {
       setLoading(false)
     }
@@ -230,81 +750,253 @@ const UltimateHtmlEditorPage = () => {
   const updatePreview = () => {
     let html = htmlCode
 
+    // 1. Text Replacements (Regex is fine/faster for placeholders)
     Object.keys(debouncedFormData).forEach(key => {
       const value = debouncedFormData[key]
       if (value && key !== 'music_url' && key !== 'music_autoplay') {
         if (key === 'event_date') {
           const date = new Date(value)
-          const formatted = date.toLocaleDateString('vi-VN', {
-            weekday: 'long',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          })
-          html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), formatted)
+          // Check validity
+          if (!isNaN(date.getTime())) {
+            const formatted = date.toLocaleDateString('vi-VN', {
+              weekday: 'long',
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            })
+            html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), formatted)
+          } else {
+            html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value)
+          }
         } else {
           html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value)
         }
       }
     })
 
-    templateAnalysis.images.forEach(img => {
-      if (debouncedImageData[img.id]) {
-        const newSrc = debouncedImageData[img.id]
-        const regex1 = new RegExp(`(<img[^>]*data-editable=["']${img.id}["'][^>]*src=["'])([^"']+)(["'])`, 'gi')
-        html = html.replace(regex1, `$1${newSrc}$3`)
+    // 2. DOM Replacements (Text & Images) - Using DOMParser for safe & correct HTML manipulation
+    try {
+      const parser = new DOMParser()
+      const doc = parser.parseFromString(html, 'text/html')
+      let hasChanges = false
 
-        const regex2 = new RegExp(`(<img[^>]*)(src=["'])([^"']+)(["'][^>]*data-editable=["']${img.id}["'])`, 'gi')
-        html = html.replace(regex2, `$1$2${newSrc}$4`)
+      // 2a. Update Custom Text Fields (NON-DESTRUCTIVE MODE)
+      Object.keys(debouncedCustomFieldData).forEach(key => {
+        const val = debouncedCustomFieldData[key]
+        if (val === undefined) return
 
-        if (img.originalSrc) {
-          html = html.replace(img.originalSrc, newSrc)
-        }
-      }
-    })
+        const els = doc.querySelectorAll(`[data-editable="${key}"]`)
+        els.forEach(el => {
+          // SAFETY CHECK: If element contains critical structure (Images, Sections), be very careful.
 
-    Object.keys(debouncedCustomFieldData).forEach(key => {
-      const regex = new RegExp(`(data-editable=["']${key}["'][^>]*>)([^<]+)(<)`, 'g')
-      html = html.replace(regex, `$1${debouncedCustomFieldData[key]}$3`)
-    })
+          // Convert newlines to <br> for proper rendering
+          const htmlContent = val ? val.replace(/\n/g, '<br/>') : '';
 
-    if (debouncedFormData.music_url) {
-      const musicPlayer = `
-        <div id="music-player" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
-          <audio id="background-music" ${debouncedFormData.music_autoplay ? 'autoplay' : ''} loop>
-            <source src="${debouncedFormData.music_url}" type="audio/mpeg">
-          </audio>
-          <button id="music-toggle" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
-            <svg id="play-icon" style="display: ${debouncedFormData.music_autoplay ? 'none' : 'block'}; width: 24px; height: 24px;" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg id="pause-icon" style="display: ${debouncedFormData.music_autoplay ? 'block' : 'none'}; width: 24px; height: 24px;" fill="white" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
-          </button>
-        </div>
-        <script>
-          (function() {
-            const audio = document.getElementById('background-music');
-            const toggle = document.getElementById('music-toggle');
-            const playIcon = document.getElementById('play-icon');
-            const pauseIcon = document.getElementById('pause-icon');
-            
-            toggle.addEventListener('click', function() {
-              if (audio.paused) {
-                audio.play();
-                playIcon.style.display = 'none';
-                pauseIcon.style.display = 'block';
-              } else {
-                audio.pause();
-                playIcon.style.display = 'block';
-                pauseIcon.style.display = 'none';
+          // 1. Find the best block-level container
+          let targetEl = el.querySelector('h1, h2, h3, h4, h5, h6, p, ul, ol');
+
+          // 2. If no block found, look for inline wrappers or use self
+          if (!targetEl) targetEl = el.querySelector('span, b, strong, i, em, mark, small') || el;
+
+          // 3. DEEP DRILL: Check if the target has a SINGLE styling child (span, b, etc.)
+          // Many editors wrap text in a <span> for font-size/color. We must update the SPAN to keep style.
+          if (targetEl.children.length === 1) {
+            const innerNode = targetEl.children[0];
+            if (['SPAN', 'B', 'STRONG', 'I', 'EM', 'MARK', 'SMALL'].includes(innerNode.tagName)) {
+              targetEl = innerNode;
+            }
+          }
+
+          // 4. Update Logic with Safety Checks
+          // Do not update if target contains structure
+          if (targetEl.querySelector('img, div, section, video, iframe, table')) {
+            return; // Abort to protect layout
+          }
+
+          // Also abort if we are falling back to 'el' but 'el' is a complex wrapper
+          if (targetEl === el && el.querySelectorAll('div').length > 1) {
+            return;
+          }
+
+          // Apply Update
+          targetEl.innerHTML = htmlContent;
+        })
+      })
+
+      // 2b. Image Replacements
+
+      templateAnalysis.images.forEach(img => {
+        if (debouncedImageData[img.id]) {
+          const newSrc = debouncedImageData[img.id]
+          hasChanges = true
+
+          if (img.type === 'ladi-background') {
+            // For Ladipage, we need to find #IMAGE_ID > .ladi-image > .ladi-image-background
+            const container = doc.getElementById(img.id)
+            if (container) {
+              // Try standard Ladipage structure
+              let bgEl = container.querySelector('.ladi-image-background')
+
+              // Fallback: If not found, look for any direct child with class starting with ladi-image
+              if (!bgEl) {
+                bgEl = container.querySelector('[class*="ladi-image-background"]')
               }
-            });
-          })();
-        </script>
-      `
-      html = html.replace('</body>', `${musicPlayer}</body>`)
+
+              if (bgEl) {
+                // Apply inline style WITH !important to override CSS
+                bgEl.style.setProperty('background-image', `url('${newSrc}')`, 'important')
+              }
+            } else {
+              // Fallback using querySelector for ID if getElementById fails (rare)
+              const bgEl = doc.querySelector(`#${img.id} .ladi-image-background`)
+              if (bgEl) {
+                bgEl.style.setProperty('background-image', `url('${newSrc}')`, 'important')
+              }
+            }
+          }
+          else if (img.type === 'background') {
+            // Find elements with data-image-editable
+            const elements = doc.querySelectorAll(`[data-image-editable="${img.id}"]`)
+            elements.forEach(el => {
+              el.style.backgroundImage = `url('${newSrc}')`
+            })
+          } else {
+            // Try finding by data-editable first
+            let imgEl = doc.querySelector(`img[data-editable="${img.id}"]`)
+
+            // Fallback: Try finding by ID
+            if (!imgEl) {
+              imgEl = doc.getElementById(img.id)
+              if (imgEl && imgEl.tagName !== 'IMG') imgEl = null
+            }
+
+            // Fallback: Try finding by Src match (if unique and not found by ID)
+            if (!imgEl && img.originalSrc) {
+              // This is risky if multiple images share src, but helpful for legacy format
+              const allImgs = doc.querySelectorAll('img')
+              for (let el of allImgs) {
+                // Compare logical paths
+                if (el.getAttribute('src') === img.originalSrc) {
+                  imgEl = el
+                  break
+                }
+              }
+            }
+
+            // Fallback: Use index from analysis if strictly fallback mode (no data-editable found in analysis)
+            // Note: templateAnalysis defines 'index' only when it falls back to scanning all images
+            if (!imgEl && typeof img.index === 'number') {
+              const allImgs = doc.querySelectorAll('img')
+              if (allImgs[img.index]) {
+                imgEl = allImgs[img.index]
+              }
+            }
+
+            if (imgEl) {
+              imgEl.src = newSrc
+              // Ensure we update attribute for consistency
+              imgEl.setAttribute('src', newSrc)
+            }
+          }
+        }
+      })
+
+      // Music Player Injection (Appending to Body)
+      if (debouncedFormData.music_url) {
+        // ... (Music Player Code logic matches previous string injection, but via DOM)
+        // Ideally we inject HTML string. Since doc.body is available:
+        const musicPlayer = `
+                <div id="music-player" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+                  <audio id="background-music" ${debouncedFormData.music_autoplay ? 'autoplay' : ''} loop>
+                    <source src="${debouncedFormData.music_url}" type="audio/mpeg">
+                  </audio>
+                  <button id="music-toggle" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                    <svg id="play-icon" style="display: ${debouncedFormData.music_autoplay ? 'none' : 'block'}; width: 24px; height: 24px;" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <svg id="pause-icon" style="display: ${debouncedFormData.music_autoplay ? 'block' : 'none'}; width: 24px; height: 24px;" fill="white" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
+                  </button>
+                </div>
+                <script>
+                  (function() {
+                    var audio = document.getElementById('background-music');
+                    var toggle = document.getElementById('music-toggle');
+                    var playIcon = document.getElementById('play-icon');
+                    var pauseIcon = document.getElementById('pause-icon');
+
+                    if(toggle && audio) {
+                        toggle.addEventListener('click', function() {
+                          if (audio.paused) {
+                            audio.play().catch(e => console.log('Play error', e));
+                            if(playIcon) playIcon.style.display = 'none';
+                            if(pauseIcon) pauseIcon.style.display = 'block';
+                          } else {
+                            audio.pause();
+                            if(playIcon) playIcon.style.display = 'block';
+                            if(pauseIcon) pauseIcon.style.display = 'none';
+                          }
+                        });
+                    }
+                  })();
+                </script>
+              `
+        // Inject Music Player at end of body
+        const tempDiv = doc.createElement('div');
+        tempDiv.innerHTML = musicPlayer;
+        while (tempDiv.firstChild) {
+          doc.body.appendChild(tempDiv.firstChild);
+        }
+      } // End of music conditional block
+
+      // Serialize back to HTML string (Add DOCTYPE for Standards Mode)
+      html = '<!DOCTYPE html>' + doc.documentElement.outerHTML
+
+    } catch (e) {
+      console.error("DOM Processing Error", e)
     }
 
     setPreviewHtml(html)
   }
+
+  // LISTEN FOR MESSAGES FROM IFRA (Direct Edit)
+  useEffect(() => {
+    const handleMessage = (event) => {
+      if (!event.data) return;
+
+      if (event.data.type === 'UPDATE_CONTENT') {
+        const { id, content } = event.data;
+        setCustomFieldData(prev => ({
+          ...prev,
+          [id]: content
+        }));
+      }
+
+      if (event.data.type === 'KEY_COMMAND') {
+        const { key, ctrlKey, metaKey, shiftKey } = event.data;
+
+        if ((ctrlKey || metaKey) && key === 'z') {
+          if (shiftKey) {
+            performRedo()
+          } else {
+            performUndo()
+          }
+        }
+        if ((ctrlKey || metaKey) && key === 'y') {
+          performRedo()
+        }
+      }
+
+      if (event.data.type === 'FOCUS_FIELD') {
+        // Highlight sidebar input
+        const sidebarInput = document.getElementById(`field-${event.data.id}`);
+        if (sidebarInput) {
+          sidebarInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          sidebarInput.focus();
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -344,21 +1036,71 @@ const UltimateHtmlEditorPage = () => {
     }
   }
 
+  const handleSaveAndExit = async () => {
+    if (!invitation) return
+
+    try {
+      setSaving(true)
+
+      // Compress HTML by removing unnecessary whitespace
+      const compressedHtml = htmlCode
+        .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
+        .replace(/>\s+</g, '><')  // Remove spaces between tags
+        .trim()
+
+      await invitationService.update(invitation.id, {
+        ...formData,
+        html_content: compressedHtml,
+        image_data: JSON.stringify(imageData),
+        custom_field_data: JSON.stringify(customFieldData),
+        status: invitation.status // Keep current status
+      })
+      
+      toast.success('✅ Đã lưu thành công!')
+      
+      // Redirect to management page
+      setTimeout(() => {
+        navigate('/management')
+      }, 500)
+    } catch (error) {
+      console.error('Save failed:', error)
+      if (error.message && error.message.includes('max_allowed_packet')) {
+        toast.error('❌ Nội dung quá lớn! Vui lòng liên hệ admin để tăng giới hạn.')
+      } else {
+        toast.error('❌ Lưu thất bại!')
+      }
+    } finally {
+      setSaving(false)
+    }
+  }
+
   const handleSave = async () => {
     if (!invitation) return
 
     try {
       setSaving(true)
+
+      // Compress HTML by removing unnecessary whitespace
+      const compressedHtml = htmlCode
+        .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
+        .replace(/>\s+</g, '><')  // Remove spaces between tags
+        .trim()
+
       await invitationService.update(invitation.id, {
         ...formData,
-        html_content: htmlCode,
+        html_content: compressedHtml,
         image_data: JSON.stringify(imageData),
-        custom_field_data: JSON.stringify(customFieldData)
+        custom_field_data: JSON.stringify(customFieldData),
+        status: invitation.status // Keep current status (published/draft)
       })
       toast.success('✅ Đã lưu thành công!')
     } catch (error) {
       console.error('Save failed:', error)
-      toast.error('❌ Lưu thất bại!')
+      if (error.message && error.message.includes('max_allowed_packet')) {
+        toast.error('❌ Nội dung quá lớn! Vui lòng liên hệ admin để tăng giới hạn.')
+      } else {
+        toast.error('❌ Lưu thất bại!')
+      }
     } finally {
       setSaving(false)
     }
@@ -372,23 +1114,49 @@ const UltimateHtmlEditorPage = () => {
       return
     }
 
+    // Show confirmation modal
+    setShowPublishConfirm(true)
+  }
+
+  const confirmPublish = async () => {
+    setShowPublishConfirm(false)
+
     try {
       setSaving(true)
-      await invitationService.update(invitation.id, {
+
+      // Compress HTML by removing unnecessary whitespace
+      const compressedHtml = htmlCode
+        .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
+        .replace(/>\s+</g, '><')  // Remove spaces between tags
+        .trim()
+
+      // Update invitation
+      const updateResponse = await invitationService.update(invitation.id, {
         ...formData,
-        html_content: htmlCode,
+        html_content: compressedHtml,
         image_data: JSON.stringify(imageData),
         custom_field_data: JSON.stringify(customFieldData),
         status: 'published'
       })
+      
+      // Publish
       await invitationService.publish(invitation.id)
+      
+      // Get updated invitation with new slug
+      const updatedInvitation = updateResponse.data || invitation
+      const newSlug = updatedInvitation.slug || invitation.slug
+      
       toast.success('🎉 Đã xuất bản thiệp mời!')
       setTimeout(() => {
-        navigate(`/invitation/${invitation.slug}`)
+        navigate(`/invitation/${newSlug}`)
       }, 1500)
     } catch (error) {
       console.error('Publish failed:', error)
-      toast.error('❌ Xuất bản thất bại!')
+      if (error.message && error.message.includes('max_allowed_packet')) {
+        toast.error('❌ Nội dung quá lớn! Vui lòng liên hệ admin để tăng giới hạn.')
+      } else {
+        toast.error('❌ Xuất bản thất bại!')
+      }
     } finally {
       setSaving(false)
     }
@@ -399,21 +1167,39 @@ const UltimateHtmlEditorPage = () => {
 
     try {
       setSaving(true)
-      await invitationService.update(invitation.id, {
+
+      // Compress HTML by removing unnecessary whitespace
+      const compressedHtml = htmlCode
+        .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
+        .replace(/>\s+</g, '><')  // Remove spaces between tags
+        .trim()
+
+      // Update and get new slug
+      const updateResponse = await invitationService.update(invitation.id, {
         ...formData,
-        html_content: htmlCode,
+        html_content: compressedHtml,
         image_data: JSON.stringify(imageData),
-        custom_field_data: JSON.stringify(customFieldData)
+        custom_field_data: JSON.stringify(customFieldData),
+        status: invitation.status // Keep current status
       })
+      
+      // Get updated slug from response
+      const updatedInvitation = updateResponse.data || invitation
+      const newSlug = updatedInvitation.slug || invitation.slug
+      
       toast.success('✅ Đã lưu! Đang mở xem trước...')
 
       setTimeout(() => {
-        window.open(`/invitation/${invitation.slug}`, '_blank')
+        window.open(`/invitation/${newSlug}`, '_blank')
         setSaving(false)
       }, 500)
     } catch (error) {
       console.error('Save before preview failed:', error)
-      toast.error('❌ Không thể lưu. Vui lòng thử lại!')
+      if (error.message && error.message.includes('max_allowed_packet')) {
+        toast.error('❌ Nội dung quá lớn! Vui lòng liên hệ admin để tăng giới hạn.')
+      } else {
+        toast.error('❌ Không thể lưu. Vui lòng thử lại!')
+      }
       setSaving(false)
     }
   }
@@ -430,510 +1216,285 @@ const UltimateHtmlEditorPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
-      {/* Header - Minimal */}
-      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
-        <div className="max-w-full px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate('/management')}
-              className="flex items-center justify-center w-10 h-10 border border-gray-300 dark:border-gray-700 hover:border-gray-900 dark:hover:border-gray-300 transition-colors"
-            >
-              <svg className="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-            </button>
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-gray-900 dark:bg-white rounded-full"></div>
-              <div>
-                <h2 className="text-base font-medium text-gray-900 dark:text-white">
-                  {invitation?.title || 'Chỉnh Sửa Thiệp Mời'}
-                </h2>
-                <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
-                  <span className="w-1 h-1 rounded-full bg-green-500"></span>
-                  Đang chỉnh sửa
-                </p>
-              </div>
+    <div className="min-h-screen bg-stone-50 dark:bg-black overflow-hidden flex flex-col">
+
+      {/* DESKTOP HEADER (Hidden on Mobile) */}
+      <header className="hidden md:flex bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 h-16 items-center justify-between px-6 z-40">
+        <div className="flex items-center gap-4">
+          <button onClick={() => navigate('/management')} className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-200 hover:bg-gray-100 transition-colors">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+          </button>
+          <div>
+            <h2 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">{invitation?.title || 'Chỉnh sửa thiệp'}</h2>
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+              <span className="text-[10px] text-gray-500 font-medium">Auto-saving...</span>
             </div>
           </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="px-6 py-2 bg-gray-900 hover:bg-gray-800 text-white font-medium transition-colors disabled:opacity-50 flex items-center gap-2"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-              </svg>
-              {saving ? 'Đang lưu...' : 'Lưu'}
-            </button>
-            <button
-              onClick={handlePreview}
-              disabled={saving}
-              className="px-6 py-2 border border-gray-300 dark:border-gray-700 hover:border-gray-900 dark:hover:border-gray-300 text-gray-900 dark:text-white font-medium transition-colors flex items-center gap-2 disabled:opacity-50"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
-              Xem Trước
-            </button>
-            <button
-              onClick={handlePublish}
-              disabled={saving}
-              className="px-6 py-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold transition-colors disabled:opacity-50 flex items-center gap-2"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-              </svg>
-              Xuất Bản
-            </button>
-          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={handleSaveAndExit} 
+            disabled={saving}
+            className="px-4 py-1.5 rounded-full bg-blue-500 text-white text-xs font-bold uppercase hover:bg-blue-600 transition-colors disabled:opacity-50"
+          >
+            {saving ? 'Đang lưu...' : 'Lưu & Quay lại'}
+          </button>
+          <button onClick={handlePreview} className="px-4 py-1.5 rounded-full bg-gray-100 text-gray-700 text-xs font-bold uppercase hover:bg-gray-200 transition-colors">Xem thử</button>
+          <button onClick={handlePublish} disabled={saving} className="px-5 py-1.5 rounded-full bg-black text-white text-xs font-bold uppercase hover:bg-gray-800 transition-colors shadow-lg disabled:opacity-50">
+            {saving ? 'Đang xuất bản...' : 'Xuất bản'}
+          </button>
         </div>
       </header>
 
-      {/* Content - Split View */}
-      <div className="flex h-[calc(100vh-80px)]">
-        {/* Left Panel - Form - Clean Design */}
-        <div className="w-1/2 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-y-auto">
-          <div className="p-6 space-y-6">
-            {/* Header */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                Chỉnh Sửa Nội Dung
+      {/* MOBILE TITLE BAR (Floating) */}
+      {/* MOBILE TITLE BAR (Fixed Top) */}
+      <div className="md:hidden fixed top-0 left-0 w-full z-30 px-4 pt- safe-top bg-white/90 dark:bg-black/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 flex items-center justify-between h-[60px]">
+        <div className="flex items-center gap-2">
+          <button onClick={() => navigate('/management')} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+            <svg className="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
+          </button>
+          <div className="flex bg-gray-100 dark:bg-gray-800 rounded-full p-0.5">
+            <button onClick={performUndo} disabled={historyIndex <= 0} className="w-8 h-8 flex items-center justify-center rounded-full disabled:opacity-30 active:bg-white dark:active:bg-black transition-colors">
+              <span className="material-symbols-outlined text-sm text-gray-600 dark:text-gray-300">undo</span>
+            </button>
+            <button onClick={performRedo} disabled={historyIndex >= history.length - 1} className="w-8 h-8 flex items-center justify-center rounded-full disabled:opacity-30 active:bg-white dark:active:bg-black transition-colors">
+              <span className="material-symbols-outlined text-sm text-gray-600 dark:text-gray-300">redo</span>
+            </button>
+          </div>
+        </div>
+
+        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-white truncate max-w-[100px]">Studio Mode</span>
+
+        <button onClick={handleSave} disabled={saving} className={`w-8 h-8 flex items-center justify-center rounded-full ${saving ? 'bg-gray-200' : 'bg-black dark:bg-white'}`}>
+          {saving ? (
+            <svg className="w-4 h-4 animate-spin text-gray-500" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+          ) : (
+            <svg className="w-4 h-4 text-white dark:text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
+          )}
+        </button>
+      </div>
+
+      {/* MAIN WORKSPACE */}
+      <div className="flex-1 flex overflow-hidden relative pt-[60px] md:pt-0">
+
+        {/* 1. EDITING PANEL (Desktop: Left Splite | Mobile: Bottom Sheet) */}
+        <div className={`
+                    absolute md:relative z-20 
+                    w-full md:w-[400px] lg:w-[450px] flex-shrink-0 
+                    bg-white dark:bg-gray-900 
+                    transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]
+                    shadow-2xl md:shadow-none border-r border-gray-200 dark:border-gray-800
+                    ${isMobile
+            ? (activeMobileTab !== 'preview' ? 'bottom-0 h-[60vh] rounded-t-3xl' : '-bottom-[100%] h-[60vh]')
+            : 'h-full inset-y-0 left-0'
+          }
+                `}>
+          {/* Mobile Drag Handle */}
+          <div className="md:hidden w-full flex justify-center pt-3 pb-1" onClick={() => setActiveMobileTab('preview')}>
+            <div className="w-12 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700"></div>
+          </div>
+
+          {/* Content Scroll Area */}
+          <div className="h-full overflow-y-auto p-6 pb-24 md:pb-6 custom-scrollbar">
+
+            {/* TAB: INFO FORM */}
+            <div className={`${(isMobile && activeMobileTab !== 'info') ? 'hidden' : 'block'} space-y-8 animate-fade-in`}>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-purple-600">edit_note</span> Thông tin
+                </h3>
+                <div className="space-y-4">
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1 block">Tên Chú Rể</label>
+                    <input
+                      name="groom_name"
+                      value={formData.groom_name}
+                      onChange={handleChange}
+                      className="w-full bg-transparent text-lg font-serif font-bold text-gray-900 dark:text-white outline-none placeholder-gray-300"
+                      placeholder="Nguyễn Văn A"
+                    />
+                  </div>
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1 block">Tên Cô Dâu</label>
+                    <input
+                      name="bride_name"
+                      value={formData.bride_name}
+                      onChange={handleChange}
+                      className="w-full bg-transparent text-lg font-serif font-bold text-gray-900 dark:text-white outline-none placeholder-gray-300"
+                      placeholder="Lê Thị B"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* TAB: IMAGES */}
+            <div className={`${(isMobile && activeMobileTab !== 'images') ? 'hidden' : 'block'} space-y-6 animate-fade-in`}>
+              {/* Desktop only header for images section */}
+              <div className="hidden md:block">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-pink-600">image</span> Thư viện ảnh
+                </h3>
+              </div>
+
+              {templateAnalysis.images.length === 0 ? (
+                <p className="text-center text-gray-400 text-sm py-10">Không tìm thấy ảnh chỉnh sửa được trong mẫu này.</p>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  {templateAnalysis.images.map(img => (
+                    <div key={img.id} className="group relative aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-100">
+                      <img src={imageData[img.id] || img.originalSrc} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                      <label htmlFor={`upload-${img.id}`} className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer">
+                        <span className="material-symbols-outlined text-white text-2xl mb-1">cloud_upload</span>
+                        <span className="text-[10px] text-white font-bold uppercase tracking-wider">Thay ảnh</span>
+                      </label>
+                      <input type="file" id={`upload-${img.id}`} className="hidden" accept="image/*" onChange={(e) => handleImageUpload(img.id, e.target.files[0])} />
+                      <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent p-2">
+                        <p className="text-[10px] text-white truncate">{img.alt || 'Image'}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Always visible on Desktop: Instructions */}
+            <div className="hidden md:block mt-8 p-4 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-800">
+              <h4 className="font-bold text-blue-900 dark:text-blue-200 text-sm mb-2">💡 Tips Pro</h4>
+              <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+                Click trực tiếp vào chữ trên màn hình xem trước để sửa nhanh. Ảnh nên có tỉ lệ (vuông/dọc) giống với mẫu gốc để đẹp nhất.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* 2. PREVIEW AREA */}
+        <div className="flex-1 bg-gray-200 dark:bg-stone-950 relative overflow-hidden flex flex-col items-center justify-center p-0" onClick={() => isMobile && setActiveMobileTab('preview')}>
+
+          {/* Desktop Toolbar (Optional Visual Cue) */}
+          <div className="hidden md:flex w-full h-10 bg-gray-100 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 items-center px-4 gap-2">
+            <div className="flex gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-red-400"></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+              <div className="w-3 h-3 rounded-full bg-green-400"></div>
+            </div>
+            <div className="flex-1 text-center">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white dark:bg-black rounded-md text-[10px] text-gray-500 font-mono shadow-sm">
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                {window.location.origin}/invitation/{invitation?.slug}
+              </div>
+            </div>
+          </div>
+
+          {/* Iframe Container */}
+          <div className="w-full h-full relative">
+            <iframe
+              ref={iframeRef}
+              className="w-full h-full border-0 bg-white"
+              title="Invitation Preview"
+              // On Desktop: Full Width. On Mobile: Full Width.
+              // We remove the intentional phone frame on Desktop.
+              style={{ width: '100%', height: '100%' }}
+            />
+          </div>
+        </div>
+
+        {/* 3. MOBILE BOTTOM NAVIGATION */}
+        <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 px-6 py-3 bg-black/90 backdrop-blur-xl rounded-full shadow-2xl z-50 transition-transform duration-300">
+          <button
+            onClick={() => setActiveMobileTab('info')}
+            className={`flex flex-col items-center gap-1 ${activeMobileTab === 'info' ? 'text-white' : 'text-gray-500'}`}
+          >
+            <span className={`material-symbols-outlined text-2xl transition-all ${activeMobileTab === 'info' ? '-translate-y-1' : ''}`}>edit_note</span>
+          </button>
+
+          <div className="w-px h-6 bg-gray-700"></div>
+
+          <button
+            onClick={() => setActiveMobileTab('images')}
+            className={`flex flex-col items-center gap-1 ${activeMobileTab === 'images' ? 'text-white' : 'text-gray-500'}`}
+          >
+            <span className={`material-symbols-outlined text-2xl transition-all ${activeMobileTab === 'images' ? '-translate-y-1' : ''}`}>image</span>
+          </button>
+
+          <div className="w-px h-6 bg-gray-700"></div>
+
+          <button
+            onClick={handleSaveAndExit}
+            disabled={saving}
+            className="flex flex-col items-center gap-1 text-blue-400 active:text-blue-300 disabled:opacity-50"
+          >
+            <span className="material-symbols-outlined text-2xl">save</span>
+          </button>
+
+          <div className="w-px h-6 bg-gray-700"></div>
+
+          <button
+            onClick={handlePreview}
+            className="flex flex-col items-center gap-1 text-gray-500 active:text-white"
+          >
+            <span className="material-symbols-outlined text-2xl">visibility</span>
+          </button>
+
+          <div className="w-px h-6 bg-gray-700"></div>
+
+          <button
+            onClick={handlePublish}
+            disabled={saving}
+            className="flex flex-col items-center gap-1 text-green-400 active:text-green-300 disabled:opacity-50"
+          >
+            <span className="material-symbols-outlined text-2xl">publish</span>
+          </button>
+        </div>
+
+        {/* Mobile Backdrop for Drawer */}
+        {isMobile && activeMobileTab !== 'preview' && (
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-10 animate-fade-in"
+            onClick={() => setActiveMobileTab('preview')}
+          />
+        )}
+      </div>
+
+      {/* Publish Confirmation Modal */}
+      {showPublishConfirm && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl max-w-md w-full border border-gray-200 dark:border-gray-700">
+            {/* Icon & Title */}
+            <div className="p-6 text-center">
+              <div className="mx-auto w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                Xác nhận xuất bản
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Thay đổi sẽ hiển thị ngay bên phải
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                Bạn có chắc chắn muốn xuất bản thiệp mời này?<br />
+                Sau khi xuất bản, thiệp sẽ được công khai và mọi người có thể xem.
               </p>
             </div>
 
-            {/* Basic Information */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-800">
-                <img width="50" height="50" src="https://img.icons8.com/clouds/100/info--v1.png" alt="info--v1" />                <h4 className="text-base font-semibold text-gray-900 dark:text-white">
-                  Thông Tin Cơ Bản
-                </h4>
-              </div>
-
-              <div>
-                <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  <img width="30" height="30" src="https://img.icons8.com/clouds/100/open-envelope-love.png" alt="open-envelope-love" />
-                  Tiêu Đề
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  onFocus={() => scrollPreviewToField('title')}
-                  placeholder="Thiệp Cưới Của Chúng Tôi"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-800 dark:text-white outline-none transition-colors"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                    <img width="30" height="30" src="https://img.icons8.com/stickers/100/groom.png" alt="groom" />Tên Chú Rể
-                  </label>
-                  <input
-                    type="text"
-                    name="groom_name"
-                    value={formData.groom_name}
-                    onChange={handleChange}
-                    onFocus={() => scrollPreviewToField('groom_name')}
-                    placeholder="Nguyễn Văn A"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-800 dark:text-white outline-none transition-colors"
-                  />
-                </div>
-                <div>
-                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                    <img width="30" height="30" src="https://img.icons8.com/clouds/100/bride.png" alt="bride" />
-                    Tên cô dâu
-                  </label>
-                  <input
-                    type="text"
-                    name="bride_name"
-                    value={formData.bride_name}
-                    onChange={handleChange}
-                    onFocus={() => scrollPreviewToField('bride_name')}
-                    placeholder="Trần Thị B"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-800 dark:text-white outline-none transition-colors"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                    <img width="30" height="30" src="https://img.icons8.com/clouds/100/calendar--v2.png" alt="calendar--v2" /> Ngày tổ chức
-                  </label>
-                  <DatePicker
-                    selected={formData.event_date && !isNaN(new Date(formData.event_date)) ? new Date(formData.event_date) : null}
-                    onChange={(date) => {
-                      if (date) {
-                        const year = date.getFullYear()
-                        const month = String(date.getMonth() + 1).padStart(2, '0')
-                        const day = String(date.getDate()).padStart(2, '0')
-                        handleChange({ target: { name: 'event_date', value: `${year}-${month}-${day}` } })
-                      }
-                    }}
-                    onFocus={() => scrollPreviewToField('event_date')}
-                    dateFormat="dd/MM/yyyy"
-                    placeholderText="Chọn ngày"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-800 dark:text-white outline-none transition-colors"
-                    wrapperClassName="w-full"
-                  />
-                </div>
-                <div>
-                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                    <img width="30" height="30" src="https://img.icons8.com/clouds/100/--pocket-watch.png" alt="--pocket-watch" />
-                    Giờ
-                  </label>
-                  <DatePicker
-                    selected={formData.event_time && !isNaN(new Date(`2000-01-01T${formData.event_time}`)) ? new Date(`2000-01-01T${formData.event_time}`) : null}
-                    onChange={(date) => {
-                      if (date) {
-                        const hours = String(date.getHours()).padStart(2, '0')
-                        const minutes = String(date.getMinutes()).padStart(2, '0')
-                        handleChange({ target: { name: 'event_time', value: `${hours}:${minutes}` } })
-                      }
-                    }}
-                    onFocus={() => scrollPreviewToField('event_time')}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    timeIntervals={15}
-                    timeCaption="Giờ"
-                    dateFormat="HH:mm"
-                    timeFormat="HH:mm"
-                    placeholderText="Chọn giờ"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-800 dark:text-white outline-none transition-colors"
-                    wrapperClassName="w-full"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  <img width="30" height="30" src="https://img.icons8.com/clouds/100/marker.png" alt="marker" /> Địa Điểm
-                </label>
-                <input
-                  type="text"
-                  name="event_location"
-                  value={formData.event_location}
-                  onChange={handleChange}
-                  onFocus={() => scrollPreviewToField('event_location')}
-                  placeholder="Nhà Hàng Tiệc Cưới ABC"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-800 dark:text-white outline-none transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  <img width="30" height="30" src="https://img.icons8.com/clouds/100/address.png" alt="address" />
-                  Địa Chỉ
-                </label>
-                <textarea
-                  name="event_address"
-                  value={formData.event_address}
-                  onChange={handleChange}
-                  onFocus={() => scrollPreviewToField('event_address')}
-                  placeholder="123 Đường ABC, Quận 1, TP.HCM"
-                  rows="2"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:text-white outline-none resize-none transition-colors"
-                />
-              </div>
-            </div>
-
-            {/* Music Section */}
-            <div className="space-y-6 pt-6 border-t-2 border-stone-200 dark:border-stone-800">
-              <div className="flex items-center gap-3 pb-3">
-                <img width="50" height="50" src="https://img.icons8.com/clouds/100/musical-notes.png" alt="musical-notes" />
-                <div>
-                  <h4 className="text-xl font-bold text-stone-900 dark:text-white font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
-                    Nhạc Nền
-                  </h4>
-                  <p className="text-sm text-stone-500 dark:text-stone-400">
-                    Chọn nhạc có sẵn hoặc thêm link riêng
-                  </p>
-                </div>
-              </div>
-
-              {/* Preset Songs */}
-              <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2.5">
-                  <img width="25" height="25" src="https://img.icons8.com/clouds/100/music-library.png" alt="music-library" />
-                  Nhạc Có Sẵn
-                </label>
-                <div className="grid grid-cols-1 gap-2">
-                  {[
-                    { name: 'A Thousand Years - Christina Perri', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
-                    { name: 'Perfect - Ed Sheeran', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
-                    { name: 'All of Me - John Legend', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
-                    { name: 'Marry You - Bruno Mars', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
-                    { name: 'Thinking Out Loud - Ed Sheeran', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
-                  ].map((song, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      onClick={() => setFormData(prev => ({ ...prev, music_url: song.url }))}
-                      className={`text-left px-4 py-3 border-2 transition-all duration-300 ${formData.music_url === song.url
-                        ? 'border-gray-900 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100'
-                        : 'border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-gray-700 dark:text-gray-300'
-                        }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
-                        </svg>
-                        <span className="font-medium">{song.name}</span>
-                        {formData.music_url === song.url && (
-                          <svg className="w-5 h-5 ml-auto text-gray-900" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                          </svg>
-                        )}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Custom URL or YouTube */}
-              <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2.5">
-                  <img width="25" height="25" src="https://img.icons8.com/clouds/100/link.png" alt="link" />
-                  Link Tùy Chỉnh
-                </label>
-                <input
-                  type="text"
-                  name="music_url"
-                  value={formData.music_url}
-                  onChange={handleChange}
-                  placeholder="https://example.com/music.mp3 hoặc https://youtube.com/watch?v=..."
-                  className="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-gray-900 focus:border-gray-900 dark:bg-gray-800 dark:text-white outline-none transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500 font-medium"
-                />
-                <p className="mt-2 text-xs text-stone-500 dark:text-stone-400">
-                  💡 Hỗ trợ: MP3, WAV, OGG, YouTube link. Paste link YouTube để tự động chuyển đổi.
-                </p>
-              </div>
-
-              <div>
-                <label className="flex items-center gap-3 px-4 py-3 bg-gray-100 dark:bg-gray-800 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-all">
-                  <input
-                    type="checkbox"
-                    name="music_autoplay"
-                    checked={formData.music_autoplay}
-                    onChange={(e) => setFormData(prev => ({ ...prev, music_autoplay: e.target.checked }))}
-                    className="w-5 h-5 text-gray-900 focus:ring-2 focus:ring-gray-900"
-                  />
-                  <img width="30" height="30" src="https://img.icons8.com/clouds/100/play.png" alt="play" />
-                  <div className="flex-1">
-                    <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">Tự động phát nhạc</span>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
-                      Nhạc sẽ tự động phát khi mở thiệp (một số trình duyệt có thể chặn autoplay)
-                    </p>
-                  </div>
-                </label>
-              </div>
-
-              {formData.music_url && !formData.music_url.includes('youtube') && !formData.music_url.includes('youtu.be') && (
-                <div className="p-4 bg-gray-100 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700">
-                  <p className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    <img width="30" height="30" src="https://img.icons8.com/clouds/100/high-volume.png" alt="high-volume" /> Nghe thử:
-                  </p>
-                  <audio controls className="w-full" src={formData.music_url}>
-                    Your browser does not support the audio element.
-                  </audio>
-                </div>
-              )}
-
-              {formData.music_url && (formData.music_url.includes('youtube') || formData.music_url.includes('youtu.be')) && (
-                <div className="p-4 bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 rounded-xl border-2 border-red-200 dark:border-red-800">
-                  <p className="flex items-center gap-2 text-sm font-semibold text-red-800 dark:text-red-300 mb-2">
-                    <img width="25" height="25" src="https://img.icons8.com/clouds/100/youtube-play.png" alt="youtube-play" />
-                    YouTube Preview:
-                  </p>
-                  <div className="aspect-video rounded-lg overflow-hidden">
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      src={`https://www.youtube.com/embed/${formData.music_url.includes('youtu.be')
-                        ? formData.music_url.split('youtu.be/')[1]?.split('?')[0]
-                        : formData.music_url.split('v=')[1]?.split('&')[0]}`}
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Images Section */}
-            {templateAnalysis.images.length > 0 && (
-              <div className="space-y-6">
-                <div className="flex items-center gap-3 pb-3 border-b-2 border-stone-200 dark:border-stone-800">
-                  <img width="50" height="50" src="https://img.icons8.com/clouds/100/image.png" alt="image" />
-                  <div>
-                    <h4 className="text-xl font-bold text-stone-900 dark:text-white font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
-                      Quản Lý Ảnh
-                    </h4>
-                    <p className="text-sm text-stone-500 dark:text-stone-400">
-                      {templateAnalysis.images.length} ảnh được phát hiện
-                    </p>
-                  </div>
-                </div>
-
-                {templateAnalysis.images.map((img, idx) => {
-                  // Icon số từ icons8 - clouds style (1-25)
-                  const numberIcons = [
-                    'https://img.icons8.com/clouds/100/1--v2.png',
-                    'https://img.icons8.com/clouds/100/2--v2.png',
-                    'https://img.icons8.com/clouds/100/3--v2.png',
-                    'https://img.icons8.com/clouds/100/4--v2.png',
-                    'https://img.icons8.com/clouds/100/5--v2.png',
-                    'https://img.icons8.com/clouds/100/6--v2.png',
-                    'https://img.icons8.com/clouds/100/7--v2.png',
-                    'https://img.icons8.com/clouds/100/8--v2.png',
-                    'https://img.icons8.com/clouds/100/9--v2.png',
-                    'https://img.icons8.com/clouds/100/10--v2.png',
-                    'https://img.icons8.com/dusk/64/circled-10.png',
-                    'https://img.icons8.com/dusk/64/circled-11.png',
-                   
-                  ]
-
-                  return (
-                    <div key={img.id} className="group relative border-2 border-stone-200 dark:border-stone-800 rounded-2xl p-6 hover:border-purple-400 dark:hover:border-purple-600 transition-all hover:shadow-xl hover:shadow-purple-500/10">
-                      <label className="block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-4 flex items-center gap-2">
-                        <img
-                          width="28"
-                          height="28"
-                          src={numberIcons[idx] || numberIcons[0]}
-                          alt={`number-${idx + 1}`}
-                          className="flex-shrink-0"
-                        />
-                        {img.alt}
-                      </label>
-
-                      <div className="flex items-start gap-5">
-                        {/* Preview */}
-                        <div className="w-36 h-36 border-2 border-dashed border-stone-300 dark:border-stone-700 rounded-xl overflow-hidden flex-shrink-0 group-hover:border-purple-400 dark:group-hover:border-purple-600 transition-all shadow-lg">
-                          <img
-                            src={imageData[img.id] || img.originalSrc}
-                            alt={img.alt}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                        </div>
-
-                        {/* Upload */}
-                        <div className="flex-1">
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => handleImageUpload(img.id, e.target.files[0])}
-                            className="hidden"
-                            id={`upload-${img.id}`}
-                          />
-                          <label
-                            htmlFor={`upload-${img.id}`}
-                            className="block w-full px-6 py-8 border-2 border-dashed border-stone-300 dark:border-stone-700 rounded-xl text-center cursor-pointer hover:border-purple-400 dark:hover:border-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/20 transition-all group/upload"
-                          >
-                            <svg className="w-12 h-12 text-stone-400 dark:text-stone-600 mx-auto mb-3 group-hover/upload:text-purple-500 group-hover/upload:scale-110 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                            </svg>
-                            <p className="text-sm font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                              Click để chọn ảnh mới
-                            </p>
-                            <p className="text-xs text-stone-500 dark:text-stone-400">
-                              JPG, PNG, GIF • Tối đa 5MB
-                            </p>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
-
-            {/* Custom Fields Section */}
-            {templateAnalysis.customFields.length > 0 && (
-              <div className="space-y-6">
-                <div className="flex items-center gap-3 pb-3 border-b-2 border-stone-200 dark:border-stone-800">
-                  <img width="50" height="50" src="https://img.icons8.com/clouds/100/edit-property.png" alt="edit-property" />
-                  <div>
-                    <h4 className="text-xl font-bold text-stone-900 dark:text-white font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
-                      Nội Dung Tùy Chỉnh
-                    </h4>
-                    <p className="text-sm text-stone-500 dark:text-stone-400">
-                      {templateAnalysis.customFields.length} trường tùy chỉnh
-                    </p>
-                  </div>
-                </div>
-
-                {templateAnalysis.customFields.map((field) => (
-                  <div key={field.id}>
-                    <label className="block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2 flex items-center gap-2">
-                      <img width="30" height="30" src="https://img.icons8.com/clouds/100/info--v1.png" alt="info--v1"/>
-                      {field.label}
-                    </label>
-                    <textarea
-                      value={customFieldData[field.id] !== undefined ? customFieldData[field.id] : field.value}
-                      onChange={(e) => handleCustomFieldChange(field.id, e.target.value)}
-                      rows="3"
-                      className="w-full px-4 py-3.5 border-2 border-stone-200 dark:border-stone-700 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-stone-800 dark:text-white outline-none resize-none transition-all hover:border-stone-300 dark:hover:border-stone-600"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Info Box - VIP Style */}
-            {/* <div className="relative p-6 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-950/20 dark:via-purple-950/20 dark:to-pink-950/20 border-2 border-blue-200 dark:border-blue-800 rounded-2xl overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"></div>
-              <div className="relative flex items-start gap-4">
-                <img width="50" height="50" src="https://img.icons8.com/clouds/100/lightning-bolt.png" alt="lightning-bolt" />
-                <div>
-                  <p className="text-sm text-blue-900 dark:text-blue-300 font-bold mb-1">Real-time Preview</p>
-                  <p className="text-sm text-blue-800 dark:text-blue-400 leading-relaxed">
-                    Mọi thay đổi sẽ hiển thị ngay lập tức bên phải.
-                    Nhớ click <strong>"Lưu"</strong> để lưu vào database!
-                  </p>
-                </div>
-              </div>
-            </div> */}
-          </div>
-        </div>
-
-        {/* Right Panel - Preview - VIP Style */}
-        <div className="w-1/2 bg-gradient-to-br from-stone-100 via-stone-50 to-stone-100 dark:from-stone-950 dark:via-stone-900 dark:to-stone-950 overflow-y-auto">
-          <div className="p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <img width="50" height="50" src="https://img.icons8.com/clouds/100/visible.png" alt="visible" />
-                <div>
-                  <h3 className="text-xl font-bold text-stone-900 dark:text-white font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
-                    Xem Trước Real-time
-                  </h3>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                    <span className="text-xs font-semibold text-green-600 dark:text-green-400">Live Preview</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-2xl overflow-hidden border-2 border-stone-200 dark:border-stone-800">
-              <iframe
-                ref={iframeRef}
-                srcDoc={previewHtml}
-                className="w-full h-[calc(100vh-250px)] border-0"
-                title="Preview"
-              />
+            {/* Actions */}
+            <div className="flex gap-3 p-6 pt-0">
+              <button
+                onClick={() => setShowPublishConfirm(false)}
+                className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={confirmPublish}
+                className="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+              >
+                Xuất bản
+              </button>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

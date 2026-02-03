@@ -1,0 +1,1860 @@
+{
+  "source_file": "generate-html\\mau6.html",
+  "total_elements": 260,
+  "stats": {
+    "total_elements": 260,
+    "text_elements": 181,
+    "image_elements": 78,
+    "video_elements": 0,
+    "other_elements": 1
+  },
+  "elements": [
+    {
+      "id": "background-music",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_background-music"
+    },
+    {
+      "id": "music-toggle",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_music-toggle"
+    },
+    {
+      "id": "play-icon",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_play-icon"
+    },
+    {
+      "id": "pause-icon",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_pause-icon"
+    },
+    {
+      "id": "shape_LDLdbIlNKm",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_shape_ldldbilnkm"
+    },
+    {
+      "id": "SECTION1",
+      "type": "text",
+      "content": "Bạn sẽ tham dự &gt;",
+      "method": "id_pattern",
+      "column_name": "text_section1"
+    },
+    {
+      "id": "GROUP44",
+      "type": "text",
+      "content": "Bạn sẽ tham dự &gt;",
+      "method": "id_pattern",
+      "column_name": "text_group44"
+    },
+    {
+      "id": "BOX18",
+      "type": "text",
+      "content": "Bạn sẽ tham dự &gt;",
+      "method": "id_pattern",
+      "column_name": "text_box18"
+    },
+    {
+      "id": "HEADLINE12",
+      "type": "text",
+      "content": "Bạn sẽ tham dự &gt;",
+      "method": "id_pattern",
+      "column_name": "headline_12"
+    },
+    {
+      "id": "HEADLINE4",
+      "type": "text",
+      "content": "Bạn sẽ tham dự &gt;",
+      "method": "id_pattern",
+      "column_name": "headline_4"
+    },
+    {
+      "id": "HEADLINE5",
+      "type": "text",
+      "content": "Gia Bảo &amp; Hà My",
+      "method": "id_pattern",
+      "column_name": "headline_5"
+    },
+    {
+      "id": "GROUP58",
+      "type": "text",
+      "content": "Chủ Nhật, ngày 20/07/2025",
+      "method": "id_pattern",
+      "column_name": "event_date"
+    },
+    {
+      "id": "IMAGE67",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_67"
+    },
+    {
+      "id": "IMAGE70",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_70"
+    },
+    {
+      "id": "IMAGE7",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_7"
+    },
+    {
+      "id": "IMAGE11",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_11"
+    },
+    {
+      "id": "IMAGE5",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_5"
+    },
+    {
+      "id": "IMAGE10",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_10"
+    },
+    {
+      "id": "IMAGE15",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_15"
+    },
+    {
+      "id": "IMAGE13",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_13"
+    },
+    {
+      "id": "IMAGE16",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_16"
+    },
+    {
+      "id": "IMAGE9",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_9"
+    },
+    {
+      "id": "IMAGE17",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_17"
+    },
+    {
+      "id": "PARAGRAPH3",
+      "type": "text",
+      "content": "Gia Bảo",
+      "method": "id_pattern",
+      "column_name": "text_3"
+    },
+    {
+      "id": "PARAGRAPH4",
+      "type": "text",
+      "content": "Gia Bảo",
+      "method": "id_pattern",
+      "column_name": "text_4"
+    },
+    {
+      "id": "GROUP23",
+      "type": "text",
+      "content": "Hà My",
+      "method": "id_pattern",
+      "column_name": "text_group23"
+    },
+    {
+      "id": "HEADLINE6",
+      "type": "text",
+      "content": "Gia Bảo &amp; Hà My",
+      "method": "id_pattern",
+      "column_name": "headline_6"
+    },
+    {
+      "id": "PARAGRAPH6",
+      "type": "text",
+      "content": "Gia Bảo &amp; Hà My",
+      "method": "id_pattern",
+      "column_name": "text_6"
+    },
+    {
+      "id": "GROUP13",
+      "type": "text",
+      "content": "NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family"
+    },
+    {
+      "id": "LINE7",
+      "type": "text",
+      "content": "NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family_2"
+    },
+    {
+      "id": "LINE8",
+      "type": "text",
+      "content": "NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family_3"
+    },
+    {
+      "id": "PARAGRAPH7",
+      "type": "text",
+      "content": "NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family_4"
+    },
+    {
+      "id": "IMAGE18",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_18"
+    },
+    {
+      "id": "PARAGRAPH9",
+      "type": "text",
+      "content": "NHÀ GÁI",
+      "method": "id_pattern",
+      "column_name": "bride_family"
+    },
+    {
+      "id": "IMAGE19",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_19"
+    },
+    {
+      "id": "PARAGRAPH10",
+      "type": "text",
+      "content": "TRÂN TRỌNG KÍNH MỜI",
+      "method": "id_pattern",
+      "column_name": "invitation_text"
+    },
+    {
+      "id": "HEADLINE21",
+      "type": "text",
+      "content": "TRÂN TRỌNG KÍNH MỜI",
+      "method": "id_pattern",
+      "column_name": "invitation_text_2"
+    },
+    {
+      "id": "HEADLINE8",
+      "type": "text",
+      "content": "Bạn và Người Thương",
+      "method": "id_pattern",
+      "column_name": "and_text"
+    },
+    {
+      "id": "PARAGRAPH12",
+      "type": "text",
+      "content": "Bạn và Người Thương",
+      "method": "id_pattern",
+      "column_name": "and_text_2"
+    },
+    {
+      "id": "PARAGRAPH14",
+      "type": "text",
+      "content": "Thời Gian Tổ Chức Vào Hồi, 10 Giờ 30",
+      "method": "id_pattern",
+      "column_name": "event_time"
+    },
+    {
+      "id": "PARAGRAPH15",
+      "type": "text",
+      "content": "THÁNG",
+      "method": "id_pattern",
+      "column_name": "event_month"
+    },
+    {
+      "id": "PARAGRAPH17",
+      "type": "text",
+      "content": "THÁNG",
+      "method": "id_pattern",
+      "column_name": "event_month_2"
+    },
+    {
+      "id": "PARAGRAPH19",
+      "type": "text",
+      "content": "Tư Gia Nhà Gái",
+      "method": "id_pattern",
+      "column_name": "bride_family_2"
+    },
+    {
+      "id": "PARAGRAPH68",
+      "type": "text",
+      "content": "Sự hiện diện của bạn là niềm vinh hạnh của chúng mình!",
+      "method": "id_pattern",
+      "column_name": "text_68"
+    },
+    {
+      "id": "PARAGRAPH18",
+      "type": "text",
+      "content": "Sự hiện diện của bạn là niềm vinh hạnh của chúng mình!",
+      "method": "id_pattern",
+      "column_name": "text_18"
+    },
+    {
+      "id": "PARAGRAPH78",
+      "type": "text",
+      "content": "Sự hiện diện của bạn là niềm vinh hạnh của chúng mình!",
+      "method": "id_pattern",
+      "column_name": "text_78"
+    },
+    {
+      "id": "GROUP80",
+      "type": "text",
+      "content": "NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family_5"
+    },
+    {
+      "id": "LINE29",
+      "type": "text",
+      "content": "NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family_6"
+    },
+    {
+      "id": "LINE30",
+      "type": "text",
+      "content": "NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family_7"
+    },
+    {
+      "id": "PARAGRAPH80",
+      "type": "text",
+      "content": "NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family_8"
+    },
+    {
+      "id": "PARAGRAPH81",
+      "type": "text",
+      "content": "NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family_9"
+    },
+    {
+      "id": "GROUP99",
+      "type": "text",
+      "content": "NHÀ GÁI",
+      "method": "id_pattern",
+      "column_name": "bride_family_3"
+    },
+    {
+      "id": "IMAGE74",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_74"
+    },
+    {
+      "id": "IMAGE75",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_75"
+    },
+    {
+      "id": "PARAGRAPH82",
+      "type": "text",
+      "content": "TRÂN TRỌNG KÍNH MỜI",
+      "method": "id_pattern",
+      "column_name": "invitation_text_3"
+    },
+    {
+      "id": "HEADLINE19",
+      "type": "text",
+      "content": "TRÂN TRỌNG KÍNH MỜI",
+      "method": "id_pattern",
+      "column_name": "invitation_text_4"
+    },
+    {
+      "id": "HEADLINE20",
+      "type": "text",
+      "content": "Bạn và Người Thương",
+      "method": "id_pattern",
+      "column_name": "and_text_3"
+    },
+    {
+      "id": "PARAGRAPH83",
+      "type": "text",
+      "content": "Bạn và Người Thương",
+      "method": "id_pattern",
+      "column_name": "and_text_4"
+    },
+    {
+      "id": "PARAGRAPH84",
+      "type": "text",
+      "content": "Thời Gian Tổ Chức Vào Hồi, 11 Giờ 30",
+      "method": "id_pattern",
+      "column_name": "event_time_2"
+    },
+    {
+      "id": "PARAGRAPH85",
+      "type": "text",
+      "content": "THÁNG",
+      "method": "id_pattern",
+      "column_name": "event_month_3"
+    },
+    {
+      "id": "PARAGRAPH86",
+      "type": "text",
+      "content": "THÁNG",
+      "method": "id_pattern",
+      "column_name": "event_month_4"
+    },
+    {
+      "id": "PARAGRAPH87",
+      "type": "text",
+      "content": "Nhà Hàng Riverside Palace",
+      "method": "id_pattern",
+      "column_name": "restaurant_name"
+    },
+    {
+      "id": "PARAGRAPH88",
+      "type": "text",
+      "content": "Sự hiện diện của bạn là niềm vinh hạnh của chúng mình!",
+      "method": "id_pattern",
+      "column_name": "text_88"
+    },
+    {
+      "id": "PARAGRAPH89",
+      "type": "text",
+      "content": "Sự hiện diện của bạn là niềm vinh hạnh của chúng mình!",
+      "method": "id_pattern",
+      "column_name": "text_89"
+    },
+    {
+      "id": "IMAGE20",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_20"
+    },
+    {
+      "id": "IMAGE25",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_25"
+    },
+    {
+      "id": "BUTTON4",
+      "type": "text",
+      "content": "Thiệp mời nhà Trai",
+      "method": "id_pattern",
+      "column_name": "groom_family_10"
+    },
+    {
+      "id": "BUTTON_TEXT4",
+      "type": "text",
+      "content": "Thiệp mời nhà Trai",
+      "method": "id_pattern",
+      "column_name": "groom_family_11"
+    },
+    {
+      "id": "BUTTON5",
+      "type": "text",
+      "content": "Thiệp mời nhà Trai",
+      "method": "id_pattern",
+      "column_name": "groom_family_12"
+    },
+    {
+      "id": "BUTTON_TEXT5",
+      "type": "text",
+      "content": "Thiệp mời nhà Trai",
+      "method": "id_pattern",
+      "column_name": "groom_family_13"
+    },
+    {
+      "id": "BUTTON6",
+      "type": "text",
+      "content": "Thiệp mời nhà Trai",
+      "method": "id_pattern",
+      "column_name": "groom_family_14"
+    },
+    {
+      "id": "BUTTON_TEXT6",
+      "type": "text",
+      "content": "Thiệp mời nhà Trai",
+      "method": "id_pattern",
+      "column_name": "groom_family_15"
+    },
+    {
+      "id": "BUTTON7",
+      "type": "text",
+      "content": "Thiệp mời nhà Gái",
+      "method": "id_pattern",
+      "column_name": "bride_family_4"
+    },
+    {
+      "id": "BUTTON_TEXT7",
+      "type": "text",
+      "content": "Thiệp mời nhà Gái",
+      "method": "id_pattern",
+      "column_name": "bride_family_5"
+    },
+    {
+      "id": "SECTION4",
+      "type": "text",
+      "content": "Thiệp mời nhà Gái",
+      "method": "id_pattern",
+      "column_name": "bride_family_6"
+    },
+    {
+      "id": "GROUP21",
+      "type": "text",
+      "content": "Thiệp mời nhà Gái",
+      "method": "id_pattern",
+      "column_name": "bride_family_7"
+    },
+    {
+      "id": "PARAGRAPH20",
+      "type": "text",
+      "content": "CÂU CHUYỆN TÌNH YÊU",
+      "method": "id_pattern",
+      "column_name": "love_text"
+    },
+    {
+      "id": "PARAGRAPH21",
+      "type": "text",
+      "content": "CÂU CHUYỆN TÌNH YÊU",
+      "method": "id_pattern",
+      "column_name": "love_text_2"
+    },
+    {
+      "id": "IMAGE27",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_27"
+    },
+    {
+      "id": "IMAGE28",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_28"
+    },
+    {
+      "id": "IMAGE29",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_29"
+    },
+    {
+      "id": "IMAGE32",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_32"
+    },
+    {
+      "id": "PARAGRAPH27",
+      "type": "text",
+      "content": "Mãi Bên Nhau Nhé",
+      "method": "id_pattern",
+      "column_name": "text_27"
+    },
+    {
+      "id": "PARAGRAPH28",
+      "type": "text",
+      "content": "Mãi Bên Nhau Nhé",
+      "method": "id_pattern",
+      "column_name": "text_28"
+    },
+    {
+      "id": "IMAGE37",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_37"
+    },
+    {
+      "id": "IMAGE31",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_31"
+    },
+    {
+      "id": "PARAGRAPH25",
+      "type": "text",
+      "content": "Hành Trình Bên Nhau",
+      "method": "id_pattern",
+      "column_name": "text_25"
+    },
+    {
+      "id": "PARAGRAPH26",
+      "type": "text",
+      "content": "Hành Trình Bên Nhau",
+      "method": "id_pattern",
+      "column_name": "text_26"
+    },
+    {
+      "id": "IMAGE35",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_35"
+    },
+    {
+      "id": "IMAGE26",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_26"
+    },
+    {
+      "id": "PARAGRAPH22",
+      "type": "text",
+      "content": "Lần Đầu Gặp Gỡ",
+      "method": "id_pattern",
+      "column_name": "text_22"
+    },
+    {
+      "id": "PARAGRAPH23",
+      "type": "text",
+      "content": "Lần Đầu Gặp Gỡ",
+      "method": "id_pattern",
+      "column_name": "text_23"
+    },
+    {
+      "id": "IMAGE36",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_36"
+    },
+    {
+      "id": "GROUP53",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_group53"
+    },
+    {
+      "id": "GROUP55",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_group55"
+    },
+    {
+      "id": "BOX23",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_box23"
+    },
+    {
+      "id": "SHAPE7",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_shape7"
+    },
+    {
+      "id": "GROUP56",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_group56"
+    },
+    {
+      "id": "PARAGRAPH29",
+      "type": "text",
+      "content": "KHOẢNH KHẮC ĐẸP NHẤT",
+      "method": "id_pattern",
+      "column_name": "text_29"
+    },
+    {
+      "id": "PARAGRAPH30",
+      "type": "text",
+      "content": "KHOẢNH KHẮC ĐẸP NHẤT",
+      "method": "id_pattern",
+      "column_name": "text_30"
+    },
+    {
+      "id": "IMAGE38",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_38"
+    },
+    {
+      "id": "IMAGE39",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_39"
+    },
+    {
+      "id": "IMAGE68",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_68"
+    },
+    {
+      "id": "IMAGE69",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_69"
+    },
+    {
+      "id": "IMAGE43",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_43"
+    },
+    {
+      "id": "IMAGE44",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_44"
+    },
+    {
+      "id": "GROUP61",
+      "type": "text",
+      "content": "XEM THÊM",
+      "method": "id_pattern",
+      "column_name": "view_button"
+    },
+    {
+      "id": "HEADLINE17",
+      "type": "text",
+      "content": "XEM THÊM",
+      "method": "id_pattern",
+      "column_name": "view_button_2"
+    },
+    {
+      "id": "SHAPE10",
+      "type": "text",
+      "content": "XEM THÊM",
+      "method": "id_pattern",
+      "column_name": "view_button_3"
+    },
+    {
+      "id": "PARAGRAPH31",
+      "type": "text",
+      "content": "SỰ KIỆN QUAN TRỌNG",
+      "method": "id_pattern",
+      "column_name": "text_31"
+    },
+    {
+      "id": "PARAGRAPH32",
+      "type": "text",
+      "content": "SỰ KIỆN QUAN TRỌNG",
+      "method": "id_pattern",
+      "column_name": "text_32"
+    },
+    {
+      "id": "IMAGE47",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_47"
+    },
+    {
+      "id": "PARAGRAPH33",
+      "type": "text",
+      "content": "Lễ Ăn Hỏi",
+      "method": "id_pattern",
+      "column_name": "text_33"
+    },
+    {
+      "id": "PARAGRAPH34",
+      "type": "text",
+      "content": "Lễ Ăn Hỏi",
+      "method": "id_pattern",
+      "column_name": "text_34"
+    },
+    {
+      "id": "PARAGRAPH70",
+      "type": "text",
+      "content": "Thứ 5, Ngày 26 tháng 09 năm 2024",
+      "method": "id_pattern",
+      "column_name": "event_date_2"
+    },
+    {
+      "id": "GROUP66",
+      "type": "text",
+      "content": "Tư Gia Nhà Gái",
+      "method": "id_pattern",
+      "column_name": "bride_family_8"
+    },
+    {
+      "id": "GROUP62",
+      "type": "text",
+      "content": "Tư Gia Nhà Gái",
+      "method": "id_pattern",
+      "column_name": "bride_family_9"
+    },
+    {
+      "id": "IMAGE48",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_48"
+    },
+    {
+      "id": "GROUP26",
+      "type": "text",
+      "content": "LỄ VU QUY",
+      "method": "id_pattern",
+      "column_name": "vu_quy_ceremony"
+    },
+    {
+      "id": "PARAGRAPH35",
+      "type": "text",
+      "content": "LỄ VU QUY",
+      "method": "id_pattern",
+      "column_name": "vu_quy_ceremony_2"
+    },
+    {
+      "id": "PARAGRAPH36",
+      "type": "text",
+      "content": "LỄ VU QUY",
+      "method": "id_pattern",
+      "column_name": "vu_quy_ceremony_3"
+    },
+    {
+      "id": "PARAGRAPH71",
+      "type": "text",
+      "content": "Chủ Nhật, Ngày 13 tháng 07 năm 2025",
+      "method": "id_pattern",
+      "column_name": "event_date_3"
+    },
+    {
+      "id": "GROUP67",
+      "type": "text",
+      "content": "Tư Gia Nhà Gái",
+      "method": "id_pattern",
+      "column_name": "bride_family_10"
+    },
+    {
+      "id": "GROUP64",
+      "type": "text",
+      "content": "Tư Gia Nhà Gái",
+      "method": "id_pattern",
+      "column_name": "bride_family_11"
+    },
+    {
+      "id": "IMAGE49",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_49"
+    },
+    {
+      "id": "PARAGRAPH37",
+      "type": "text",
+      "content": "LỄ THÀNH HÔN",
+      "method": "id_pattern",
+      "column_name": "marriage_ceremony"
+    },
+    {
+      "id": "PARAGRAPH38",
+      "type": "text",
+      "content": "LỄ THÀNH HÔN",
+      "method": "id_pattern",
+      "column_name": "marriage_ceremony_2"
+    },
+    {
+      "id": "PARAGRAPH72",
+      "type": "text",
+      "content": "&nbsp;Chủ Nhật, Ngày 20 tháng 07 năm 2025",
+      "method": "id_pattern",
+      "column_name": "event_date_4"
+    },
+    {
+      "id": "GROUP41",
+      "type": "text",
+      "content": "Nhà Hàng Riverside Palace",
+      "method": "id_pattern",
+      "column_name": "restaurant_name_2"
+    },
+    {
+      "id": "IMAGE50",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_50"
+    },
+    {
+      "id": "IMAGE63",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_63"
+    },
+    {
+      "id": "IMAGE64",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_64"
+    },
+    {
+      "id": "IMAGE65",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_65"
+    },
+    {
+      "id": "PARAGRAPH45",
+      "type": "text",
+      "content": "BẠN SẼ ĐẾN CHỨ?",
+      "method": "id_pattern",
+      "column_name": "text_45"
+    },
+    {
+      "id": "PARAGRAPH46",
+      "type": "text",
+      "content": "BẠN SẼ ĐẾN CHỨ?",
+      "method": "id_pattern",
+      "column_name": "text_46"
+    },
+    {
+      "id": "GROUP30",
+      "type": "text",
+      "content": "Gửi đi",
+      "method": "id_pattern",
+      "column_name": "send_button"
+    },
+    {
+      "id": "FORM2",
+      "type": "text",
+      "content": "Gửi đi",
+      "method": "id_pattern",
+      "column_name": "send_button_2"
+    },
+    {
+      "id": "687876a9227d8a0013a24b96",
+      "type": "text",
+      "content": "Gửi đi",
+      "method": "id_pattern",
+      "column_name": "send_button_3"
+    },
+    {
+      "id": "BUTTON3",
+      "type": "text",
+      "content": "Gửi đi",
+      "method": "id_pattern",
+      "column_name": "send_button_4"
+    },
+    {
+      "id": "BUTTON_TEXT3",
+      "type": "text",
+      "content": "Gửi đi",
+      "method": "id_pattern",
+      "column_name": "send_button_5"
+    },
+    {
+      "id": "FORM_ITEM2",
+      "type": "text",
+      "content": "Gửi đi",
+      "method": "id_pattern",
+      "column_name": "send_button_6"
+    },
+    {
+      "id": "FORM_ITEM6",
+      "type": "text",
+      "content": "Mình sẽ đến",
+      "method": "id_pattern",
+      "column_name": "text_form_item6"
+    },
+    {
+      "id": "FORM_ITEM7",
+      "type": "text",
+      "content": "Mình không đến",
+      "method": "id_pattern",
+      "column_name": "grandfather_name"
+    },
+    {
+      "id": "FORM_ITEM9",
+      "type": "text",
+      "content": "Tiệc Cưới Nhà Trai",
+      "method": "id_pattern",
+      "column_name": "groom_family_16"
+    },
+    {
+      "id": "FORM_ITEM10",
+      "type": "text",
+      "content": "Sự lựa chọn",
+      "method": "id_pattern",
+      "column_name": "text_form_item10"
+    },
+    {
+      "id": "FORM_ITEM11",
+      "type": "text",
+      "content": "Bạn đi bao nhiêu người ?",
+      "method": "id_pattern",
+      "column_name": "text_form_item11"
+    },
+    {
+      "id": "PARAGRAPH47",
+      "type": "text",
+      "content": "Họ Tên:",
+      "method": "id_pattern",
+      "column_name": "text_47"
+    },
+    {
+      "id": "PARAGRAPH48",
+      "type": "text",
+      "content": "Họ Tên:",
+      "method": "id_pattern",
+      "column_name": "text_48"
+    },
+    {
+      "id": "PARAGRAPH49",
+      "type": "text",
+      "content": "Họ Tên:",
+      "method": "id_pattern",
+      "column_name": "text_49"
+    },
+    {
+      "id": "PARAGRAPH50",
+      "type": "text",
+      "content": "Bạn sẽ đến chứ?",
+      "method": "id_pattern",
+      "column_name": "text_50"
+    },
+    {
+      "id": "PARAGRAPH65",
+      "type": "text",
+      "content": "Bạn sẽ tham dự bữa tiệc nào?",
+      "method": "id_pattern",
+      "column_name": "text_65"
+    },
+    {
+      "id": "PARAGRAPH51",
+      "type": "text",
+      "content": "Gửi lời chúc đến cô dâu chú rể",
+      "method": "id_pattern",
+      "column_name": "groom_name"
+    },
+    {
+      "id": "PARAGRAPH53",
+      "type": "text",
+      "content": "GỬI MỪNG CƯỚI ĐẾN CÔ DÂU CHÚ RỂ",
+      "method": "id_pattern",
+      "column_name": "groom_name_2"
+    },
+    {
+      "id": "IMAGE55",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_55"
+    },
+    {
+      "id": "IMAGE52",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_52"
+    },
+    {
+      "id": "PARAGRAPH54",
+      "type": "text",
+      "content": "You're My Love",
+      "method": "id_pattern",
+      "column_name": "love_text_3"
+    },
+    {
+      "id": "IMAGE60",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_60"
+    },
+    {
+      "id": "IMAGE56",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_56"
+    },
+    {
+      "id": "PARAGRAPH55",
+      "type": "text",
+      "content": "Our Love Story",
+      "method": "id_pattern",
+      "column_name": "love_text_4"
+    },
+    {
+      "id": "GROUP35",
+      "type": "text",
+      "content": "Our Love Story",
+      "method": "id_pattern",
+      "column_name": "love_text_5"
+    },
+    {
+      "id": "PARAGRAPH57",
+      "type": "text",
+      "content": "Our Love Story",
+      "method": "id_pattern",
+      "column_name": "love_text_6"
+    },
+    {
+      "id": "PARAGRAPH58",
+      "type": "text",
+      "content": "CÔ DÂU",
+      "method": "id_pattern",
+      "column_name": "bride_name"
+    },
+    {
+      "id": "PARAGRAPH59",
+      "type": "text",
+      "content": "- Tên tài khoản:",
+      "method": "id_pattern",
+      "column_name": "text_59"
+    },
+    {
+      "id": "PARAGRAPH60",
+      "type": "text",
+      "content": "- STK: 0123456789",
+      "method": "id_pattern",
+      "column_name": "text_60"
+    },
+    {
+      "id": "GROUP36",
+      "type": "text",
+      "content": "- Tên ngân hàng:",
+      "method": "id_pattern",
+      "column_name": "text_group36"
+    },
+    {
+      "id": "PARAGRAPH61",
+      "type": "text",
+      "content": "- Tên ngân hàng:",
+      "method": "id_pattern",
+      "column_name": "text_61"
+    },
+    {
+      "id": "PARAGRAPH62",
+      "type": "text",
+      "content": "CHÚ RỂ",
+      "method": "id_pattern",
+      "column_name": "groom_name_3"
+    },
+    {
+      "id": "PARAGRAPH63",
+      "type": "text",
+      "content": "- Tên tài khoản:",
+      "method": "id_pattern",
+      "column_name": "text_63"
+    },
+    {
+      "id": "PARAGRAPH64",
+      "type": "text",
+      "content": "- STK: 0123456789",
+      "method": "id_pattern",
+      "column_name": "text_64"
+    },
+    {
+      "id": "IMAGE71",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_71"
+    },
+    {
+      "id": "IMAGE72",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_72"
+    },
+    {
+      "id": "IMAGE61",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_61"
+    },
+    {
+      "id": "IMAGE62",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_62"
+    },
+    {
+      "id": "GROUP38",
+      "type": "text",
+      "content": "Gia Bảo",
+      "method": "id_pattern",
+      "column_name": "text_group38"
+    },
+    {
+      "id": "HEADLINE9",
+      "type": "text",
+      "content": "Gia Bảo",
+      "method": "id_pattern",
+      "column_name": "headline_9"
+    },
+    {
+      "id": "GROUP39",
+      "type": "text",
+      "content": "Gia Bảo",
+      "method": "id_pattern",
+      "column_name": "text_group39"
+    },
+    {
+      "id": "SHAPE1",
+      "type": "text",
+      "content": "Gia Bảo",
+      "method": "id_pattern",
+      "column_name": "text_shape1"
+    },
+    {
+      "id": "HEADLINE10",
+      "type": "text",
+      "content": "Hà My",
+      "method": "id_pattern",
+      "column_name": "headline_10"
+    },
+    {
+      "id": "PARAGRAPH66",
+      "type": "text",
+      "content": "Hà My",
+      "method": "id_pattern",
+      "column_name": "text_66"
+    },
+    {
+      "id": "PARAGRAPH115",
+      "type": "text",
+      "content": "Bản quyền thuộc AuroraWedding - Thiệp Cưới Online",
+      "method": "id_pattern",
+      "column_name": "weekday"
+    },
+    {
+      "id": "SECTION_POPUP",
+      "type": "text",
+      "content": "Bản quyền thuộc AuroraWedding - Thiệp Cưới Online",
+      "method": "id_pattern",
+      "column_name": "weekday_2"
+    },
+    {
+      "id": "LOICHUC",
+      "type": "text",
+      "content": "Gửi lời chúc",
+      "method": "id_pattern",
+      "column_name": "send_button_7"
+    },
+    {
+      "id": "HEADLINE13",
+      "type": "text",
+      "content": "Gửi lời chúc",
+      "method": "id_pattern",
+      "column_name": "send_button_8"
+    },
+    {
+      "id": "XNTD",
+      "type": "text",
+      "content": "Gửi lời chúc",
+      "method": "id_pattern",
+      "column_name": "send_button_9"
+    },
+    {
+      "id": "HEADLINE14",
+      "type": "text",
+      "content": "Gửi lời chúc",
+      "method": "id_pattern",
+      "column_name": "send_button_10"
+    },
+    {
+      "id": "MUNGCUOI",
+      "type": "text",
+      "content": "Xác nhận tham dự",
+      "method": "id_pattern",
+      "column_name": "confirm_button"
+    },
+    {
+      "id": "HEADLINE15",
+      "type": "text",
+      "content": "Mừng cưới",
+      "method": "id_pattern",
+      "column_name": "headline_15"
+    },
+    {
+      "id": "THIEP",
+      "type": "text",
+      "content": "Mừng cưới",
+      "method": "id_pattern",
+      "column_name": "text_thiep"
+    },
+    {
+      "id": "HEADLINE16",
+      "type": "text",
+      "content": "Mừng cưới",
+      "method": "id_pattern",
+      "column_name": "headline_16"
+    },
+    {
+      "id": "POPUP5",
+      "type": "text",
+      "content": "Thiệp mời",
+      "method": "id_pattern",
+      "column_name": "text_popup5"
+    },
+    {
+      "id": "GALLERY3",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "gallery_3"
+    },
+    {
+      "id": "eJOY__extension_ai_adv_root",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_ai_adv_root"
+    },
+    {
+      "id": "mask0_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask0_427_34"
+    },
+    {
+      "id": "mask1_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask1_427_34"
+    },
+    {
+      "id": "mask2_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask2_427_34"
+    },
+    {
+      "id": "eJOY__extension_root",
+      "type": "text",
+      "content": "0 / 10",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_root"
+    },
+    {
+      "id": "eJOY__extension_shadow",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_shadow"
+    },
+    {
+      "id": "SECTION2",
+      "type": "text",
+      "content": "Gia BảoEm là giấc mơ đẹp nhất của anh, và hôm nay giấc mơ ấy đã thành hiện thựcHà MyỞ thời điểm phù hợp nhất, mặc lên người bộ váy cưới đẹp nhất, gả cho người đáng tin cậy nhất, người đó chỉ có thể là...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "and_text_5"
+    },
+    {
+      "id": "SECTION3",
+      "type": "text",
+      "content": "NHÀ TRAICha:Hồ Thanh TâmMẹ:Lư Thị Mỹ LoanNHÀ GÁICha:Nguyễn SơnMẹ:Nguyễn Thị NguyệtTRÂN TRỌNG KÍNH MỜITỚI DỰ LỄ VU QUY CỦA HAI VỢ CHỒNG MÌNHBạn và Người ThươngHà My & Gia BảoThời Gian Tổ Chức Vào Hồi, ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "groom_family_17"
+    },
+    {
+      "id": "GROUP73",
+      "type": "text",
+      "content": "NHÀ TRAICha:Hồ Thanh TâmMẹ:Lư Thị Mỹ LoanNHÀ GÁICha:Nguyễn SơnMẹ:Nguyễn Thị NguyệtTRÂN TRỌNG KÍNH MỜITỚI DỰ LỄ VU QUY CỦA HAI VỢ CHỒNG MÌNHBạn và Người ThươngHà My & Gia BảoThời Gian Tổ Chức Vào Hồi, ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "groom_family_18"
+    },
+    {
+      "id": "GROUP75",
+      "type": "text",
+      "content": "NHÀ TRAICha:Hồ Thanh TâmMẹ:Lư Thị Mỹ LoanNHÀ GÁICha:Nguyễn SơnMẹ:Nguyễn Thị NguyệtTRÂN TRỌNG KÍNH MỜITỚI DỰ LỄ THÀNH HÔN CỦA HAI VỢ CHỒNG MÌNHBạn và Người ThươngGia Bảo & Hà MyThời Gian Tổ Chức Vào Hồ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "groom_family_19"
+    },
+    {
+      "id": "GROUP68",
+      "type": "text",
+      "content": "Mãi Bên Nhau NhéChặng đường nào rồi cũng phải có đích đến. Nếu hạnh phúc là một con đường thì anh và em đang dần đi đến chặng đường cuối trong cuộc hành trình đầy cảm xúc này.Cảm ơn và trân trọng tất ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "sincerely_text"
+    },
+    {
+      "id": "GROUP19",
+      "type": "text",
+      "content": "Mãi Bên Nhau NhéChặng đường nào rồi cũng phải có đích đến. Nếu hạnh phúc là một con đường thì anh và em đang dần đi đến chặng đường cuối trong cuộc hành trình đầy cảm xúc này.Cảm ơn và trân trọng tất ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "sincerely_text_2"
+    },
+    {
+      "id": "GROUP20",
+      "type": "text",
+      "content": "Mãi Bên Nhau Nhé",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "text_group20"
+    },
+    {
+      "id": "GROUP47",
+      "type": "text",
+      "content": "Hành Trình Bên NhauThời gian yêu nhau của chúng mình không quá dài nhưng cũng không phải ngắn. Đối với em, đó là một hành trình dài với rất nhiều cung bậc cảm xúc; vui có, buồn có, giận hờn có, nhưng ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "grandfather_name_2"
+    },
+    {
+      "id": "GROUP17",
+      "type": "text",
+      "content": "Hành Trình Bên NhauThời gian yêu nhau của chúng mình không quá dài nhưng cũng không phải ngắn. Đối với em, đó là một hành trình dài với rất nhiều cung bậc cảm xúc; vui có, buồn có, giận hờn có, nhưng ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "grandfather_name_3"
+    },
+    {
+      "id": "GROUP18",
+      "type": "text",
+      "content": "Hành Trình Bên Nhau",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "text_group18"
+    },
+    {
+      "id": "GROUP46",
+      "type": "text",
+      "content": "Lần Đầu Gặp GỡTình yêu là sự rung cảm của một tâm hồn khi gặp một tâm hồn đồng điệu, là sự hòa nhịp của hai trái tim, làm người ta nhìn thấy mọi vật tươi đẹp hơn. Khoảng cách giữa chúng ta nếu là một ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "love_text_7"
+    },
+    {
+      "id": "GROUP16",
+      "type": "text",
+      "content": "Lần Đầu Gặp GỡTình yêu là sự rung cảm của một tâm hồn khi gặp một tâm hồn đồng điệu, là sự hòa nhịp của hai trái tim, làm người ta nhìn thấy mọi vật tươi đẹp hơn. Khoảng cách giữa chúng ta nếu là một ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "love_text_8"
+    },
+    {
+      "id": "GROUP14",
+      "type": "text",
+      "content": "Lần Đầu Gặp Gỡ",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "text_group14"
+    },
+    {
+      "id": "SECTION5",
+      "type": "text",
+      "content": "KHOẢNH KHẮC ĐẸP NHẤTCùng ngắm nhìn những bức hình đẹp nhất của chúng mình nhé!XEM THÊM",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "view_button_4"
+    },
+    {
+      "id": "GROUP22",
+      "type": "text",
+      "content": "KHOẢNH KHẮC ĐẸP NHẤTCùng ngắm nhìn những bức hình đẹp nhất của chúng mình nhé!",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "text_group22"
+    },
+    {
+      "id": "SECTION6",
+      "type": "text",
+      "content": "SỰ KIỆN QUAN TRỌNGSự hiện diện của bạn là vinh hạnh của chúng mình!Lễ Ăn HỏiThứ 5, Ngày 26 tháng 09 năm 2024(tức 24/08 Giáp Thìn)Tư Gia Nhà GáiThôn An Mỹ, Xã Tây Hồ, TP Đà NẵngLỄ VU QUYChủ Nhật, Ngày ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "bride_family_12"
+    },
+    {
+      "id": "GROUP24",
+      "type": "text",
+      "content": "SỰ KIỆN QUAN TRỌNGSự hiện diện của bạn là vinh hạnh của chúng mình!",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "text_group24"
+    },
+    {
+      "id": "GROUP63",
+      "type": "text",
+      "content": "Lễ Ăn HỏiThứ 5, Ngày 26 tháng 09 năm 2024(tức 24/08 Giáp Thìn)Tư Gia Nhà GáiThôn An Mỹ, Xã Tây Hồ, TP Đà Nẵng",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "bride_family_13"
+    },
+    {
+      "id": "GROUP25",
+      "type": "text",
+      "content": "Lễ Ăn HỏiThứ 5, Ngày 26 tháng 09 năm 2024(tức 24/08 Giáp Thìn)",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "event_date_5"
+    },
+    {
+      "id": "GROUP27",
+      "type": "text",
+      "content": "LỄ THÀNH HÔNChủ Nhật, Ngày 20 tháng 07 năm 2025(tức 26/06 Ất Tỵ)",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "marriage_ceremony_3"
+    },
+    {
+      "id": "SECTION7",
+      "type": "text",
+      "content": "BẠN SẼ ĐẾN CHỨ?Đám cưới của chúng tôi sẽ trọn vẹn hơn khi có thêm lời chúc phúc và sự hiện diện của các bạn. Xin hãy xác nhận sự có mặt của mình để chúng tôi chuẩn bị đón tiếp một cách chu đáo nhất nh...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "confirm_button_2"
+    },
+    {
+      "id": "GROUP42",
+      "type": "text",
+      "content": "Gửi điMình sẽ đếnMình có thể đếnMình không đếnTiệc Cưới Nhà GáiTiệc Cưới Nhà TraiSự lựa chọnBạn Cô DâuBạn Chú RểBạn đi bao nhiêu người ?12345Họ Tên:Bạn sẽ đến chứ?Bạn sẽ tham dự bữa tiệc nào?Khách mời...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "groom_name_4"
+    },
+    {
+      "id": "SECTION8",
+      "type": "text",
+      "content": "GỬI MỪNG CƯỚI ĐẾN CÔ DÂU CHÚ RỂMình rất muốn được chụp chung với bạn những tấm hình kỷ niệm vì vậy hãy đến sớm hơn một chút bạn yêu nhé!You're My LoveOur Love StoryCÔ DÂU- Tên tài khoản:Nguyen Ha My- ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "groom_name_5"
+    },
+    {
+      "id": "GROUP34",
+      "type": "text",
+      "content": "You're My Love",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "love_text_9"
+    },
+    {
+      "id": "GROUP33",
+      "type": "text",
+      "content": "Our Love Story",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "love_text_10"
+    },
+    {
+      "id": "SECTION9",
+      "type": "text",
+      "content": "Gia BảoHà MyThank you!Bản quyền thuộc AuroraWedding - Thiệp Cưới Online",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "weekday_3"
+    },
+    {
+      "id": "GROUP100",
+      "type": "text",
+      "content": "Bản quyền thuộc AuroraWedding - Thiệp Cưới Online",
+      "method": "dom_tree",
+      "tag": "a",
+      "column_name": "weekday_4"
+    },
+    {
+      "id": "IMAGE62",
+      "type": "text",
+      "content": "Gia Bảo",
+      "method": "class_pattern",
+      "column_name": "text_image62"
+    },
+    {
+      "id": "IMAGE19",
+      "type": "text",
+      "content": "TRÂN TRỌNG KÍNH MỜI",
+      "method": "class_pattern",
+      "column_name": "invitation_text_5"
+    },
+    {
+      "id": "LINE18",
+      "type": "text",
+      "content": "13",
+      "method": "class_pattern",
+      "column_name": "text_line18"
+    },
+    {
+      "id": "IMAGE75",
+      "type": "text",
+      "content": "TRÂN TRỌNG KÍNH MỜI",
+      "method": "class_pattern",
+      "column_name": "invitation_text_6"
+    },
+    {
+      "id": "LINE33",
+      "type": "text",
+      "content": "20",
+      "method": "class_pattern",
+      "column_name": "text_line33"
+    },
+    {
+      "id": "IMAGE32",
+      "type": "text",
+      "content": "Mãi Bên Nhau Nhé",
+      "method": "class_pattern",
+      "column_name": "text_image32"
+    },
+    {
+      "id": "IMAGE31",
+      "type": "text",
+      "content": "Hành Trình Bên Nhau",
+      "method": "class_pattern",
+      "column_name": "text_image31"
+    },
+    {
+      "id": "IMAGE52",
+      "type": "text",
+      "content": "You're My Love",
+      "method": "class_pattern",
+      "column_name": "love_text_11"
+    },
+    {
+      "id": "IMAGE56",
+      "type": "text",
+      "content": "Our Love Story",
+      "method": "class_pattern",
+      "column_name": "love_text_12"
+    },
+    {
+      "id": "GROUP58",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP58"
+    },
+    {
+      "id": "BOX26",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_BOX26"
+    },
+    {
+      "id": "SECTION2",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_SECTION2"
+    },
+    {
+      "id": "GROUP4",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP4"
+    },
+    {
+      "id": "GROUP1",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP1"
+    },
+    {
+      "id": "GROUP2",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP2"
+    },
+    {
+      "id": "GROUP3",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP3"
+    },
+    {
+      "id": "GROUP99",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP99"
+    },
+    {
+      "id": "PARAGRAPH89",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_PARAGRAPH89"
+    },
+    {
+      "id": "GROUP19",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP19"
+    },
+    {
+      "id": "GROUP47",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP47"
+    },
+    {
+      "id": "GROUP17",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP17"
+    },
+    {
+      "id": "GROUP46",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP46"
+    },
+    {
+      "id": "GROUP16",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP16"
+    },
+    {
+      "id": "BOX2",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_BOX2"
+    },
+    {
+      "id": "GROUP63",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP63"
+    },
+    {
+      "id": "GROUP66",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP66"
+    },
+    {
+      "id": "GROUP67",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP67"
+    },
+    {
+      "id": "GROUP41",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP41"
+    },
+    {
+      "id": "GROUP34",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP34"
+    },
+    {
+      "id": "PARAGRAPH54",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_PARAGRAPH54"
+    },
+    {
+      "id": "GROUP33",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP33"
+    },
+    {
+      "id": "BOX13",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_BOX13"
+    },
+    {
+      "id": "PARAGRAPH64",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_PARAGRAPH64"
+    },
+    {
+      "id": "SECTION9",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_SECTION9"
+    },
+    {
+      "id": "aqYoiihPiL",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_aqYoiihPiL"
+    },
+    {
+      "id": "GALLERY3",
+      "type": "gallery",
+      "content": "",
+      "method": "image_scan",
+      "column_name": "gallery3"
+    }
+  ]
+}

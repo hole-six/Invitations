@@ -1,0 +1,1569 @@
+{
+  "source_file": "generate-html\\mau19.html",
+  "total_elements": 221,
+  "stats": {
+    "total_elements": 221,
+    "text_elements": 184,
+    "image_elements": 35,
+    "video_elements": 1,
+    "other_elements": 1
+  },
+  "elements": [
+    {
+      "id": "style_element",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_style_element"
+    },
+    {
+      "id": "background-music",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_background-music"
+    },
+    {
+      "id": "music-toggle",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_music-toggle"
+    },
+    {
+      "id": "play-icon",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_play-icon"
+    },
+    {
+      "id": "pause-icon",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_pause-icon"
+    },
+    {
+      "id": "SECTION2",
+      "type": "text",
+      "content": "Đức Tín &amp; Minh Thư",
+      "method": "id_pattern",
+      "column_name": "text_section2"
+    },
+    {
+      "id": "IMAGE1",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_1"
+    },
+    {
+      "id": "HEADLINE3",
+      "type": "text",
+      "content": "Đức Tín &amp; Minh Thư",
+      "method": "id_pattern",
+      "column_name": "headline_3"
+    },
+    {
+      "id": "HEADLINE4",
+      "type": "text",
+      "content": "Đức Tín &amp; Minh Thư",
+      "method": "id_pattern",
+      "column_name": "headline_4"
+    },
+    {
+      "id": "LINE1",
+      "type": "text",
+      "content": "THƯ MỜI TIỆC CƯỚI",
+      "method": "id_pattern",
+      "column_name": "wedding_party"
+    },
+    {
+      "id": "HEADLINE6",
+      "type": "text",
+      "content": "THƯ MỜI TIỆC CƯỚI",
+      "method": "id_pattern",
+      "column_name": "wedding_party_2"
+    },
+    {
+      "id": "LINE2",
+      "type": "text",
+      "content": "01 . 11 . 2025",
+      "method": "id_pattern",
+      "column_name": "text_line2"
+    },
+    {
+      "id": "HEADLINE78",
+      "type": "text",
+      "content": "01 . 11 . 2025",
+      "method": "id_pattern",
+      "column_name": "headline_78"
+    },
+    {
+      "id": "IMAGE31",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_31"
+    },
+    {
+      "id": "BUTTON_SHAPE31",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "button__SHAPE31"
+    },
+    {
+      "id": "BUTTON_TEXT31",
+      "type": "text",
+      "content": "Aurora",
+      "method": "id_pattern",
+      "column_name": "button_31"
+    },
+    {
+      "id": "NOTIFY2",
+      "type": "text",
+      "content": "Aurora",
+      "method": "id_pattern",
+      "column_name": "text_notify2"
+    },
+    {
+      "id": "SECTION3",
+      "type": "text",
+      "content": "Aurora",
+      "method": "id_pattern",
+      "column_name": "text_section3"
+    },
+    {
+      "id": "GROUP1",
+      "type": "text",
+      "content": "Bạn Dâu Rể",
+      "method": "id_pattern",
+      "column_name": "text_group1"
+    },
+    {
+      "id": "HEADLINE10",
+      "type": "text",
+      "content": "NHÀ GÁI",
+      "method": "id_pattern",
+      "column_name": "bride_family"
+    },
+    {
+      "id": "PARAGRAPH1",
+      "type": "text",
+      "content": "NHÀ GÁI",
+      "method": "id_pattern",
+      "column_name": "bride_family_2"
+    },
+    {
+      "id": "GROUP3",
+      "type": "text",
+      "content": "Ông: Huỳnh Tiến",
+      "method": "id_pattern",
+      "column_name": "grandfather_name"
+    },
+    {
+      "id": "HEADLINE11",
+      "type": "text",
+      "content": "Ông: Huỳnh Tiến",
+      "method": "id_pattern",
+      "column_name": "grandfather_name_2"
+    },
+    {
+      "id": "PARAGRAPH2",
+      "type": "text",
+      "content": "NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family"
+    },
+    {
+      "id": "IMAGE2",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_2"
+    },
+    {
+      "id": "IMAGE3",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_3"
+    },
+    {
+      "id": "IMAGE4",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_4"
+    },
+    {
+      "id": "HEADLINE64",
+      "type": "text",
+      "content": "\"Sự gì Thiên Chúa đã kết hợp,",
+      "method": "id_pattern",
+      "column_name": "headline_64"
+    },
+    {
+      "id": "SECTION4",
+      "type": "text",
+      "content": "\"Sự gì Thiên Chúa đã kết hợp,",
+      "method": "id_pattern",
+      "column_name": "text_section4"
+    },
+    {
+      "id": "BOX1",
+      "type": "text",
+      "content": "loài người không được phân ly.”",
+      "method": "id_pattern",
+      "column_name": "grandfather_name_3"
+    },
+    {
+      "id": "HEADLINE12",
+      "type": "text",
+      "content": "LỄ THÀNH HÔN",
+      "method": "id_pattern",
+      "column_name": "marriage_ceremony"
+    },
+    {
+      "id": "HEADLINE14",
+      "type": "text",
+      "content": "LỄ THÀNH HÔN",
+      "method": "id_pattern",
+      "column_name": "marriage_ceremony_2"
+    },
+    {
+      "id": "HEADLINE15",
+      "type": "text",
+      "content": "LỄ THÀNH HÔN",
+      "method": "id_pattern",
+      "column_name": "marriage_ceremony_3"
+    },
+    {
+      "id": "IMAGE5",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_5"
+    },
+    {
+      "id": "HEADLINE16",
+      "type": "text",
+      "content": "Minh Thư",
+      "method": "id_pattern",
+      "column_name": "headline_16"
+    },
+    {
+      "id": "HEADLINE17",
+      "type": "text",
+      "content": "Đón Khách: 16H30",
+      "method": "id_pattern",
+      "column_name": "headline_17"
+    },
+    {
+      "id": "HEADLINE18",
+      "type": "text",
+      "content": "Nhập Tiệc: 17H30",
+      "method": "id_pattern",
+      "column_name": "headline_18"
+    },
+    {
+      "id": "LINE3",
+      "type": "text",
+      "content": "THỨ BẢY",
+      "method": "id_pattern",
+      "column_name": "weekday"
+    },
+    {
+      "id": "LINE4",
+      "type": "text",
+      "content": "(Tức ngày 12 tháng 09 năm Ất Tỵ)",
+      "method": "id_pattern",
+      "column_name": "event_date"
+    },
+    {
+      "id": "HEADLINE23",
+      "type": "text",
+      "content": "(Tức ngày 12 tháng 09 năm Ất Tỵ)",
+      "method": "id_pattern",
+      "column_name": "event_date_2"
+    },
+    {
+      "id": "HEADLINE20",
+      "type": "text",
+      "content": "(Tức ngày 12 tháng 09 năm Ất Tỵ)",
+      "method": "id_pattern",
+      "column_name": "event_date_3"
+    },
+    {
+      "id": "HEADLINE21",
+      "type": "text",
+      "content": "(Tức ngày 12 tháng 09 năm Ất Tỵ)",
+      "method": "id_pattern",
+      "column_name": "event_date_4"
+    },
+    {
+      "id": "COUNTDOWN1",
+      "type": "text",
+      "content": "THÁNG 11",
+      "method": "id_pattern",
+      "column_name": "event_month"
+    },
+    {
+      "id": "COUNTDOWN_ITEM1",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_countdown_item1"
+    },
+    {
+      "id": "COUNTDOWN_ITEM2",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_countdown_item2"
+    },
+    {
+      "id": "COUNTDOWN_ITEM3",
+      "type": "text",
+      "content": "Ngày",
+      "method": "id_pattern",
+      "column_name": "event_date_5"
+    },
+    {
+      "id": "COUNTDOWN_ITEM4",
+      "type": "text",
+      "content": "Ngày",
+      "method": "id_pattern",
+      "column_name": "event_date_6"
+    },
+    {
+      "id": "HEADLINE24",
+      "type": "text",
+      "content": "Ngày",
+      "method": "id_pattern",
+      "column_name": "event_date_7"
+    },
+    {
+      "id": "HEADLINE25",
+      "type": "text",
+      "content": "Ngày",
+      "method": "id_pattern",
+      "column_name": "event_date_8"
+    },
+    {
+      "id": "HEADLINE26",
+      "type": "text",
+      "content": "Ngày",
+      "method": "id_pattern",
+      "column_name": "event_date_9"
+    },
+    {
+      "id": "HEADLINE27",
+      "type": "text",
+      "content": "Giờ",
+      "method": "id_pattern",
+      "column_name": "event_time"
+    },
+    {
+      "id": "HEADLINE28",
+      "type": "text",
+      "content": "Phút",
+      "method": "id_pattern",
+      "column_name": "headline_28"
+    },
+    {
+      "id": "BUTTON2",
+      "type": "text",
+      "content": "Cùng đếm ngược thời gian với chúng mình nha!",
+      "method": "id_pattern",
+      "column_name": "button_2"
+    },
+    {
+      "id": "BUTTON_TEXT2",
+      "type": "text",
+      "content": "XÁC NHẬN THAM DỰ",
+      "method": "id_pattern",
+      "column_name": "confirm_button"
+    },
+    {
+      "id": "BUTTON3",
+      "type": "text",
+      "content": "XÁC NHẬN THAM DỰ",
+      "method": "id_pattern",
+      "column_name": "confirm_button_2"
+    },
+    {
+      "id": "BUTTON_TEXT3",
+      "type": "text",
+      "content": "GỬI MỪNG CƯỚI NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family_2"
+    },
+    {
+      "id": "BUTTON12",
+      "type": "text",
+      "content": "GỬI MỪNG CƯỚI NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family_3"
+    },
+    {
+      "id": "BUTTON_TEXT12",
+      "type": "text",
+      "content": "GỬI MỪNG CƯỚI NHÀ GÁI",
+      "method": "id_pattern",
+      "column_name": "bride_family_3"
+    },
+    {
+      "id": "PARAGRAPH10",
+      "type": "text",
+      "content": "GỬI MỪNG CƯỚI NHÀ GÁI",
+      "method": "id_pattern",
+      "column_name": "bride_family_4"
+    },
+    {
+      "id": "PARAGRAPH11",
+      "type": "text",
+      "content": "GỬI MỪNG CƯỚI NHÀ GÁI",
+      "method": "id_pattern",
+      "column_name": "bride_family_5"
+    },
+    {
+      "id": "PARAGRAPH14",
+      "type": "text",
+      "content": "TRÂN TRỌNG KÍNH MỜI",
+      "method": "id_pattern",
+      "column_name": "invitation_text"
+    },
+    {
+      "id": "SECTION12",
+      "type": "text",
+      "content": "TỚI DỰ",
+      "method": "id_pattern",
+      "column_name": "text_section12"
+    },
+    {
+      "id": "GROUP47",
+      "type": "text",
+      "content": "Quý Khách",
+      "method": "id_pattern",
+      "column_name": "text_group47"
+    },
+    {
+      "id": "BOX20",
+      "type": "text",
+      "content": "TIỆC CƯỚI NHÀ GÁI",
+      "method": "id_pattern",
+      "column_name": "bride_family_6"
+    },
+    {
+      "id": "HEADLINE83",
+      "type": "text",
+      "content": "TIỆC CƯỚI NHÀ GÁI",
+      "method": "id_pattern",
+      "column_name": "bride_family_7"
+    },
+    {
+      "id": "GROUP48",
+      "type": "text",
+      "content": "TIỆC CƯỚI NHÀ GÁI",
+      "method": "id_pattern",
+      "column_name": "bride_family_8"
+    },
+    {
+      "id": "HEADLINE84",
+      "type": "text",
+      "content": "TIỆC CƯỚI NHÀ GÁI",
+      "method": "id_pattern",
+      "column_name": "bride_family_9"
+    },
+    {
+      "id": "HEADLINE85",
+      "type": "text",
+      "content": "THỨ 5 I 16:00",
+      "method": "id_pattern",
+      "column_name": "weekday_2"
+    },
+    {
+      "id": "HEADLINE86",
+      "type": "text",
+      "content": "27 . 11 . 2025",
+      "method": "id_pattern",
+      "column_name": "headline_86"
+    },
+    {
+      "id": "GROUP49",
+      "type": "text",
+      "content": "(Tức ngày 08 Tháng 10 Năm Ất Tỵ)",
+      "method": "id_pattern",
+      "column_name": "event_date_10"
+    },
+    {
+      "id": "HEADLINE87",
+      "type": "text",
+      "content": "(Tức ngày 08 Tháng 10 Năm Ất Tỵ)",
+      "method": "id_pattern",
+      "column_name": "event_date_11"
+    },
+    {
+      "id": "HEADLINE88",
+      "type": "text",
+      "content": "Tại Tư Gia Nhà Gái",
+      "method": "id_pattern",
+      "column_name": "bride_family_10"
+    },
+    {
+      "id": "BUTTON33",
+      "type": "text",
+      "content": "Nhà May Toàn Thắng",
+      "method": "id_pattern",
+      "column_name": "button_33"
+    },
+    {
+      "id": "BUTTON_TEXT33",
+      "type": "text",
+      "content": "XÁC NHẬN THAM DỰ",
+      "method": "id_pattern",
+      "column_name": "confirm_button_3"
+    },
+    {
+      "id": "GROUP50",
+      "type": "text",
+      "content": "XÁC NHẬN THAM DỰ",
+      "method": "id_pattern",
+      "column_name": "confirm_button_4"
+    },
+    {
+      "id": "BOX21",
+      "type": "text",
+      "content": "XÁC NHẬN THAM DỰ",
+      "method": "id_pattern",
+      "column_name": "confirm_button_5"
+    },
+    {
+      "id": "HEADLINE90",
+      "type": "text",
+      "content": "TIỆC CƯỚI NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family_4"
+    },
+    {
+      "id": "GROUP51",
+      "type": "text",
+      "content": "TIỆC CƯỚI NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family_5"
+    },
+    {
+      "id": "HEADLINE91",
+      "type": "text",
+      "content": "TIỆC CƯỚI NHÀ TRAI",
+      "method": "id_pattern",
+      "column_name": "groom_family_6"
+    },
+    {
+      "id": "HEADLINE92",
+      "type": "text",
+      "content": "THỨ 6 I 11:00",
+      "method": "id_pattern",
+      "column_name": "weekday_3"
+    },
+    {
+      "id": "HEADLINE93",
+      "type": "text",
+      "content": "28 . 11 . 2025",
+      "method": "id_pattern",
+      "column_name": "headline_93"
+    },
+    {
+      "id": "GROUP52",
+      "type": "text",
+      "content": "(Tức ngày 09 Tháng 10 Năm Ất Tỵ)",
+      "method": "id_pattern",
+      "column_name": "event_date_12"
+    },
+    {
+      "id": "HEADLINE94",
+      "type": "text",
+      "content": "(Tức ngày 09 Tháng 10 Năm Ất Tỵ)",
+      "method": "id_pattern",
+      "column_name": "event_date_13"
+    },
+    {
+      "id": "HEADLINE95",
+      "type": "text",
+      "content": "Tại Trung Tâm Tiệc Cưới",
+      "method": "id_pattern",
+      "column_name": "wedding_party_3"
+    },
+    {
+      "id": "BUTTON34",
+      "type": "text",
+      "content": "Vạn Hoa Thiên Sơn Plaza",
+      "method": "id_pattern",
+      "column_name": "button_34"
+    },
+    {
+      "id": "BUTTON_TEXT34",
+      "type": "text",
+      "content": "XÁC NHẬN THAM DỰ",
+      "method": "id_pattern",
+      "column_name": "confirm_button_6"
+    },
+    {
+      "id": "SECTION7",
+      "type": "text",
+      "content": "XÁC NHẬN THAM DỰ",
+      "method": "id_pattern",
+      "column_name": "confirm_button_7"
+    },
+    {
+      "id": "HEADLINE68",
+      "type": "text",
+      "content": "XÁC NHẬN THAM DỰ",
+      "method": "id_pattern",
+      "column_name": "confirm_button_8"
+    },
+    {
+      "id": "HEADLINE69",
+      "type": "text",
+      "content": "ĐỊA ĐIỂM TỔ CHỨC",
+      "method": "id_pattern",
+      "column_name": "venue_name"
+    },
+    {
+      "id": "BUTTON25",
+      "type": "text",
+      "content": "Resort&nbsp; Phương&nbsp; Nam",
+      "method": "id_pattern",
+      "column_name": "event_year"
+    },
+    {
+      "id": "BUTTON_TEXT25",
+      "type": "text",
+      "content": "Xem Chỉ Đường",
+      "method": "id_pattern",
+      "column_name": "view_button"
+    },
+    {
+      "id": "HEADLINE70",
+      "type": "text",
+      "content": "Xem Chỉ Đường",
+      "method": "id_pattern",
+      "column_name": "view_button_2"
+    },
+    {
+      "id": "HTML_CODE3",
+      "type": "text",
+      "content": "**Resort khuyến nghị: Để tránh nguy hiểm ngoài ý muốn tại hồ bơi không có rào chắn, quý khách nên hạn chế cho trẻ nhỏ đi cùng.",
+      "method": "id_pattern",
+      "column_name": "grandfather_name_4"
+    },
+    {
+      "id": "PARAGRAPH12",
+      "type": "text",
+      "content": "Album ảnh của chúng tôi!",
+      "method": "id_pattern",
+      "column_name": "album_title"
+    },
+    {
+      "id": "IMAGE24",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_24"
+    },
+    {
+      "id": "IMAGE25",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_25"
+    },
+    {
+      "id": "IMAGE26",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_26"
+    },
+    {
+      "id": "IMAGE27",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_27"
+    },
+    {
+      "id": "IMAGE28",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_28"
+    },
+    {
+      "id": "IMAGE29",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_29"
+    },
+    {
+      "id": "IMAGE30",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_30"
+    },
+    {
+      "id": "GROUP42",
+      "type": "text",
+      "content": "XEM THÊM",
+      "method": "id_pattern",
+      "column_name": "view_button_3"
+    },
+    {
+      "id": "HEADLINE73",
+      "type": "text",
+      "content": "XEM THÊM",
+      "method": "id_pattern",
+      "column_name": "view_button_4"
+    },
+    {
+      "id": "SHAPE4",
+      "type": "text",
+      "content": "XEM THÊM",
+      "method": "id_pattern",
+      "column_name": "view_button_5"
+    },
+    {
+      "id": "PARAGRAPH17",
+      "type": "text",
+      "content": "Cảm ơn bạn rất nhiều vì đã gửi những lời chúc mừng tốt đẹp nhất đến đám cưới của chúng mình!",
+      "method": "id_pattern",
+      "column_name": "send_button"
+    },
+    {
+      "id": "FORM7",
+      "type": "text",
+      "content": "Gửi lời chúc",
+      "method": "id_pattern",
+      "column_name": "send_button_2"
+    },
+    {
+      "id": "687876ba227d8a0013a24db6",
+      "type": "text",
+      "content": "Gửi lời chúc",
+      "method": "id_pattern",
+      "column_name": "send_button_3"
+    },
+    {
+      "id": "BUTTON32",
+      "type": "text",
+      "content": "Gửi lời chúc",
+      "method": "id_pattern",
+      "column_name": "send_button_4"
+    },
+    {
+      "id": "BUTTON_TEXT32",
+      "type": "text",
+      "content": "Gửi lời chúc",
+      "method": "id_pattern",
+      "column_name": "send_button_5"
+    },
+    {
+      "id": "FORM_ITEM27",
+      "type": "text",
+      "content": "Gửi lời chúc",
+      "method": "id_pattern",
+      "column_name": "send_button_6"
+    },
+    {
+      "id": "FORM_ITEM28",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_form_item28"
+    },
+    {
+      "id": "FORM_ITEM29",
+      "type": "text",
+      "content": "Bạn Cô Dâu Chú Rể",
+      "method": "id_pattern",
+      "column_name": "groom_name"
+    },
+    {
+      "id": "HEADLINE82",
+      "type": "text",
+      "content": "Bạn chú Rể",
+      "method": "id_pattern",
+      "column_name": "groom_name_2"
+    },
+    {
+      "id": "SECTION8",
+      "type": "text",
+      "content": "Gửi Lời Chúc Mừng",
+      "method": "id_pattern",
+      "column_name": "send_button_7"
+    },
+    {
+      "id": "PARAGRAPH8",
+      "type": "text",
+      "content": "VIDEO CƯỚI",
+      "method": "id_pattern",
+      "column_name": "text_8"
+    },
+    {
+      "id": "PARAGRAPH9",
+      "type": "text",
+      "content": "VIDEO CƯỚI",
+      "method": "id_pattern",
+      "column_name": "text_9"
+    },
+    {
+      "id": "VIDEO1",
+      "type": "video",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "video_1"
+    },
+    {
+      "id": "SHAPE1",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_shape1"
+    },
+    {
+      "id": "PARAGRAPH15",
+      "type": "text",
+      "content": "Xác nhận tham dự đám cưới của Tín &amp; Thư",
+      "method": "id_pattern",
+      "column_name": "confirm_button_9"
+    },
+    {
+      "id": "FORM5",
+      "type": "text",
+      "content": "Xác nhận tham dự đám cưới của Tín &amp; Thư",
+      "method": "id_pattern",
+      "column_name": "confirm_button_10"
+    },
+    {
+      "id": "687876a9227d8a0013a24b96",
+      "type": "text",
+      "content": "Xác nhận tham dự đám cưới của Tín &amp; Thư",
+      "method": "id_pattern",
+      "column_name": "confirm_button_11"
+    },
+    {
+      "id": "BUTTON29",
+      "type": "text",
+      "content": "Xác nhận",
+      "method": "id_pattern",
+      "column_name": "confirm_button_12"
+    },
+    {
+      "id": "BUTTON_TEXT29",
+      "type": "text",
+      "content": "Xác nhận",
+      "method": "id_pattern",
+      "column_name": "confirm_button_13"
+    },
+    {
+      "id": "FORM_ITEM15",
+      "type": "text",
+      "content": "Xác nhận",
+      "method": "id_pattern",
+      "column_name": "confirm_button_14"
+    },
+    {
+      "id": "FORM_ITEM16",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_form_item16"
+    },
+    {
+      "id": "FORM_ITEM17",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_form_item17"
+    },
+    {
+      "id": "FORM_ITEM18",
+      "type": "text",
+      "content": "Có, tôi sẽ đến",
+      "method": "id_pattern",
+      "column_name": "text_form_item18"
+    },
+    {
+      "id": "FORM_ITEM19",
+      "type": "text",
+      "content": "Xin lỗi, tôi bận mất rồi.",
+      "method": "id_pattern",
+      "column_name": "text_form_item19"
+    },
+    {
+      "id": "FORM_ITEM20",
+      "type": "text",
+      "content": "2 Người",
+      "method": "id_pattern",
+      "column_name": "text_form_item20"
+    },
+    {
+      "id": "HEADLINE79",
+      "type": "text",
+      "content": "Khách nhà trai",
+      "method": "id_pattern",
+      "column_name": "groom_family_7"
+    },
+    {
+      "id": "SECTION6",
+      "type": "text",
+      "content": "Xác Nhận Tham Dự",
+      "method": "id_pattern",
+      "column_name": "confirm_button_15"
+    },
+    {
+      "id": "GROUP35",
+      "type": "text",
+      "content": "Xác Nhận Tham Dự",
+      "method": "id_pattern",
+      "column_name": "confirm_button_16"
+    },
+    {
+      "id": "IMAGE22",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_22"
+    },
+    {
+      "id": "BOX14",
+      "type": "text",
+      "content": "Đức Tín &amp; Minh Thư",
+      "method": "id_pattern",
+      "column_name": "text_box14"
+    },
+    {
+      "id": "HEADLINE66",
+      "type": "text",
+      "content": "Đức Tín &amp; Minh Thư",
+      "method": "id_pattern",
+      "column_name": "headline_66"
+    },
+    {
+      "id": "HEADLINE67",
+      "type": "text",
+      "content": "Đức Tín &amp; Minh Thư",
+      "method": "id_pattern",
+      "column_name": "headline_67"
+    },
+    {
+      "id": "GROUP38",
+      "type": "text",
+      "content": "- Happy Wedding -&nbsp;",
+      "method": "id_pattern",
+      "column_name": "text_group38"
+    },
+    {
+      "id": "PARAGRAPH7",
+      "type": "text",
+      "content": "Bản quyền thuộc Aurora - Thiệp Cưới Online",
+      "method": "id_pattern",
+      "column_name": "weekday_4"
+    },
+    {
+      "id": "POPUP2",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾN",
+      "method": "id_pattern",
+      "column_name": "text_popup2"
+    },
+    {
+      "id": "GROUP11",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾN",
+      "method": "id_pattern",
+      "column_name": "text_group11"
+    },
+    {
+      "id": "GROUP12",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾN",
+      "method": "id_pattern",
+      "column_name": "text_group12"
+    },
+    {
+      "id": "BOX3",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾN",
+      "method": "id_pattern",
+      "column_name": "text_box3"
+    },
+    {
+      "id": "HEADLINE32",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾN",
+      "method": "id_pattern",
+      "column_name": "headline_32"
+    },
+    {
+      "id": "BUTTON5",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾN",
+      "method": "id_pattern",
+      "column_name": "button_5"
+    },
+    {
+      "id": "BUTTON_TEXT5",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾN",
+      "method": "id_pattern",
+      "column_name": "button_5_2"
+    },
+    {
+      "id": "BUTTON6",
+      "type": "text",
+      "content": "Tải ảnh QR",
+      "method": "id_pattern",
+      "column_name": "button_6"
+    },
+    {
+      "id": "BUTTON_TEXT6",
+      "type": "text",
+      "content": "Tải ảnh QR",
+      "method": "id_pattern",
+      "column_name": "button_6_2"
+    },
+    {
+      "id": "IMAGE7",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_7"
+    },
+    {
+      "id": "GROUP16",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_group16"
+    },
+    {
+      "id": "GROUP17",
+      "type": "text",
+      "content": "Tải ảnh QR",
+      "method": "id_pattern",
+      "column_name": "text_group17"
+    },
+    {
+      "id": "BOX5",
+      "type": "text",
+      "content": "Tải ảnh QR",
+      "method": "id_pattern",
+      "column_name": "text_box5"
+    },
+    {
+      "id": "BUTTON9",
+      "type": "text",
+      "content": "Tải ảnh QR",
+      "method": "id_pattern",
+      "column_name": "button_9"
+    },
+    {
+      "id": "BUTTON_TEXT9",
+      "type": "text",
+      "content": "Tải ảnh QR",
+      "method": "id_pattern",
+      "column_name": "button_9_2"
+    },
+    {
+      "id": "BUTTON10",
+      "type": "text",
+      "content": "Tải ảnh QR",
+      "method": "id_pattern",
+      "column_name": "button_10"
+    },
+    {
+      "id": "BUTTON_TEXT10",
+      "type": "text",
+      "content": "Copy STK",
+      "method": "id_pattern",
+      "column_name": "button_10_2"
+    },
+    {
+      "id": "HEADLINE40",
+      "type": "text",
+      "content": "Copy STK",
+      "method": "id_pattern",
+      "column_name": "headline_40"
+    },
+    {
+      "id": "IMAGE9",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_9"
+    },
+    {
+      "id": "POPUP4",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾN",
+      "method": "id_pattern",
+      "column_name": "text_popup4"
+    },
+    {
+      "id": "GROUP25",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾN",
+      "method": "id_pattern",
+      "column_name": "text_group25"
+    },
+    {
+      "id": "GROUP26",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾN",
+      "method": "id_pattern",
+      "column_name": "text_group26"
+    },
+    {
+      "id": "BOX9",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾN",
+      "method": "id_pattern",
+      "column_name": "text_box9"
+    },
+    {
+      "id": "HEADLINE54",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾN",
+      "method": "id_pattern",
+      "column_name": "headline_54"
+    },
+    {
+      "id": "BUTTON19",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾN",
+      "method": "id_pattern",
+      "column_name": "button_19"
+    },
+    {
+      "id": "BUTTON_TEXT19",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾN",
+      "method": "id_pattern",
+      "column_name": "button_19_2"
+    },
+    {
+      "id": "BUTTON20",
+      "type": "text",
+      "content": "Tải ảnh QR",
+      "method": "id_pattern",
+      "column_name": "button_20"
+    },
+    {
+      "id": "BUTTON_TEXT20",
+      "type": "text",
+      "content": "Tải ảnh QR",
+      "method": "id_pattern",
+      "column_name": "button_20_2"
+    },
+    {
+      "id": "IMAGE14",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_14"
+    },
+    {
+      "id": "GROUP28",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_group28"
+    },
+    {
+      "id": "GROUP29",
+      "type": "text",
+      "content": "Tải ảnh QR",
+      "method": "id_pattern",
+      "column_name": "text_group29"
+    },
+    {
+      "id": "BOX10",
+      "type": "text",
+      "content": "Tải ảnh QR",
+      "method": "id_pattern",
+      "column_name": "text_box10"
+    },
+    {
+      "id": "BUTTON21",
+      "type": "text",
+      "content": "Tải ảnh QR",
+      "method": "id_pattern",
+      "column_name": "button_21"
+    },
+    {
+      "id": "BUTTON_TEXT21",
+      "type": "text",
+      "content": "Tải ảnh QR",
+      "method": "id_pattern",
+      "column_name": "button_21_2"
+    },
+    {
+      "id": "BUTTON22",
+      "type": "text",
+      "content": "Tải ảnh QR",
+      "method": "id_pattern",
+      "column_name": "button_22"
+    },
+    {
+      "id": "BUTTON_TEXT22",
+      "type": "text",
+      "content": "Copy STK",
+      "method": "id_pattern",
+      "column_name": "button_22_2"
+    },
+    {
+      "id": "HEADLINE59",
+      "type": "text",
+      "content": "Copy STK",
+      "method": "id_pattern",
+      "column_name": "headline_59"
+    },
+    {
+      "id": "IMAGE15",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_15"
+    },
+    {
+      "id": "GALLERY1",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "gallery_1"
+    },
+    {
+      "id": "PARAGRAPH16",
+      "type": "text",
+      "content": "Xác nhận tham dự đám cưới của Tín &amp; Thư",
+      "method": "id_pattern",
+      "column_name": "confirm_button_17"
+    },
+    {
+      "id": "FORM6",
+      "type": "text",
+      "content": "Xác nhận tham dự đám cưới của Tín &amp; Thư",
+      "method": "id_pattern",
+      "column_name": "confirm_button_18"
+    },
+    {
+      "id": "BUTTON30",
+      "type": "text",
+      "content": "Xác nhận",
+      "method": "id_pattern",
+      "column_name": "confirm_button_19"
+    },
+    {
+      "id": "BUTTON_TEXT30",
+      "type": "text",
+      "content": "Xác nhận",
+      "method": "id_pattern",
+      "column_name": "confirm_button_20"
+    },
+    {
+      "id": "FORM_ITEM21",
+      "type": "text",
+      "content": "Xác nhận",
+      "method": "id_pattern",
+      "column_name": "confirm_button_21"
+    },
+    {
+      "id": "FORM_ITEM22",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_form_item22"
+    },
+    {
+      "id": "FORM_ITEM23",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_form_item23"
+    },
+    {
+      "id": "FORM_ITEM24",
+      "type": "text",
+      "content": "Có, tôi sẽ đến",
+      "method": "id_pattern",
+      "column_name": "text_form_item24"
+    },
+    {
+      "id": "FORM_ITEM25",
+      "type": "text",
+      "content": "Tiếc quá ngày hôm đó tôi có công việc gia đình mất rồi",
+      "method": "id_pattern",
+      "column_name": "grandfather_name_5"
+    },
+    {
+      "id": "FORM_ITEM26",
+      "type": "text",
+      "content": "2 Người",
+      "method": "id_pattern",
+      "column_name": "text_form_item26"
+    },
+    {
+      "id": "HEADLINE80",
+      "type": "text",
+      "content": "Khách nhà trai",
+      "method": "id_pattern",
+      "column_name": "groom_family_8"
+    },
+    {
+      "id": "backdrop-popup",
+      "type": "text",
+      "content": "Xác Nhận Tham Dự",
+      "method": "id_pattern",
+      "column_name": "confirm_button_22"
+    },
+    {
+      "id": "backdrop-dropbox",
+      "type": "text",
+      "content": "Xác Nhận Tham Dự",
+      "method": "id_pattern",
+      "column_name": "confirm_button_23"
+    },
+    {
+      "id": "eJOY__extension_ai_adv_root",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_ai_adv_root"
+    },
+    {
+      "id": "mask0_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask0_427_34"
+    },
+    {
+      "id": "mask1_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask1_427_34"
+    },
+    {
+      "id": "mask2_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask2_427_34"
+    },
+    {
+      "id": "eJOY__extension_root",
+      "type": "text",
+      "content": "0 / 10",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_root"
+    },
+    {
+      "id": "eJOY__extension_shadow",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_shadow"
+    },
+    {
+      "id": "SECTION9",
+      "type": "text",
+      "content": "Album ảnh của chúng tôi!XEM THÊM",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "album_title_2"
+    },
+    {
+      "id": "SECTION11",
+      "type": "text",
+      "content": "Cảm ơn bạn rất nhiều vì đã gửi những lời chúc mừng tốt đẹp nhất đến đám cưới của chúng mình!Gửi lời chúcBạn Cô Dâu Chú RểBạn cô DâuBạn chú RểBạn Dâu RểGửi Lời Chúc Mừng",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "groom_name_3"
+    },
+    {
+      "id": "GROUP46",
+      "type": "text",
+      "content": "Gửi lời chúcBạn Cô Dâu Chú RểBạn cô DâuBạn chú RểBạn Dâu Rể",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "groom_name_4"
+    },
+    {
+      "id": "GROUP39",
+      "type": "text",
+      "content": "VIDEO CƯỚIChúng tôi luôn có những khoảnh khắc vui vẻ cùng nhau, dù là ở đâu, hay là bất cứ khi nào !!!",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "text_group39"
+    },
+    {
+      "id": "SECTION10",
+      "type": "text",
+      "content": "Xác nhận tham dự đám cưới của Tín & ThưĐiều này giúp chúng tôi đón tiếp các bạn chu đáo và đầy đủ hơn. Xin cảm ơn !!!Xác nhậnCó, tôi sẽ đếnXin lỗi, tôi bận mất rồi.Số người đi cùngĐi một mình1 Người2 ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "confirm_button_24"
+    },
+    {
+      "id": "GROUP44",
+      "type": "text",
+      "content": "Xác nhận tham dự đám cưới của Tín & ThưĐiều này giúp chúng tôi đón tiếp các bạn chu đáo và đầy đủ hơn. Xin cảm ơn !!!Xác nhậnCó, tôi sẽ đếnXin lỗi, tôi bận mất rồi.Số người đi cùngĐi một mình1 Người2 ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "confirm_button_25"
+    },
+    {
+      "id": "SECTION_POPUP",
+      "type": "text",
+      "content": "MỪNG CƯỚI ĐẾNCHÚ RỂTải ảnh QRCopy STKTải ảnh QRCopy STKMỪNG CƯỚI ĐẾNCHÚ RỂMỪNG CƯỚI ĐẾNCHÚ RỂTải ảnh QRCopy STKTải ảnh QRCopy STKMỪNG CƯỚI ĐẾNCÔ DÂUXác nhận tham dự đám cưới của Tín & ThưĐiều này giúp...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "groom_name_5"
+    },
+    {
+      "id": "POPUP6",
+      "type": "text",
+      "content": "Xác nhận tham dự đám cưới của Tín & ThưĐiều này giúp chúng tôi đón tiếp các bạn chu đáo và đầy đủ hơn. Xin cảm ơn !!!Xác nhậnCó, tôi sẽ đếnTiếc quá ngày hôm đó tôi có công việc gia đình mất rồiSố ngườ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "grandfather_name_6"
+    },
+    {
+      "id": "GROUP45",
+      "type": "text",
+      "content": "Xác nhận tham dự đám cưới của Tín & ThưĐiều này giúp chúng tôi đón tiếp các bạn chu đáo và đầy đủ hơn. Xin cảm ơn !!!Xác nhậnCó, tôi sẽ đếnTiếc quá ngày hôm đó tôi có công việc gia đình mất rồiSố ngườ...",
+      "method": "dom_tree",
+      "tag": "div",
+      "column_name": "grandfather_name_7"
+    },
+    {
+      "id": "IMAGE1",
+      "type": "text",
+      "content": "Đức Tín &amp; Minh Thư",
+      "method": "class_pattern",
+      "column_name": "text_image1"
+    },
+    {
+      "id": "IMAGE4",
+      "type": "text",
+      "content": "\"Sự gì Thiên Chúa đã kết hợp,",
+      "method": "class_pattern",
+      "column_name": "text_image4"
+    },
+    {
+      "id": "IMAGE5",
+      "type": "text",
+      "content": "Đón Khách: 16H30",
+      "method": "class_pattern",
+      "column_name": "text_image5"
+    },
+    {
+      "id": "BOX15",
+      "type": "text",
+      "content": "Bản quyền thuộc Aurora - Thiệp Cưới Online",
+      "method": "class_pattern",
+      "column_name": "weekday_5"
+    },
+    {
+      "id": "SECTION2",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_SECTION2"
+    },
+    {
+      "id": "HEADLINE78",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_HEADLINE78"
+    },
+    {
+      "id": "HEADLINE15",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_HEADLINE15"
+    },
+    {
+      "id": "PARAGRAPH12",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_PARAGRAPH12"
+    },
+    {
+      "id": "SECTION6",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_SECTION6"
+    },
+    {
+      "id": "GROUP35",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_GROUP35"
+    },
+    {
+      "id": "BUTTON_TEXT6",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_BUTTON_TEXT6"
+    },
+    {
+      "id": "HEADLINE40",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_HEADLINE40"
+    },
+    {
+      "id": "BUTTON_TEXT20",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_BUTTON_TEXT20"
+    },
+    {
+      "id": "HEADLINE59",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_HEADLINE59"
+    },
+    {
+      "id": "LLXcoPzDuz",
+      "type": "image",
+      "content": "",
+      "method": "class_pattern",
+      "column_name": "image_LLXcoPzDuz"
+    },
+    {
+      "id": "GALLERY1",
+      "type": "gallery",
+      "content": "",
+      "method": "image_scan",
+      "column_name": "gallery1"
+    }
+  ]
+}

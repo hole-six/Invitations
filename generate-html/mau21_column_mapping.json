@@ -1,0 +1,202 @@
+{
+  "source_file": "generate-html\\mau21.html",
+  "total_elements": 27,
+  "stats": {
+    "total_elements": 27,
+    "text_elements": 25,
+    "image_elements": 2,
+    "video_elements": 0,
+    "other_elements": 0
+  },
+  "elements": [
+    {
+      "id": "banner",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_banner"
+    },
+    {
+      "id": "about",
+      "type": "text",
+      "content": "CÔ DÂU VÀ CHÚ RỂ",
+      "method": "id_pattern",
+      "column_name": "groom_name"
+    },
+    {
+      "id": "time-line",
+      "type": "text",
+      "content": "Love Story",
+      "method": "id_pattern",
+      "column_name": "love_text"
+    },
+    {
+      "id": "album",
+      "type": "text",
+      "content": "ALBUM ẢNH",
+      "method": "id_pattern",
+      "column_name": "album_title"
+    },
+    {
+      "id": "countdown-secton",
+      "type": "text",
+      "content": "CÙNG ĐẾM NGƯỢC THỜI GIAN",
+      "method": "id_pattern",
+      "column_name": "text_countdown-secton"
+    },
+    {
+      "id": "invitation",
+      "type": "text",
+      "content": "Giây",
+      "method": "id_pattern",
+      "column_name": "text_invitation"
+    },
+    {
+      "id": "dresscode",
+      "type": "text",
+      "content": "Quy tắc trang phục",
+      "method": "id_pattern",
+      "column_name": "text_dresscode"
+    },
+    {
+      "id": "message",
+      "type": "text",
+      "content": "Gửi lời chúc đến cặp đôi",
+      "method": "id_pattern",
+      "column_name": "send_button"
+    },
+    {
+      "id": "messageForm",
+      "type": "text",
+      "content": "Gửi lời chúc",
+      "method": "id_pattern",
+      "column_name": "send_button_2"
+    },
+    {
+      "id": "postId",
+      "type": "text",
+      "content": "Gửi lời chúc",
+      "method": "id_pattern",
+      "column_name": "send_button_3"
+    },
+    {
+      "id": "m_text",
+      "type": "text",
+      "content": "Lời nhắn gửi",
+      "method": "id_pattern",
+      "column_name": "send_button_4"
+    },
+    {
+      "id": "form",
+      "type": "text",
+      "content": "console.error('Error:', error)); });",
+      "method": "id_pattern",
+      "column_name": "text_form"
+    },
+    {
+      "id": "form-wedding",
+      "type": "text",
+      "content": "Xác nhận tham dự",
+      "method": "id_pattern",
+      "column_name": "confirm_button"
+    },
+    {
+      "id": "nha_trai",
+      "type": "text",
+      "content": "THÀNH HÔN NHÀ GÁI",
+      "method": "id_pattern",
+      "column_name": "bride_family"
+    },
+    {
+      "id": "f_name",
+      "type": "text",
+      "content": "Tên Khách Mời",
+      "method": "id_pattern",
+      "column_name": "text_f_name"
+    },
+    {
+      "id": "wedding-select",
+      "type": "text",
+      "content": "Có tôi sẽ đến",
+      "method": "id_pattern",
+      "column_name": "text_wedding-select"
+    },
+    {
+      "id": "f_text",
+      "type": "text",
+      "content": "Xác nhận",
+      "method": "id_pattern",
+      "column_name": "confirm_button_2"
+    },
+    {
+      "id": "gift",
+      "type": "text",
+      "content": "Gửi quà đến cô dâu và chú rể",
+      "method": "id_pattern",
+      "column_name": "groom_name_2"
+    },
+    {
+      "id": "box-gift",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_box-gift"
+    },
+    {
+      "id": "gift-container",
+      "type": "image",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "image_gift-container"
+    },
+    {
+      "id": "thankyou",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_thankyou"
+    },
+    {
+      "id": "eJOY__extension_ai_adv_root",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_ai_adv_root"
+    },
+    {
+      "id": "mask0_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask0_427_34"
+    },
+    {
+      "id": "mask1_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask1_427_34"
+    },
+    {
+      "id": "mask2_427_34",
+      "type": "text",
+      "content": "",
+      "method": "id_pattern",
+      "column_name": "text_mask2_427_34"
+    },
+    {
+      "id": "eJOY__extension_root",
+      "type": "text",
+      "content": "0 / 10",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_root"
+    },
+    {
+      "id": "eJOY__extension_shadow",
+      "type": "text",
+      "content": "Từ điển",
+      "method": "id_pattern",
+      "column_name": "text_ejoy__extension_shadow"
+    }
+  ]
+}

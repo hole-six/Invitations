@@ -26,10 +26,10 @@ const HomePage = () => {
       const response = await templateService.getAll({ is_active: 1, limit: 8 })
       const apiTemplates = (response.data || []).map(template => {
         try {
-          const designData = typeof template.design_data === 'string' 
+          const designData = typeof template.design_data === 'string'
             ? JSON.parse(template.design_data)
             : template.design_data
-          
+
           return {
             id: template.id,
             name: template.name,
@@ -47,7 +47,7 @@ const HomePage = () => {
           return null
         }
       }).filter(Boolean)
-      
+
       setTemplates(apiTemplates)
     } catch (error) {
       console.error('Failed to load templates:', error)
@@ -59,290 +59,265 @@ const HomePage = () => {
   return (
     <div className="bg-white dark:bg-gray-900 font-sans antialiased overflow-x-hidden selection:bg-gray-900 selection:text-white">
       <Header />
-      
-      {/* Hero Section - Minimal Monochrome */}
-      <header 
-        className="relative w-full min-h-screen flex items-center justify-center overflow-hidden" 
-        style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=80')",
-          backgroundAttachment: 'fixed',
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
-        }}
+
+      {/* Hero Section - Wedding Background */}
+      <header
+        className="relative w-full min-h-[90vh] md:min-h-screen flex items-center justify-center overflow-hidden bg-gray-900"
       >
-        {/* Monochrome overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-gray-50/90 to-gray-100/85"></div>
-        
-        {/* Minimal geometric elements */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-20 left-10 w-32 h-32 border border-gray-200 rounded-full opacity-30"></div>
-          <div className="absolute bottom-20 right-10 w-40 h-40 border border-gray-300 rounded-full opacity-20"></div>
-          <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-gray-400 rounded-full opacity-40"></div>
-          <div className="absolute top-1/3 right-1/3 w-2 h-2 bg-gray-400 rounded-full opacity-40"></div>
+        {/* Wedding Background Image - Premium Luxury */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: "url('https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=2787&auto=format&fit=crop')",
+          }}
+        ></div>
+
+        {/* Dark Overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80"></div>
+
+        {/* Technical Grid Overlay - The "ERP" Feel */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black,transparent)]"></div>
+
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 pt-32 pb-12 flex flex-col items-center justify-center h-full text-center">
+
+          {/* System Badge - Tech Style */}
+         
+
+          {/* Main Headline - Authoritative */}
+          <h1 className="font-serif text-5xl sm:text-6xl md:text-8xl text-white leading-[1.1] tracking-tight mb-6 drop-shadow-2xl">
+            
+            <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/50 font-sans font-bold">
+              Thiệp Cưới Thông Minh
+            </span>
+          </h1>
+
+          {/* Subheadline - Professional Description */}
+          <p className="text-gray-400 text-base md:text-xl max-w-3xl mx-auto mb-10 font-light leading-relaxed tracking-wide">
+            Giải pháp toàn diện dành cho các cặp đôi hiện đại. <br className="hidden md:block" />
+            Tối ưu hóa quy trình từ thiết kế, gửi thiệp đến quản lý khách mời.
+          </p>
+
+          {/* Action Area - SaaS Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mb-16">
+            <button
+              onClick={() => navigate('/collection')}
+              className="group relative px-8 py-3.5 bg-white text-black text-sm font-bold tracking-wide uppercase overflow-hidden rounded-[4px] hover:bg-gray-100 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)]"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                Bắt đầu ngay
+                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </span>
+            </button>
+
+            <button
+              onClick={() => navigate('/editor')}
+              className="group px-8 py-3.5 bg-transparent border border-white/20 text-white text-sm font-bold tracking-wide uppercase hover:bg-white/5 hover:border-white/40 transition-all rounded-[4px] backdrop-blur-sm"
+            >
+              Xem Demo Hệ Thống
+            </button>
+          </div>
+
+          {/* Data Dashboard Strip - The "ERP" Data Feel */}
+
         </div>
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 pt-32 pb-20">
-          <div className="text-center max-w-5xl mx-auto">
-            {/* Minimal badge */}
-            <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-full mb-12">
-              <div className="w-2 h-2 bg-gray-900 rounded-full"></div>
-              <span className="text-gray-900 text-sm font-medium tracking-wide">WEDDING INVITATIONS</span>
-            </div>
-           
-            {/* Clean typography */}
-            <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl font-light text-gray-900 leading-[1.1] tracking-tight mb-8" style={{fontFamily: "'Playfair Display', serif"}}>
-              Thiệp Cưới
-              <br/>
-              <span className="font-normal">Tinh Tế</span>
-            </h1>
-
-            {/* Simple subtitle */}
-            <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto mb-16 leading-relaxed font-light">
-              Thiết kế tối giản, sang trọng<br/>
-              <span className="text-gray-900 font-medium">Mỗi chi tiết đều hoàn hảo</span>
-            </p>
-
-            {/* Minimal CTA */}
-            <div className="flex flex-wrap gap-4 justify-center mb-20">
-              <button 
-                onClick={() => navigate('/collection')}
-                className="px-12 py-4 bg-gray-900 hover:bg-gray-800 text-white font-medium text-lg transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-3"
-              >
-                Khám Phá
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </button>
-              
-              <button 
-                onClick={() => navigate('/editor')}
-                className="px-12 py-4 bg-white border border-gray-300 hover:border-gray-900 text-gray-900 font-medium text-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
-              >
-                Xem Demo
-              </button>
-            </div>
-
-            {/* Clean stats */}
-            <div className="flex flex-wrap gap-16 justify-center text-gray-600 text-sm">
-              <div className="flex items-center gap-3">
-                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                <span className="font-medium">10,000+ Cặp Đôi</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                <span className="font-medium">500+ Mẫu Thiết Kế</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                <span className="font-medium">Miễn Phí</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Minimal scroll indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
-          <div className="w-6 h-10 border border-gray-400 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-gray-400 rounded-full mt-2 animate-bounce"></div>
-          </div>
+        {/* Scroll Indicator - Technical */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+          <span className="text-[9px] text-white font-mono uppercase tracking-[0.2em]">Scroll to Explore</span>
+          <div className="w-[1px] h-8 bg-gradient-to-b from-white to-transparent"></div>
         </div>
       </header>
 
-      {/* Features Section - Minimal */}
-      <section className="py-32 bg-white dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="text-center mb-20">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full mb-8">
-              <span className="text-gray-700 dark:text-gray-300 text-sm font-medium tracking-wider uppercase">Tính Năng</span>
-            </div>
-            <h2 className="font-serif text-4xl md:text-5xl font-light text-gray-900 dark:text-white mb-6" style={{fontFamily: "'Playfair Display', serif"}}>
-              Thiết Kế
-              <br/>
-              <span className="font-normal">Chuyên Nghiệp</span>
+      {/* Collection Preview - Super Premium & Responsive */}
+      <section className="py-20 md:py-32 bg-gray-50 dark:bg-black relative overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute -top-[20%] -right-[10%] w-[50%] h-[50%] bg-purple-500/5 rounded-full blur-[120px]"></div>
+          <div className="absolute top-[40%] -left-[10%] w-[40%] h-[40%] bg-blue-500/5 rounded-full blur-[100px]"></div>
+        </div>
+
+        <div className="relative max-w-[1440px] mx-auto px-6 lg:px-12">
+          {/* Section Header - Centered & Elegant */}
+          <div className="text-center max-w-4xl mx-auto mb-16 md:mb-24">
+        
+            <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl text-gray-900 dark:text-white mb-6 leading-[1.1] tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+              Tuyệt Tác <span className="italic font-light text-gray-400">Thiết Kế</span>
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Mỗi chi tiết được chăm chút tỉ mỉ.<br/>
-              Đơn giản nhưng không đơn điệu.
+            <p className="text-gray-600 dark:text-gray-400 text-lg md:text-xl font-light max-w-2xl mx-auto leading-relaxed">
+              Khám phá những mẫu thiệp cưới được yêu thích nhất. Đẳng cấp, tinh tế và hoàn toàn miễn phí.
             </p>
           </div>
 
-          {/* MINIMAL FEATURES LAYOUT */}
-          <div className="space-y-16">
-            {/* Main Feature - Clean Grid */}
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <div className="w-12 h-12 bg-gray-900 flex items-center justify-center mb-8">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                  </svg>
-                </div>
-                
-                <h3 className="font-serif text-3xl font-light text-gray-900 dark:text-white mb-6" style={{fontFamily: "'Playfair Display', serif"}}>
-                  Thiết Kế<br/>
-                  <span className="font-normal">Tùy Chỉnh</span>
-                </h3>
-                
-                <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-8">
-                  Mỗi template được thiết kế tối giản nhưng tinh tế. 
-                  Bạn có thể tùy chỉnh mọi chi tiết theo phong cách riêng.
-                </p>
-                
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                    <span className="text-gray-600">Tùy chỉnh không giới hạn</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                    <span className="text-gray-600">Upload ảnh riêng</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                    <span className="text-gray-600">Chỉnh sửa nội dung</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="relative">
-                <img 
-                  src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=800&q=80"
-                  alt="Wedding invitation design"
-                  className="w-full h-[400px] object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"></div>
-              </div>
-            </div>
+          {/* Templates Grid - Responsive & Premium */}
+          {/* Mobile: 2 columns (Instagram style), Tablet/Desktop: 4 columns */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+            {templates.slice(0, 4).map((template) => (
+              <div
+                key={template.id}
+                className="group relative bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 ease-out border border-gray-100 dark:border-zinc-800"
+                onClick={() => navigate('/collection')}
+              >
+                {/* Image Container */}
+                <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 dark:bg-gray-800">
+                  <img
+                    src={template.thumbnail || 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80'}
+                    alt={template.name}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
 
-            {/* Secondary Features - Clean Grid */}
-            <div className="grid md:grid-cols-3 gap-12">
-              {[
-                {
-                  icon: (
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                    </svg>
-                  ),
-                  title: 'Nhạc Nền',
-                  desc: 'Thêm bài hát yêu thích của hai bạn vào thiệp cưới.'
-                },
-                {
-                  icon: (
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                    </svg>
-                  ),
-                  title: 'Chia Sẻ',
-                  desc: 'Gửi lời mời đến những người thân yêu chỉ bằng một link.'
-                },
-                {
-                  icon: (
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                  ),
-                  title: 'Thống Kê',
-                  desc: 'Theo dõi lượt xem và phản hồi từ khách mời.'
-                }
-              ].map((feature, index) => (
-                <div key={index} className="text-center">
-                  <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 flex items-center justify-center mx-auto mb-6">
-                    {feature.icon}
+                  {/* Overlay Gradient on Hover */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                  {/* Badges */}
+                  <div className="absolute top-3 left-3 flex gap-2">
+                    {template.isPremium && (
+                      <span className="px-2 py-1 bg-white/90 dark:bg-black/80 backdrop-blur-md text-black dark:text-white text-[10px] font-bold uppercase tracking-wider rounded-sm shadow-sm">
+                        Premium
+                      </span>
+                    )}
                   </div>
-                  
-                  <h3 className="font-serif text-xl font-light text-gray-900 dark:text-white mb-4" style={{fontFamily: "'Playfair Display', serif"}}>
-                    {feature.title}
-                  </h3>
-                  
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {feature.desc}
-                  </p>
+
+                  {/* Hover Action Button */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                    <button className="px-6 py-3 bg-white text-black font-bold uppercase text-xs tracking-widest rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                      Xem Chi Tiết
+                    </button>
+                  </div>
                 </div>
-              ))}
-            </div>
+
+                {/* Content Info */}
+                <div className="p-4 md:p-5 relative">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex-1 min-w-0 pr-2">
+                      <h3 className="font-serif text-base md:text-lg font-medium text-gray-900 dark:text-white group-hover:text-purple-600 transition-colors truncate w-full">
+                        {template.name}
+                      </h3>
+                      <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 font-mono mt-0.5 uppercase tracking-wider">
+                        {template.category}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span className="text-[10px] md:text-xs font-bold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md">
+                        Free
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Usage Stat */}
+                  <div className="flex items-center gap-2 mt-3 md:mt-4 pt-3 md:pt-4 border-t border-gray-100 dark:border-gray-800/50">
+                    <div className="flex -space-x-1.5 md:-space-x-2">
+                      {[1, 2, 3].map(i => (
+                        <div key={i} className="w-5 h-5 md:w-6 md:h-6 rounded-full border-2 border-white dark:border-zinc-900 bg-gray-200 dark:bg-gray-700"></div>
+                      ))}
+                    </div>
+                    <span className="text-[9px] md:text-[10px] text-gray-500 font-medium">
+                      +{template.usage_count || 120} đã dùng
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* View All Button */}
+          <div className="mt-12 md:mt-16 text-center">
+            <button
+              onClick={() => navigate('/collection')}
+              className="group relative inline-flex items-center gap-3 px-8 py-3 md:py-4 bg-black dark:bg-white text-white dark:text-black font-bold text-xs md:text-sm tracking-widest uppercase rounded-full hover:bg-gray-800 dark:hover:bg-gray-200 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
+            >
+              Xem Tất Cả Mẫu
+              <span className="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Collection Preview - Minimal */}
-      <section className="py-32 bg-gray-50 dark:bg-gray-800">
+      {/* Features Section - Minimal */}
+      <section className="py-12 md:py-24 bg-white dark:bg-black border-t border-gray-100 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-20">
-            <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-full mb-6">
-                <span className="text-gray-700 dark:text-gray-300 text-sm font-medium tracking-wider uppercase">Bộ Sưu Tập</span>
-              </div>
-              <h2 className="font-serif text-4xl md:text-5xl font-light text-gray-900 dark:text-white mb-4" style={{fontFamily: "'Playfair Display', serif"}}>
-                Mẫu Thiệp Mới Nhất
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400 max-w-lg text-lg leading-relaxed">
-                Những thiết kế được yêu thích nhất
-              </p>
-            </div>
-            <button 
-              onClick={() => navigate('/collection')}
-              className="group px-8 py-4 border border-gray-300 dark:border-gray-600 hover:border-gray-900 dark:hover:border-gray-300 transition-all flex items-center gap-2 font-medium"
-            >
-              Xem Tất Cả
-              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </button>
+          <div className="text-center mb-12 md:mb-20">
+            <h2 className="font-serif text-3xl md:text-5xl font-medium text-gray-900 dark:text-white mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
+              Thiết Kế <span className="italic font-light text-gray-400">Chuyên Nghiệp</span>
+            </h2>
+            <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-light">
+              Mọi công cụ bạn cần để tạo nên một tấm thiệp cưới hoàn hảo. <br className="hidden md:block" /> Đơn giản, nhanh chóng và miễn phí.
+            </p>
           </div>
 
-          {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[1, 2, 3, 4].map((item) => (
-                <div key={item} className="animate-pulse">
-                  <div className="aspect-[3/4] bg-gray-200 dark:bg-gray-700 mb-6"></div>
-                  <div className="h-6 bg-gray-200 dark:bg-gray-700 mb-2"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 w-2/3"></div>
+          <div className="grid lg:grid-cols-2 gap-12 md:gap-20 items-center mb-24">
+            <div className="order-2 lg:order-1">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-black dark:bg-white rounded-full flex items-center justify-center text-white dark:text-black">
+                  <span className="material-symbols-outlined text-2xl">design_services</span>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {templates.slice(0, 8).map((template, index) => (
-                <div 
-                  key={template.id} 
-                  className="group cursor-pointer"
-                  onClick={() => navigate('/collection')}
-                >
-                  <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 dark:bg-gray-700 mb-6 hover:shadow-lg transition-all duration-300">
-                    <img 
-                      src={template.thumbnail || 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400'}
-                      alt={template.name}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
-                      <button className="bg-white text-gray-900 px-4 py-2 text-sm font-medium hover:bg-gray-900 hover:text-white transition-all">
-                        Chỉnh Sửa
-                      </button>
-                    </div>
+                <span className="text-sm font-bold uppercase tracking-wider text-gray-500">Ultimate Editor</span>
+              </div>
 
-                    {template.isPremium && (
-                      <div className="absolute top-3 left-3">
-                        <span className="px-2 py-1 bg-gray-900 text-white text-xs font-medium">
-                          PREMIUM
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <h3 className="font-serif text-lg font-light text-gray-900 dark:text-white mb-1 group-hover:text-gray-600 transition-colors">
-                    {template.name}
-                  </h3>
-                  <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span>{template.usage_count || 0} lượt dùng</span>
-                    <span className={template.isPremium ? 'text-gray-900 font-medium' : 'text-gray-600'}>
-                      {template.isPremium ? 'Premium' : 'Free'}
-                    </span>
-                  </div>
-                </div>
-              ))}
+              <h3 className="font-serif text-3xl md:text-4xl text-gray-900 dark:text-white mb-6 leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+                Tùy Chỉnh <br /> <span className="italic font-light text-gray-500">Mọi Chi Tiết</span>
+              </h3>
+
+              <p className="text-gray-600 dark:text-gray-400 text-lg mb-8 font-light leading-relaxed">
+                Công cụ chỉnh sửa kéo thả mạnh mẽ giúp bạn dễ dàng thay đổi nội dung, hình ảnh, phông chữ và màu sắc theo ý muốn.
+              </p>
+
+              <ul className="space-y-4 mb-8">
+                {[
+                  'Tải lên hình ảnh chất lượng cao',
+                  'Kho nhạc nền đa dạng, cảm xúc',
+                  'Hiệu ứng chuyển động mượt mà',
+                  'Tối ưu hiển thị trên mọi thiết bị'
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                    <span className="material-symbols-outlined text-green-500 text-xl">check_circle</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <button onClick={() => navigate('/editor')} className="px-8 py-3 bg-gray-100 dark:bg-gray-800 text-black dark:text-white font-bold rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                Trải Nghiệm Ngay
+              </button>
             </div>
-          )}
+
+            <div className="relative order-1 lg:order-2 group">
+              <div className="absolute -inset-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl opacity-20 group-hover:opacity-30 blur-xl transition-opacity duration-500"></div>
+              <img
+                src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=800&q=80"
+                alt="Wedding invitation editor"
+                className="relative w-full aspect-[4/3] object-cover rounded-2xl shadow-2xl"
+              />
+            </div>
+          </div>
+
+          {/* Secondary Features Grid */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { icon: 'music_note', title: 'Nhạc Nền Cảm Xúc', desc: 'Thêm giai điệu yêu thích của hai bạn vào thiệp mời.' },
+              { icon: 'share', title: 'Chia Sẻ Dễ Dàng', desc: 'Gửi thiệp qua Facebook, Zalo chỉ với một đường link.' },
+              { icon: 'analytics', title: 'Thống Kê Khách Mời', desc: 'Theo dõi ai đã xem và xác nhận tham dự realtime.' }
+            ].map((feature, i) => (
+              <div key={i} className="bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-center md:text-left">
+                <span className="material-symbols-outlined text-4xl text-gray-900 dark:text-white mb-4">{feature.icon}</span>
+                <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{feature.title}</h4>
+                <p className="text-gray-600 dark:text-gray-400 font-light">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
+      </section>
+
+      {/* CTA Bottom */}
+      <section className="py-20 bg-black text-white text-center px-6">
+        <h2 className="font-serif text-4xl md:text-6xl mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
+          Sẵn sàng tạo thiệp cưới?
+        </h2>
+        <p className="text-gray-400 text-lg max-w-xl mx-auto mb-10 font-light">
+          Bắt đầu ngay hôm nay. Hoàn toàn miễn phí và không cần kỹ năng thiết kế.
+        </p>
+        <button onClick={() => navigate('/collection')} className="px-10 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-colors shadow-xl text-lg">
+          Tạo Thiệp Ngay
+        </button>
       </section>
 
       <Footer />
