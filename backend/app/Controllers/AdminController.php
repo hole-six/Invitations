@@ -74,7 +74,6 @@ class AdminController
         $search = $request->query('search');
         $sortBy = $request->query('sort_by', 'created_at');
         $sortOrder = $request->query('sort_order', 'desc');
-        
         $sql = 'SELECT id, uuid, email, full_name, phone, role, status, avatar_url, last_login_at, last_login_ip, created_at, updated_at FROM users WHERE 1=1';
         $params = [];
         
@@ -126,6 +125,8 @@ class AdminController
         ]);
         
         $db = $GLOBALS['app']->getDatabase();
+        
+
         
         try {
             $userData = [
