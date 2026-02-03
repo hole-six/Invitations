@@ -8,7 +8,39 @@ declare(strict_types=1);
 
 // Error reporting for development
 error_reporting(E_ALL);
-ini_set('display_errors', '1');
+ini_set('display_errors', '0'); // Don't display errors as HTML
+ini_set('log_errors', '1'); // Log errors instead
+
+// Set error handler to return JSON
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    http_response_code(500);
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false,
+        'message' => 'Internal server error: ' . $errstr,
+        'errors' => [
+            'file' => $errfile,
+            'line' => $errline
+        ]
+    ]);
+    exit;
+});
+
+// Set exception handler to return JSON
+set_exception_handler(function($exception) {
+    http_response_code(500);
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false,
+        'message' => 'Exception: ' . $exception->getMessage(),
+        'errors' => [
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine(),
+            'trace' => $exception->getTraceAsString()
+        ]
+    ]);
+    exit;
+});
 
 // CORS Headers
 header('Access-Control-Allow-Origin: *'); // Allow all origins temporarily

@@ -7,6 +7,7 @@ class User
     public ?int $id = null;
     public ?string $email = null;
     public ?string $password_hash = null;
+    public ?string $password = null; // Alias for password_hash
     public ?string $full_name = null;
     public ?string $phone = null;
     public ?string $avatar_url = null;
@@ -21,11 +22,14 @@ class User
     public function __construct(array $data = [])
     {
         foreach ($data as $key => $value) {
-            // Map database 'password' field to 'password_hash' property
-            if ($key === 'password') {
-                $this->password_hash = $value;
-            } elseif (property_exists($this, $key)) {
+            if (property_exists($this, $key)) {
                 $this->$key = $value;
+                // Sync password and password_hash
+                if ($key === 'password') {
+                    $this->password_hash = $value;
+                } elseif ($key === 'password_hash') {
+                    $this->password = $value;
+                }
             }
         }
     }
