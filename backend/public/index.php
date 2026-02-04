@@ -80,10 +80,14 @@ $app = new \App\Core\Application($config);
 // Apply ERP Auth Middleware to all API routes (except public routes)
 $publicRoutes = [
     '/api/health',
+    '/api/auth/login',
+    '/api/auth/register',
+    '/api/auth/forgot-password',
+    '/api/auth/reset-password',
     '/api/public/invitations/'
 ];
 
-$requestUri = $_SERVER['REQUEST_URI'];
+$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $isPublicRoute = false;
 
 foreach ($publicRoutes as $publicRoute) {
