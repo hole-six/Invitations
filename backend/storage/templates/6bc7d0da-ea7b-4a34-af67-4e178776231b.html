@@ -5384,15 +5384,6 @@
         left: 25.002px;
       }
 
-      #IMAGE30>.ladi-image>.ladi-image-background {
-        background-image: url("https://w.ladicdn.com/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
-      }
-
-      #IMAGE32>.ladi-image>.ladi-image-background {
-        background-image: url("https://w.ladicdn.com/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
-      }
-
-
       #BUTTON4,
       #BUTTON5,
       #BUTTON6,
@@ -7978,7 +7969,7 @@
             </div>
             <div id="HEADLINE57" class="ladi-element" data-editable="title_11">
               <h3 class="ladi-headline ladi-transition ladi-lazyload">
-                &nbsp;13︱02 ︱26<br />
+                &nbsp;25︱09 ︱25<br />
               </h3>
             </div>
             <div id="HEADLINE58" class="ladi-element" data-editable="date_2">
@@ -8070,7 +8061,7 @@
             </div>
           </div>
         </div>
-        <script>
+                      <script>
           let countdownInterval;
 
           function parseDate(element) {
@@ -8080,7 +8071,7 @@
 
             if (parts.length === 3) {
               const day = parseInt(parts[0]);
-              const month = parseInt(parts[1]) - 1;
+              const month = parseInt(parts[1]) - 1; 
               const year = 2000 + parseInt(parts[2]);
               const date = new Date(year, month, day);
               return isNaN(date.getTime()) ? null : date.getTime();
@@ -8105,7 +8096,7 @@
 
               startCountdown(targetDate);
             } else {
-              render(0, 0, 0, 0);
+              render(0, 0, 0, 0); 
             }
           }
 
@@ -8153,6 +8144,7 @@
           window.addEventListener('load', () => {
             updateTargetAndStart();
             console.log("Countdown initialized.");
+
             const config = { characterData: true, childList: true, subtree: true };
             const target1 = document.querySelector('#HEADLINE57 h3');
             const target2 = document.querySelector('#HEADLINE12 h3');
@@ -8168,17 +8160,16 @@
           <div class="ladi-paragraph" data-editable="time_3">Giờ</div>
         </div>
         <div id="PARAGRAPH18" class="ladi-element">
-          <div class="ladi-paragraph" data-editable="text_3">Phút</div>
+          <div class="ladi-paragraph"  data-editable="text_3">Phút</div>
         </div>
         <div id="PARAGRAPH19" class="ladi-element">
-          <div class="ladi-paragraph" data-editable="text_4">Giây</div>
+          <div class="ladi-paragraph"  data-editable="text_4">Giây</div>
         </div>
         <div id="PARAGRAPH20" class="ladi-element ladi-animation-hidden">
-          <div class="ladi-paragraph" data-editable="groom_9">
-            Until we officially become Mr. &amp; Mrs.
+          <div class="ladi-paragraph"  data-editable="groom_9">
+               Until we officially become Mr. &amp; Mrs.
           </div>
         </div>
-
         <div id="HEADLINE59" class="ladi-element" data-editable="wedding_2">
           <h3 class="ladi-headline ladi-lazyload">Wedding Countdown<br /></h3>
         </div>
@@ -8755,6 +8746,19 @@
         <div id="HEADLINE44" class="ladi-element" data-editable="title_21">
           <h3 class="ladi-headline ladi-lazyload">Hẹn gặp bạn!</h3>
         </div>
+        <a href="https://www.aurorawedding.online/" target="_blank" id="GROUP44" class="ladi-element"
+          data-replace-href="https://www.aurorawedding.online/">
+          <div class="ladi-group">
+            <div id="BOX25" class="ladi-element">
+              <div class="ladi-box ladi-transition ladi-lazyload"></div>
+            </div>
+            <div id="PARAGRAPH21" class="ladi-element" data-editable="text_7">
+              <div class="ladi-paragraph">
+                Bản quyền thuộc Aurora - Thiệp Cưới Online
+              </div>
+            </div>
+          </div>
+        </a>
       </div>
     </div>
     <div id="SECTION_POPUP" class="ladi-section">

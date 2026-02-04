@@ -201,32 +201,11 @@ class InvitationService
         if (isset($data['event_time']) && $data['event_time'] === '') {
             $data['event_time'] = null;
         }
-        
-        // Fix boolean/integer fields - convert empty string to 0
-        $integerFields = [
-            'music_autoplay', 'show_countdown', 'enable_rsvp', 'enable_guest_book',
-            'views_count', 'rsvp_count', 'template_id'
-        ];
-        
-        foreach ($integerFields as $field) {
-            if (isset($data[$field]) && $data[$field] === '') {
-                $data[$field] = 0;
-            }
+    
+        if (isset($data['music_autoplay']) && $data['music_autoplay'] === '') {
+            $data['music_autoplay'] = null;
         }
-        
-        // Fix text fields - convert empty string to null for optional fields
-        $nullableTextFields = [
-            'event_location', 'event_address', 'groom_name', 'bride_name',
-            'groom_father', 'groom_mother', 'bride_father', 'bride_mother',
-            'music_url', 'cover_image_url', 'password', 'custom_domain'
-        ];
-        
-        foreach ($nullableTextFields as $field) {
-            if (isset($data[$field]) && $data[$field] === '') {
-                $data[$field] = null;
-            }
-        }
-        
+
         // Auto-update slug if bride/groom names changed
         if ((isset($data['groom_name']) || isset($data['bride_name'])) && !isset($data['slug'])) {
             $groomName = $data['groom_name'] ?? $invitation->groom_name;

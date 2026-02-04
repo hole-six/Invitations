@@ -98,6 +98,16 @@ class InvitationRepository
             $data['design_data'] = json_encode($data['design_data']);
         }
         
+        // Handle boolean fields - convert empty strings to null or proper boolean
+        if (isset($data['music_autoplay'])) {
+            if ($data['music_autoplay'] === '' || $data['music_autoplay'] === null) {
+                $data['music_autoplay'] = null;
+            } else {
+                // Convert to integer (0 or 1) for MySQL boolean
+                $data['music_autoplay'] = (int)(bool)$data['music_autoplay'];
+            }
+        }
+        
         $id = $this->db->insert('invitations', $data);
         return $this->findById($id);
     }
@@ -120,6 +130,16 @@ class InvitationRepository
         // Convert custom_field_data array to JSON if needed
         if (isset($data['custom_field_data']) && is_array($data['custom_field_data'])) {
             $data['custom_field_data'] = json_encode($data['custom_field_data']);
+        }
+        
+        // Handle boolean fields - convert empty strings to null or proper boolean
+        if (isset($data['music_autoplay'])) {
+            if ($data['music_autoplay'] === '' || $data['music_autoplay'] === null) {
+                $data['music_autoplay'] = null;
+            } else {
+                // Convert to integer (0 or 1) for MySQL boolean
+                $data['music_autoplay'] = (int)(bool)$data['music_autoplay'];
+            }
         }
         
         try {

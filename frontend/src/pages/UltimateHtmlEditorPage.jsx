@@ -703,13 +703,21 @@ const UltimateHtmlEditorPage = () => {
           .trim()
 
         // Auto-save without blocking UI (don't use setSaving)
-        await invitationService.update(invitation.id, {
-          ...formData,
-          html_content: compressedHtml,
-          image_data: JSON.stringify(imageData),
-          custom_field_data: JSON.stringify(customFieldData),
-          status: invitation.status // Keep current status
-        })
+await invitationService.update(invitation.id, {
+  ...formData,
+  html_content: compressedHtml,
+  event_date:
+    !formData.event_date || formData.event_date === '' ? null : formData.event_date,
+
+  music_autoplay:
+    formData.music_autoplay === '' || formData.music_autoplay === undefined
+      ? null
+      : Number(formData.music_autoplay),
+
+  image_data: JSON.stringify(imageData),
+  custom_field_data: JSON.stringify(customFieldData),
+  status: invitation.status
+});
 
         setLastSavedData(currentData)
         console.log('✅ Auto-saved successfully')
