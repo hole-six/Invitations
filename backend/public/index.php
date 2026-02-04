@@ -78,12 +78,17 @@ $config = require CONFIG_PATH . '/app.php';
 $app = new \App\Core\Application($config);
 
 // Apply ERP Auth Middleware to all API routes (except public routes)
+// TODO: Bật lại khi đã tích hợp ERP hoàn chỉnh
+// Hiện tại tắt để dùng login cũ
+/*
 $publicRoutes = [
     '/api/health',
     '/api/auth/login',
     '/api/auth/register',
     '/api/auth/forgot-password',
     '/api/auth/reset-password',
+    '/api/templates',
+    '/api/templates/categories',
     '/api/public/invitations/'
 ];
 
@@ -104,6 +109,7 @@ if (!$isPublicRoute && strpos($requestUri, '/api/') === 0) {
         exit; // Middleware đã trả về error response
     }
 }
+*/
 
 // Handle request
 $app->run();
