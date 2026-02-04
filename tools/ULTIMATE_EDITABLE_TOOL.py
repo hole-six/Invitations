@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🔥🔥🔥 ULTIMATE EDITABLE MAKER - PHIÊN BẢN HOÀN THIỆN 🔥🔥🔥
-💎 Version 4.0 - COMPLETE & PERFECT Edition
-🎯 Tự động thêm data-editable cho TEXT và data-image-editable cho IMAGE
-📝 Đặt tên thông minh, không bỏ sót, bao trùm mọi trường hợp
+🔥 ULTIMATE EDITABLE MAKER - CLEAN VERSION 🔥
+💎 Chỉ thêm data-editable và data-image-editable
+🚫 KHÔNG thêm CSS hay style gì cả
 """
 
 import re
@@ -274,49 +273,45 @@ class UltimateEditableTool:
             self.used_names.clear()
             original_html = html
             
+            # CLEAN: Remove editor-styles CSS if exists
+            html = re.sub(r'<style[^>]*id=["\']editor-styles["\'][^>]*>.*?</style>', '', html, flags=re.DOTALL | re.IGNORECASE)
+            
+            # CLEAN: Remove ALL existing data-editable and data-image-editable attributes
+            html = re.sub(r'\s+data-editable="[^"]*"', '', html)
+            html = re.sub(r'\s+data-image-editable="[^"]*"', '', html)
+            
+            log(f"  🧹 Cleaned existing editable attributes and styles")
+            
             # Process TEXT
             text_elements = self.extract_text_elements(html)
-            log(f"  📝 Found {len(text_elements)} text elements")
+            log(f"  � Found {len(text_elements)} text elements")
             
             count_text = 0
             for idx, el in enumerate(text_elements, 1):
                 field_name = self.get_smart_field_name(el['content'], el['type'], idx)
                 
-                # Check if already has data-editable
-                pattern_check = r'id="' + re.escape(el['id']) + r'"[^>]*data-editable'
-                if re.search(pattern_check, html):
-                    # Update existing
-                    pattern = r'(id="' + re.escape(el['id']) + r'"[^>]*?)data-editable="[^"]*"'
-                    html = re.sub(pattern, r'\1data-editable="' + field_name + '"', html)
-                else:
-                    # Add new
-                    pattern = r'(id="' + re.escape(el['id']) + r'"[^>]*?)>'
-                    html = re.sub(pattern, r'\1 data-editable="' + field_name + '">', html)
-                
+                # FILTER REMOVED: Allow all text fields
+                # if not field_name.startswith(('groom', 'bride')):
+                #     continue
+
+                # Add new
+                pattern = r'(id="' + re.escape(el['id']) + r'"[^>]*?)>'
+                # We cleaned all so just add
+                html = re.sub(pattern, r'\1 data-editable="' + field_name + '">', html)
                 count_text += 1
                 log(f"    ✓ {el['type']}: {el['id']} → data-editable=\"{field_name}\"")
             
             # Process IMAGES
             image_elements = self.extract_image_elements(html)
-            log(f"  🖼️  Found {len(image_elements)} image elements")
-            
             count_images = 0
             for idx, el in enumerate(image_elements, 1):
-                field_name = self.get_smart_image_name(el['id'], idx)
+                image_name = self.get_smart_image_name(el['id'], idx)
                 
-                # Check if already has data-image-editable
-                pattern_check = r'id="' + re.escape(el['id']) + r'"[^>]*data-image-editable'
-                if re.search(pattern_check, html):
-                    # Update existing
-                    pattern = r'(id="' + re.escape(el['id']) + r'"[^>]*?)data-image-editable="[^"]*"'
-                    html = re.sub(pattern, r'\1data-image-editable="' + field_name + '"', html)
-                else:
-                    # Add new
-                    pattern = r'(id="' + re.escape(el['id']) + r'"[^>]*?)>'
-                    html = re.sub(pattern, r'\1 data-image-editable="' + field_name + '">', html)
-                
+                pattern = r'(id="' + re.escape(el['id']) + r'"[^>]*?)>'
+                # Add data-image-editable
+                html = re.sub(pattern, r'\1 data-image-editable="' + image_name + '">', html)
                 count_images += 1
-                log(f"    ✓ {el['type']}: {el['id']} → data-image-editable=\"{field_name}\"")
+                log(f"    🖼️ {el['type']}: {el['id']} → data-image-editable=\"{image_name}\"")
             
             # Save if changed
             if html != original_html:

@@ -207,30 +207,15 @@ const UltimateHtmlEditorPage = () => {
         style.textContent = `
             [data-editable] {
               cursor: text !important;
-              transition: all 0.2s;
-              position: relative;
-              z-index: 50;
-              pointer-events: auto !important;
-              min-height: 1em; /* Ensure empty fields are clickable */
-              min-width: 20px;
-              display: inline-block;
+              outline: 1px dashed transparent;
             }
             [data-editable]:hover {
               outline: 2px dashed #a855f7 !important;
-              background: rgba(168, 85, 247, 0.1);
-              z-index: 100 !important;
-              box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+              background: rgba(168, 85, 247, 0.05);
             }
             [data-editable]:focus {
               outline: 2px solid #f59e0b !important;
-              background: rgba(251, 191, 36, 0.1);
-              z-index: 1000 !important;
-              min-width: 10px;
-              box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
-            }
-            /* Ensure Ladipage layers don't block us */
-            .ladi-overlay {
-              pointer-events: none !important;
+              background: rgba(251, 191, 36, 0.05);
             }
           `
         doc.head.appendChild(style)
@@ -1154,8 +1139,14 @@ const UltimateHtmlEditorPage = () => {
     try {
       setSaving(true)
 
+      // Clean HTML: Remove editor styles before saving
+      let cleanHtml = htmlCode
+      
+      // Remove editor-styles
+      cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
+
       // Compress HTML by removing unnecessary whitespace
-      const compressedHtml = htmlCode
+      const compressedHtml = cleanHtml
         .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
         .replace(/>\s+</g, '><')  // Remove spaces between tags
         .trim()
@@ -1192,8 +1183,14 @@ const UltimateHtmlEditorPage = () => {
     try {
       setSaving(true)
 
+      // Clean HTML: Remove editor styles before saving
+      let cleanHtml = htmlCode
+      
+      // Remove editor-styles
+      cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
+      
       // Compress HTML by removing unnecessary whitespace
-      const compressedHtml = htmlCode
+      const compressedHtml = cleanHtml
         .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
         .replace(/>\s+</g, '><')  // Remove spaces between tags
         .trim()
@@ -1236,8 +1233,14 @@ const UltimateHtmlEditorPage = () => {
     try {
       setSaving(true)
 
+      // Clean HTML: Remove editor styles before saving
+      let cleanHtml = htmlCode
+      
+      // Remove editor-styles
+      cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
+
       // Compress HTML by removing unnecessary whitespace
-      const compressedHtml = htmlCode
+      const compressedHtml = cleanHtml
         .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
         .replace(/>\s+</g, '><')  // Remove spaces between tags
         .trim()
@@ -1280,8 +1283,14 @@ const UltimateHtmlEditorPage = () => {
     try {
       setSaving(true)
 
+      // Clean HTML: Remove editor styles before saving
+      let cleanHtml = htmlCode
+      
+      // Remove editor-styles
+      cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
+
       // Compress HTML by removing unnecessary whitespace
-      const compressedHtml = htmlCode
+      const compressedHtml = cleanHtml
         .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
         .replace(/>\s+</g, '><')  // Remove spaces between tags
         .trim()
