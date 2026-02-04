@@ -194,6 +194,14 @@ class InvitationService
             throw new \Exception('Unauthorized access');
         }
         
+        // Fix empty string dates for MySQL strict mode (Mac)
+        if (isset($data['event_date']) && $data['event_date'] === '') {
+            $data['event_date'] = null;
+        }
+        if (isset($data['event_time']) && $data['event_time'] === '') {
+            $data['event_time'] = null;
+        }
+        
         // Auto-update slug if bride/groom names changed
         if ((isset($data['groom_name']) || isset($data['bride_name'])) && !isset($data['slug'])) {
             $groomName = $data['groom_name'] ?? $invitation->groom_name;
