@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\AuthController;
+use App\Controllers\SsoAuthController;
 use App\Controllers\InvitationController;
 use App\Controllers\TemplateController;
 use App\Controllers\GuestController;
@@ -28,6 +29,12 @@ $router->post('/api/auth/refresh', [AuthController::class, 'refresh']);
 $router->get('/api/auth/me', [AuthController::class, 'me']);
 $router->post('/api/auth/forgot-password', [AuthController::class, 'forgotPassword']);
 $router->post('/api/auth/reset-password', [AuthController::class, 'resetPassword']);
+
+// ============================================
+// SSO AUTH ROUTES - Không cần, Wedding là hệ thống con
+// Frontend sẽ gửi token từ ERP trong header Authorization
+// Backend chỉ cần verify token với ERP
+// ============================================
 
 // ============================================
 // INVITATION ROUTES

@@ -77,5 +77,29 @@ $config = require CONFIG_PATH . '/app.php';
 // Initialize application
 $app = new \App\Core\Application($config);
 
+// Apply ERP Auth Middleware to all API routes (except public routes)
+$publicRoutes = [
+    '/api/health',
+    '/api/public/invitations/'
+];
+
+$requestUri = $_SERVER['REQUEST_URI'];
+$isPublicRoute = false;
+
+foreach ($publicRoutes as $publicRoute) {
+    if (strpos($requestUri, $publicRoute) === 0) {
+        $isPublicRoute = true;
+        break;
+    }
+}
+
+// Verify ERP token for non-public routes
+if (!$isPublicRoute && strpos($requestUri, '/api/') === 0) {
+    $erpAuthMiddleware = new \App\Middleware\ErpAuthMiddleware();
+    if (!$erpAuthMiddleware->handle()) {
+        exit; // Middleware đã trả về error response
+    }
+}
+
 // Handle request
 $app->run();
