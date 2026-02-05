@@ -2341,8 +2341,6 @@
       left: 109.358px;
     }
 
-    #GROUP1,
-    #SECTION3,
     #GROUP16 {
       display: none !important;
     }
@@ -6746,7 +6744,7 @@
     <div id="SECTION1" class="ladi-section">
       <div class="ladi-section-background"></div>
       <div class="ladi-container">
-        <div id="IMAGE2" class="ladi-element" data-image-editable="couple_photo">
+        <div id="IMAGE2" class="ladi-element">
           <div class="ladi-image">
             <div class="ladi-image-background"></div>
           </div>
@@ -6782,18 +6780,18 @@
     <div id="SECTION2" class="ladi-section">
       <div class="ladi-section-background"></div>
       <div class="ladi-container">
-        <div id="IMAGE3" class="ladi-element" data-image-editable="couple_photo_2">
+        <div id="IMAGE3" class="ladi-element" data-image-editable="photo_3">
           <div class="ladi-image ladi-transition">
             <div class="ladi-image-background"></div>
             <div class="ladi-overlay"></div>
           </div>
         </div>
-        <div data-action="true" id="IMAGE4" class="ladi-element ladi-animation" data-image-editable="photo">
+        <div data-action="true" id="IMAGE4" class="ladi-element ladi-animation" data-image-editable="image_1">
           <div class="ladi-image">
             <div class="ladi-image-background"></div>
           </div>
         </div>
-        <div data-action="true" id="IMAGE5" class="ladi-element ladi-animation" data-image-editable="photo_2">
+        <div data-action="true" id="IMAGE5" class="ladi-element ladi-animation" data-image-editable="image_2">
           <div class="ladi-image ladi-transition">
             <div class="ladi-image-background"></div>
           </div>
@@ -6813,10 +6811,10 @@
         </div>
       </div>
     </div>
-    <div id="SECTION3" class="ladi-section">
+    <div id="SECTION3" class="ladi-section !block">
       <div class="ladi-section-background ladi-lazyload"></div>
       <div class="ladi-container">
-        <div id="IMAGE7" class="ladi-element" data-image-editable="photo_3">
+        <div id="IMAGE7" class="ladi-element">
           <div class="ladi-image">
             <div class="ladi-image-background ladi-lazyload"></div>
           </div>
@@ -6925,7 +6923,7 @@
         <div id="HEADLINE25" class="ladi-element ladi-animation" data-editable="wedding">
           <h3 class="ladi-headline">WEDDING<br>CALENDAR<br></h3>
         </div>
-        <div id="IMAGE11" class="ladi-element" data-image-editable="photo_5">
+        <div id="IMAGE11" class="ladi-element">
           <div class="ladi-image">
             <div class="ladi-image-background ladi-lazyload"></div>
           </div>
@@ -6939,7 +6937,7 @@
         <div id="GROUP5" class="ladi-element">
           <div class="ladi-group">
             <div id="COUNTDOWN1" class="ladi-element" data-type="daily" data-daily-start="00:00:00"
-              data-daily-end="23:59:59" data-date-start="1769619600000" data-date-end="1769705999000">
+              data-daily-end="23:59:59">
               <div class="ladi-countdown">
                 <div id="COUNTDOWN_ITEM1" class="ladi-element" data-item-type="day">
                   <div class="ladi-countdown-background ladi-lazyload"></div>
@@ -6951,13 +6949,107 @@
                 </div>
                 <div id="COUNTDOWN_ITEM3" class="ladi-element" data-item-type="minute">
                   <div class="ladi-countdown-background ladi-lazyload"></div>
-                  <div class="ladi-countdown-text"><span>48</span></div>
+                  <div class="ladi-countdown-text"><span>00</span></div>
                 </div>
                 <div id="COUNTDOWN_ITEM4" class="ladi-element" data-item-type="seconds">
                   <div class="ladi-countdown-background ladi-lazyload"></div>
-                  <div class="ladi-countdown-text"><span>41</span></div>
+                  <div class="ladi-countdown-text"><span>00</span></div>
                 </div>
               </div>
+              <script>
+                let countdownInterval;
+
+                function parseDate(element) {
+                  if (!element) return null;
+                  const text = element.innerText.trim();
+
+                  const dateMatch = text.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+
+                  if (dateMatch) {
+                    const day = parseInt(dateMatch[1]);
+                    const month = parseInt(dateMatch[2]) - 1;
+                    const year = parseInt(dateMatch[3]);
+
+                    const date = new Date(year, month, day);
+                    return isNaN(date.getTime()) ? null : date.getTime();
+                  }
+                  return null;
+                }
+
+                function updateTargetAndStart() {
+                  const p10 = document.querySelector('#PARAGRAPH10 .ladi-paragraph');
+                  const p12 = document.querySelector('#PARAGRAPH12 .ladi-paragraph');
+
+                  const date1 = parseDate(p10);
+                  const date2 = parseDate(p12);
+                  const now = new Date().getTime();
+
+                  const validDates = [date1, date2].filter(d => d !== null && d > now);
+
+                  if (validDates.length > 0) {
+                    const targetDate = Math.min(...validDates);
+
+                    if (countdownInterval) clearInterval(countdownInterval);
+                    startCountdown(targetDate);
+                  } else {
+                    render(0, 0, 0, 0);
+                  }
+                }
+
+                function startCountdown(endTime) {
+                  const logic = () => {
+                    const now = new Date().getTime();
+                    const distance = endTime - now;
+
+                    if (distance < 0) {
+                      clearInterval(countdownInterval);
+                      render(0, 0, 0, 0);
+                      return;
+                    }
+
+                    const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    render(d, h, m, s);
+                  };
+
+                  logic();
+                  countdownInterval = setInterval(logic, 1000);
+                }
+
+                function render(d, h, m, s) {
+                  const pad = (n) => n < 10 ? '0' + n : n;
+                  const daySpan = document.querySelector('#COUNTDOWN_ITEM1 span');
+                  const hourSpan = document.querySelector('#COUNTDOWN_ITEM2 span');
+                  const minSpan = document.querySelector('#COUNTDOWN_ITEM3 span');
+                  const secSpan = document.querySelector('#COUNTDOWN_ITEM4 span');
+
+                  if (daySpan) daySpan.innerText = pad(d);
+                  if (hourSpan) hourSpan.innerText = pad(h);
+                  if (minSpan) minSpan.innerText = pad(m);
+                  if (secSpan) secSpan.innerText = pad(s);
+                }
+
+                const observer = new MutationObserver(() => {
+                  console.log("Date change detected, updating countdown...");
+                  updateTargetAndStart();
+                });
+
+                window.addEventListener('load', () => {
+                  updateTargetAndStart();
+
+                  console.log("Countdown initialized.");
+
+                  const config = { characterData: true, childList: true, subtree: true };
+                  const target1 = document.querySelector('#PARAGRAPH10 .ladi-paragraph');
+                  const target2 = document.querySelector('#PARAGRAPH12 .ladi-paragraph');
+
+                  if (target1) observer.observe(target1, config);
+                  if (target2) observer.observe(target2, config);
+                });
+              </script>
             </div>
             <div id="HEADLINE42" class="ladi-element" data-editable="date_3">
               <h3 class="ladi-headline ladi-lazyload">Ngày</h3>
@@ -6973,7 +7065,7 @@
             </div>
           </div>
         </div>
-        <div data-action="true" id="IMAGE12" class="ladi-element" data-image-editable="photo_6">
+        <div data-action="true" id="IMAGE12" class="ladi-element" data-image-editable="photo_5">
           <div class="ladi-image">
             <div class="ladi-image-background ladi-lazyload"></div>
           </div>
@@ -7072,7 +7164,7 @@
                       <use xlink:href="#shape_HOEZqkbZqe"></use>
                     </svg></div>
                 </div>
-                <div id="IMAGE37" class="ladi-element" data-image-editable="photo_7">
+                <div id="IMAGE37" class="ladi-element" data-image-editable="image_6">
                   <div class="ladi-image ladi-transition">
                     <div class="ladi-image-background ladi-lazyload"></div>
                   </div>
@@ -7131,7 +7223,7 @@
                       <use xlink:href="#shape_HOEZqkbZqe"></use>
                     </svg></div>
                 </div>
-                <div id="IMAGE38" class="ladi-element" data-image-editable="photo_8">
+                <div id="IMAGE38" class="ladi-element" data-image-editable="image_7">
                   <div class="ladi-image ladi-transition">
                     <div class="ladi-image-background ladi-lazyload"></div>
                   </div>
@@ -7226,7 +7318,7 @@
         <div id="PARAGRAPH2" class="ladi-element" data-editable="album">
           <div class="ladi-paragraph ladi-transition">Album ảnh của chúng tôi!</div>
         </div>
-        <div data-action="true" id="IMAGE24" class="ladi-element" data-image-editable="photo_9">
+        <div data-action="true" id="IMAGE24" class="ladi-element" data-image-editable="photo_14">
           <div class="ladi-image ladi-transition">
             <div class="ladi-image-background ladi-lazyload"></div>
           </div>
@@ -7236,7 +7328,7 @@
             <div class="ladi-image-background ladi-lazyload"></div>
           </div>
         </div>
-        <div data-action="true" id="IMAGE26" class="ladi-element" data-image-editable="photo_11">
+        <div data-action="true" id="IMAGE26" class="ladi-element" data-image-editable="photo_13">
           <div class="ladi-image ladi-transition">
             <div class="ladi-image-background ladi-lazyload"></div>
           </div>
@@ -7246,22 +7338,22 @@
             <div class="ladi-image-background ladi-lazyload"></div>
           </div>
         </div>
-        <div data-action="true" id="IMAGE28" class="ladi-element" data-image-editable="photo_13">
+        <div data-action="true" id="IMAGE28" class="ladi-element" data-image-editable="photo_8">
           <div class="ladi-image ladi-transition">
             <div class="ladi-image-background ladi-lazyload"></div>
           </div>
         </div>
-        <div data-action="true" id="IMAGE29" class="ladi-element" data-image-editable="photo_14">
+        <div data-action="true" id="IMAGE29" class="ladi-element" data-image-editable="photo_11">
           <div class="ladi-image ladi-transition">
             <div class="ladi-image-background ladi-lazyload"></div>
           </div>
         </div>
-        <div data-action="true" id="IMAGE30" class="ladi-element" data-image-editable="photo_15">
+        <div data-action="true" id="IMAGE30" class="ladi-element" data-image-editable="photo_9">
           <div class="ladi-image ladi-transition">
             <div class="ladi-image-background ladi-lazyload"></div>
           </div>
         </div>
-        <div data-action="true" id="GROUP14" class="ladi-element ladi-animation-hidden">
+        <!-- <div data-action="true" id="GROUP14" class="ladi-element ladi-animation-hidden">
           <div class="ladi-group">
             <div id="HEADLINE69" class="ladi-element" data-editable="button">
               <h3 class="ladi-headline ladi-transition ladi-lazyload">XEM THÊM</h3>
@@ -7275,7 +7367,7 @@
                 </svg></div>
             </div>
           </div>
-        </div>
+        </div> -->
         <div data-action="true" id="BUTTON4" class="ladi-element ladi-animation-hidden">
           <div class="ladi-button ladi-transition">
             <div class="ladi-button-background ladi-lazyload"></div>
@@ -7289,12 +7381,12 @@
     <div id="SECTION7" class="ladi-section">
       <div class="ladi-section-background ladi-lazyload"></div>
       <div class="ladi-container">
-        <div id="IMAGE16" class="ladi-element" data-image-editable="photo_16">
+        <div id="IMAGE16" class="ladi-element">
           <div class="ladi-image">
             <div class="ladi-image-background ladi-lazyload"></div>
           </div>
         </div>
-        <div id="IMAGE13" class="ladi-element" data-image-editable="photo_17">
+        <div id="IMAGE13" class="ladi-element" data-image-editable="photo_16">
           <div class="ladi-image">
             <div class="ladi-image-background ladi-lazyload"></div>
           </div>
@@ -7302,7 +7394,7 @@
         <div id="BOX6" class="ladi-element">
           <div class="ladi-box ladi-transition ladi-lazyload"></div>
         </div>
-        <div id="IMAGE14" class="ladi-element" data-image-editable="photo_18">
+        <div id="IMAGE14" class="ladi-element" data-image-editable="photo_15">
           <div class="ladi-image">
             <div class="ladi-image-background ladi-lazyload"></div>
           </div>
@@ -7415,17 +7507,7 @@
         </div>
         <div id="HEADLINE65" class="ladi-element ladi-animation-hidden" data-editable="title_41">
           <h3 class="ladi-headline ladi-lazyload">Thank you!</h3>
-        </div><a href="https://www.aurorawedding.online/" target="_blank" id="GROUP23"
-          class="ladi-element ladi-animation-hidden" data-replace-href="https://www.aurorawedding.online/">
-          <div class="ladi-group">
-            <div id="BOX11" class="ladi-element">
-              <div class="ladi-box ladi-transition ladi-lazyload"></div>
-            </div>
-            <div id="PARAGRAPH4" class="ladi-element" data-editable="wedding_4">
-              <div class="ladi-paragraph">Bản quyền thuộc AuroraWedding - Thiệp Cưới Online</div>
-            </div>
-          </div>
-        </a>
+        </div>
       </div>
     </div>
     <div id="SECTION_POPUP" class="ladi-section">
@@ -7435,8 +7517,7 @@
           <div class="ladi-popup">
             <div class="ladi-popup-background"></div>
             <div id="GALLERY1" class="ladi-element" data-max-item="11" data-runtime-id="xKYmEOdcEg" data-current="2"
-              data-is-next="true" data-scrolled="true" data-loaded="true" data-next-time="1769674277832"
-              data-image-editable="gallery">
+              data-is-next="true" data-scrolled="true" data-loaded="true" data-next-time="1769674277832">
               <div class="ladi-gallery ladi-gallery-bottom">
                 <div class="ladi-gallery-view" style="cursor: pointer;">
                   <div class="ladi-gallery-view-arrow ladi-gallery-view-arrow-left"></div>
@@ -7494,14 +7575,6 @@
                     <div id="HEADLINE71" class="ladi-element" data-editable="groom_2">
                       <h3 class="ladi-headline ladi-lazyload">MỪNG CƯỚI ĐẾN<br>CHÚ RỂ</h3>
                     </div>
-                    <div id="BUTTON5" class="ladi-element">
-                      <div class="ladi-button">
-                        <div class="ladi-button-background ladi-lazyload"></div>
-                        <div id="BUTTON_TEXT5" class="ladi-element ladi-button-headline" data-editable="album_2">
-                          <p class="ladi-headline ladi-lazyload">Tải ảnh QR</p>
-                        </div>
-                      </div>
-                    </div>
                     <div id="BUTTON6" class="ladi-element">
                       <div class="ladi-button">
                         <div class="ladi-button-background ladi-lazyload"></div>
@@ -7512,7 +7585,7 @@
                     </div>
                   </div>
                 </div>
-                <div data-action="true" id="IMAGE32" class="ladi-element" data-image-editable="photo_19">
+                <div data-action="true" id="IMAGE32" class="ladi-element">
                   <div class="ladi-image">
                     <div class="ladi-image-background ladi-lazyload"></div>
                   </div>
@@ -7527,31 +7600,13 @@
                       <div class="ladi-group">
                         <div id="BOX9" class="ladi-element">
                           <div class="ladi-box ladi-transition ladi-lazyload"></div>
-                        </div><a
-                          href="https://w.ladicdn.com/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png"
-                          id="BUTTON7" class="ladi-element"
-                          data-replace-href="https://w.ladicdn.com/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png">
-                          <div class="ladi-button">
-                            <div class="ladi-button-background ladi-lazyload"></div>
-                            <div id="BUTTON_TEXT7" class="ladi-element ladi-button-headline" data-editable="album_3">
-                              <p class="ladi-headline ladi-lazyload">Tải ảnh QR</p>
-                            </div>
-                          </div>
-                        </a>
-                        <div id="BUTTON8" class="ladi-element">
-                          <div class="ladi-button">
-                            <div class="ladi-button-background ladi-lazyload"></div>
-                            <div id="BUTTON_TEXT8" class="ladi-element ladi-button-headline" data-editable="button_5">
-                              <p class="ladi-headline ladi-lazyload">Copy STK<br></p>
-                            </div>
-                          </div>
                         </div>
                         <div id="HEADLINE76" class="ladi-element" data-editable="bride">
                           <h3 class="ladi-headline ladi-lazyload">MỪNG CƯỚI ĐẾN<br>CÔ DÂU</h3>
                         </div>
                       </div>
                     </div>
-                    <div data-action="true" id="IMAGE33" class="ladi-element" data-image-editable="photo_20">
+                    <div data-action="true" id="IMAGE33" class="ladi-element" data-image-editable="qr_2">
                       <div class="ladi-image">
                         <div class="ladi-image-background ladi-lazyload"></div>
                       </div>
@@ -7564,31 +7619,13 @@
                       <div class="ladi-group">
                         <div id="BOX10" class="ladi-element">
                           <div class="ladi-box ladi-transition ladi-lazyload"></div>
-                        </div><a
-                          href="https://w.ladicdn.com/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png"
-                          id="BUTTON9" class="ladi-element"
-                          data-replace-href="https://w.ladicdn.com/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png">
-                          <div class="ladi-button">
-                            <div class="ladi-button-background ladi-lazyload"></div>
-                            <div id="BUTTON_TEXT9" class="ladi-element ladi-button-headline" data-editable="album_4">
-                              <p class="ladi-headline ladi-lazyload">Tải ảnh QR</p>
-                            </div>
-                          </div>
-                        </a>
-                        <div id="BUTTON10" class="ladi-element">
-                          <div class="ladi-button">
-                            <div class="ladi-button-background ladi-lazyload"></div>
-                            <div id="BUTTON_TEXT10" class="ladi-element ladi-button-headline" data-editable="button_6">
-                              <p class="ladi-headline ladi-lazyload">Copy STK<br></p>
-                            </div>
-                          </div>
                         </div>
                         <div id="HEADLINE79" class="ladi-element" data-editable="groom_3">
                           <h3 class="ladi-headline ladi-lazyload">MỪNG CƯỚI ĐẾN<br>CHÚ RỂ<br></h3>
                         </div>
                       </div>
                     </div>
-                    <div data-action="true" id="IMAGE34" class="ladi-element" data-image-editable="photo_21">
+                    <div data-action="true" id="IMAGE34" class="ladi-element" data-image-editable="qr_1">
                       <div class="ladi-image">
                         <div class="ladi-image-background ladi-lazyload"></div>
                       </div>
@@ -8277,7 +8314,8 @@
       <div>
         <div class="gf-app"></div>
       </div>
-    </template></div>
+    </template>
+  </div>
 </body><chatgpt-sidebar data-gpts-theme="light"><template shadowrootmode="open">
     <style data-rc-order="prependQueue" data-rc-priority="-999" data-css-hash="qq1x77" data-token-hash="cjk7xi">
       :where(.css-1d6rho5) a {
@@ -31711,7 +31749,8 @@
                       <path fill="currentColor"
                         d="M3.624 2.776a.6.6 0 0 0-.848.848L7.152 8l-4.376 4.376a.6.6 0 0 0 .848.848L8 8.85l4.376 4.375a.6.6 0 0 0 .848-.848L8.85 8l4.375-4.376a.6.6 0 0 0-.848-.848L8 7.152z">
                       </path>
-                    </svg></div>
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
