@@ -50,7 +50,7 @@
             let countdownInterval;
 
             function getTargetDate() {
-                const elH = document.querySelector('.js-hour');
+                const elH = document.querySelector('#js-hour');
                 const elD = document.querySelector('#js-day');
                 const elM = document.querySelector('#js-month');
                 const elY = document.querySelector('#js-year');
@@ -120,7 +120,7 @@
                 const config = { characterData: true, childList: true, subtree: true };
 
                 // Theo dõi tất cả các nguồn dữ liệu thời gian
-                ['.js-hour', '#js-day', '#js-month', '#js-year'].forEach(selector => {
+                ['#js-hour', '#js-day', '#js-month', '#js-year'].forEach(selector => {
                     const el = document.querySelector(selector);
                     if (el) observer.observe(el, config);
                 });
@@ -156,7 +156,7 @@
 
     <!-- style -->
 
-
+    <!-- Embla Carousel -->
     <style>
         .embla {
             /* max-width: 420px; */
@@ -211,7 +211,6 @@
         }
 
         .embla__button {
-            -webkit-appearance: none;
             background-color: transparent;
             touch-action: manipulation;
             display: inline-flex;
@@ -269,6 +268,8 @@
             box-shadow: none;
         }
     </style>
+
+    <!-- main CSS -->
     <style>
         /* global css */
         body {
@@ -361,16 +362,9 @@
             transform: translate(0) scale(1) !important;
         }
 
-        .wrapper {
-            width: 100%;
-            margin: auto;
-            padding-inline: 15px;
-        }
-
         .groom_bride {
             font-size: 30px;
         }
-
 
         [data-image-editable] {
             background-size: cover;
@@ -378,8 +372,17 @@
             background-repeat: no-repeat;
         }
 
-        /* photo image */
+        .wrapper {
+            width: 100%;
+            margin: auto;
+            padding-inline: 15px;
+        }
 
+        /* photo image */
+    </style>
+
+    <!-- data image -->
+    <style>
         .bg_1 {
             background-image: url("https://w.ladicdn.com/s750x550/6801c7e1fbbd4d001283dac2/anh-chup-man-hinh-2025-07-25-152803-20250725082814-xh-1b.png");
         }
@@ -607,7 +610,7 @@
                         <p class="text-[20px] text-[#af495b]" data-editable="field_32">Lotte Hotel Hanoi</p>
                         <p class="text-[12px]" data-editable="field_33">Số 54 Liễu Giai, Quận Ba Đình, Hà Nội</p>
                         <p class="text-[16px] text-[#af495b]" data-aos="fade-left" data-aos-delay="1000"><span
-                                class="js-hour" data-editable="field_34">11:00</span> - <span
+                                id="js-hour" data-editable="field_34">11:00</span> - <span
                                 data-editable="field_35">Thứ Sáu</span></p>
                         <p class="text-[20px] text-[#af495b]" data-aos="fade-right" data-aos-delay="1000">
                             <span id="js-day" class="" data-editable="field_36">10</span>
@@ -1033,8 +1036,8 @@
                 const nextBtn = popup.querySelector('.embla__button--next');
 
                 if (show) {
-                    popup.classList.add('active'); 
-                    document.body.style.overflow = 'hidden'; 
+                    popup.classList.add('active');
+                    document.body.style.overflow = 'hidden';
 
                     if (!emblaApi) {
                         emblaApi = EmblaCarousel(viewportNode, { loop: true });
@@ -1047,7 +1050,7 @@
                         }, 10);
                     }
                 } else {
-                    popup.classList.remove('active'); 
+                    popup.classList.remove('active');
                     document.body.style.overflow = 'auto';
                 }
             }

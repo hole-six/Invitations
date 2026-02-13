@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bonheur+Royale&family=Lavishly+Yours&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Prata&family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/css/lightgallery-bundle.min.css" />
+
+    <!-- CDN -->
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Embla Carousel -->
+    <script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
+
+
+
+    <!-- Script -->
+
+
+    <!-- Timer script -->
+    <script>
+
+        //     <span class="js-hour" data-editable="field_34">11:00</span></p >
+        //     <span id="js-day" data-editable="field_36">10</span>
+        //     <span id="js-month"  data-editable="field_37">02</span>
+        //     <span id="js-year"  data-editable="field_38">2026</span>
+
+
+        //     <div id="TIMER_HOUR">
+        //          <span">00</span>
+        //          <p">Giờ</p>
+        //      </div>
+
+        (function () {
+
+            let countdownInterval;
+
+            function getTargetDate() {
+                const elH = document.querySelector('#js-hour');
+                const elD = document.querySelector('#js-day');
+                const elM = document.querySelector('#js-month');
+                const elY = document.querySelector('#js-year');
+
+                if (!elH || !elD || !elM || !elY) return null;
+
+                // Trích xuất giờ và phút (ví dụ: 11:00)
+                const timeMatch = elH.innerText.match(/(\d{2}):(\d{2})/);
+                const hour = timeMatch ? parseInt(timeMatch[1]) : 0;
+                const minute = timeMatch ? parseInt(timeMatch[2]) : 0;
+
+                // Trích xuất ngày, tháng, năm
+                const day = parseInt(elD.innerText);
+                const month = parseInt(elM.innerText) - 1; // Tháng trong JS từ 0-11
+                const year = parseInt(elY.innerText);
+
+                const target = new Date(year, month, day, hour, minute, 0).getTime();
+                return isNaN(target) ? null : target;
+            }
+
+            function render(d, h, m, s) {
+                const pad = (n) => n < 10 ? '0' + n : n;
+                const setVal = (id, val) => {
+                    const el = document.querySelector(`${id} span`);
+                    if (el) el.innerText = pad(val);
+                };
+
+                setVal('#TIMER_DAY', d);
+                setVal('#TIMER_HOUR', h);
+                setVal('#TIMER_MIN', m);
+                setVal('#TIMER_SEC', s);
+            }
+
+            function updateCountdown() {
+                const endTime = getTargetDate();
+                if (!endTime) return;
+
+                if (countdownInterval) clearInterval(countdownInterval);
+
+                const logic = () => {
+                    const now = new Date().getTime();
+                    const distance = endTime - now;
+
+                    if (distance < 0) {
+                        clearInterval(countdownInterval);
+                        render(0, 0, 0, 0);
+                        return;
+                    }
+
+                    const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    render(d, h, m, s);
+                };
+
+                logic();
+                countdownInterval = setInterval(logic, 1000);
+            }
+
+            // Khởi tạo và theo dõi thay đổi
+            window.addEventListener('load', () => {
+                updateCountdown();
+
+                const observer = new MutationObserver(updateCountdown);
+                const config = { characterData: true, childList: true, subtree: true };
+
+                // Theo dõi tất cả các nguồn dữ liệu thời gian
+                ['#js-hour', '#js-day', '#js-month', '#js-year'].forEach(selector => {
+                    const el = document.querySelector(selector);
+                    if (el) observer.observe(el, config);
+                });
+            });
+        })();
+    </script>
+
+
+    <!-- Animation script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const animationObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = entry.target;
+
+                        const delay = target.getAttribute('data-aos-delay') || '0';
+                        const duration = target.getAttribute('data-aos-duration') || '800';
+
+                        target.style.transitionDelay = `${delay}ms`;
+                        target.style.transitionDuration = `${duration}ms`;
+
+                        target.classList.add('aos-animate');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('[data-aos]').forEach(el => animationObserver.observe(el));
+        });
+    </script>
+
+
+
+    <!-- style -->
+
+    <!-- Embla Carousel -->
+    <style>
+        .embla {
+            /* max-width: 420px; */
+            /* Độ rộng tương đương mobile */
+            margin: auto;
+            --slide-spacing: 1rem;
+            --slide-size: 100%;
+        }
+
+        .embla__viewport {
+            overflow: hidden;
+        }
+
+        .embla__container {
+            display: flex;
+            touch-action: pan-y;
+            margin-left: calc(var(--slide-spacing) * -1);
+        }
+
+        .embla__slide {
+            width: 60px;
+            transform: translate3d(0, 0, 0);
+            flex: 0 0 var(--slide-size);
+            min-width: 0;
+            padding-left: var(--slide-spacing);
+        }
+
+        .embla__slide__number {
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f3f4f6;
+            border-radius: 1rem;
+            font-size: 3rem;
+            font-weight: bold;
+            color: #7D54AE;
+            box-shadow: inset 0 0 0 1px #e5e7eb;
+        }
+
+        .embla__controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .embla__buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .embla__button {
+            background-color: transparent;
+            touch-action: manipulation;
+            display: inline-flex;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid #7D54AE;
+            padding: 0;
+            margin: 0;
+            width: 2.5rem;
+            height: 2.5rem;
+            z-index: 1;
+            border-radius: 50%;
+            color: #7D54AE;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .embla__button:disabled {
+            color: #d1d5db;
+            border-color: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        .embla__button__svg {
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+
+        .embla__dot--selected {
+            background-color: #7D54AE;
+            border-color: #7D54AE;
+        }
+
+        #GALLERY_POPUP {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        #GALLERY_POPUP.active {
+            display: flex;
+        }
+
+        .embla__slide__number {
+            width: 100%;
+            height: 70vh;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: none;
+        }
+    </style>
+
+
+    <!-- Snowflake -->
+    <style>
+        @-webkit-keyframes snowflakes-fall {
+            0% {
+                top: -10%
+            }
+
+            100% {
+                top: 100%
+            }
+        }
+
+        @-webkit-keyframes snowflakes-shake {
+
+            0%,
+            100% {
+                -webkit-transform: translateX(0);
+                transform: translateX(0)
+            }
+
+            50% {
+                -webkit-transform: translateX(80px);
+                transform: translateX(80px)
+            }
+        }
+
+        @keyframes snowflakes-fall {
+            0% {
+                top: -10%
+            }
+
+            100% {
+                top: 100%
+            }
+        }
+
+        @keyframes snowflakes-shake {
+
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+
+            50% {
+                transform: translateX(80px)
+            }
+        }
+
+        .snowflake {
+            color: #fff;
+            font-size: 1em;
+            font-family: Arial, sans-serif;
+            text-shadow: 0 0 5px #000;
+            position: fixed;
+            top: -10%;
+            z-index: 9999;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            cursor: default;
+            -webkit-animation-name: snowflakes-fall, snowflakes-shake;
+            -webkit-animation-duration: 10s, 3s;
+            -webkit-animation-timing-function: linear, ease-in-out;
+            -webkit-animation-iteration-count: infinite, infinite;
+            -webkit-animation-play-state: running, running;
+            animation-name: snowflakes-fall, snowflakes-shake;
+            animation-duration: 10s, 3s;
+            animation-timing-function: linear, ease-in-out;
+            animation-iteration-count: infinite, infinite;
+            animation-play-state: running, running;
+        }
+
+        .snowflake:nth-of-type(0) {
+            left: 1%;
+            -webkit-animation-delay: 0s, 0s;
+            animation-delay: 0s, 0s
+        }
+
+        .snowflake:nth-of-type(1) {
+            left: 10%;
+            -webkit-animation-delay: 1s, 1s;
+            animation-delay: 1s, 1s
+        }
+
+        .snowflake:nth-of-type(2) {
+            left: 20%;
+            -webkit-animation-delay: 6s, .5s;
+            animation-delay: 6s, .5s
+        }
+
+        .snowflake:nth-of-type(3) {
+            left: 30%;
+            -webkit-animation-delay: 4s, 2s;
+            animation-delay: 4s, 2s
+        }
+
+        .snowflake:nth-of-type(4) {
+            left: 40%;
+            -webkit-animation-delay: 2s, 2s;
+            animation-delay: 2s, 2s
+        }
+
+        .snowflake:nth-of-type(5) {
+            left: 50%;
+            -webkit-animation-delay: 8s, 3s;
+            animation-delay: 8s, 3s
+        }
+
+        .snowflake:nth-of-type(6) {
+            left: 60%;
+            -webkit-animation-delay: 6s, 2s;
+            animation-delay: 6s, 2s
+        }
+
+        .snowflake:nth-of-type(7) {
+            left: 70%;
+            -webkit-animation-delay: 2.5s, 1s;
+            animation-delay: 2.5s, 1s
+        }
+
+        .snowflake:nth-of-type(8) {
+            left: 80%;
+            -webkit-animation-delay: 1s, 0s;
+            animation-delay: 1s, 0s
+        }
+
+        .snowflake:nth-of-type(9) {
+            left: 90%;
+            -webkit-animation-delay: 3s, 1.5s;
+            animation-delay: 3s, 1.5s
+        }
+
+        .snowflake:nth-of-type(10) {
+            left: 25%;
+            -webkit-animation-delay: 2s, 0s;
+            animation-delay: 2s, 0s
+        }
+
+        .snowflake:nth-of-type(11) {
+            left: 65%;
+            -webkit-animation-delay: 4s, 2.5s;
+            animation-delay: 4s, 2.5s
+        }
+    </style>
+    <!-- main CSS -->
+    <style>
+        /* global css */
+        body {
+            margin: 0;
+        }
+
+        main {
+            font-family: Arial, sans-serif;
+            max-width: 430px;
+            margin: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        picture {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+        }
+
+        section {
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding-block: 30px;
+        }
+
+        /* font familly */
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .font-quicksand {
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .font-prata {
+            font-family: 'Prata', serif;
+        }
+
+        .font-mulish {
+            font-family: 'Mulish', sans-serif;
+        }
+
+        .font-lavishly {
+            font-family: 'Lavishly Yours', cursive;
+        }
+
+        .font-bonheur {
+            font-family: 'Bonheur Royale';
+        }
+
+        .font-philosopher {
+            font-family: 'Philosopher';
+        }
+
+        /* Animation Base States */
+        [data-aos] {
+            opacity: 0;
+            transition-property: transform, opacity;
+            transition-timing-function: ease-out;
+        }
+
+        /* Fade Animations */
+        [data-aos="fade-up"] {
+            transform: translateY(30px);
+        }
+
+        [data-aos="fade-down"] {
+            transform: translateY(-30px);
+        }
+
+        [data-aos="fade-left"] {
+            transform: translateX(30px);
+        }
+
+        [data-aos="fade-right"] {
+            transform: translateX(-30px);
+        }
+
+        /* Zoom Animations */
+        [data-aos="zoom-in"] {
+            transform: scale(0.8);
+        }
+
+        [data-aos="zoom-out"] {
+            transform: scale(1.1);
+        }
+
+        /* Slide Animations */
+        [data-aos="slide-up"] {
+            transform: translateY(100%);
+        }
+
+        /* The Active State (Triggered by JS) */
+        .aos-animate {
+            opacity: 1 !important;
+            transform: translate(0) scale(1) !important;
+        }
+
+        .groom_bride {
+            font-size: 30px;
+        }
+
+        [data-image-editable] {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .wrapper {
+            width: 100%;
+            margin: auto;
+            padding-inline: 20px;
+        }
+    </style>
+
+    <!-- data image -->
+    <style>
+        .watercolor {
+            background-image: url("https://img.freepik.com/free-vector/purple-watercolour-splash-banner_78370-1874.jpg");
+        }
+
+        .element_1 {
+            background-image: url("https://w.ladicdn.com/s400x400/6801c7e1fbbd4d001283dac2/0c7e91c7-e0e4-4ec3-9a8a-492e238ef480-20250827204641-wp6c1.png");
+        }
+
+        .element_2 {
+            background-image: url("https://w.ladicdn.com/s400x400/6801c7e1fbbd4d001283dac2/26e2e771-9bf9-48d1-a493-46d563ab3f4f-20250827204703-jk_my.png");
+        }
+
+        .element_3 {
+            background-image: url("https://w.ladicdn.com/s400x400/6801c7e1fbbd4d001283dac2/b6d8d1dc-714c-40b8-a3cb-02e9d82fb37a-20250827204705-qsar0.png");
+        }
+
+        .element_4 {
+            background-image: url("https://w.ladicdn.com/s400x400/6801c7e1fbbd4d001283dac2/9cc5f390-1058-4495-9d63-e35a6cb9a9c3-20250827204642-v6spc.png");
+        }
+
+        .frame {
+            background-image: url("https://img.freepik.com/free-vector/lavender-seamless-pattern_1284-52305.jpg");
+        }
+
+        .bg_1 {
+            background-image: url("https://img.freepik.com/premium-photo/vertical-lavender-watercolor-frame-with-floral-border-white-background_267920-941.jpg");
+        }
+
+        .bg_2 {
+            background-image: url("https://img.freepik.com/free-vector/pastel-watercolor-banner_91008-232.jpg");
+        }
+
+        .bg_3 {
+            background-image: url("https://img.freepik.com/free-vector/lavender-seamless-pattern_1284-52305.jpg");
+        }
+
+        [data-image-editable="photo_1"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342159_9a35bc8074ac983581f10a243218dee5-20250720112650-xdgti.jpg");
+        }
+
+        [data-image-editable="photo_2"] {
+            background-image: url("https://w.ladicdn.com/s450x400/5c728619c417ab07e5194baa/22-20240427063945-kdhmq.jpg");
+        }
+
+        [data-image-editable="photo_3"] {
+            background-image: url("https://w.ladicdn.com/s700x550/6801c7e1fbbd4d001283dac2/z6823838296252_9dc2a80595ceb2d9916440b01035f73d-20250720112650--nghd.jpg");
+        }
+
+        [data-image-editable="photo_4"] {
+            background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838784242_aee303c8a068cb5fd7b41e7ef4b596d0-20250720112708-siwg1.jpg");
+        }
+
+        [data-image-editable="photo_5"] {
+            background-image: url("https://w.ladicdn.com/s500x550/6801c7e1fbbd4d001283dac2/z6823838739064_5c886c45d1d55977a87b5ca14373809e-20250720112708-1kjld.jpg");
+        }
+
+        [data-image-editable="photo_6"] {
+            background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838562924_339d83292301008cda4f978f91fff475-20250720112700-igibu.jpg");
+        }
+
+        [data-image-editable="photo_7"] {
+            background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+        }
+
+        [data-image-editable="photo_8"] {
+            background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838384689_f9140d1b705d2baa14714ae77179b775-20250720112650-qrpou.jpg");
+        }
+
+        [data-image-editable="photo_9"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838784286_fa9f26bf3167e3a2f668f9b524060a8b-20250720112708--0znq.jpg");
+        }
+
+        [data-image-editable="photo_10"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838474700_ae674803922601c8fe5fd6dc39839a52-20250720112655-abrzg.jpg");
+        }
+
+        [data-image-editable="photo_11"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838831042_069f5c5b3e835e42e996c331e4133d2e-20250720112716-91doe.jpg");
+        }
+
+        [data-image-editable="photo_12"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838384688_fa8a2fb2e4439bdba2eeaabc71b862cf-20250720112650-pwmxi.jpg");
+        }
+
+        [data-image-editable="photo_13"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342158_07f2a515ce97a05d7dac8aa0465ccc85-20250720112650-jtwiv.jpg");
+        }
+
+        [data-image-editable="photo_14"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+        }
+
+        [data-image-editable="photo_15"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+        }
+
+        [data-image-editable="photo_16"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+        }
+
+        [data-image-editable="photo_gallery_1"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+        }
+
+        [data-image-editable="photo_gallery_2"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838474700_ae674803922601c8fe5fd6dc39839a52-20250720112655-abrzg.jpg");
+        }
+
+        [data-image-editable="photo_gallery_3"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+        }
+
+        [data-image-editable="photo_gallery_4"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+        }
+
+        [data-image-editable="photo_gallery_5"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838784286_fa9f26bf3167e3a2f668f9b524060a8b-20250720112708--0znq.jpg");
+        }
+
+        [data-image-editable="photo_gallery_6"] {
+            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+        }
+
+
+        [data-image-editable="qr_1"] {
+            background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
+        }
+
+        [data-image-editable="qr_2"] {
+            background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <!-- Banner -->
+        <section id="SECTION_1" class="bg_1 p-0">
+            <div class="wrapper h-[625px] pl-[95px] pr-[80px] pt-[70px] pb-[70px]">
+                <div class="text-[50px] text-[#7D54AE] font-bonheur leading-[1]">
+                    <p class="ml-[70px]" data-aos="fade-right" data-editable="field_1">Aaroon</p>
+                    <p class="text-[30px] text-center" data-aos="fade-up">and</p>
+                    <p class="text-end mr-[70px]" data-aos="fade-left" data-editable="field_2">Olivia</p>
+                </div>
+                <div class="font-philosopher pt-[40px] mb-[70px] ">
+                    <p class="text-[25px] italic text-start ml-[30px] relative z-[1]" data-aos="fade-right"
+                        data-aos-delay="100" data-editable="field_3">Saturday</p>
+                    <div class="m-auto text-center relative z-[1]" data-aos="fade-left" data-aos-delay="200">
+                        <p id="js-month" data-editable="field_4">02</p>
+                        <p id="js-day" class="relative text-[40px] text-white leading-[1]" data-editable="field_5">23
+                        </p>
+                        <p id="js-year" data-editable="field_6">2026</p>
+                    </div>
+                    <picture
+                        class="size-[200px] absolute watercolor left-1/2 transform -translate-x-1/2 -translate-y-3/4">
+                    </picture>
+
+                    <p class="text-[25px] italic text-end mr-[30px] relative z-[1]" data-aos="fade-right"
+                        data-aos-delay="300">At <span id="js-hour" data-editable="field_7">08:00</span> PM</p>
+                </div>
+                <div class="font-philosopher text-center" data-aos="fade-up" data-aos-delay="400">
+                    <p data-editable="field_8">
+                        142/18 Cộng Hoà, Phường 4,</p>
+                    Quận Tân Bình, TP Hồ Chí
+                    Minh
+                </div>
+            </div>
+        </section>
+
+
+        <!-- main photo -->
+        <section id="SECTION_2" class="bg_2">
+            <div class="wrapper ">
+                <div class="p-[10px] rounded-[10px] frame" data-aos="fade-up">
+                    <picture class="w-full h-[260px]" data-image-editable="photo_1"></picture>
+                </div>
+            </div>
+        </section>
+
+
+
+        <section id="SECTION_3" class="bg_2">
+            <div class="wrapper font-philosopher">
+                <p class="text-center text-[30px] mb-[30px]" data-aos="fade-up" data-editable="field_9">Tiệc cưới và lễ
+                    thành hôn</p>
+                <div class="relative bg-white flex rounded-[10px]  mb-[20px]" data-aos="fade-right">
+                    <picture class="rounded-l-[10px] flex-1 w-[85px] h-[120px]" data-image-editable="photo_2"></picture>
+                    <div class="flex-1 px-[10px]">
+                        <p class="text-[18px]" data-editable="field_90">Tiệc cưới nhà trai</p>
+                        <p class="text-[12px]" data-editable="field_10">11h00 Thứ 5, ngày 05/06/2025</p>
+                        <p class="text-[12px]" data-editable="field_11">Tầng 4, Selegend Hotel Số 36 Quang Trung, Trần
+                            Hưng Đạo, Thái Bình</p>
+                    </div>
+                </div>
+                <div class="relative bg-white flex rounded-[10px]" data-aos="fade-left">
+                    <picture class="rounded-l-[10px] flex-1 w-[85px] h-[120px]" data-image-editable="photo_3"></picture>
+                    <div class="flex-1 px-[20px]">
+                        <p class="text-[18px]" data-editable="field_12">Tiệc cưới nhà trai</p>
+                        <p class="text-[12px]" data-editable="field_13">11h00 Thứ 5, ngày 05/06/2025</p>
+                        <p class="text-[12px]" data-editable="field_14">Tầng 4, Selegend Hotel Số 36 Quang Trung, Trần
+                            Hưng Đạo, Thái Bình</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <section id="SECTION_4" class="bg_2">
+            <div class="wrapper font-philosopher">
+                <p class="text-center text-[30px] mb-[30px]" data-aos="fade-up">Coming Soon</p>
+                <div class="flex justify-center gap-3 mb-4">
+                    <div id="TIMER_DAY"
+                        class="bg-white/90 backdrop-blur-sm p-3 rounded-xl shadow-sm border border-pink-50 min-w-[65px] text-center"
+                        data-aos="fade-up" data-aos-delay="100">
+                        <span class="block text-2xl font-bold text-[#7D54AE]">00</span>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-400">Ngày</p>
+                    </div>
+                    <div id="TIMER_HOUR"
+                        class="bg-white/90 backdrop-blur-sm p-3 rounded-xl shadow-sm border border-pink-50 min-w-[65px] text-center"
+                        data-aos="fade-up" data-aos-delay="200">
+                        <span class="block text-2xl font-bold text-[#7D54AE]">00</span>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-400">Giờ</p>
+                    </div>
+                    <div id="TIMER_MIN"
+                        class="bg-white/90 backdrop-blur-sm p-3 rounded-xl shadow-sm border border-pink-50 min-w-[65px] text-center"
+                        data-aos="fade-up" data-aos-delay="300">
+                        <span class="block text-2xl font-bold text-[#7D54AE]">00</span>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-400">Phút</p>
+                    </div>
+                    <div id="TIMER_SEC"
+                        class="bg-white/90 backdrop-blur-sm p-3 rounded-xl shadow-sm border border-pink-50 min-w-[65px] text-center"
+                        data-aos="fade-up" data-aos-delay="400">
+                        <span class="block text-2xl font-bold text-[#7D54AE]">00</span>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-400">Giây</p>
+                    </div>
+                </div>
+                <p class="text-end italic text-gray-500 text-sm" data-editable="field_15" data-aos="fade-right">...cho
+                    đến ngày chúng mình về
+                    chung một
+                    nhà</p>
+                <p class="text-center text-[30px] mb-[30px]" data-editable="field_16">Tháng 8</p>
+                <div class="flex text-center text-[14px]">
+                    <div class="flex-1" data-aos="fade-up">
+                        <p data-editable="field_92">Thứ 2</p>
+                        <p data-editable="field_17">2</p>
+                    </div>
+                    <div class="flex-1" data-aos="fade-up" data-aos-delay="100">
+                        <p data-editable="field_18">Thứ 3</p>
+                        <p data-editable="field_19">3</p>
+                    </div>
+                    <div class="flex-1" data-aos="fade-up" data-aos-delay="200">
+                        <p data-editable="field_20">Thứ 4</p>
+                        <p data-editable="field_21">4</p>
+                    </div>
+                    <div class="flex-1 text-[#7D54AE]" data-aos="fade-up" data-aos-delay="300">
+                        <p data-editable="field_22">Thứ 5</p>
+                        <p data-editable="field_23">5</p>
+                    </div>
+                    <div class="flex-1" data-aos="fade-up" data-aos-delay="400">
+                        <p data-editable="field_24">Thứ 6</p>
+                        <p data-editable="field_25">6</p>
+                    </div>
+                    <div class="flex-1" data-aos="fade-up" data-aos-delay="500">
+                        <p data-editable="field_26">Thứ 7</p>
+                        <p data-editable="field_27">7</p>
+                    </div>
+                    <div class="flex-1" data-aos="fade-up" data-aos-delay="600">
+                        <p data-editable="field_28">Chủ nhật</p>
+                        <p data-editable="field_29">8</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <section id="SECTION_5" class="bg_2">
+            <div class="wrapper ">
+                <div class="p-[10px] rounded-[10px] frame" data-aos="fade-up" data-aos="fade-up">
+                    <picture class="w-full h-[260px]" data-image-editable="photo_4"></picture>
+                </div>
+            </div>
+        </section>
+        <section id="SECTION_6" class="bg_2">
+            <div class="wrapper font-philosopher">
+                <div class="pb-[30px] text-[40px] text-[#7D54AE] font-bonheur leading-[1]">
+                    <p class="ml-[70px]">Your presence</p>
+                    <p class="text-center">is</p>
+                    <p class="mr-[70px] text-end">our best gift</p>
+                </div>
+                <div class="flex">
+                    <div class="flex-1" data-aos="fade-right">
+                        <picture class="ml-auto size-[50px] element_1"></picture>
+                    </div>
+                    <div class="mx-[10px] w-[2px] bg-black"></div>
+                    <div class="pb-[30px] flex-1" data-aos="fade-left">
+                        <p data-editable="field_30">17h30| đón khách</p>
+                        <p data-editable="field_31">loremloremloremlorem</p>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="pb-[30px] flex-1 text-right" data-aos="fade-right" data-aos-delay="100">
+                        <p data-editable="field_32">17h30| Lễ cưới</p>
+                        <p data-editable="field_33">loremloremloremlorem</p>
+                    </div>
+                    <div class="mx-[10px] w-[2px] bg-black"></div>
+                    <div class="flex-1" data-aos="fade-left" data-aos-delay="100">
+                        <picture class="size-[50px] element_2"></picture>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="flex-1" data-aos="fade-right" data-aos-delay="200">
+                        <picture class="ml-auto size-[50px] element_3"></picture>
+                    </div>
+                    <div class="pb-[30px] mx-[10px] w-[2px] bg-black"></div>
+                    <div class="flex-1 " data-aos="fade-left" data-aos-delay="200">
+                        <p data-editable="field_34">17h30| Ăn tiệc</p>
+                        <p data-editable="field_35">loremloremloremlorem</p>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="pb-[30px] flex-1 text-right" data-aos="fade-right" data-aos-delay="300">
+                        <p data-editable="field_36">17h30| Chụcp ảnh</p>
+                        <p data-editable="field_37">loremloremloremlorem</p>
+                    </div>
+                    <div class="mx-[10px] w-[2px] bg-black"></div>
+                    <div class="flex-1" data-aos="fade-left" data-aos-delay="300">
+                        <picture class="size-[50px] element_4"></picture>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="SECTION_8" class="bg_2">
+            <div class="wrapper ">
+                <div class="p-[10px] rounded-[10px] frame" data-aos="fade-up">
+                    <picture class="w-full h-[260px]" data-image-editable="photo_5"></picture>
+                </div>
+            </div>
+        </section>
+        <section id="section_9" class="bg_2">
+            <div class="wrapper">
+                <p class="font-philosopher text-center text-[30px] mb-[30px]" data-editable="field_38">Album của chúng
+                    tớ</p>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    <picture class="aspect-[3/4] bg-gray-100 rounded overflow-hidden" data-image-editable="photo_6"
+                        data-aos="fade-up">
+                    </picture>
+                    <picture class="aspect-[3/4] bg-gray-100 rounded overflow-hidden" data-image-editable="photo_7"
+                        data-aos="fade-up" data-aos-delay="100">
+                    </picture>
+                    <picture class="aspect-[3/4] bg-gray-100 rounded overflow-hidden" data-image-editable="photo_8"
+                        data-aos="fade-up" data-aos-delay="200">
+                    </picture>
+                    <picture class="aspect-[3/4] bg-gray-100 rounded overflow-hidden" data-image-editable="photo_9"
+                        data-aos="fade-up" data-aos-delay="300">
+                    </picture>
+                    <picture class="aspect-[3/4] bg-gray-100 rounded overflow-hidden" data-image-editable="photo_10"
+                        data-aos="fade-up" data-aos-delay="400">
+                    </picture>
+                    <picture class="aspect-[3/4] bg-gray-100 rounded overflow-hidden" data-image-editable="photo_11"
+                        data-aos="fade-up" data-aos-delay="500">
+                    </picture>
+                </div>
+                <div class="text-center mt-6" data-aos="fade-up" data-aos-delay="1500">
+                    <button onclick="toggleGalleryPopup(true)"
+                        class="group flex flex-col items-center mx-auto text-gray-500 hover:text-[#7D54AE] transition-colors">
+                        <span class="text-xs uppercase tracking-widest mb-1 text-black">Xem Thêm</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="#000000" class="w-5 h-5 animate-bounce">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+        <section id="section_10" class="bg_2">
+            <div class="wrapper">
+                <p class="font-philosopher text-center text-[30px] mb-[30px]" data-editable="field_39"
+                    data-aos="fade-up">Chặng đường của chúng
+                    tớ</p>
+
+                <div>
+                    <div class="flex">
+                        <div class="flex-1 mr-[20px] py-[30px]" data-aos="fade-right">
+                            <div class="text-right">
+                                <p class="text-[20px] font-prata pb-[10px]" data-editable="field_40">2017</p>
+                                <p class="text-[12px] font-prata italic pb-[5px]" data-editable="field_41">17 bẻ gãy
+                                    sừng trâu
+                                </p>
+                                <p class="text-[12px] font-mulish" data-editable="field_55">17, độ tuổi với những rung
+                                    động
+                                    đầu đời, non nớt, trong trẻo như
+                                    sớm ban mai. Anh bị thu
+                                    hút
+                                    bởi một cô gái ngây ngô, vui vẻ và đáng mến. Em bị thu hút bởi chàng trai tóc đầu
+                                    đinh,
+                                    quậy
+                                    quậy nhưng rất đáng yêu. Và chúng mình gặp nhau nơi lòng hăng say phục vụ nhà Chúa.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="w-[2px] bg-black relative"></div>
+                        <div class="flex-1 ml-[20px] py-[30px]" data-aos="fade-left">
+                            <picture class="rounded-[10px]" data-image-editable="photo_12"></picture>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex-1 mr-[20px] py-[30px]" data-aos="fade-right">
+                            <picture class="rounded-[10px]" data-image-editable="photo_13"></picture>
+                        </div>
+                        <div class="w-[2px] bg-black relative"></div>
+                        <div class="flex-1 ml-[20px] py-[30px]" data-aos="fade-left">
+                            <div class="text-left">
+                                <p class="text-[20px] font-prata pb-[10px]" data-editable="field_43">2021</p>
+                                <p class="text-[12px] font-prata italic pb-[5px]" data-editable="field_44">Thử thách,
+                                    chông gai
+                                </p>
+                                <p class="text-[12px] font-mulish" data-editable="field_45">2021 - Thử thách, chông gai
+                                    Xa
+                                    mặt cách lòng, hiểu lầm, tổn thương, cãi vã liên tục khiến chúng mình quyết định nói
+                                    lời
+                                    chia tay...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex-1 mr-[20px] py-[30px]" data-aos="fade-right">
+                            <div class="text-right">
+                                <p class="text-[20px] font-prata pb-[10px]" data-editable="field_46">2023</p>
+                                <p class="text-[12px] font-prata italic pb-[5px]" data-editable="field_47">Gương vỡ lại
+                                    lành</p>
+                                <p class="text-[12px] font-mulish" data-editable="field_48">2 năm thử thách để chúng
+                                    mình
+                                    trân trọng, thấu hiểu nhau hơn.
+                                    Chúng mình cầu nguyện với Chúa.Liệu đây có phải người sẽ ở bên con suốt đời, cùng
+                                    con
+                                    yêu mến và phụng sự Chúa?</p>
+                            </div>
+                        </div>
+                        <div class="w-[2px] bg-black relative"></div>
+                        <div class="flex-1 ml-[20px] py-[30px]" data-aos="fade-left">
+                            <picture class="rounded-[10px]" data-image-editable="photo_14"></picture>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex-1 mr-[20px] py-[30px]" data-aos="fade-right">
+                            <picture class="rounded-[10px]" data-image-editable="photo_15"></picture>
+                        </div>
+                        <div class="w-[2px] bg-black relative"></div>
+                        <div class="flex-1 ml-[20px] py-[30px]" data-aos="fade-left">
+                            <div class="text-left">
+                                <p class="text-[20px] font-prata pb-[10px]" data-editable="field_49">2026</p>
+                                <p class="text-[12px] font-prata italic pb-[5px]" data-editable="field_50">Người bên
+                                    mình năm 17
+                                    tuổi, giờ tiến lên lễ đường dưới sự chúc phúc của Thiên Chúa.</p>
+                                <p class="text-[12px] font-mulish" data-editable="field_51">Anh là Anton Nguyễn Minh
+                                    Long
+                                    xin nhận em Maria Nguyễn Thị Thu Trang làm vợ và hứa sẽ giữ lòng chung thủy với em,
+                                    khi
+                                    thịnh vượng cũng như lúc gian nan, khi mạnh khỏe cũng như lúc đau yếu, để yêu thương
+                                    và
+                                    tôn trọng em mọi ngày suốt đời anh."</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex-1 mr-[20px] py-[30px]" data-aos="fade-right">
+                            <div class="text-right">
+                                <p class="text-[20px] font-prata pb-[10px]" data-editable="field_52">2026</p>
+                                <p class="text-[12px] font-prata italic pb-[5px]" data-editable="field_53">Người bên
+                                    mình năm 17
+                                    tuổi, giờ tiến lên lễ đường dưới sự chúc phúc của Thiên Chúa.</p>
+                                <p class="text-[12px] font-mulish" data-editable="field_54">"Em là Maria Nguyễn Thị Thu
+                                    Trang xin nhận anh Anton Nguyễn Minh Long làm chồng và hứa sẽ giữ lòng chung thủy
+                                    với
+                                    anh, khi thịnh vượng cũng như lúc gian nan, khi mạnh khỏe cũng như lúc đau yếu, để
+                                    yêu
+                                    thương và tôn trọng anh mọi ngày suốt đời em."</p>
+                            </div>
+                        </div>
+                        <div class="w-[2px] bg-black relative"></div>
+                        <div class="flex-1 ml-[20px] py-[30px]" data-aos="fade-left">
+                            <picture class="rounded-[10px]" data-image-editable="photo_16"></picture>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="SECTION_8" class="py-10 bg_2">
+            <div class="wrapper">
+                <div
+                    class="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-pink-100 text-center max-w-sm mx-auto">
+                    <div class="mb-8">
+                        <p class="font-serif text-3xl text-[#7D54AE] mb-2" data-editable="field_header_1"
+                            data-editable="field_93">Lời cảm ơn</p>
+                        <p class="italic text-gray-500 text-sm tracking-widest uppercase mb-4" data-editable="field_56">
+                            Thank you</p>
+                        <p class="font-mulish text-gray-600 text-sm leading-relaxed mb-4" data-editable="field_57">
+                            Đám cưới của chúng tôi sẽ trọn vẹn hơn khi có thêm lời chúc phúc và sự hiện diện của các
+                            bạn.
+                        </p>
+                        <p class="text-[#7D54AE] font-medium text-xs uppercase tracking-tighter"
+                            data-editable="field_58">
+                            Minh Long & Thu Trang
+                        </p>
+                    </div>
+
+                    <form action="" class="space-y-4">
+                        <div class="relative">
+                            <input type="text" placeholder="Tên của bạn"
+                                class="w-full px-4 py-3 rounded-full border border-gray-200 focus:border-[#7D54AE] focus:ring-1 focus:ring-[#7D54AE] outline-none transition-all text-sm bg-white/50">
+                        </div>
+
+                        <div class="relative">
+                            <input type="text" placeholder="Số điện thoại"
+                                class="w-full px-4 py-3 rounded-full border border-gray-200 focus:border-[#7D54AE] focus:ring-1 focus:ring-[#7D54AE] outline-none transition-all text-sm bg-white/50">
+                        </div>
+
+                        <div class="relative">
+                            <input type="number" placeholder="Số người tham dự"
+                                class="w-full px-4 py-3 rounded-full border border-gray-200 focus:border-[#7D54AE] focus:ring-1 focus:ring-[#7D54AE] outline-none transition-all text-sm bg-white/50">
+                        </div>
+
+                        <div class="flex justify-around py-2 text-sm text-gray-600">
+                            <label class="flex items-center space-x-2 cursor-pointer group">
+                                <input type="radio" name="guest_type" id="side_groom" class="accent-[#7D54AE]">
+                                <span class="group-hover:text-[#7D54AE]">Nhà trai</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer group">
+                                <input type="radio" name="guest_type" id="side_bride" class="accent-[#7D54AE]">
+                                <span class="group-hover:text-[#7D54AE]">Nhà gái</span>
+                            </label>
+                        </div>
+
+                        <div class="relative">
+                            <textarea name="congratulations" rows="4" placeholder="Lời chúc của bạn"
+                                class="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:border-[#7D54AE] focus:ring-1 focus:ring-[#7D54AE] outline-none transition-all text-sm bg-white/50 resize-none"></textarea>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full bg-[#7D54AE] hover:bg-[#8e3a49] text-white font-medium py-3 rounded-full shadow-lg shadow-pink-200 transition-all active:scale-95 uppercase tracking-widest text-xs">
+                            Gửi lời chúc
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- wedding gift -->
+        <section id="wedding-gift" class="bg_2">
+            <div class="wrapper text-center py-[15px]">
+                <div class="bg-white p-[10px] rounded-[10px]">
+                    <p class="">Hộp mừng cưới</p>
+                    <div class="flex">
+                        <div class="flex-1">
+                            <p>Chú rể</p>
+                            <picture class="size-[150px] aspect-[1/1] m-auto" data-image-editable="qr_1"></picture>
+                            <p class="text-[12px]">Họ và tên : <span data-editable="field_59">Nguyễn ABC</span></p>
+                            <p class="text-[12px]">Ngân hàng : <span data-editable="field_60">Techcomebank</span></p>
+                            <p class="text-[12px]">STK : <span data-editable="field_61">0123456789</span></p>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-[12px]">Cô dâu</p>
+                            <picture class="size-[150px] aspect-[1/1] m-auto" data-image-editable="qr_2"></picture>
+                            <p class="text-[12px]">Họ và tên : <span data-editable="field_62">Nguyễn ABC</span></p>
+                            <p class="text-[12px]">Ngân hàng : <span data-editable="field_63">Techcomebank</span></p>
+                            <p class="text-[12px]">STK : <span data-editable="field_64">0123456789</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="GALLERY_POPUP" class="embla">
+            <button onclick="toggleGalleryPopup(false)"
+                class="absolute top-10 right-10 text-white text-5xl z-[10000]">&times;</button>
+
+            <div class="embla__viewport">
+                <div class="embla__container">
+                    <div class="embla__slide">
+                        <picture class="embla__slide__number" data-image-editable="photo_gallery_1"></picture>
+                    </div>
+                    <div class="embla__slide">
+                        <picture class="embla__slide__number" data-image-editable="photo_gallery_2"></picture>
+                    </div>
+                    <div class="embla__slide">
+                        <picture class="embla__slide__number" data-image-editable="photo_gallery_3"></picture>
+                    </div>
+                    <div class="embla__slide">
+                        <picture class="embla__slide__number" data-image-editable="photo_gallery_4"></picture>
+                    </div>
+                    <div class="embla__slide">
+                        <picture class="embla__slide__number" data-image-editable="photo_gallery_5"></picture>
+                    </div>
+                    <div class="embla__slide">
+                        <picture class="embla__slide__number" data-image-editable="photo_gallery_6"></picture>
+                    </div>
+                </div>
+            </div>
+
+            <div class="embla__controls">
+                <div class="embla__buttons">
+                    <button class="embla__button embla__button--prev" type="button">
+                        <svg class="embla__button__svg" viewBox="0 0 532 532">
+                            <path fill="white"
+                                d="M355.66 11.354c13.793-13.805 36.208-13.805 50.001 0 13.785 13.804 13.785 36.238 0 50.034L201.22 266l204.442 204.61c13.785 13.805 13.785 36.239 0 50.044-13.793 13.796-36.208 13.796-50.002 0a5994246.277 5994246.277 0 0 0-229.332-229.454 35.065 35.065 0 0 1-10.326-25.126c0-9.2 3.393-18.26 10.326-25.2C172.192 194.973 332.731 34.31 355.66 11.354Z">
+                            </path>
+                        </svg>
+                    </button>
+                    <button class="embla__button embla__button--next" type="button">
+                        <svg class="embla__button__svg" viewBox="0 0 532 532">
+                            <path fill="white"
+                                d="M176.34 520.646c-13.793 13.805-36.208 13.805-50.001 0-13.785-13.804-13.785-36.238 0-50.034L330.78 266 126.34 61.391c-13.785-13.805-13.785-36.239 0-50.044 13.793-13.796 36.208-13.796 50.002 0 22.928 22.947 206.395 206.507 229.332 229.454a35.065 35.065 0 0 1 10.326 25.126c0 9.2-3.393 18.26-10.326 25.2-45.865 45.901-206.404 206.564-229.332 229.52Z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+        <script>
+            const OPTIONS = { loop: true };
+
+            const emblaNode = document.querySelector('.embla');
+            const viewportNode = emblaNode.querySelector('.embla__viewport');
+            const prevBtnNode = emblaNode.querySelector('.embla__button--prev');
+            const nextBtnNode = emblaNode.querySelector('.embla__button--next');
+
+            const emblaApi = EmblaCarousel(viewportNode, OPTIONS);
+
+            const addPrevNextButtonClickHandlers = (emblaApi, prevBtn, nextBtn) => {
+                const scrollPrev = () => emblaApi.scrollPrev();
+                const scrollNext = () => emblaApi.scrollNext();
+
+                prevBtn.addEventListener('click', scrollPrev, false);
+                nextBtn.addEventListener('click', scrollNext, false);
+
+                const togglePrevNextButtonsState = () => {
+                    if (emblaApi.canScrollPrev()) prevBtn.removeAttribute('disabled');
+                    else prevBtn.setAttribute('disabled', 'disabled');
+
+                    if (emblaApi.canScrollNext()) nextBtn.removeAttribute('disabled');
+                    else nextBtn.setAttribute('disabled', 'disabled');
+                };
+
+                emblaApi
+                    .on('select', togglePrevNextButtonsState)
+                    .on('reinit', togglePrevNextButtonsState);
+
+                togglePrevNextButtonsState();
+            };
+
+            addPrevNextButtonClickHandlers(emblaApi, prevBtnNode, nextBtnNode);
+            addDotButtonsAndClickHandlers(emblaApi);
+            function toggleGalleryPopup(show) {
+                const popup = document.getElementById('GALLERY_POPUP');
+                const viewportNode = popup.querySelector('.embla__viewport');
+                const prevBtn = popup.querySelector('.embla__button--prev');
+                const nextBtn = popup.querySelector('.embla__button--next');
+
+                if (show) {
+                    popup.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+
+                    if (!emblaApi) {
+                        emblaApi = EmblaCarousel(viewportNode, { loop: true });
+
+                        prevBtn.addEventListener('click', () => emblaApi.scrollPrev());
+                        nextBtn.addEventListener('click', () => emblaApi.scrollNext());
+                    } else {
+                        setTimeout(() => {
+                            emblaApi.reInit();
+                        }, 10);
+                    }
+                } else {
+                    popup.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        </script>
+        <footer>
+            <p class="bg-gray-200 text-center">Bản quyền thuộc Hiweb</p>
+        </footer>
+        <div class="snowflakes" aria-hidden="true">
+            <div class="snowflake" style="font-size: 20px;">🌸</div>
+            <div class="snowflake">❅</div>
+            <div class="snowflake" style="font-size: 18px;">💜 </div>
+            <div class="snowflake">❅</div>
+            <div class="snowflake" style="font-size: 20px;">🌸</div>
+            <div class="snowflake" style="font-size: 22px;">💜</div>
+            <div class="snowflake" style="font-size: 14px;">🌸</div>
+            <div class="snowflake" style="font-size: 15px;">💜</div>
+        </div>
+    </main>
+</body>
+
+</html>
