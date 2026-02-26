@@ -306,13 +306,12 @@
 
         p,
         span {
-            font-family: 'Source Sans 3';
+            font-family: 'Poppins';
         }
 
         p {
             margin: 0;
-            /* font-family: 'Poppins'; */
-            font-size: 1.7rem;
+            font-size: 1.4rem;
         }
 
         h1,
@@ -321,7 +320,7 @@
         h4,
         h5,
         h6 {
-            font-family: 'Rochester';
+            font-family: 'Poppins';
         }
 
         h2,
@@ -329,23 +328,22 @@
         h4,
         h5,
         h6 {
-            color: #d291bc;
+            /* color: #d291bc; */
         }
 
-        h1 {
-            font-size: 8vw;
-        }
+        /* h1,
+        .h1 {
+            font-size: 4rem;
+            @apply text-[3.6rem];
+        } */
 
-
+        h2,
         .h2 {
-            font-size: 6.4rem;
+            font-size: 3.6rem;
         }
 
+        h3,
         .h3 {
-            font-size: 5rem;
-        }
-
-        .h4 {
             font-size: 2.4rem;
         }
 
@@ -500,30 +498,6 @@
 
     <!-- data image -->
     <style>
-        .element_1 {
-            background-image: url("https://img.freepik.com/premium-photo/border-made-pink-watercolor-roses-flowers-green-leaves-wedding-greeting-illustration_202769-9261.jpg");
-        }
-
-        .element_2 {
-            background-image: url("https://img.freepik.com/premium-psd/floral-seamless-border-with-pink-roses-silver-branches-with-leaves-watercolor-illustration_566403-821.jpg?w=2000");
-        }
-
-        .element_3 {
-            background-image: url("https://img.freepik.com/premium-vector/hand-drawn-border-flourish-separator-calligraphy-designer-elements-vector-vintage-wedding_81863-8430.jpg?uid=R232239133&ga=GA1.1.520531959.1770612426&semt=ais_hybrid&w=740&q=80");
-        }
-
-        .element_4 {
-            background-image: url("https://img.freepik.com/free-vector/watercolour-green-background_78370-1882.jpg?semt=ais_user_personalization&w=740&q=80");
-        }
-
-        .element_5 {
-            background-image: url("https://w.ladicdn.com/s450x450/6801c7e1fbbd4d001283dac2/7038d9be-dc1a-4484-9a12-4951da90b9d0-20250914040600-3czay.png");
-        }
-
-        .element_6 {
-            background-image: url("https://w.ladicdn.com/s450x450/6801c7e1fbbd4d001283dac2/5631932a-af9f-4c5a-8c21-8d354bb47517-20250914040601-rlcyb.png");
-        }
-
         [data-image-editable="photo_1"] {
             background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342159_9a35bc8074ac983581f10a243218dee5-20250720112650-xdgti.jpg");
         }
@@ -749,283 +723,235 @@
 
 <body>
     <main>
-
-
         <!-- Banner Begin-->
         <section id="SECTION_BANNER" data-image-editable="photo_1" class="relative h-screen flex">
-            <div
-                class="bg-[linear-gradient(to_bottom,rgba(0,0,0,0.4)_0%,rgba(239,1,124,0.57)_100%)] opacity-40 absolute inset-0 z-0">
+            <div class="bg-[#7f3f3b] opacity-40 absolute inset-0 z-0">
             </div>
             <div class="wrapper z-[10] relative">
-                <div class="text-white text-center py-[5rem]">
-                    <h1 class="text-[9vw] mb-[1rem]" data-editable="field_1" data-aos="fade-up">
-                        Francisco & Laura</h1>
-                    <p class="m-auto w-fit text-[14px] font-black uppercase text-[#d291bc] tracking-[7px] relative bg-white py-[8px] px-[15px] rounded-[2px] mb-[4rem]"
-                        data-editable="field_2" data-aos="fade-up" data-aos-delay="100">
-                        Are Getting Married</p>
-                    <div data-aos="fade-up" data-aos-delay="100">
-                        <p class="font-rochester"><span class="text-[4.8rem] font-rochester"
-                                id="js-hour" data-editable="field_3">8:00</span> <span class="font-rochester" data-editable="field_4">AM</span></p>
-                        <p class="mb-[2.4rem] text-[4.8rem] " data-aos="fade-up" data-aos-delay="200">
-                            <span id="js-month" class="font-rochester" data-editable="field_5">02</span> |
-                            <span id="js-day" class="font-rochester" data-editable="field_6">28</span> |
-                            <span id="js-year" class="font-rochester" data-editable="field_7">2026</span>
-                        </p>
-                    </div>
+                <div class="text-white text-center">
+                    <h1 class="text-[4rem] md:text-[7rem] font-bold" data-editable="field_1" data-aos="fade-up">
+                        James & Julie <br>
+                        are Getting Married
+                    </h1>
                 </div>
             </div>
         </section>
         <!-- Banner End-->
-        <!-- Timer Section Begin -->
-        <section id="SECTION_TIMER" class="py-0">
-            <div
-                class="relative max-w-[80%] flex max-md:flex-col justify-center z-20 m-auto -mt-[7rem] p-[1rem] text-center text-white">
-                <div class="flex-1 py-[2rem] px-3 md:px-[3rem] bg-[#c183af] flex items-center justify-center"
-                    data-aos="fade-up" data-aos-delay="100">
-                    <p class="font-rochester text-[3rem] text-white whitespace-nowrap" data-editable="field_8">Save the
-                        day</p>
-                </div>
-                <div id="TIMER_DAY" class="flex-1 py-[2rem] px-3 md:px-[3rem] bg-[#c994ba]" data-aos="fade-up"
-                    data-aos-delay="100">
-                    <span class="font-rochester text-[3rem] md:text-[4rem] text-white font-bold">00</span>
-                    <p class="text-[1.2rem] uppercase tracking-widest font-bold">
-                        Day
-                    </p>
-                </div>
-                <div id="TIMER_HOUR" class="flex-1 py-[ 2rem] px-3 md:px-[3rem] bg-[#c994ba]" data-aos="fade-up"
-                    data-aos-delay="200">
-                    <span class="font-rochester text-[3rem] md:text-[4rem] text-white font-bold">00</span>
-                    <p class="text-[1.2rem] uppercase tracking-widest font-bold">
-                        Hour
-                    </p>
-                </div>
-                <div id="TIMER_MIN" class="flex-1 py-[2rem] px-3 md:px-[3rem] bg-[#c994ba]" data-aos="fade-up"
-                    data-aos-delay="300">
-                    <span class="font-rochester text-[3rem] md:text-[4rem] text-white font-bold">00</span>
-                    <p class="text-[1.2rem] uppercase tracking-widest font-bold">
-                        Min
-                    </p>
-                </div>
-                <div id="TIMER_SEC" class="flex-1 py-[2rem] px-3 md:px-[3rem] bg-[#c994ba]" data-aos="fade-up"
-                    data-aos-delay="400">
-                    <span class="font-rochester text-[3rem] md:text-[4rem] text-white font-bold">00</span>
-                    <p class="text-[1.2rem] uppercase tracking-widest font-bold">
-                        Sec
-                    </p>
-                </div>
-            </div>
-        </section>
-        <!-- Timer Section End -->
         <!-- Introduction Section Begin -->
-        <section id="SECTION_INTRODUCTION" class="pt-[10rem] md:pt-[17rem]">
+        <section id="SECTION_INTRODUCTION">
             <div class="wrapper">
-                <div class="text-center" data-aos="fade-up">
-                    <span
-                        class="text-[14px] mb-[5px] uppercase text-[#d291bc] tracking-[2px] font-black border border-dashed border-[#d291bc] inline-block px-[10px] py-0"
-                        data-editable="field_9">About
-                        Bride & Groom</span>
-                    <h2 class="h2 mb-[4.8rem]" data-editable="field_10">Bride & Groom</h2>
-                </div>
-                <div class="flex max-md:flex-col-reverse mb-[8rem]">
-                    <div class="pt-[3rem] md:pl-[4.8rem] md:mr-[8rem] text-center md:text-right">
-                        <h3 class="h3 mb-[.8rem]" data-editable="field_11">Leonardo Agustus</h3>
-                        <p class="text-[#999999]" data-editable="field_12">Far far away, behind the word mountains, far
-                            from the countries
-                            Vokalia and Consonantia,
-                            there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the
-                            Semantics, a large language ocean.</p>
+                <div class="flex gap-[3rem] max-md:flex-col-reverse mb-[5rem]">
+                    <div class="flex-1">
+                        <h2 class="mb-[2rem] h2 font-thin" data-editable="field_2">About the <br>Handsome <span
+                                class="font-semibold">Groom</span></h2>
+                        <p class="mb-[1.6rem] text-[#777777]" data-editable="field_3"> Few would argue that, despite the
+                            advancements of
+                            feminism over the
+                            past three decades,
+                            women still face a double standard when it comes to their behavior. While men’s
+                            borderline-inappropriate behavior is often laughed off as “boys will be boys,” women face
+                            higher conduct standards – especially in the workplace.
+                        </p>
+                        <p class="text-[#777777]" data-editable="field_4">
+                            While men’s borderline-inappropriate behavior is often laughed off as “boys will be boys,”
+                        </p>
                     </div>
-                    <div
-                        class="size-[30rem] md:size-[40rem] max-md:m-auto aspect-square p-[1rem] rounded-[1rem] bg-[#ead9e5]">
+                    <div class="md:flex-1 max-md:size-[20rem] max-md:m-auto w-[20rem]">
                         <picture class="rounded-[1rem]" data-image-editable="photo_2"></picture>
                     </div>
                 </div>
-                <div class="flex flex-row-reverse max-md:flex-col-reverse">
-                    <div class="mt-[3rem] md:pr-[4.8rem] md:ml-[8rem] max-md:text-center">
-                        <h3 class="h3 mb-[.8rem]" data-editable="field_13">Marianna Reyes</h3>
-                        <p class="text-[#999999]" data-editable="field_14">Far far away, behind the word mountains, far
-                            from the countries
-                            Vokalia and Consonantia,
-                            there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the
-                            Semantics, a large language ocean.</p>
+                <div class="flex gap-[3rem] max-md:flex-col-reverse flex-row-reverse">
+                    <div class="flex-1">
+                        <h2 class="mb-[2rem] h2 font-thin" data-editable="field_5">About the <br>Handsome <span
+                                class="font-semibold">Groom</span></h2>
+                        <p class="mb-[1.6rem] text-[#777777]" data-editable="field_6"> Few would argue that, despite the
+                            advancements of
+                            feminism over the
+                            past three decades,
+                            women still face a double standard when it comes to their behavior. While men’s
+                            borderline-inappropriate behavior is often laughed off as “boys will be boys,” women face
+                            higher conduct standards – especially in the workplace.
+                        </p>
+                        <p class="text-[#777777]" data-editable="field_7">
+                            While men’s borderline-inappropriate behavior is often laughed off as “boys will be boys,”
+                        </p>
                     </div>
-                    <div
-                        class="size-[30rem] md:size-[40rem] max-md:m-auto aspect-square p-[1rem] rounded-[1rem] bg-[#ead9e5]">
+                    <div class="md:flex-1 max-md:size-[20rem] max-md:m-auto w-[20rem]">
                         <picture class="rounded-[1rem]" data-image-editable="photo_3"></picture>
                     </div>
                 </div>
             </div>
         </section>
         <!-- Introduction Section End -->
-        <!-- Love Story Section Begin -->
-        <section id="SECTION_STORY" data-image-editable="photo_4" class="bg-cover bg-no-repeat bg-center bg-fixed">
+        <!-- Timer Section Begin -->
+        <section id="SECTION_TIMER">
             <div class="wrapper">
-                <div class="text-center">
-                    <span
-                        class="text-[14px] mb-[5px] uppercase text-[#d291bc] tracking-[2px] font-black border border-dashed border-[#d291bc] inline-block px-[10px] py-0"
-                        data-editable="field_15">About
-                        Bride & Groom</span>
-                    <h2 class="h2 mb-[4.8rem]" data-editable="field_16">Bride & Groom</h2>
-                </div>
-                <div class="">
-                    <ul class="relative">
-                        <li class="relative mb-[4rem]">
-                            <div class="absolute min-[1024px]:left-1/2 top-0 z-10 min-[1024px]:-ml-[5rem] size-[12rem]
-                            after:absolute after:top-[10px] after:left-[10px] after:right-[10px] after:bottom-[10px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:rounded-full"
-                                data-aos="fade-up">
-                                <picture class="rounded-full shadow-lg" data-image-editable="photo_5"></picture>
-                            </div>
-                            <div class="relative max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[5rem] min-[1024px]:text-right shadow-md bg-[#d291bc] text-white
-                            before:absolute before:top-[20px] before:left-[20px] before:right-[20px] before:bottom-[20px] before:content-[''] before:border before:border-dashed before:border-[#ffffff80] before:-z-[1] before:rotate-[-1deg]
-                            after:absolute after:top-[20px] after:left-[20px] after:right-[20px] after:bottom-[20px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:-z-[1] after:rotate-[1deg]
-                            " data-aos="fade-up">
-                                <p class="mb-[1rem] text-[1.3rem]" data-editable="field_17">June 10,
-                                    2017</p>
-                                <h3 class="text-[4rem] mb-[1rem] text-[2.4rem] text-white" data-editable="field_18">
-                                    First We Meet</h3>
-                                <p data-editable="field_19">Far far away, behind the word mountains, far from the
-                                    countries Vokalia and
-                                    Consonantia, there live the blind texts. Separated they live in .</p>
-                            </div>
-                        </li>
-                        <li class="relative mb-[4rem]">
-                            <div class="absolute min-[1024px]:left-1/2 top-0 z-10 min-[1024px]:-ml-[5rem] size-[12rem]
-                            after:absolute after:top-[10px] after:left-[10px] after:right-[10px] after:bottom-[10px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:rounded-full"
-                                data-aos="fade-up">
-                                <picture class="rounded-full shadow-lg" data-image-editable="photo_6"></picture>
-                            </div>
-                            <div class="relative max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[5rem] shadow-md min-[1024px]:ml-auto bg-[#d291bc] text-white
-                            before:absolute before:top-[20px] before:left-[20px] before:right-[20px] before:bottom-[20px] before:content-[''] before:border before:border-dashed before:border-[#ffffff80] before:-z-[1] before:rotate-[-1deg]
-                            after:absolute after:top-[20px] after:left-[20px] after:right-[20px] after:bottom-[20px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:-z-[1] after:rotate-[1deg]
-                            " data-aos="fade-up">
-                                <p class="mb-[1rem] text-[1.3rem]" data-editable="field_20">June 10,
-                                    2017</p>
-                                <h3 class="text-[4rem] mb-[1rem] text-[2.4rem] text-white" data-editable="field_21">
-                                    First We Meet</h3>
-                                <p data-editable="field_22">Far far away, behind the word mountains, far from the
-                                    countries Vokalia and
-                                    Consonantia, there live the blind texts. Separated they live in .</p>
-                            </div>
-                        </li>
-                        <li class="relative mb-[4rem]">
-                            <div class="absolute min-[1024px]:left-1/2 top-0 z-10 min-[1024px]:-ml-[5rem] size-[12rem]
-                            after:absolute after:top-[10px] after:left-[10px] after:right-[10px] after:bottom-[10px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:rounded-full"
-                                data-aos="fade-up">
-                                <picture class="rounded-full shadow-lg" data-image-editable="photo_7"></picture>
-                            </div>
-                            <div class="relative max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[5rem] min-[1024px]:text-right shadow-md bg-[#d291bc] text-white
-                            before:absolute before:top-[20px] before:left-[20px] before:right-[20px] before:bottom-[20px] before:content-[''] before:border before:border-dashed before:border-[#ffffff80] before:-z-[1] before:rotate-[-1deg]
-                            after:absolute after:top-[20px] after:left-[20px] after:right-[20px] after:bottom-[20px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:-z-[1] after:rotate-[1deg]
-                            " data-aos="fade-up">
-                                <p class="mb-[1rem] text-[1.3rem]" data-editable="field_23">June 10,
-                                    2017</p>
-                                <h3 class="text-[4rem] mb-[1rem] text-[2.4rem] text-white" data-editable="field_24">
-                                    First We Meet</h3>
-                                <p data-editable="field_25">Far far away, behind the word mountains, far from the
-                                    countries Vokalia and
-                                    Consonantia, there live the blind texts. Separated they live in .</p>
-                            </div>
-                        </li>
-                        <li class="relative mb-[4rem]">
-                            <div class="absolute min-[1024px]:left-1/2 top-0 z-10 min-[1024px]:-ml-[5rem] size-[12rem]
-                            after:absolute after:top-[10px] after:left-[10px] after:right-[10px] after:bottom-[10px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:rounded-full"
-                                data-aos="fade-up">
-                                <picture class="rounded-full shadow-lg" data-image-editable="photo_8"></picture>
-                            </div>
-                            <div class="relative max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[5rem] shadow-md min-[1024px]:ml-auto bg-[#d291bc] text-white
-                            before:absolute before:top-[20px] before:left-[20px] before:right-[20px] before:bottom-[20px] before:content-[''] before:border before:border-dashed before:border-[#ffffff80] before:-z-[1] before:rotate-[-1deg]
-                            after:absolute after:top-[20px] after:left-[20px] after:right-[20px] after:bottom-[20px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:-z-[1] after:rotate-[1deg]
-                            " data-aos="fade-up">
-                                <p class="mb-[1rem] text-[1.3rem]" data-editable="field_26">June 10,
-                                    2017</p>
-                                <h3 class="text-[4rem] mb-[1rem] text-[2.4rem] text-white" data-editable="field_27">
-                                    First We Meet</h3>
-                                <p data-editable="field_28">Far far away, behind the word mountains, far from the
-                                    countries Vokalia and
-                                    Consonantia, there live the blind texts. Separated they live in .</p>
-                            </div>
-                        </li>
-                    </ul>
+                <div class="relative bg-[linear-gradient(to_right,#bb3df6,#89fcf0)] p-[6rem]
+                before:content-[''] before:absolute before:inset-[1rem] before:border
+                ">
+                    <h3 class="h3 font-semibold text-center text-white" data-editable="field_111">Wedding Day : <span id="js-day"
+                            data-editable="field_day">28</span> <span id="js-month"
+                            data-editable="field_month">02</span>
+                        <span id="js-year" data-editable="field_year">2026</span> at
+                        <span id="js-hour" data-editable="field_hour">17:00</span> pm
+                    </h3>
                 </div>
             </div>
         </section>
-        <!-- Love Story Section End -->
-        <!-- Planning Section Begin -->
-        <section id="SECTION_PLANNING" class="py-0 bg-[#f1f3f4]">
-            <div class="wrapper flex max-md:flex-col gap-[6rem]">
-                <div class="flex-1 w-[30rem] aspect-[45/72] max-md:m-auto">
-                    <picture data-image-editable="photo_9"></picture>
+        <!-- Timer Section End -->
+        <!-- Gallery Section Begin -->
+        <section id="SECTION_GALLERY">
+            <div class="wrapper">
+                <div class="text-center mb-[5rem]">
+                    <h2 class="h2 mb-[1.2rem]" data-editable="field_8">Our Pre Wedding Photo Gallery</h2>
+                    <p class="text-[#777777]" data-editable="field_9">Lorem ipsum dolor sit amet consectetur adipisicing
+                        elit. Quo laborum,
+                        perferendis accusamus
+                        quaerat, inventore alias ab ducimus fuga repellendus magnam obcaecati tenetur similique enim,
+                        iure neque at. Perspiciatis, culpa nostrum!</p>
                 </div>
-                <div class="flex-1 m-auto md:pl-[3rem] py-[4.5rem] text-center">
-                    <div class="">
-                        <span
-                            class="text-[14px] mb-[5px] uppercase text-[#d291bc] tracking-[2px] font-black border border-dashed border-[#d291bc] inline-block px-[10px] py-0"
-                            data-editable="field_29">About
-                            planning</span>
-                        <h2 class="h2 mb-[4.8rem]" data-editable="field_30">When & Where</h2>
+            </div>
+            <div class="flex max-md:flex-col gap-[1rem]">
+                <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="200">
+                    <picture class="mb-[1rem] h-[40rem]" data-image-editable="photo_4"></picture>
+                    <picture class="mb-[1rem] h-[20rem]" data-image-editable="photo_5"></picture>
+                </div>
+                <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="400">
+                    <picture class="mb-[1rem] h-[20rem]" data-image-editable="photo_6"></picture>
+                    <picture class="mb-[10px] h-[40rem]" data-image-editable="photo_7"></picture>
+                </div>
+                <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="600">
+                    <picture class="mb-[1rem] h-[40rem]" data-image-editable="photo_8"></picture>
+                    <picture class="mb-[10px] h-[20rem]" data-image-editable="photo_9"></picture>
+                </div>
+                <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="800">
+                    <picture class="mb-[1rem] h-[20rem]" data-image-editable="photo_10"></picture>
+                    <picture class="mb-[1rem] h-[40rem]" data-image-editable="photo_11"></picture>
+                </div>
+            </div>
+        </section>
+        <!-- Gallery Section End -->
+        <!-- Timer Section Begin -->
+        <section id="SECTION_TIMER">
+            <div class="wrapper">
+                <div class="relative flex justify-center m-auto p-[1rem] gap-[1rem] text-center text-black">
+                    <div id="TIMER_DAY" class="flex-1 py-[2rem] px-3 md:px-[3rem] shadow-[0_23px_34px_rgba(0,0,0,0.25)]"
+                        data-aos="fade-up" data-aos-delay="100">
+                        <span class="font-rochester text-[3rem] md:text-[4rem] text-black font-bold">00</span>
+                        <p class="text-[1.2rem] uppercase tracking-widest font-bold">
+                            Day
+                        </p>
                     </div>
-                    <div class="flex max-md:flex-col">
-                        <div class="flex-1">
-                            <div>
-                                <div class="size-[10rem] m-auto mb-[1rem]">
-                                    <picture class="element_5"></picture>
-                                </div>
-                                <p class="text-[2.8rem] mb-[.8rem]" data-editable="field_31">The Ceremony</p>
-                                <div class="text-[1.7rem] text-[#999999]">
-                                    <p data-editable="field_32">Saturday, 28, 2019</p>
-                                    <p class="mb-[1.6rem]" data-editable="field_33">02:00 pm-10:00 pm</p>
-                                    <p class="mb-[1.6rem]" data-editable="field_34">203 Fake St. Mountain View, San
-                                        Francisco, California, USA
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex-1">
-                            <div>
-                                <div class="size-[10rem] m-auto mb-[1rem]">
-                                    <picture class="element_6"></picture>
-                                </div>
-                                <p class="text-[2.8rem] mb-[.8rem]" data-editable="field_35">The Reception</p>
-                                <div class="text-[1.7rem] text-[#999999]">
-                                    <p data-editable="field_36">Saturday, 28, 2019</p>
-                                    <p class="mb-[1.6rem]" data-editable="field_37">02:00 pm-10:00 pm</p>
-                                    <p class="mb-[1.6rem]" data-editable="field_38">203 Fake St. Mountain View, San
-                                        Francisco, California, USA
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                    <div id="TIMER_HOUR"
+                        class="flex-1 py-[2rem] px-3 md:px-[3rem] shadow-[0_23px_34px_rgba(0,0,0,0.25)]"
+                        data-aos="fade-up" data-aos-delay="200">
+                        <span class="font-rochester text-[3rem] md:text-[4rem] text-black font-bold">00</span>
+                        <p class="text-[1.2rem] uppercase tracking-widest font-bold">
+                            Hour
+                        </p>
+                    </div>
+                    <div id="TIMER_MIN" class="flex-1 py-[2rem] px-3 md:px-[3rem] shadow-[0_23px_34px_rgba(0,0,0,0.25)]"
+                        data-aos="fade-up" data-aos-delay="300">
+                        <span class="font-rochester text-[3rem] md:text-[4rem] text-black font-bold">00</span>
+                        <p class="text-[1.2rem] uppercase tracking-widest font-bold">
+                            Min
+                        </p>
+                    </div>
+                    <div id="TIMER_SEC" class="flex-1 py-[2rem] px-3 md:px-[3rem] shadow-[0_23px_34px_rgba(0,0,0,0.25)]"
+                        data-aos="fade-up" data-aos-delay="400">
+                        <span class="font-rochester text-[3rem] md:text-[4rem] text-black font-bold">00</span>
+                        <p class="text-[1.2rem] uppercase tracking-widest font-bold">
+                            Sec
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
-        <!-- Planning Section End -->
+        <!-- Timer Section End -->
+        <!-- Information Section Begin -->
+        <section id="SECTION_INFORMATION" class="bg-[#f9f9ff] overflow-hidden">
+            <div class="wrapper">
+                <div class="text-center mb-[8rem]">
+                    <h2 class="h2 mb-[1.2rem]" data-editable="field_10">Wedding Information</h2>
+                    <p class="text-[#777777]" data-editable="field_11">Lorem ipsum dolor sit amet consectetur
+                        adipisicing elit. Quo laborum,
+                        perferendis accusamus
+                        quaerat, inventore alias ab ducimus fuga repellendus magnam obcaecati tenetur similique enim,
+                        iure neque at. Perspiciatis, culpa nostrum!</p>
+                </div>
+                <div class="flex max-md:flex-col mb-[5rem]">
+                    <div class="max-md:m-auto md:flex-1 max-md:size-[30rem]">
+                        <picture data-image-editable="photo_12"></picture>
+                    </div>
+                    <div class="md:flex-1 mt-[6rem] relative py-[3rem] md:py-[8rem] pr-[3rem] md:pr-[10rem] bg-white max-md:text-center
+                    shadow-[-35px_35px_50px_0px_rgba(157,157,157,0.3)]
+                    after:shadow-[-35px_35px_50px_0px_rgba(157,157,157,0.3)]
+                    after:content-[''] after:absolute after:right-full after:top-0 after:bg-white after:w-[7rem] after:h-full
+                    ">
+                        <h2 class="h2 mb-[3rem] font-semibold" data-editable="field_12">Main Ceremony</h2>
+                        <p class="mb-[1.6rem] text-[#777777]" data-editable="field_13">Lorem ipsum dolor sit, amet
+                            consectetur adipisicing elit.
+                            Sapiente,
+                            possimus voluptas
+                            veritatis voluptatibus beatae dolorum omnis iste totam deleniti in corrupti itaque quam
+                            soluta consequuntur error. Minus in cumque repudiandae.</p>
+                        <ul class="text-black text-[1.4rem]">
+                            <li class="mb-[1.6rem]" data-editable="field_15">Date: Friday, 20 March 2018</li>
+                            <li class="mb-[1.6rem]" data-editable="field_16">Time: 19.00</li>
+                            <li class="mb-[1.6rem]" data-editable="field_17">Address: 56/8, West Panthapath.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="flex md:flex-row-reverse max-md:flex-col">
+                    <div class="max-md:m-auto md:flex-1 max-md:size-[30rem]">
+                        <picture data-image-editable="photo_13"></picture>
+                    </div>
+                    <div class="md:flex-1 mt-[6rem] relative py-[3rem] md:py-[8rem] pl-[3rem] md:pl-[10rem] bg-white max-md:text-center
+                    shadow-[35px_-35px_50px_0px_rgba(157,157,157,0.3)]
+                    after:shadow-[35px_-35px_50px_0px_rgba(157,157,157,0.3)]
+                    after:content-[''] after:absolute after:left-full after:top-0 after:bg-white after:w-[7rem] after:h-full
+                    ">
+                        <h2 class="h2 mb-[3rem] font-semibold" data-editable="field_18">Main Ceremony</h2>
+                        <p class="mb-[1.6rem] text-[#777777]" data-editable="field_19">Lorem ipsum dolor sit, amet
+                            consectetur adipisicing elit.
+                            Sapiente,
+                            possimus voluptas
+                            veritatis voluptatibus beatae dolorum omnis iste totam deleniti in corrupti itaque quam
+                            soluta consequuntur error. Minus in cumque repudiandae.</p>
+                        <ul class="text-black text-[1.4rem]">
+                            <li class="mb-[1.6rem]" data-editable="field_20">Date: Friday, 20 March 2018</li>
+                            <li class="mb-[1.6rem]" data-editable="field_21">Time: 19.00</li>
+                            <li class="mb-[1.6rem]" data-editable="field_22">Address: 56/8, West Panthapath.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Information Section End -->
         <!-- Form Section Begin  -->
-        <section id="SECTION_FORM" data-image-editable="photo_10"
+        <section id="SECTION_FORM" data-image-editable="photo_14"
             class="relative bg-cover bg-no-repeat bg-center bg-fixed">
-            <div class="bg-white opacity-50 absolute inset-0 z-0"></div>
-            <div class="w-full wrapper z-[10] relative flex max-md:flex-col-reverse gap-[2rem] text-black">
+            <div class="bg-black opacity-50 absolute inset-0 z-0"></div>
+            <div class="w-full wrapper z-[10] relative flex max-md:flex-col-reverse gap-[2rem] text-white">
                 <div class="flex-1" data-aos="fade-right">
                     <div class="md:p-[3rem] rounded-2xl w-full max-w-[40rem]">
                         <div class="">
-                            <span
-                                class="text-[14px] mb-[5px] uppercase text-[#d291bc] tracking-[2px] font-black border border-dashed border-[#d291bc] inline-block px-[10px] py-0">Invitation</span>
                             <h2 class="h2 mb-[2.4rem]">Will You Attend?</h2>
                         </div>
                         <form action="" class="space-y-4">
                             <div class="relative">
                                 <input type="text" placeholder="Tên của bạn"
-                                    class="w-full px-4 py-3 text-[1.7rem] bg-transparent placeholder-black border-b border-b-black outline-none">
+                                    class="w-full px-4 py-3 text-[1.7rem] bg-transparent border-b border-b-white outline-none placeholder-white">
                             </div>
 
                             <div class="relative">
                                 <input type="text" placeholder="Số điện thoại"
-                                    class="w-full px-4 py-3 text-[1.7rem] bg-transparent placeholder-black border-b border-b-black outline-none">
+                                    class="w-full px-4 py-3 text-[1.7rem] bg-transparent border-b border-b-white outline-none placeholder-white">
                             </div>
 
                             <div class="relative">
                                 <input type="number" min="1" max="5" placeholder="Số người tham dự"
-                                    class="w-full px-4 py-3 text-[1.7rem] bg-transparent placeholder-black border-b border-b-black outline-none">
+                                    class="w-full px-4 py-3 text-[1.7rem] bg-transparent border-b border-b-white outline-none placeholder-white">
                             </div>
 
                             <div class="flex justify-around py-[10px] text-[1.7rem]">
@@ -1041,11 +967,11 @@
 
                             <div class="relative">
                                 <textarea name="congratulations" rows="4" placeholder="Lời chúc của bạn"
-                                    class="w-full px-4 py-3 text-[1.7rem] resize-none bg-transparent placeholder-black border-b border-b-black outline-none"></textarea>
+                                    class="w-full px-4 py-3 text-[1.7rem] resize-none bg-transparent border-b border-b-white outline-none placeholder-white"></textarea>
                             </div>
 
                             <button type="submit"
-                                class="bg-[#d291bc] hover:bg-[#8e3a49] text-white font-medium px-[2.4rem] py-[1.6rem] rounded-[1rem] shadow-lg shadow-pink-200 transition-all active:scale-95 uppercase text-[1.7rem]">
+                                class="bg-[linear-gradient(to_right,#bb3df6,#89fcf0)] hover:bg-[#8e3a49] text-white font-medium px-[2.4rem] py-[1.6rem] rounded-[1rem] transition-all active:scale-95 uppercase text-[1.7rem]">
                                 Gửi lời chúc
                             </button>
                         </form>
@@ -1054,37 +980,6 @@
             </div>
         </section>
         <!-- Form Section End  -->
-        <!-- Gallery Section Begin -->
-        <section id="SECTION_GALLERY">
-            <div class="wrapper">
-                <div class="text-center">
-                    <span
-                        class="text-[14px] mb-[5px] uppercase text-[#d291bc] tracking-[2px] font-black border border-dashed border-[#d291bc] inline-block px-[10px] py-0"
-                        data-editable="field_39">About
-                        Gallery</span>
-                    <h2 class="h2 mb-[4.8rem] " data-editable="field_40">Photo Gallery</h2>
-                </div>
-                <div class="flex max-md:flex-col gap-[1rem]">
-                    <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="200">
-                        <picture class="mb-[1rem] h-[40rem]" data-image-editable="photo_11"></picture>
-                        <picture class="mb-[1rem] h-[20rem]" data-image-editable="photo_12"></picture>
-                    </div>
-                    <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="400">
-                        <picture class="mb-[1rem] h-[20rem]" data-image-editable="photo_13"></picture>
-                        <picture class="mb-[10px] h-[40rem]" data-image-editable="photo_14"></picture>
-                    </div>
-                    <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="600">
-                        <picture class="mb-[1rem] h-[40rem]" data-image-editable="photo_15"></picture>
-                        <picture class="mb-[10px] h-[20rem]" data-image-editable="photo_16"></picture>
-                    </div>
-                    <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="800">
-                        <picture class="mb-[1rem] h-[20rem]" data-image-editable="photo_17"></picture>
-                        <picture class="mb-[1rem] h-[40rem]" data-image-editable="photo_18"></picture>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Gallery Section End -->
         <!-- Wedding Gift Section Begin -->
         <section id="SECTION_GIFT">
             <div class="wrapper text-center py-[15px]">
@@ -1112,7 +1007,6 @@
             </div>
         </section>
         <!-- Wedding Gift Section End -->
-
 
         <script>
             const OPTIONS = { loop: true };
