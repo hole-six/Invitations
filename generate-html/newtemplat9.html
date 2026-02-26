@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Playball&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
 
 
@@ -303,13 +303,14 @@
 
         p,
         span {
-            font-family: 'Bitter';
+            font-family: 'Poppins';
+            line-height: 3rem;
         }
 
         p {
             margin: 0;
             font-size: 1.7rem;
-            color: #555555;
+            color: #978e98;
         }
 
         h1,
@@ -318,14 +319,15 @@
         h4,
         h5,
         h6 {
-            font-family: 'Playball';
+            font-family: 'Playfair Display';
+            color: #362d2b;
         }
 
         h1,
         .h1 {
-            font-size: 8rem;
-            font-weight: 800;
-            line-height: 1;
+            font-size: 5rem;
+            font-weight: 700;
+            line-height: 1.2;
         }
 
         h2,
@@ -336,6 +338,11 @@
         h3,
         .h3 {
             font-size: 4rem;
+        }
+
+        h4,
+        .h4 {
+            font-size: 3.5rem;
         }
 
 
@@ -354,12 +361,12 @@
         }
 
         /* font familly */
-        .font-bitter {
-            font-family: 'Bitter', serif;
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
         }
 
-        .font-playball {
-            font-family: 'Playball', sans-serif;
+        .font-poppins {
+            font-family: 'Poppins', sans-serif;
         }
 
         [data-image-editable] {
@@ -389,7 +396,7 @@
 
             h1,
             .h1 {
-                font-size: 4.2rem;
+                font-size: 3.4rem;
                 font-weight: 800;
                 line-height: 1;
             }
@@ -401,11 +408,11 @@
 
             h3,
             .h3 {
-                font-size: 2.5rem;
+                font-size: 4rem;
             }
 
             p {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
         }
     </style>
@@ -459,8 +466,12 @@
 
     <!-- data image -->
     <style>
-        .bg_1 {
-            background-image: url("https://png.pngtree.com/background/20211215/original/pngtree-abstract-geometric-tiled-circular-background-picture-image_1451926.jpg");
+        .element_1 {
+            background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/e2b97db1-057f-4ebc-9bf9-34155b15b2df-20250825221030-08o1o.png");
+        }
+
+        .element_2 {
+            background-image: url("https://png.pngtree.com/png-clipart/20241221/original/pngtree-delicate-watercolor-flower-corner-border-png-image_18122039.png");
         }
 
         [data-image-editable="photo_1"] {
@@ -690,245 +701,140 @@
     <main>
         <!-- Banner Begin-->
         <section id="SECTION_BANNER" data-image-editable="photo_1" class="relative h-screen flex">
-            <div class="bg-black opacity-40 absolute inset-0 z-0">
-            </div>
-            <div class="wrapper z-[10]">
-                <div class="text-white text-center">
+            <div class="wrapper">
+                <div
+                    class="flex flex-col justify-center w-fit aspect-square bg-[#b39eb5cc] rounded-full p-[5rem] text-white text-center">
                     <p class="text-[1.7rem] md:text-[2rem] text-white" data-aos="fade-up"><span id="js-hour"
                             data-editable="field_1">8:00</span><span data-editable="field_2">AM</span>
                         <span id="js-day" data-editable="field_3">28</span>/<span id="js-month"
                             data-editable="field_4">02</span>/<span id="js-year" data-editable="field_5">2026</span>
                     </p>
-                    <h3 class="h3" data-editable="field_6" data-aos="fade-up" data-aos-delay="200">Save The Date</h3>
-                    <h1 class="h1" data-editable="field_7" data-aos="fade-up" data-aos-delay="400">
+                    <h1 class="h1 text-white" data-editable="field_6" data-aos="fade-up" data-aos-delay="200">
                         James & Julie
                     </h1>
+                    <h3 class="h3 text-white" data-editable="field_7" data-aos="fade-up" data-aos-delay="400">We are
+                        getting
+                        married</h3>
                 </div>
             </div>
         </section>
         <!-- Banner End-->
-        <!-- Story Section Begin -->
-        <section id="SECTION_STORY" class="relative after:bg-contain 
-        after:absolute after:content-[''] after:inset-[0] after:z-[-1] after:opacity-50 after:bg-[url(https://png.pngtree.com/background/20211215/original/pngtree-abstract-geometric-tiled-circular-background-picture-image_1451926.jpg)]
-        ">
-            <div class="wrapper text-center">
-                <div class="text-center mb-[4rem]">
-                    <h2 class="h2" data-editable="field_8">Our Story</h2>
-                    <picture class="m-auto size-[1.8rem] relative
-                    before:content-[''] before:left-full before:absolute before:top-1/2 before:h-[.1rem] before:w-[6rem] before:bg-[#aaa]
-                    after:content-[''] after:right-full after:absolute after:top-1/2 after:h-[.1rem] after:w-[6rem] after:bg-[#aaa]
-
-                    "> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                            <path
-                                d="M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z" />
-                        </svg></picture>
-                </div>
-                <p data-editable="field_9">Every bride and groom wants an incomparable wedding combined with fantasy
-                    and style. We create stunning, one-of-a-kind events produced and styled to perfection.
-                    From traditional to modern, elegant and relaxed, we focus on any event we plan.</p>
-            </div>
-        </section>
-        <!-- Story Section End -->
-        <!-- Timer Section Begin -->
-        <section id="SECTION_TIMER" class="relative" data-image-editable="photo_2">
-            <div class="bg-black opacity-40 absolute inset-0 z-0"></div>
+        <!-- our Story Section Begin -->
+        <Section id="SECTION_STORY">
             <div class="wrapper">
-                <div class="relative z-10 text-center mb-[4rem]">
-                    <h2 class="h2 text-white" data-editable="field_" 10>Don't miss it!</h2>
-                    <picture class="m-auto size-[1.8rem] relative
-                    before:content-[''] before:left-full before:absolute before:top-1/2 before:h-[.1rem] before:w-[6rem] before:bg-[#aaa]
-                    after:content-[''] after:right-full after:absolute after:top-1/2 after:h-[.1rem] after:w-[6rem] after:bg-[#aaa]
-
-                    "> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="fill-white">
-                            <path
-                                d="M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z" />
-                        </svg></picture>
-                </div>
-                <div
-                    class="relative flex max-sm:flex-col max-md:items-center justify-center m-auto p-[1rem] gap-[1rem] md:gap-[4rem] text-center text-white">
-                    <div id="TIMER_DAY" class="size-[12rem] content-center border-white border-[1px] rounded-full px-3"
-                        data-aos="fade-up" data-aos-delay="100">
-                        <span class="font-rochester text-[3rem] md:text-[4rem] text-white font-bold">00</span>
-                        <p class="text-white text-[1.2rem] uppercase tracking-widest font-bold">
-                            Day
-                        </p>
+                <div class="flex max-md:flex-col gap-[3rem]">
+                    <div class="relative flex-1 aspect-[530/625]">
+                        <picture class="rounded-[1rem]" data-image-editable="photo_2"></picture>
+                        <div class="size-[30rem] bottom-[-5rem] left-[-5rem] absolute">
+                            <picture class="element_2"></picture>
+                        </div>
                     </div>
-                    <div id="TIMER_HOUR" class="size-[12rem] content-center border-white border-[1px] rounded-full px-3"
-                        data-aos="fade-up" data-aos-delay="200">
-                        <span class="font-rochester text-[3rem] md:text-[4rem] text-white font-bold">00</span>
-                        <p class="text-white text-[1.2rem] uppercase tracking-widest font-bold">
-                            Hour
-                        </p>
-                    </div>
-                    <div id="TIMER_MIN" class="size-[12rem] content-center border-white border-[1px] rounded-full px-3"
-                        data-aos="fade-up" data-aos-delay="300">
-                        <span class="font-rochester text-[3rem] md:text-[4rem] text-white font-bold">00</span>
-                        <p class="text-white text-[1.2rem] uppercase tracking-widest font-bold">
-                            Min
-                        </p>
-                    </div>
-                    <div id="TIMER_SEC" class="size-[12rem] content-center border-white border-[1px] rounded-full px-3"
-                        data-aos="fade-up" data-aos-delay="400">
-                        <span class="font-rochester text-[3rem] md:text-[4rem] text-white font-bold">00</span>
-                        <p class="text-white text-[1.2rem] uppercase tracking-widest font-bold">
-                            Sec
-                        </p>
+                    <div class="flex-1 m-auto">
+                        <div class="size-[10rem]">
+                            <picture class="element_1"></picture>
+                        </div>
+                        <h3 class="h3 font-semi-bold mb-[4.4rem] uppercase" data-editable="field_8">Our Story</h3>
+                        <p class="mb-[3.5rem]" data-editable="field_9">Lorem ipsum dolor sit amet, consectetur
+                            adipisicing elit, sed do eiusmod
+                            tempor incididunt ut
+                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                            laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        <p data-editable="field_111">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                            laboris nisi ut aliquip ex ea commodo consequat.</p>
                     </div>
                 </div>
             </div>
-        </section>
-        <!-- Timer Section End -->
-        <!-- Wedding Details Section Begin -->
-        <section id="SECTION_WEDDINGDETAILS">
+        </Section>
+        <!-- our Story Section End -->
+        <!-- Wedding Planning Section Begin -->
+        <section id="SECTION_PLANNING" class="bg-[#fefcfa]">
             <div class="wrapper">
-                <div class="text-center mb-[4rem]">
-                    <h2 class="h2" data-editable="field_11">Wedding Details</h2>
-                    <picture class="m-auto size-[1.8rem] relative
-                    before:content-[''] before:left-full before:absolute before:top-1/2 before:h-[.1rem] before:w-[6rem] before:bg-[#aaa]
-                    after:content-[''] after:right-full after:absolute after:top-1/2 after:h-[.1rem] after:w-[6rem] after:bg-[#aaa]
-
-                    "> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                            <path
-                                d="M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z" />
-                        </svg></picture>
-                </div>
-                <div class="">
-                    <ul
-                        class="relative max-[1024px]:before:hidden before:content-[''] before:top-[3rem] before:bottom-0 before:absolute before:w-[.1rem] before:border-[#f67e7d] before:border before:left-1/2 before:ml-0">
-                        <li class="relative mb-[4rem]">
-                            <div class="absolute min-[1024px]:left-1/2 top-0 min-[1024px]:-ml-[5rem] size-[10rem]"
-                                data-aos="fade-up">
-                                <picture class="rounded-full border-[#f67e7d] border-[5px] shadow-lg"
-                                    data-image-editable="photo_3"></picture>
-                            </div>
-                            <div class="relative max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[3rem] min-[1024px]:text-right shadow-md"
-                                data-aos="fade-up">
-                                <span class="mb-[1rem] text-[1.3rem] text-[#f67e7d]" data-editable="field_12">9:00
-                                    PM</span>
-                                <h3 class="text-[2.4rem]" data-editable="field_13">CEREMONY</h3>
-                                <p data-editable="field_14">Look at the most passionate ceremony ever. We wish happiness
-                                    to the wedding couple..</p>
-                            </div>
-                        </li>
-                        <li class="relative mb-[4rem]">
-                            <div class="absolute min-[1024px]:left-1/2 top-0 min-[1024px]:-ml-[5rem] size-[10rem]"
-                                data-aos="fade-up">
-                                <picture class="rounded-full border-[#f67e7d] border-[5px] shadow-lg"
-                                    data-image-editable="photo_4"></picture>
-                            </div>
-                            <div class="relative max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[3rem] shadow-md min-[1024px]:ml-auto"
-                                data-aos="fade-up">
-                                <span class="mb-[1rem] text-[1.3rem] text-[#f67e7d]" data-editable="field_15">9:00
-                                    PM</span>
-                                <h3 class="text-[2.4rem]" data-editable="field_16">TOAST & DINNER</h3>
-                                <p data-editable="field_17">Look at the most passionate ceremony ever. We wish happiness
-                                    to the wedding couple.</p>
-                            </div>
-                        </li>
-                        <li class="relative mb-[4rem]">
-                            <div class="absolute min-[1024px]:left-1/2 top-0 min-[1024px]:-ml-[5rem] size-[10rem]"
-                                data-aos="fade-up">
-                                <picture class="rounded-full border-[#f67e7d] border-[5px] shadow-lg"
-                                    data-image-editable="photo_5"></picture>
-                            </div>
-                            <div class="relative max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[3rem] min-[1024px]:text-right shadow-md"
-                                data-aos="fade-up">
-                                <span class="mb-[1rem] text-[1.3rem] text-[#f67e7d]" data-editable="field_18">9:00
-                                    PM</span>
-                                <h3 class="text-[2.4rem]" data-editable="field_19">WEDDING CAKE</h3>
-                                <p data-editable="field_20">Look at the most passionate ceremony ever. We wish happiness
-                                    to the wedding couple.</p>
-                            </div>
-                        </li>
-                        <li class="relative mb-[4rem]">
-                            <div class="absolute min-[1024px]:left-1/2 top-0 min-[1024px]:-ml-[5rem] size-[10rem]"
-                                data-aos="fade-up">
-                                <picture class="rounded-full border-[#f67e7d] border-[5px] shadow-lg"
-                                    data-image-editable="photo_6"></picture>
-                            </div>
-                            <div class="relative max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[3rem] shadow-md min-[1024px]:ml-auto"
-                                data-aos="fade-up">
-                                <span class="mb-[1rem] text-[1.3rem] text-[#f67e7d]" data-editable="field_21">9:00
-                                    PM</span>
-                                <h3 class="text-[2.4rem]" data-editable="field_22">PHOTOGRAPHY</h3>
-                                <p data-editable="field_23">Look at the most passionate ceremony ever. We wish happiness
-                                    to the wedding couple.</p>
-                            </div>
-                        </li>
-                    </ul>
+                <div class="flex max-lg:flex-col gap-[2rem]">
+                    <div class="flex-1 text-center rounded-[1rem] shadow-md">
+                        <h4 class="h4 mb-[.8rem]" data-editable="field_10">Rehearsal Dinner</h4>
+                        <p class="mb-[5.4rem] text-[#362d2b] font-playfair" data-editable="field_11">July 20, 2020</p>
+                        <div class="size-[25rem] m-auto mb-[4.3rem]">
+                            <picture class="rounded-full" data-image-editable="photo_3"></picture>
+                        </div>
+                        <span class="block mb-[1.5rem] tracking-[1rem] text-[1.6rem] text-[#daad9e]"
+                            data-editable="field_12">12:00PM-2:00PM</span>
+                        <p class="text-[#090908]" data-editable="field_13">The Sierra Resort 14 Pacific Grove Monterey,
+                            CA</p>
+                    </div>
+                    <div class="flex-1 text-center rounded-[1rem] shadow-md">
+                        <h4 class="h4 mb-[.8rem]" data-editable="field_14">Rehearsal Dinner</h4>
+                        <p class="mb-[5.4rem] text-[#362d2b] font-playfair" data-editable="field_15">July 20, 2020</p>
+                        <div class="size-[25rem] m-auto mb-[4.3rem]">
+                            <picture class="rounded-full" data-image-editable="photo_4"></picture>
+                        </div>
+                        <span class="block mb-[1.5rem] tracking-[1rem] text-[1.6rem] text-[#daad9e]"
+                            data-editable="field_16">12:00PM-2:00PM</span>
+                        <p class="text-[#090908]" data-editable="field_17">The Sierra Resort 14 Pacific Grove Monterey,
+                            CA</p>
+                    </div>
+                    <div class="flex-1 text-center rounded-[1rem] shadow-md">
+                        <h4 class="h4 mb-[.8rem]" data-editable="field_18">Rehearsal Dinner</h4>
+                        <p class="mb-[5.4rem] text-[#362d2b] font-playfair" data-editable="field_19">July 20, 2020</p>
+                        <div class="size-[25rem] m-auto mb-[4.3rem]">
+                            <picture class="rounded-full" data-image-editable="photo_5"></picture>
+                        </div>
+                        <span class="block mb-[1.5rem] tracking-[1rem] text-[1.6rem] text-[#daad9e]"
+                            data-editable="field_20">12:00PM-2:00PM</span>
+                        <p class="text-[#090908]" data-editable="field_21">The Sierra Resort 14 Pacific Grove Monterey,
+                            CA</p>
+                    </div>
                 </div>
             </div>
         </section>
-        <!-- Wedding Details Section End -->
-        <!-- Wedding Ceremony Section Begin -->
-        <section id="SECTION_Ceremony" class="relative" data-image-editable="photo_7">
-            <div class="bg-black opacity-40 absolute inset-0 z-0"></div>
-            <div class="wrapper">
-                <div class="relative z-10 text-center ">
-                    <h2 class="h2 text-white" data-editable="field_24">Don't miss it!</h2>
-                    <picture class="m-auto size-[1.8rem] relative mb-[4rem]
-                    before:content-[''] before:left-full before:absolute before:top-1/2 before:h-[.1rem] before:w-[6rem] before:bg-[#aaa]
-                    after:content-[''] after:right-full after:absolute after:top-1/2 after:h-[.1rem] after:w-[6rem] after:bg-[#aaa]
-
-                    "> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="fill-white">
-                            <path
-                                d="M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z" />
-                        </svg></picture>
-                    <p class="text-white" data-editable="field_25">We assist our clients in creating memorable, magical
-                        celebrations that exceed expectations. Our personal approach ensures the weddings we
-                        plan are meaningful and truly reflect our clients as individuals, as couples, and states
-                        something about their shared values and sense of style.</p>
-                </div>
-            </div>
-        </section>
-        <!-- Wedding Ceremony Section End -->
-        <!-- Our Gallery Section Begin -->
+        <!-- Wedding Planning Section End -->
+        <!-- Gallery Section Begin -->
         <section id="SECTION_GALLERY">
             <div class="wrapper">
-                <div class="text-center">
-                    <h2 class="h2" data-editable="field_26">Our Gallery</h2>
-                    <picture class="m-auto size-[1.8rem] relative mb-[4rem]
-                    before:content-[''] before:left-full before:absolute before:top-1/2 before:h-[.1rem] before:w-[6rem] before:bg-[#aaa]
-                    after:content-[''] after:right-full after:absolute after:top-1/2 after:h-[.1rem] after:w-[6rem] after:bg-[#aaa]
+                <div>
+                    <div>
+                        <div class="size-[15rem] m-auto">
+                            <picture class="element_1"></picture>
+                        </div>
+                        <h2 class="h2 text-center mb-[6.6rem]" data-editable="field_22">
+                            OUR MEMORIES
+                        </h2>
+                    </div>
+                    <div class="grid gird-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                        <div class="w-full aspect-[39/48]">
+                            <picture data-image-editable="photo_6"></picture>
+                        </div>
+                        <div class="w-full aspect-[39/48]">
+                            <picture data-image-editable="photo_7"></picture>
+                        </div>
+                        <div class="w-full aspect-[39/48]">
+                            <picture data-image-editable="photo_8"></picture>
+                        </div>
+                        <div class="w-full aspect-[39/48]">
+                            <picture data-image-editable="photo_9"></picture>
+                        </div>
+                        <div class="w-full aspect-[39/48]">
+                            <picture data-image-editable="photo_10"></picture>
+                        </div>
+                        <div class="w-full aspect-[39/48]">
+                            <picture data-image-editable="photo_11"></picture>
+                        </div>
+                    </div>
+                    <div class="text-center mt-6">
+                        <button onclick="toggleGalleryPopup(true)"
+                            class="group flex flex-col items-center mx-auto hover:text-[#7D54AE] transition-colors">
+                            <span class="text-[1.7rem] uppercase tracking-widest mb-1">More</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="#000000" class="size-[2rem] animate-bounce">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
 
-                    "> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                            <path
-                                d="M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z" />
-                        </svg></picture>
-                </div>
-                <div class="grid gird-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[1.5rem] md:gap-[3rem]">
-                    <div class="w-full aspect-[35/23]">
-                        <picture data-image-editable="photo_8"></picture>
-                    </div>
-                    <div class="w-full aspect-[35/23]">
-                        <picture data-image-editable="photo_9"></picture>
-                    </div>
-                    <div class="w-full aspect-[35/23]">
-                        <picture data-image-editable="photo_10"></picture>
-                    </div>
-                    <div class="w-full aspect-[35/23]">
-                        <picture data-image-editable="photo_11"></picture>
-                    </div>
-                    <div class="w-full aspect-[35/23]">
-                        <picture data-image-editable="photo_12"></picture>
-                    </div>
-                    <div class="w-full aspect-[35/23]">
-                        <picture data-image-editable="photo_13"></picture>
-                    </div>
-                </div>
-                <div class="text-center mt-6">
-                    <button onclick="toggleGalleryPopup(true)"
-                        class="group flex flex-col items-center mx-auto hover:text-[#7D54AE] transition-colors">
-                        <span class="text-[1.7rem] uppercase tracking-widest mb-1">More</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="#000000" class="size-[2rem] animate-bounce">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                        </svg>
-                    </button>
-                </div>
             </div>
         </section>
-        <!-- Our Gallery Section End -->
+        <!-- Gallery Section End -->
         <!-- Gallery Popup Section Begin -->
         <section id="GALLERY_POPUP" class="embla">
             <button onclick="toggleGalleryPopup(false)"
@@ -978,14 +884,19 @@
         </section>
         <!-- Gallery Popup Section End -->
         <!-- Form Section Begin  -->
-        <section id="SECTION_FORM" data-image-editable="photo_14"
+        <section id="SECTION_FORM" data-image-editable="photo_12"
             class="relative bg-cover bg-no-repeat bg-center bg-fixed">
             <div class="bg-black opacity-50 absolute inset-0 z-0"></div>
             <div class="w-full wrapper z-[10] relative flex max-md:flex-col-reverse gap-[2rem] text-white">
                 <div class="flex-1" data-aos="fade-right">
                     <div class="md:p-[3rem] rounded-2xl w-full max-w-[40rem]">
                         <div class="">
-                            <h2 class="h2 mb-[2.4rem]" data-editable="field_form_1">Will You Attend?</h2>
+                            <div class="size-[15rem]">
+                                <picture class="element_1"></picture>
+                            </div>
+                            <h2 class="h2 mb-[2.4rem] text-white" data-editable="field_form_1">The Best Gift</h2>
+                            <h3 class="h3 mb-[2.4rem] text-white" data-editable="field_form_10">Will be your
+                                bresentation</h3>
                         </div>
                         <form action="" class="space-y-4">
                             <div class="relative">
@@ -1058,7 +969,6 @@
             </div>
         </section>
         <!-- Wedding Gift Section End -->
-
         <script>
             const OPTIONS = { loop: true };
 
