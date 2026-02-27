@@ -1034,7 +1034,7 @@
                         data-image-editable="photo_16" data-aos="fade-up" data-aos-delay="500">
                     </picture>
                 </div>
-                <div class="text-center mt-6" data-aos="fade-up" data-aos-delay="1500">
+                <!-- <div class="text-center mt-6" data-aos="fade-up" data-aos-delay="1500">
                     <button onclick="toggleGalleryPopup(true)"
                         class="group flex flex-col items-center mx-auto hover:text-[#3d48a8] transition-colors">
                         <span class="text-xs uppercase tracking-widest mb-1 text-black">Xem Thêm</span>
@@ -1043,7 +1043,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                         </svg>
                     </button>
-                </div>
+                </div> -->
             </div>
             <div class="absolute size-[100px] md:size-[300px] -mt-[70px] md:-mt-[300px] right-0 element_9 bg-contain">
             </div>
@@ -1110,33 +1110,83 @@
 
 
         <!-- wedding gift -->
-        <section id="SECTION_GIFT">
-            <div class="wrapper text-center py-[15px]">
-                <div class="w-[390px] justify-self-center text-black p-[10px] rounded-[10px]">
-                    <p class="">Hộp mừng cưới</p>
-                    <div class="flex">
-                        <div class="flex-1">
-                            <p>Chú rể</p>
-                            <picture class="size-[150px] aspect-[1/1] m-auto" data-image-editable="qr_1"></picture>
-                            <p class="text-[12px]">Họ và tên : <span data-editable="field_59">Nguyễn ABC</span></p>
-                            <p class="text-[12px]">Ngân hàng : <span data-editable="field_60">Techcomebank</span></p>
-                            <p class="text-[12px]">STK : <span data-editable="field_61">0123456789</span></p>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-[12px]">Cô dâu</p>
-                            <picture class="size-[150px] aspect-[1/1] m-auto" data-image-editable="qr_2"></picture>
-                            <p class="text-[12px]">Họ và tên : <span data-editable="field_62">Nguyễn ABC</span></p>
-                            <p class="text-[12px]">Ngân hàng : <span data-editable="field_63">Techcomebank</span></p>
-                            <p class="text-[12px]">STK : <span data-editable="field_64">0123456789</span></p>
-                        </div>
-                    </div>
-                </div>
+      <section id="SECTION_GIFT">
+        <div class="wrapper text-center py-[15px]">
+          <div class="mb-[2rem]" data-aos="fade-up">
+            <h3
+              class="text-[3rem] font-bold mb-[1rem]"
+              data-editable="gift_title"
+            >
+              Wedding box
+            </h3>
+            <p class="text-[2rem]">your presence is our best gift</p>
+          </div>
+          <div class="justify-self-center text-black p-[10px] rounded-[10px]">
+            <div class="flex max-md:flex-col gap-[3rem]">
+              <div class="flex-1 p-[1rem] shadow-md rounded-[1rem]">
+                <h6
+                  class="text-[2rem] mb-[1rem]"
+                  data-editable="groom_title"
+                  data-aos="fade-right"
+                  data-aos-delay="100"
+                >
+                  Groom
+                </h6>
+                <picture
+                  class="size-[300px] aspect-[1/1] m-auto mb-[1rem]"
+                  data-image-editable="qr_1"
+                  data-aos="fade-right"
+                  data-aos-delay="200"
+                >
+                </picture>
+                <p data-aos="fade-right" data-aos-delay="300">
+                  Name : <span data-editable="groom_name">Nguyễn ABC</span>
+                </p>
+                <p data-aos="fade-right" data-aos-delay="400">
+                  Bank :
+                  <span data-editable="groom_bank">Techcomebank</span>
+                </p>
+                <p data-aos="fade-right" data-aos-delay="500">
+                  Bank Number :
+                  <span data-editable="groom_bank_nummber">0123456789</span>
+                </p>
+              </div>
+              <div class="flex-1 p-[1rem] shadow-md rounded-[1rem]">
+                <h6
+                  class="text-[2rem] mb-[1rem]"
+                  data-editable="bride_title"
+                  data-aos="fade-left"
+                  data-aos-delay="100"
+                >
+                  Bride
+                </h6>
+                <picture
+                  class="size-[300px] aspect-[1/1] m-auto mb-[1rem]"
+                  data-image-editable="qr_2"
+                  data-aos="fade-left"
+                  data-aos-delay="200"
+                >
+                </picture>
+                <p data-aos="fade-left" data-aos-delay="300">
+                  Name : <span data-editable="bride_name">Nguyễn ABC</span>
+                </p>
+                <p data-aos="fade-left" data-aos-delay="400">
+                  Bank :
+                  <span data-editable="bride_bank">Techcomebank</span>
+                </p>
+                <p data-aos="fade-left" data-aos-delay="500">
+                  Bank number :
+                  <span data-editable="bride_bank_number">0123456789</span>
+                </p>
+              </div>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
 
         <!--  Album gallery popup -->
-        <section id="SECTION_POPUP" class="embla">
+        <!-- <section id="SECTION_POPUP" class="embla">
             <button onclick="toggleGalleryPopup(false)"
                 class="absolute top-10 right-10 text-white text-5xl z-[10000]">&times;</button>
 
@@ -1181,7 +1231,7 @@
                     </button>
                 </div>
             </div>
-        </section>
+        </section> -->
 
 
 
