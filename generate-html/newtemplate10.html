@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Petit+Formal+Script&display=swap"
         rel="stylesheet">
 
 
@@ -289,6 +289,7 @@
 
         body {
             margin: 0;
+            color: #212529;
         }
 
         main {
@@ -303,14 +304,15 @@
 
         p,
         span {
-            font-family: 'Poppins';
+            font-family: 'Mulish';
             line-height: 3rem;
         }
 
         p {
             margin: 0;
-            font-size: 1.7rem;
-            color: #978e98;
+            font-size: 1.6rem;
+            color: #727272;
+            line-height: 2.8rem;
         }
 
         h1,
@@ -319,31 +321,31 @@
         h4,
         h5,
         h6 {
-            font-family: 'Playfair Display';
+            font-family: 'Petit Formal Script';
             color: #362d2b;
         }
 
-        h1,
+        /* h1,
         .h1 {
             font-size: 5rem;
             font-weight: 700;
             line-height: 1.2;
-        }
+        } */
 
         h2,
         .h2 {
-            font-size: 5.6rem;
+            font-size: 3.6rem;
         }
 
         h3,
         .h3 {
-            font-size: 4rem;
+            font-size: 2.4rem;
         }
 
-        h4,
+        /* h4,
         .h4 {
             font-size: 3.5rem;
-        }
+        } */
 
 
         picture {
@@ -358,15 +360,16 @@
             /* background-size: cover; */
             padding-block: 100px;
             margin: auto;
+            overflow: hidden;
         }
 
         /* font familly */
-        .font-playfair {
-            font-family: 'Playfair Display', serif;
+        .font-petit {
+            font-family: 'Petit Formal Script', serif;
         }
 
-        .font-poppins {
-            font-family: 'Poppins', sans-serif;
+        .font-mulish {
+            font-family: 'Mulish', sans-serif;
         }
 
         [data-image-editable] {
@@ -394,26 +397,26 @@
                 margin: auto;
             }
 
-            h1,
+            /* h1,
             .h1 {
                 font-size: 3.4rem;
                 font-weight: 800;
                 line-height: 1;
-            }
+            } */
 
             h2,
             .h2 {
-                font-size: 3.5rem;
+                font-size: 3rem;
             }
 
-            h3,
+            /* h3,
             .h3 {
-                font-size: 4rem;
+                font-size: 2.4rem;
             }
 
             p {
                 font-size: 1.6rem;
-            }
+            } */
         }
     </style>
 
@@ -470,8 +473,20 @@
             background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/e2b97db1-057f-4ebc-9bf9-34155b15b2df-20250825221030-08o1o.png");
         }
 
-        .element_2 {
-            background-image: url("https://png.pngtree.com/png-clipart/20241221/original/pngtree-delicate-watercolor-flower-corner-border-png-image_18122039.png");
+        .line_break {
+            background-image: url("https://png.pngtree.com/png-clipart/20250613/original/pngtree-watercolor-floral-clipart-with-pale-blue-bouquet-png-image_21184457.png");
+        }
+
+        .flower_1 {
+            background-image: url("https://png.pngtree.com/png-clipart/20250211/original/pngtree-lovely-flowers-red-roses-adorned-with-elegant-swirls-png-image_20417292.png");
+        }
+
+        .flower_2 {
+            background-image: url("https://img.freepik.com/premium-vector/floral-garden-vector-design-collection-pink-peach-lavender-blooms_452720-639.jpg");
+        }
+
+        .flower_3 {
+            background-image: url("https://png.pngtree.com/png-clipart/20250824/original/pngtree-bridal-rose-bouquet-for-wedding-and-romantic-events-vector-png-image_21721195.png");
         }
 
         [data-image-editable="photo_1"] {
@@ -702,122 +717,194 @@
         <!-- Banner Begin-->
         <section id="SECTION_BANNER" data-image-editable="photo_1" class="relative h-screen flex">
             <div class="wrapper">
-                <div
-                    class="flex flex-col justify-center w-fit aspect-square bg-[#b39eb5cc] rounded-full p-[5rem] text-white text-center">
-                    <p class="text-[1.7rem] md:text-[2rem] text-white" data-aos="fade-up"><span id="js-hour"
+                <div class="relative flex flex-col justify-center w-fit aspect-square bg-[#c78665] rounded-full m-auto p-[5rem] text-white text-center 
+                    after:absolute after:content-[''] after:-right-[40px] after:-bottom-[25px] after:-top-[30px] after:-left-[20px] after:rounded-full after:border after:border-[rgb(199,134,101)] after:z-[-1]
+                    before:absolute before:content-[''] before:-right-[25px] before:-bottom-[25px] before:-top-[30px] before:-left-[40px] before:rounded-full before:border before:border-[rgb(242,198,77)] before:-[-1]
+                    ">
+                    <p class="mb-[3rem] text-[1.6rem] text-white" data-aos="fade-up"><span id="js-hour"
                             data-editable="field_1">8:00</span><span data-editable="field_2">AM</span>
                         <span id="js-day" data-editable="field_3">28</span>/<span id="js-month"
                             data-editable="field_4">02</span>/<span id="js-year" data-editable="field_5">2026</span>
                     </p>
-                    <h1 class="h1 text-white" data-editable="field_6" data-aos="fade-up" data-aos-delay="200">
+                    <h2 class="h2 mb-[3.6rem] text-white" data-editable="field_6" data-aos="fade-up"
+                        data-aos-delay="200">
                         James & Julie
-                    </h1>
-                    <h3 class="h3 text-white" data-editable="field_7" data-aos="fade-up" data-aos-delay="400">We are
-                        getting
-                        married</h3>
+                        <br>
+                        Wedding Ceremony
+                    </h2>
+                    <span class="font-petit text-[1.8rem]" data-editable="field_7" data-aos="fade-up"
+                        data-aos-delay="200">Get Married</span>
                 </div>
             </div>
         </section>
         <!-- Banner End-->
-        <!-- our Story Section Begin -->
-        <Section id="SECTION_STORY">
-            <div class="wrapper">
-                <div class="flex max-md:flex-col gap-[3rem]">
-                    <div class="relative flex-1 aspect-[530/625]">
-                        <picture class="rounded-[1rem]" data-image-editable="photo_2"></picture>
-                        <div class="size-[30rem] bottom-[-5rem] left-[-5rem] absolute">
-                            <picture class="element_2"></picture>
-                        </div>
-                    </div>
-                    <div class="flex-1 m-auto">
-                        <div class="size-[10rem]">
-                            <picture class="element_1"></picture>
-                        </div>
-                        <h3 class="h3 font-semi-bold mb-[4.4rem] uppercase" data-editable="field_8">Our Story</h3>
-                        <p class="mb-[3.5rem]" data-editable="field_9">Lorem ipsum dolor sit amet, consectetur
-                            adipisicing elit, sed do eiusmod
-                            tempor incididunt ut
-                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat.</p>
-                        <p data-editable="field_111">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    </div>
-                </div>
+        <!-- Timer Section Begin -->
+        <section id="SECTION_TIMER" class="relative">
+            <div class="max-md:hidden absolute -right-[3rem] top-0 size-[30rem]">
+                <picture class="flower_3"></picture>
             </div>
-        </Section>
-        <!-- our Story Section End -->
-        <!-- Wedding Planning Section Begin -->
-        <section id="SECTION_PLANNING" class="bg-[#fefcfa]">
             <div class="wrapper">
-                <div class="flex max-lg:flex-col gap-[2rem]">
-                    <div class="flex-1 text-center rounded-[1rem] shadow-md">
-                        <h4 class="h4 mb-[.8rem]" data-editable="field_10">Rehearsal Dinner</h4>
-                        <p class="mb-[5.4rem] text-[#362d2b] font-playfair" data-editable="field_11">July 20, 2020</p>
-                        <div class="size-[25rem] m-auto mb-[4.3rem]">
-                            <picture class="rounded-full" data-image-editable="photo_3"></picture>
+                <div>
+                    <div class="text-center mb-[2.4rem] md:mb-[6.2rem]">
+                        <div class="m-auto mb-[2rem] w-[20rem]" data-aos="fade-up">
+                            <picture class="line_break aspect-[25/14]"></picture>
                         </div>
-                        <span class="block mb-[1.5rem] tracking-[1rem] text-[1.6rem] text-[#daad9e]"
-                            data-editable="field_12">12:00PM-2:00PM</span>
-                        <p class="text-[#090908]" data-editable="field_13">The Sierra Resort 14 Pacific Grove Monterey,
-                            CA</p>
+                        <p class="mb-[1rem] text-[#C78665] text-[1.8rem]" data-editable="field_8" data-aos="fade-up"
+                            data-aos-delay="200">14. January. 2020</p>
+                        <p class="h3" data-editable="field_9" data-aos="fade-up" data-aos-delay="400">THE. WEDDING.
+                            Countdown</p>
                     </div>
-                    <div class="flex-1 text-center rounded-[1rem] shadow-md">
-                        <h4 class="h4 mb-[.8rem]" data-editable="field_14">Rehearsal Dinner</h4>
-                        <p class="mb-[5.4rem] text-[#362d2b] font-playfair" data-editable="field_15">July 20, 2020</p>
-                        <div class="size-[25rem] m-auto mb-[4.3rem]">
-                            <picture class="rounded-full" data-image-editable="photo_4"></picture>
+                    <div class="p-[3.5rem]" data-image-editable="photo_2">
+                        <div
+                            class="relative flex max-sm:flex-col max-md:items-center justify-center m-auto p-[1rem] gap-[1rem] md:gap-[4rem] text-center text-[#C78665] bg-[white]">
+                            <div id="TIMER_DAY" class="size-[12rem] content-center px-3" data-aos="fade-up"
+                                data-aos-delay="100">
+                                <span
+                                    class="block mb-[1.6rem] font-petit text-[3rem] md:text-[6rem] text-[#C78665] font-bold">00</span>
+                                <p class="text-[#212529] text-[1.2rem] uppercase tracking-widest font-bold">
+                                    Day
+                                </p>
+                            </div>
+                            <div id="TIMER_HOUR" class="size-[12rem] content-center px-3" data-aos="fade-up"
+                                data-aos-delay="200">
+                                <span
+                                    class="block mb-[1.6rem] font-petit text-[3rem] md:text-[6rem] text-[#C78665] font-bold">00</span>
+                                <p class="text-[#212529] text-[1.2rem] uppercase tracking-widest font-bold">
+                                    Hour
+                                </p>
+                            </div>
+                            <div id="TIMER_MIN" class="size-[12rem] content-center px-3" data-aos="fade-up"
+                                data-aos-delay="300">
+                                <span
+                                    class="block mb-[1.6rem] font-petit text-[3rem] md:text-[6rem] text-[#C78665] font-bold">00</span>
+                                <p class="text-[#212529] text-[1.2rem] uppercase tracking-widest font-bold">
+                                    Min
+                                </p>
+                            </div>
+                            <div id="TIMER_SEC" class="size-[12rem] content-center px-3" data-aos="fade-up"
+                                data-aos-delay="400">
+                                <span
+                                    class="block mb-[1.6rem] font-petit text-[3rem] md:text-[6rem] text-[#C78665] font-bold">00</span>
+                                <p class="text-[#212529] text-[1.2rem] uppercase tracking-widest font-bold">
+                                    Sec
+                                </p>
+                            </div>
                         </div>
-                        <span class="block mb-[1.5rem] tracking-[1rem] text-[1.6rem] text-[#daad9e]"
-                            data-editable="field_16">12:00PM-2:00PM</span>
-                        <p class="text-[#090908]" data-editable="field_17">The Sierra Resort 14 Pacific Grove Monterey,
-                            CA</p>
-                    </div>
-                    <div class="flex-1 text-center rounded-[1rem] shadow-md">
-                        <h4 class="h4 mb-[.8rem]" data-editable="field_18">Rehearsal Dinner</h4>
-                        <p class="mb-[5.4rem] text-[#362d2b] font-playfair" data-editable="field_19">July 20, 2020</p>
-                        <div class="size-[25rem] m-auto mb-[4.3rem]">
-                            <picture class="rounded-full" data-image-editable="photo_5"></picture>
-                        </div>
-                        <span class="block mb-[1.5rem] tracking-[1rem] text-[1.6rem] text-[#daad9e]"
-                            data-editable="field_20">12:00PM-2:00PM</span>
-                        <p class="text-[#090908]" data-editable="field_21">The Sierra Resort 14 Pacific Grove Monterey,
-                            CA</p>
                     </div>
                 </div>
             </div>
         </section>
-        <!-- Wedding Planning Section End -->
-        <!-- Gallery Section Begin -->
-        <section id="SECTION_GALLERY">
+        <!-- Timer Section End -->
+        <!-- Love Story Section Begin -->
+        <section id="SECTION_STORY">
             <div class="wrapper">
-                <div>
-                    <div>
-                        <div class="size-[15rem] m-auto">
-                            <picture class="element_1"></picture>
+                <div class="text-center">
+                    <div class="mb-[2.4rem] md:mb-[6.2rem]">
+                        <div class="m-auto mb-[2rem] w-[20rem]">
+                            <picture class="line_break aspect-[25/14]"></picture>
                         </div>
-                        <h2 class="h2 text-center mb-[6.6rem]" data-editable="field_22">
-                            OUR MEMORIES
-                        </h2>
+                        <p class="h2 text-[#1F1F1F] uppercase" data-editable="field_10">Our. Love. Story</p>
+                    </div>
+                    <div class="flex max-lg:flex-col gap-[3rem]">
+                        <div class="flex-1">
+                            <div
+                                class="w-[24rem] m-auto mb-[3.2rem] relative before:absolute before:content-[''] before:inset-[1rem] before:border-[2px] before:border-white before:rounded-full">
+                                <picture class="aspect-square rounded-full" data-image-editable="photo_3"></picture>
+                            </div>
+                            <span class="block mb-[1rem] font-petit text-[2.4rem]" data-editable="field_11">Groom</span>
+                            <h2 class="h2 mb-[3.8rem] text-[#C78665]" data-editable="field_12">Jack Wonner</h2>
+                            <p class="font-petit" data-editable="field_13">Many variations of passages of Lorem Ipsum
+                                available, but the majority
+                                have suffered
+                                alteration in some content of a page when looking at its layout. The point of using
+                                Lorem
+                                Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using
+                                Content here content here, making it look like readable English. Many desktop publishing
+                                packages and web page editors now use.</p>
+                        </div>
+                        <div class="flex-1">
+                            <div class="bg-[#FFFAF2] p-[3rem]">
+                                <div
+                                    class="py-[4.5rem] relative before:absolute before:h-[4rem] before:w-[.1rem] before:bg-[#C78665] before:left-1/2 before:contennt-[''] before:-bottom-[1rem] before:opacity-20">
+                                    <h3 class="h3 mb-[.8rem] text-[#C78665]" data-editable="field_14">Fast Meet</h3>
+                                    <p data-editable="field_15">Many variations of passages of Lorem Ipsum available,
+                                        but the majority have
+                                        suffered
+                                        alteration in some.</p>
+                                </div>
+                                <div
+                                    class="py-[4.5rem] relative before:absolute before:h-[4rem] before:w-[.1rem] before:bg-[#C78665] before:left-1/2 before:contennt-[''] before:-bottom-[1rem] before:opacity-20">
+                                    <h3 class="h3 mb-[.8rem] text-[#C78665]" data-editable="field_16">He Proposed</h3>
+                                    <p data-editable="field_17">Many variations of passages of Lorem Ipsum available,
+                                        but the majority have
+                                        suffered
+                                        alteration in some.</p>
+                                </div>
+                                <div
+                                    class="py-[4.5rem] relative before:absolute before:h-[4rem] before:w-[.1rem] before:bg-[#C78665] before:left-1/2 before:contennt-[''] before:-bottom-[1rem] before:opacity-20">
+                                    <h3 class="h3 mb-[.8rem] text-[#C78665]" data-editable="field_18">Love Story</h3>
+                                    <p data-editable="field_19">Many variations of passages of Lorem Ipsum available,
+                                        but the majority have
+                                        suffered
+                                        alteration in some.</p>
+                                </div>
+                                <div class="py-[4.5rem]">
+                                    <h3 class="h3 mb-[.8rem] text-[#C78665]" data-editable="field_20">Wedding Day</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <div
+                                class="w-[24rem] m-auto mb-[3.2rem] relative before:absolute before:content-[''] before:inset-[1rem] before:border-[2px] before:border-white before:rounded-full">
+                                <picture class="aspect-square rounded-full" data-image-editable="photo_4"></picture>
+                            </div>
+                            <span class="block mb-[1rem] font-petit text-[2.4rem]" data-editable="field_21">Bride</span>
+                            <h2 class="h2 mb-[3.8rem] text-[#C78665]" data-editable="field_22">Anjelina Kona</h2>
+                            <p class="font-petit" data-editable="field_23">Many variations of passages of Lorem Ipsum
+                                available, but the majority
+                                have suffered
+                                alteration in some content of a page when looking at its layout. The point of using
+                                Lorem
+                                Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using
+                                Content here content here, making it look like readable English. Many desktop publishing
+                                packages and web page editors now use.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Love Story Section End -->
+        <!-- Gallery Section Begin -->
+        <section id="SECTION_GALLERY" class="relative">
+            <div class="max-md:hidden absolute -right-[3rem] bottom-0 size-[30rem]">
+                <picture class="flower_3"></picture>
+            </div>
+            <div class="wrapper">
+                <div class="text-center">
+                    <div class="mb-[2.4rem] md:mb-[6.2rem]">
+                        <div class="m-auto mb-[2rem] w-[20rem]">
+                            <picture class="line_break aspect-[25/14]"></picture>
+                        </div>
+                        <p class="h2 text-[#1F1F1F] uppercase" data-editable="field_24">Our. Love. Story</p>
                     </div>
                     <div class="grid gird-cols-1 sm:grid-cols-2 md:grid-cols-3">
-                        <div class="w-full aspect-[39/48]">
+                        <div class="w-full aspect-[35/23]">
+                            <picture data-image-editable="photo_5"></picture>
+                        </div>
+                        <div class="w-full aspect-[35/23]">
                             <picture data-image-editable="photo_6"></picture>
                         </div>
-                        <div class="w-full aspect-[39/48]">
+                        <div class="w-full aspect-[35/23]">
                             <picture data-image-editable="photo_7"></picture>
                         </div>
-                        <div class="w-full aspect-[39/48]">
+                        <div class="w-full aspect-[35/23]">
                             <picture data-image-editable="photo_8"></picture>
                         </div>
-                        <div class="w-full aspect-[39/48]">
+                        <div class="w-full aspect-[35/23]">
                             <picture data-image-editable="photo_9"></picture>
                         </div>
-                        <div class="w-full aspect-[39/48]">
+                        <div class="w-full aspect-[35/23]">
                             <picture data-image-editable="photo_10"></picture>
-                        </div>
-                        <div class="w-full aspect-[39/48]">
-                            <picture data-image-editable="photo_11"></picture>
                         </div>
                     </div>
                     <div class="text-center mt-6">
@@ -831,7 +918,6 @@
                         </button>
                     </div>
                 </div>
-
             </div>
         </section>
         <!-- Gallery Section End -->
@@ -883,20 +969,79 @@
             </div>
         </section>
         <!-- Gallery Popup Section End -->
+        <!-- Program Details Section Begin -->
+        <section id="SECTION_DETAILS">
+            <div class="wrapper">
+                <div class="text-center">
+                    <div class="mb-[2.4rem] md:mb-[6.2rem]">
+                        <div class="m-auto mb-[2rem] w-[20rem]">
+                            <picture class="line_break aspect-[25/14]"></picture>
+                        </div>
+                        <p class="h2 text-[#1F1F1F] uppercase" data-editable="field_25">Program. Details</p>
+                    </div>
+                    <div class="flex max-lg:flex-col gap-[3rem]">
+                        <div class="flex-1 p-[2rem]" data-image-editable="photo_11">
+                            <div class="bg-white py-[5.7rem] px-[3rem] rounded-[1rem]">
+                                <p class="font-petit mb-[1rem] text-[2rem]" data-editable="field_26">
+                                    16.00
+                                </p>
+                                <p class="h3 text-[#C78665] mb-[1rem]" data-editable="field_27">Wedding Ceremony</p>
+                                <p class="mb-[1.2rem]" data-editable="field_28">Many variations of passages of Lorem
+                                    Ipsum available, but the
+                                    majority have
+                                    suffered
+                                    alteration in some content of a page when looking at its layout. </p>
+                                <div class="w-[15rem] m-auto">
+                                    <picture class="flower_2 aspect-[2/1]"></picture>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1 p-[2rem]" data-image-editable="photo_12">
+                            <div class="bg-white py-[5.7rem] px-[3rem] rounded-[1rem]">
+                                <p class="font-petit mb-[1rem] text-[2rem]" data-editable="field_29">
+                                    16.00
+                                </p>
+                                <p class="h3 text-[#C78665] mb-[1rem]" data-editable="field_30">Wedding Ceremony</p>
+                                <p class="mb-[1.2rem]" data-editable="field_31">Many variations of passages of Lorem
+                                    Ipsum available, but the
+                                    majority have
+                                    suffered
+                                    alteration in some content of a page when looking at its layout. </p>
+                                <div class="w-[15rem] m-auto">
+                                    <picture class="flower_2 aspect-[2/1]"></picture>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1 p-[2rem]" data-image-editable="photo_13">
+                            <div class="bg-white py-[5.7rem] px-[3rem] rounded-[1rem]">
+                                <p class="font-petit mb-[1rem] text-[2rem]" data-editable="field_32">
+                                    16.00
+                                </p>
+                                <p class="h3 text-[#C78665] mb-[1rem]" data-editable="field_33">Wedding Ceremony</p>
+                                <p class="mb-[1.2rem]" data-editable="field_34">Many variations of passages of Lorem
+                                    Ipsum available, but the
+                                    majority have
+                                    suffered
+                                    alteration in some content of a page when looking at its layout. </p>
+                                <div class="w-[15rem] m-auto">
+                                    <picture class="flower_2 aspect-[2/1]"></picture>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Program Detail Section End -->
         <!-- Form Section Begin  -->
-        <section id="SECTION_FORM" data-image-editable="photo_12"
+        <section id="SECTION_FORM" data-image-editable="photo_14"
             class="relative bg-cover bg-no-repeat bg-center bg-fixed">
             <div class="bg-black opacity-50 absolute inset-0 z-0"></div>
             <div class="w-full wrapper z-[10] relative flex max-md:flex-col-reverse gap-[2rem] text-white">
                 <div class="flex-1" data-aos="fade-right">
                     <div class="md:p-[3rem] rounded-2xl w-full max-w-[40rem]">
                         <div class="">
-                            <div class="size-[15rem]">
-                                <picture class="element_1"></picture>
-                            </div>
-                            <h2 class="h2 mb-[2.4rem] text-white" data-editable="field_form_1">The Best Gift</h2>
-                            <h3 class="h3 mb-[2.4rem] text-white" data-editable="field_form_10">Will be your
-                                bresentation</h3>
+                            <h2 class="h2 mb-[2.4rem] text-white" data-editable="field_form_1">Will You Attend?</h2>
                         </div>
                         <form action="" class="space-y-4">
                             <div class="relative">
@@ -969,6 +1114,8 @@
             </div>
         </section>
         <!-- Wedding Gift Section End -->
+
+
         <script>
             const OPTIONS = { loop: true };
 
