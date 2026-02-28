@@ -1,19 +1,17 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
 
-
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Arima:wght@100..700&family=Bonheur+Royale&family=Great+Vibes&family=Lavishly+Yours&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Prata&family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rochester&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&family=Yeseva+One&display=swap"
-        rel="stylesheet">
-
+      href="https://fonts.googleapis.com/css2?family=Arima:wght@100..700&family=Bonheur+Royale&family=Great+Vibes&family=Lavishly+Yours&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Prata&family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rochester&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&family=Yeseva+One&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- CDN -->
     <!-- Tailwind CSS -->
@@ -21,978 +19,1182 @@
     <!-- Embla Carousel -->
     <script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
 
-
-
-
-
     <!-- style -->
 
     <!-- Embla Carousel -->
     <style>
-        .embla {
-            /* max-width: 420px; */
-            /* Độ rộng tương đương mobile */
-            margin: auto;
-            --slide-spacing: 1rem;
-            --slide-size: 100%;
-        }
+      .embla {
+        /* max-width: 420px; */
+        /* Độ rộng tương đương mobile */
+        margin: auto;
+        --slide-spacing: 1rem;
+        --slide-size: 100%;
+      }
 
-        .embla__viewport {
-            overflow: hidden;
-        }
+      .embla__viewport {
+        overflow: hidden;
+      }
 
-        .embla__container {
-            display: flex;
-            touch-action: pan-y;
-            margin-left: calc(var(--slide-spacing) * -1);
-        }
+      .embla__container {
+        display: flex;
+        touch-action: pan-y;
+        margin-left: calc(var(--slide-spacing) * -1);
+      }
 
-        .embla__slide {
-            width: 60px;
-            transform: translate3d(0, 0, 0);
-            flex: 0 0 var(--slide-size);
-            min-width: 0;
-            padding-left: var(--slide-spacing);
-        }
+      .embla__slide {
+        width: 60px;
+        transform: translate3d(0, 0, 0);
+        flex: 0 0 var(--slide-size);
+        min-width: 0;
+        padding-left: var(--slide-spacing);
+      }
 
-        .embla__slide__number {
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f3f4f6;
-            border-radius: 1rem;
-            font-size: 3rem;
-            font-weight: bold;
-            color: #3481f4;
-            box-shadow: inset 0 0 0 1px #e5e7eb;
-        }
+      .embla__slide__number {
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f3f4f6;
+        border-radius: 1rem;
+        font-size: 3rem;
+        font-weight: bold;
+        color: #3481f4;
+        box-shadow: inset 0 0 0 1px #e5e7eb;
+      }
 
-        .embla__controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
+      .embla__controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
 
-        .embla__buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
+      .embla__buttons {
+        display: flex;
+        gap: 3rem;
+      }
 
-        .embla__button {
-            background-color: transparent;
-            touch-action: manipulation;
-            display: inline-flex;
-            text-decoration: none;
-            cursor: pointer;
-            border: 1px solid #3481f4;
-            padding: 0;
-            margin: 0;
-            width: 2.5rem;
-            height: 2.5rem;
-            z-index: 1;
-            border-radius: 50%;
-            color: #3481f4;
-            align-items: center;
-            justify-content: center;
-        }
+      .embla__button {
+        background-color: transparent;
+        touch-action: manipulation;
+        display: inline-flex;
+        text-decoration: none;
+        cursor: pointer;
+        border: 1px solid #3481f4;
+        padding: 0;
+        margin: 0;
+        width: 2.5rem;
+        height: 2.5rem;
+        z-index: 1;
+        border-radius: 50%;
+        color: #3481f4;
+        align-items: center;
+        justify-content: center;
+      }
 
-        .embla__button:disabled {
-            color: #d1d5db;
-            border-color: #d1d5db;
-            cursor: not-allowed;
-        }
+      .embla__button:disabled {
+        color: #d1d5db;
+        border-color: #d1d5db;
+        cursor: not-allowed;
+      }
 
-        .embla__button__svg {
-            width: 1.2rem;
-            height: 1.2rem;
-        }
+      .embla__button__svg {
+        width: 1.2rem;
+        height: 1.2rem;
+      }
 
-        #GALLERY_POPUP {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.95);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
+      #GALLERY_POPUP {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.95);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
 
-        #GALLERY_POPUP.active {
-            display: flex;
-        }
+      #GALLERY_POPUP.active {
+        display: flex;
+      }
 
-        .embla__slide__number {
-            width: 100%;
-            height: 70vh;
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            box-shadow: none;
-        }
+      .embla__slide__number {
+        width: 100%;
+        height: 70vh;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        box-shadow: none;
+      }
     </style>
-
 
     <!-- Snowflake -->
     <style>
-        @-webkit-keyframes snowflakes-fall {
-            0% {
-                top: -10%
-            }
-
-            100% {
-                top: 100%
-            }
+      @-webkit-keyframes snowflakes-fall {
+        0% {
+          top: -10%;
         }
 
-        @-webkit-keyframes snowflakes-shake {
+        100% {
+          top: 100%;
+        }
+      }
 
-            0%,
-            100% {
-                -webkit-transform: translateX(0);
-                transform: translateX(0)
-            }
-
-            50% {
-                -webkit-transform: translateX(80px);
-                transform: translateX(80px)
-            }
+      @-webkit-keyframes snowflakes-shake {
+        0%,
+        100% {
+          -webkit-transform: translateX(0);
+          transform: translateX(0);
         }
 
-        @keyframes snowflakes-fall {
-            0% {
-                top: -10%
-            }
+        50% {
+          -webkit-transform: translateX(80px);
+          transform: translateX(80px);
+        }
+      }
 
-            100% {
-                top: 100%
-            }
+      @keyframes snowflakes-fall {
+        0% {
+          top: -10%;
         }
 
-        @keyframes snowflakes-shake {
+        100% {
+          top: 100%;
+        }
+      }
 
-            0%,
-            100% {
-                transform: translateX(0)
-            }
-
-            50% {
-                transform: translateX(80px)
-            }
+      @keyframes snowflakes-shake {
+        0%,
+        100% {
+          transform: translateX(0);
         }
 
-        .snowflake {
-            color: #fff;
-            font-size: 1em;
-            font-family: Arial, sans-serif;
-            text-shadow: 0 0 5px #000;
-            position: fixed;
-            top: -10%;
-            z-index: 9999;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            cursor: default;
-            -webkit-animation-name: snowflakes-fall, snowflakes-shake;
-            -webkit-animation-duration: 10s, 3s;
-            -webkit-animation-timing-function: linear, ease-in-out;
-            -webkit-animation-iteration-count: infinite, infinite;
-            -webkit-animation-play-state: running, running;
-            animation-name: snowflakes-fall, snowflakes-shake;
-            animation-duration: 10s, 3s;
-            animation-timing-function: linear, ease-in-out;
-            animation-iteration-count: infinite, infinite;
-            animation-play-state: running, running;
+        50% {
+          transform: translateX(80px);
         }
+      }
 
-        .snowflake:nth-of-type(0) {
-            left: 1%;
-            -webkit-animation-delay: 0s, 0s;
-            animation-delay: 0s, 0s
-        }
+      .snowflake {
+        color: #fff;
+        font-size: 1em;
+        font-family: Arial, sans-serif;
+        text-shadow: 0 0 5px #000;
+        position: fixed;
+        top: -10%;
+        z-index: 9999;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        cursor: default;
+        -webkit-animation-name: snowflakes-fall, snowflakes-shake;
+        -webkit-animation-duration: 10s, 3s;
+        -webkit-animation-timing-function: linear, ease-in-out;
+        -webkit-animation-iteration-count: infinite, infinite;
+        -webkit-animation-play-state: running, running;
+        animation-name: snowflakes-fall, snowflakes-shake;
+        animation-duration: 10s, 3s;
+        animation-timing-function: linear, ease-in-out;
+        animation-iteration-count: infinite, infinite;
+        animation-play-state: running, running;
+      }
 
-        .snowflake:nth-of-type(1) {
-            left: 10%;
-            -webkit-animation-delay: 1s, 1s;
-            animation-delay: 1s, 1s
-        }
+      .snowflake:nth-of-type(0) {
+        left: 1%;
+        -webkit-animation-delay: 0s, 0s;
+        animation-delay: 0s, 0s;
+      }
 
-        .snowflake:nth-of-type(2) {
-            left: 20%;
-            -webkit-animation-delay: 6s, .5s;
-            animation-delay: 6s, .5s
-        }
+      .snowflake:nth-of-type(1) {
+        left: 10%;
+        -webkit-animation-delay: 1s, 1s;
+        animation-delay: 1s, 1s;
+      }
 
-        .snowflake:nth-of-type(3) {
-            left: 30%;
-            -webkit-animation-delay: 4s, 2s;
-            animation-delay: 4s, 2s
-        }
+      .snowflake:nth-of-type(2) {
+        left: 20%;
+        -webkit-animation-delay: 6s, 0.5s;
+        animation-delay: 6s, 0.5s;
+      }
 
-        .snowflake:nth-of-type(4) {
-            left: 40%;
-            -webkit-animation-delay: 2s, 2s;
-            animation-delay: 2s, 2s
-        }
+      .snowflake:nth-of-type(3) {
+        left: 30%;
+        -webkit-animation-delay: 4s, 2s;
+        animation-delay: 4s, 2s;
+      }
 
-        .snowflake:nth-of-type(5) {
-            left: 50%;
-            -webkit-animation-delay: 8s, 3s;
-            animation-delay: 8s, 3s
-        }
+      .snowflake:nth-of-type(4) {
+        left: 40%;
+        -webkit-animation-delay: 2s, 2s;
+        animation-delay: 2s, 2s;
+      }
 
-        .snowflake:nth-of-type(6) {
-            left: 60%;
-            -webkit-animation-delay: 6s, 2s;
-            animation-delay: 6s, 2s
-        }
+      .snowflake:nth-of-type(5) {
+        left: 50%;
+        -webkit-animation-delay: 8s, 3s;
+        animation-delay: 8s, 3s;
+      }
 
-        .snowflake:nth-of-type(7) {
-            left: 70%;
-            -webkit-animation-delay: 2.5s, 1s;
-            animation-delay: 2.5s, 1s
-        }
+      .snowflake:nth-of-type(6) {
+        left: 60%;
+        -webkit-animation-delay: 6s, 2s;
+        animation-delay: 6s, 2s;
+      }
 
-        .snowflake:nth-of-type(8) {
-            left: 80%;
-            -webkit-animation-delay: 1s, 0s;
-            animation-delay: 1s, 0s
-        }
+      .snowflake:nth-of-type(7) {
+        left: 70%;
+        -webkit-animation-delay: 2.5s, 1s;
+        animation-delay: 2.5s, 1s;
+      }
 
-        .snowflake:nth-of-type(9) {
-            left: 90%;
-            -webkit-animation-delay: 3s, 1.5s;
-            animation-delay: 3s, 1.5s
-        }
+      .snowflake:nth-of-type(8) {
+        left: 80%;
+        -webkit-animation-delay: 1s, 0s;
+        animation-delay: 1s, 0s;
+      }
 
-        .snowflake:nth-of-type(10) {
-            left: 25%;
-            -webkit-animation-delay: 2s, 0s;
-            animation-delay: 2s, 0s
-        }
+      .snowflake:nth-of-type(9) {
+        left: 90%;
+        -webkit-animation-delay: 3s, 1.5s;
+        animation-delay: 3s, 1.5s;
+      }
 
-        .snowflake:nth-of-type(11) {
-            left: 65%;
-            -webkit-animation-delay: 4s, 2.5s;
-            animation-delay: 4s, 2.5s
-        }
+      .snowflake:nth-of-type(10) {
+        left: 25%;
+        -webkit-animation-delay: 2s, 0s;
+        animation-delay: 2s, 0s;
+      }
+
+      .snowflake:nth-of-type(11) {
+        left: 65%;
+        -webkit-animation-delay: 4s, 2.5s;
+        animation-delay: 4s, 2.5s;
+      }
     </style>
 
     <!-- Main CSS -->
     <style>
-        /* global css */
+      /* global css */
 
-        html {
-            font-size: 62.5%;
-        }
+      html {
+        font-size: 62.5%;
+      }
 
-        body {
-            margin: 0;
-        }
+      body {
+        margin: 0;
+      }
 
-        main {
-            font-family: Arial, sans-serif;
-            margin: auto;
-        }
+      main {
+        font-family: Arial, sans-serif;
+        margin: auto;
+      }
 
-        img {
-            max-width: 100%;
-            height: auto;
-        }
+      img {
+        max-width: 100%;
+        height: auto;
+      }
 
-        p,
-        span {
-            font-family: 'Poppins';
-        }
+      p,
+      span {
+        font-family: "Poppins";
+      }
 
-        p {
-            margin: 0;
-            font-size: 1.4rem;
-        }
+      p {
+        margin: 0;
+        font-size: 1.4rem;
+      }
 
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-family: 'Poppins';
-        }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Poppins";
+      }
 
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            /* color: #d291bc; */
-        }
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        /* color: #d291bc; */
+      }
 
-        /* h1,
+      /* h1,
         .h1 {
             font-size: 4rem;
             @apply text-[3.6rem];
         } */
 
-        h2,
-        .h2 {
-            font-size: 3.6rem;
-        }
+      h2,
+      .h2 {
+        font-size: 3.6rem;
+      }
 
-        h3,
-        .h3 {
-            font-size: 2.4rem;
-        }
+      h3,
+      .h3 {
+        font-size: 2.4rem;
+      }
 
-        picture {
-            display: block;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
+      picture {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+      }
+
+      section {
+        /* background-repeat: no-repeat; */
+        /* background-size: cover; */
+        padding-block: 100px;
+        margin: auto;
+      }
+
+      /* font familly */
+      .font-playfair {
+        font-family: "Playfair Display", serif;
+      }
+
+      .font-quicksand {
+        font-family: "Quicksand", sans-serif;
+      }
+
+      .font-prata {
+        font-family: "Prata", serif;
+      }
+
+      .font-mulish {
+        font-family: "Mulish", sans-serif;
+      }
+
+      .font-lavishly {
+        font-family: "Lavishly Yours", cursive;
+      }
+
+      .font-bonheur {
+        font-family: "Bonheur Royale";
+      }
+
+      .font-philosopher {
+        font-family: "Philosopher";
+      }
+
+      .font-yeseva {
+        font-family: "Yeseva One";
+      }
+
+      .font-worksans {
+        font-family: "Work Sans";
+      }
+
+      .font-arima {
+        font-family: "Arima";
+      }
+
+      .font-great {
+        font-family: "Great Vibes";
+      }
+
+      .font-libre {
+        font-family: "Libre Caslon Text";
+      }
+
+      .font-poppins {
+        font-family: "Poppins";
+      }
+
+      .font-rochester {
+        font-family: "Rochester";
+      }
+
+      .font-sourcesans3 {
+        font-family: "Source Sans 3";
+      }
+
+      [data-image-editable] {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .wrapper {
+        max-width: 1140px;
+        width: 100%;
+        margin: auto;
+        padding-inline: 30px;
+      }
+
+      @media screen and (max-width: 768px) {
+        .wrapper {
+          padding-inline: 15px;
         }
 
         section {
-            /* background-repeat: no-repeat; */
-            /* background-size: cover; */
-            padding-block: 100px;
-            margin: auto;
+          /* background-repeat: no-repeat; */
+          /* background-size: cover; */
+          padding-block: 50px;
+          margin: auto;
         }
-
-        /* font familly */
-        .font-playfair {
-            font-family: 'Playfair Display', serif;
-        }
-
-        .font-quicksand {
-            font-family: 'Quicksand', sans-serif;
-        }
-
-        .font-prata {
-            font-family: 'Prata', serif;
-        }
-
-        .font-mulish {
-            font-family: 'Mulish', sans-serif;
-        }
-
-        .font-lavishly {
-            font-family: 'Lavishly Yours', cursive;
-        }
-
-        .font-bonheur {
-            font-family: 'Bonheur Royale';
-        }
-
-        .font-philosopher {
-            font-family: 'Philosopher';
-        }
-
-        .font-yeseva {
-            font-family: 'Yeseva One';
-        }
-
-        .font-worksans {
-            font-family: 'Work Sans';
-        }
-
-        .font-arima {
-            font-family: 'Arima';
-        }
-
-        .font-great {
-            font-family: 'Great Vibes';
-        }
-
-        .font-libre {
-            font-family: 'Libre Caslon Text';
-        }
-
-        .font-poppins {
-            font-family: 'Poppins';
-        }
-
-        .font-rochester {
-            font-family: 'Rochester';
-        }
-
-        .font-sourcesans3 {
-            font-family: 'Source Sans 3';
-        }
-
-        [data-image-editable] {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        .wrapper {
-            max-width: 1140px;
-            width: 100%;
-            margin: auto;
-            padding-inline: 30px;
-        }
-
-        @media screen and (max-width: 768px) {
-            .wrapper {
-                padding-inline: 15px;
-            }
-
-            section {
-                /* background-repeat: no-repeat; */
-                /* background-size: cover; */
-                padding-block: 50px;
-                margin: auto;
-            }
-        }
+      }
     </style>
 
     <!-- Animation CSS -->
     <style>
-        /* Animation Base States */
-        [data-aos] {
-            opacity: 0;
-            transition-property: transform, opacity;
-            transition-timing-function: ease-out;
-        }
+      /* Animation Base States */
+      [data-aos] {
+        opacity: 0;
+        transition-property: transform, opacity;
+        transition-timing-function: ease-out;
+      }
 
-        /* Fade Animations */
-        [data-aos="fade-up"] {
-            transform: translateY(30px);
-        }
+      /* Fade Animations */
+      [data-aos="fade-up"] {
+        transform: translateY(30px);
+      }
 
-        [data-aos="fade-down"] {
-            transform: translateY(-30px);
-        }
+      [data-aos="fade-down"] {
+        transform: translateY(-30px);
+      }
 
-        [data-aos="fade-left"] {
-            transform: translateX(30px);
-        }
+      [data-aos="fade-left"] {
+        transform: translateX(30px);
+      }
 
-        [data-aos="fade-right"] {
-            transform: translateX(-30px);
-        }
+      [data-aos="fade-right"] {
+        transform: translateX(-30px);
+      }
 
-        /* Zoom Animations */
-        [data-aos="zoom-in"] {
-            transform: scale(0.7);
-        }
+      /* Zoom Animations */
+      [data-aos="zoom-in"] {
+        transform: scale(0.7);
+      }
 
-        [data-aos="zoom-out"] {
-            transform: scale(1.2);
-        }
+      [data-aos="zoom-out"] {
+        transform: scale(1.2);
+      }
 
-        /* Slide Animations */
-        [data-aos="slide-up"] {
-            transform: translateY(100%);
-        }
+      /* Slide Animations */
+      [data-aos="slide-up"] {
+        transform: translateY(100%);
+      }
 
-        /* The Active State (Triggered by JS) */
-        .aos-animate {
-            opacity: 1 !important;
-            transform: translate(0) scale(1) !important;
-        }
+      /* The Active State (Triggered by JS) */
+      .aos-animate {
+        opacity: 1 !important;
+        transform: translate(0) scale(1) !important;
+      }
     </style>
 
     <!-- data image -->
     <style>
-        [data-image-editable="photo_1"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342159_9a35bc8074ac983581f10a243218dee5-20250720112650-xdgti.jpg");
-        }
+      [data-image-editable="photo_1"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342159_9a35bc8074ac983581f10a243218dee5-20250720112650-xdgti.jpg");
+      }
 
-        [data-image-editable="photo_2"] {
-            background-image: url("https://w.ladicdn.com/s450x400/5c728619c417ab07e5194baa/22-20240427063945-kdhmq.jpg");
-        }
+      [data-image-editable="photo_2"] {
+        background-image: url("https://w.ladicdn.com/s450x400/5c728619c417ab07e5194baa/22-20240427063945-kdhmq.jpg");
+      }
 
-        [data-image-editable="photo_3"] {
-            background-image: url("https://w.ladicdn.com/s700x550/6801c7e1fbbd4d001283dac2/z6823838296252_9dc2a80595ceb2d9916440b01035f73d-20250720112650--nghd.jpg");
-        }
+      [data-image-editable="photo_3"] {
+        background-image: url("https://w.ladicdn.com/s700x550/6801c7e1fbbd4d001283dac2/z6823838296252_9dc2a80595ceb2d9916440b01035f73d-20250720112650--nghd.jpg");
+      }
 
-        [data-image-editable="photo_4"] {
-            background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838784242_aee303c8a068cb5fd7b41e7ef4b596d0-20250720112708-siwg1.jpg");
-        }
+      [data-image-editable="photo_4"] {
+        background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838784242_aee303c8a068cb5fd7b41e7ef4b596d0-20250720112708-siwg1.jpg");
+      }
 
-        [data-image-editable="photo_5"] {
-            background-image: url("https://w.ladicdn.com/s500x550/6801c7e1fbbd4d001283dac2/z6823838739064_5c886c45d1d55977a87b5ca14373809e-20250720112708-1kjld.jpg");
-        }
+      [data-image-editable="photo_5"] {
+        background-image: url("https://w.ladicdn.com/s500x550/6801c7e1fbbd4d001283dac2/z6823838739064_5c886c45d1d55977a87b5ca14373809e-20250720112708-1kjld.jpg");
+      }
 
-        [data-image-editable="photo_6"] {
-            background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838562924_339d83292301008cda4f978f91fff475-20250720112700-igibu.jpg");
-        }
+      [data-image-editable="photo_6"] {
+        background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838562924_339d83292301008cda4f978f91fff475-20250720112700-igibu.jpg");
+      }
 
-        [data-image-editable="photo_7"] {
-            background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
-        }
+      [data-image-editable="photo_7"] {
+        background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+      }
 
-        [data-image-editable="photo_8"] {
-            background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838384689_f9140d1b705d2baa14714ae77179b775-20250720112650-qrpou.jpg");
-        }
+      [data-image-editable="photo_8"] {
+        background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838384689_f9140d1b705d2baa14714ae77179b775-20250720112650-qrpou.jpg");
+      }
 
-        [data-image-editable="photo_9"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838784286_fa9f26bf3167e3a2f668f9b524060a8b-20250720112708--0znq.jpg");
-        }
+      [data-image-editable="photo_9"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838784286_fa9f26bf3167e3a2f668f9b524060a8b-20250720112708--0znq.jpg");
+      }
 
-        [data-image-editable="photo_10"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838474700_ae674803922601c8fe5fd6dc39839a52-20250720112655-abrzg.jpg");
-        }
+      [data-image-editable="photo_10"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838474700_ae674803922601c8fe5fd6dc39839a52-20250720112655-abrzg.jpg");
+      }
 
-        [data-image-editable="photo_11"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838831042_069f5c5b3e835e42e996c331e4133d2e-20250720112716-91doe.jpg");
-        }
+      [data-image-editable="photo_11"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838831042_069f5c5b3e835e42e996c331e4133d2e-20250720112716-91doe.jpg");
+      }
 
-        [data-image-editable="photo_12"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838384688_fa8a2fb2e4439bdba2eeaabc71b862cf-20250720112650-pwmxi.jpg");
-        }
+      [data-image-editable="photo_12"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838384688_fa8a2fb2e4439bdba2eeaabc71b862cf-20250720112650-pwmxi.jpg");
+      }
 
-        [data-image-editable="photo_13"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342158_07f2a515ce97a05d7dac8aa0465ccc85-20250720112650-jtwiv.jpg");
-        }
+      [data-image-editable="photo_13"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342158_07f2a515ce97a05d7dac8aa0465ccc85-20250720112650-jtwiv.jpg");
+      }
 
-        [data-image-editable="photo_14"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
-        }
+      [data-image-editable="photo_14"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+      }
 
-        [data-image-editable="photo_15"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
-        }
+      [data-image-editable="photo_15"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+      }
 
-        [data-image-editable="photo_16"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
-        }
+      [data-image-editable="photo_16"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+      }
 
-        [data-image-editable="photo_17"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
-        }
+      [data-image-editable="photo_17"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+      }
 
-        [data-image-editable="photo_18"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
-        }
+      [data-image-editable="photo_18"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+      }
 
-        [data-image-editable="photo_19"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
-        }
+      [data-image-editable="photo_19"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+      }
 
-        [data-image-editable="photo_gallery_1"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
-        }
+      [data-image-editable="photo_gallery_1"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+      }
 
-        [data-image-editable="photo_gallery_2"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838474700_ae674803922601c8fe5fd6dc39839a52-20250720112655-abrzg.jpg");
-        }
+      [data-image-editable="photo_gallery_2"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838474700_ae674803922601c8fe5fd6dc39839a52-20250720112655-abrzg.jpg");
+      }
 
-        [data-image-editable="photo_gallery_3"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
-        }
+      [data-image-editable="photo_gallery_3"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+      }
 
-        [data-image-editable="photo_gallery_4"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
-        }
+      [data-image-editable="photo_gallery_4"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+      }
 
-        [data-image-editable="photo_gallery_5"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838784286_fa9f26bf3167e3a2f668f9b524060a8b-20250720112708--0znq.jpg");
-        }
+      [data-image-editable="photo_gallery_5"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838784286_fa9f26bf3167e3a2f668f9b524060a8b-20250720112708--0znq.jpg");
+      }
 
-        [data-image-editable="photo_gallery_6"] {
-            background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
-        }
+      [data-image-editable="photo_gallery_6"] {
+        background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+      }
 
+      [data-image-editable="qr_1"] {
+        background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
+      }
 
-        [data-image-editable="qr_1"] {
-            background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
-        }
-
-        [data-image-editable="qr_2"] {
-            background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
-        }
+      [data-image-editable="qr_2"] {
+        background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
+      }
     </style>
 
     <!-- Script -->
 
-
     <!-- Timer script -->
     <script>
-        (function () {
+      (function () {
+        let countdownInterval;
 
-            let countdownInterval;
+        function getTargetDate() {
+          const elH = document.querySelector("#js-hour");
+          const elD = document.querySelector("#js-day");
+          const elM = document.querySelector("#js-month");
+          const elY = document.querySelector("#js-year");
 
-            function getTargetDate() {
-                const elH = document.querySelector('#js-hour');
-                const elD = document.querySelector('#js-day');
-                const elM = document.querySelector('#js-month');
-                const elY = document.querySelector('#js-year');
+          if (!elH || !elD || !elM || !elY) return null;
 
-                if (!elH || !elD || !elM || !elY) return null;
+          // Trích xuất giờ và phút (ví dụ: 11:00)
+          const timeMatch = elH.innerText.match(/(\d{2}):(\d{2})/);
+          const hour = timeMatch ? parseInt(timeMatch[1]) : 0;
+          const minute = timeMatch ? parseInt(timeMatch[2]) : 0;
 
-                // Trích xuất giờ và phút (ví dụ: 11:00)
-                const timeMatch = elH.innerText.match(/(\d{2}):(\d{2})/);
-                const hour = timeMatch ? parseInt(timeMatch[1]) : 0;
-                const minute = timeMatch ? parseInt(timeMatch[2]) : 0;
+          // Trích xuất ngày, tháng, năm
+          const day = parseInt(elD.innerText);
+          const month = parseInt(elM.innerText) - 1; // Tháng trong JS từ 0-11
+          const year = parseInt(elY.innerText);
 
-                // Trích xuất ngày, tháng, năm
-                const day = parseInt(elD.innerText);
-                const month = parseInt(elM.innerText) - 1; // Tháng trong JS từ 0-11
-                const year = parseInt(elY.innerText);
+          const target = new Date(year, month, day, hour, minute, 0).getTime();
+          return isNaN(target) ? null : target;
+        }
 
-                const target = new Date(year, month, day, hour, minute, 0).getTime();
-                return isNaN(target) ? null : target;
+        function render(d, h, m, s) {
+          const pad = (n) => (n < 10 ? "0" + n : n);
+          const setVal = (id, val) => {
+            const el = document.querySelector(`${id} span`);
+            if (el) el.innerText = pad(val);
+          };
+
+          setVal("#TIMER_DAY", d);
+          setVal("#TIMER_HOUR", h);
+          setVal("#TIMER_MIN", m);
+          setVal("#TIMER_SEC", s);
+        }
+
+        function updateCountdown() {
+          const endTime = getTargetDate();
+          if (!endTime) return;
+
+          if (countdownInterval) clearInterval(countdownInterval);
+
+          const logic = () => {
+            const now = new Date().getTime();
+            const distance = endTime - now;
+
+            if (distance < 0) {
+              clearInterval(countdownInterval);
+              render(0, 0, 0, 0);
+              return;
             }
 
-            function render(d, h, m, s) {
-                const pad = (n) => n < 10 ? '0' + n : n;
-                const setVal = (id, val) => {
-                    const el = document.querySelector(`${id} span`);
-                    if (el) el.innerText = pad(val);
-                };
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor(
+              (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+            );
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
 
-                setVal('#TIMER_DAY', d);
-                setVal('#TIMER_HOUR', h);
-                setVal('#TIMER_MIN', m);
-                setVal('#TIMER_SEC', s);
-            }
+            render(d, h, m, s);
+          };
 
-            function updateCountdown() {
-                const endTime = getTargetDate();
-                if (!endTime) return;
+          logic();
+          countdownInterval = setInterval(logic, 1000);
+        }
 
-                if (countdownInterval) clearInterval(countdownInterval);
+        // Khởi tạo và theo dõi thay đổi
+        window.addEventListener("load", () => {
+          updateCountdown();
 
-                const logic = () => {
-                    const now = new Date().getTime();
-                    const distance = endTime - now;
+          const observer = new MutationObserver(updateCountdown);
+          const config = {
+            characterData: true,
+            childList: true,
+            subtree: true,
+          };
 
-                    if (distance < 0) {
-                        clearInterval(countdownInterval);
-                        render(0, 0, 0, 0);
-                        return;
-                    }
-
-                    const d = Math.floor(distance / (1000 * 60 * 60 * 24));
-                    const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    const s = Math.floor((distance % (1000 * 60)) / 1000);
-
-                    render(d, h, m, s);
-                };
-
-                logic();
-                countdownInterval = setInterval(logic, 1000);
-            }
-
-            // Khởi tạo và theo dõi thay đổi
-            window.addEventListener('load', () => {
-                updateCountdown();
-
-                const observer = new MutationObserver(updateCountdown);
-                const config = { characterData: true, childList: true, subtree: true };
-
-                // Theo dõi tất cả các nguồn dữ liệu thời gian
-                ['#js-hour', '#js-day', '#js-month', '#js-year'].forEach(selector => {
-                    const el = document.querySelector(selector);
-                    if (el) observer.observe(el, config);
-                });
-            });
-        })();
+          // Theo dõi tất cả các nguồn dữ liệu thời gian
+          ["#js-hour", "#js-day", "#js-month", "#js-year"].forEach(
+            (selector) => {
+              const el = document.querySelector(selector);
+              if (el) observer.observe(el, config);
+            },
+          );
+        });
+      })();
     </script>
-
 
     <!-- Animation script -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const animationObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const target = entry.target;
+      document.addEventListener("DOMContentLoaded", () => {
+        const animationObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const target = entry.target;
 
-                        const delay = target.getAttribute('data-aos-delay') || '0';
-                        const duration = target.getAttribute('data-aos-duration') || '800';
+                const delay = target.getAttribute("data-aos-delay") || "0";
+                const duration =
+                  target.getAttribute("data-aos-duration") || "800";
 
-                        target.style.transitionDelay = `${delay}ms`;
-                        target.style.transitionDuration = `${duration}ms`;
+                target.style.transitionDelay = `${delay}ms`;
+                target.style.transitionDuration = `${duration}ms`;
 
-                        target.classList.add('aos-animate');
-                    }
-                });
-            }, { threshold: 0.1 });
+                target.classList.add("aos-animate");
+              }
+            });
+          },
+          { threshold: 0.1 },
+        );
 
-            document.querySelectorAll('[data-aos]').forEach(el => animationObserver.observe(el));
-        });
+        document
+          .querySelectorAll("[data-aos]")
+          .forEach((el) => animationObserver.observe(el));
+      });
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
     <main>
-        <!-- Banner Begin-->
-        <section id="SECTION_BANNER" data-image-editable="photo_1" class="relative h-screen flex">
-            <div class="bg-[#7f3f3b] opacity-40 absolute inset-0 z-0">
+      <!-- Banner Begin-->
+      <section
+        id="SECTION_BANNER"
+        data-image-editable="photo_1"
+        class="relative h-screen flex"
+      >
+        <div class="bg-[#7f3f3b] opacity-40 absolute inset-0 z-0"></div>
+        <div class="wrapper z-[10] relative">
+          <div class="text-white text-center">
+            <h1
+              class="text-[4rem] md:text-[7rem] font-bold"
+              data-editable="field_1"
+              data-aos="fade-up"
+            >
+              James & Julie <br />
+              are Getting Married
+            </h1>
+          </div>
+        </div>
+      </section>
+      <!-- Banner End-->
+      <!-- Introduction Section Begin -->
+      <section id="SECTION_INTRODUCTION">
+        <div class="wrapper">
+          <div class="flex gap-[3rem] max-md:flex-col-reverse mb-[5rem]">
+            <div class="flex-1">
+              <h2
+                class="mb-[2rem] h2 font-thin"
+                data-editable="field_2"
+                data-aos="fade-up"
+              >
+                About the <br />Handsome
+                <span class="font-semibold">Groom</span>
+              </h2>
+              <p
+                class="mb-[1.6rem] text-[#777777]"
+                data-editable="field_3"
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                Few would argue that, despite the advancements of feminism over
+                the past three decades, women still face a double standard when
+                it comes to their behavior. While men’s borderline-inappropriate
+                behavior is often laughed off as “boys will be boys,” women face
+                higher conduct standards – especially in the workplace.
+              </p>
+              <p
+                class="text-[#777777]"
+                data-editable="field_4"
+                data-aos="fade-up"
+                data-aos-delay="400"
+              >
+                While men’s borderline-inappropriate behavior is often laughed
+                off as “boys will be boys,”
+              </p>
             </div>
-            <div class="wrapper z-[10] relative">
-                <div class="text-white text-center">
-                    <h1 class="text-[4rem] md:text-[7rem] font-bold" data-editable="field_1" data-aos="fade-up">
-                        James & Julie <br>
-                        are Getting Married
-                    </h1>
-                </div>
+            <div
+              class="md:flex-1 max-md:size-[20rem] max-md:m-auto w-[20rem]"
+              data-aos="fade-left"
+            >
+              <picture
+                class="rounded-[1rem]"
+                data-image-editable="photo_2"
+              ></picture>
             </div>
-        </section>
-        <!-- Banner End-->
-        <!-- Introduction Section Begin -->
-        <section id="SECTION_INTRODUCTION">
-            <div class="wrapper">
-                <div class="flex gap-[3rem] max-md:flex-col-reverse mb-[5rem]">
-                    <div class="flex-1">
-                        <h2 class="mb-[2rem] h2 font-thin" data-editable="field_2" data-aos="fade-up">About the
-                            <br>Handsome <span class="font-semibold">Groom</span>
-                        </h2>
-                        <p class="mb-[1.6rem] text-[#777777]" data-editable="field_3" data-aos="fade-up"
-                            data-aos-delay="200"> Few would
-                            argue that, despite the
-                            advancements of
-                            feminism over the
-                            past three decades,
-                            women still face a double standard when it comes to their behavior. While men’s
-                            borderline-inappropriate behavior is often laughed off as “boys will be boys,” women face
-                            higher conduct standards – especially in the workplace.
-                        </p>
-                        <p class="text-[#777777]" data-editable="field_4" data-aos="fade-up" data-aos-delay="400">
-                            While men’s borderline-inappropriate behavior is often laughed off as “boys will be boys,”
-                        </p>
-                    </div>
-                    <div class="md:flex-1 max-md:size-[20rem] max-md:m-auto w-[20rem]" data-aos="fade-left">
-                        <picture class="rounded-[1rem]" data-image-editable="photo_2"></picture>
-                    </div>
-                </div>
-                <div class="flex gap-[3rem] max-md:flex-col-reverse flex-row-reverse">
-                    <div class="flex-1">
-                        <h2 class="mb-[2rem] h2 font-thin" data-editable="field_5" data-aos="fade-up">About the
-                            <br>Handsome <span class="font-semibold">Groom</span>
-                        </h2>
-                        <p class="mb-[1.6rem] text-[#777777]" data-editable="field_6" data-aos="fade-up"
-                            data-aos-delay="200"> Few would argue that, despite the
-                            advancements of
-                            feminism over the
-                            past three decades,
-                            women still face a double standard when it comes to their behavior. While men’s
-                            borderline-inappropriate behavior is often laughed off as “boys will be boys,” women face
-                            higher conduct standards – especially in the workplace.
-                        </p>
-                        <p class="text-[#777777]" data-editable="field_7" data-aos="fade-up" data-aos-delay="400">
-                            While men’s borderline-inappropriate behavior is often laughed off as “boys will be boys,”
-                        </p>
-                    </div>
-                    <div class="md:flex-1 max-md:size-[20rem] max-md:m-auto w-[20rem]" data-aos="fade-up">
-                        <picture class="rounded-[1rem]" data-image-editable="photo_3"></picture>
-                    </div>
-                </div>
+          </div>
+          <div class="flex gap-[3rem] max-md:flex-col-reverse flex-row-reverse">
+            <div class="flex-1">
+              <h2
+                class="mb-[2rem] h2 font-thin"
+                data-editable="field_5"
+                data-aos="fade-up"
+              >
+                About the <br />Handsome
+                <span class="font-semibold">Groom</span>
+              </h2>
+              <p
+                class="mb-[1.6rem] text-[#777777]"
+                data-editable="field_6"
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                Few would argue that, despite the advancements of feminism over
+                the past three decades, women still face a double standard when
+                it comes to their behavior. While men’s borderline-inappropriate
+                behavior is often laughed off as “boys will be boys,” women face
+                higher conduct standards – especially in the workplace.
+              </p>
+              <p
+                class="text-[#777777]"
+                data-editable="field_7"
+                data-aos="fade-up"
+                data-aos-delay="400"
+              >
+                While men’s borderline-inappropriate behavior is often laughed
+                off as “boys will be boys,”
+              </p>
             </div>
-        </section>
-        <!-- Introduction Section End -->
-        <!-- Timer Section Begin -->
-        <section id="SECTION_TIMER">
-            <div class="wrapper">
-                <div class="relative bg-[linear-gradient(to_right,#bb3df6,#89fcf0)] p-[6rem]
-                before:content-[''] before:absolute before:inset-[1rem] before:border
-                ">
-                    <h3 class="h3 font-semibold text-center text-white" data-editable="field_111" data-aos="fade-right">
-                        Wedding Day : <span id="js-day" data-editable="field_day">28</span> <span id="js-month"
-                            data-editable="field_month">02</span>
-                        <span id="js-year" data-editable="field_year">2026</span> at
-                        <span id="js-hour" data-editable="field_hour">17:00</span> pm
-                    </h3>
-                </div>
+            <div
+              class="md:flex-1 max-md:size-[20rem] max-md:m-auto w-[20rem]"
+              data-aos="fade-up"
+            >
+              <picture
+                class="rounded-[1rem]"
+                data-image-editable="photo_3"
+              ></picture>
             </div>
-        </section>
-        <!-- Timer Section End -->
-        <!-- Gallery Section Begin -->
-        <section id="SECTION_GALLERY">
-            <div class="wrapper">
-                <div class="text-center mb-[5rem]">
-                    <h2 class="h2 mb-[1.2rem]" data-editable="field_8" data-aos="fade-up">Our Pre Wedding Photo Gallery
-                    </h2>
-                    <p class="text-[#777777]" data-editable="field_9" data-aos="fade-up" data-aos-delay="200">Lorem
-                        ipsum dolor sit amet consectetur adipisicing
-                        elit. Quo laborum,
-                        perferendis accusamus
-                        quaerat, inventore alias ab ducimus fuga repellendus magnam obcaecati tenetur similique enim,
-                        iure neque at. Perspiciatis, culpa nostrum!</p>
-                </div>
+          </div>
+        </div>
+      </section>
+      <!-- Introduction Section End -->
+      <!-- Timer Section Begin -->
+      <section id="SECTION_TIMER">
+        <div class="wrapper">
+          <div
+            class="relative bg-[linear-gradient(to_right,#bb3df6,#89fcf0)] p-[6rem] before:content-[''] before:absolute before:inset-[1rem] before:border"
+          >
+            <h3
+              class="h3 font-semibold text-center text-white"
+              data-editable="field_111"
+              data-aos="fade-right"
+            >
+              Wedding Day :
+              <span id="js-day" data-editable="field_day">28</span>
+              <span id="js-month" data-editable="field_month">02</span>
+              <span id="js-year" data-editable="field_year">2026</span> at
+              <span id="js-hour" data-editable="field_hour">17:00</span> pm
+            </h3>
+          </div>
+        </div>
+      </section>
+      <!-- Timer Section End -->
+      <!-- Gallery Section Begin -->
+      <section id="SECTION_GALLERY">
+        <div class="wrapper">
+          <div class="text-center mb-[5rem]">
+            <h2
+              class="h2 mb-[1.2rem]"
+              data-editable="field_8"
+              data-aos="fade-up"
+            >
+              Our Pre Wedding Photo Gallery
+            </h2>
+            <p
+              class="text-[#777777]"
+              data-editable="field_9"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo
+              laborum, perferendis accusamus quaerat, inventore alias ab ducimus
+              fuga repellendus magnam obcaecati tenetur similique enim, iure
+              neque at. Perspiciatis, culpa nostrum!
+            </p>
+          </div>
+        </div>
+        <div class="flex max-md:flex-col gap-[1rem]">
+          <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="200">
+            <picture
+              class="mb-[1rem] h-[40rem]"
+              data-image-editable="photo_4"
+            ></picture>
+            <picture
+              class="mb-[1rem] h-[20rem]"
+              data-image-editable="photo_5"
+            ></picture>
+          </div>
+          <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="400">
+            <picture
+              class="mb-[1rem] h-[20rem]"
+              data-image-editable="photo_6"
+            ></picture>
+            <picture
+              class="mb-[10px] h-[40rem]"
+              data-image-editable="photo_7"
+            ></picture>
+          </div>
+          <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="600">
+            <picture
+              class="mb-[1rem] h-[40rem]"
+              data-image-editable="photo_8"
+            ></picture>
+            <picture
+              class="mb-[10px] h-[20rem]"
+              data-image-editable="photo_9"
+            ></picture>
+          </div>
+          <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="800">
+            <picture
+              class="mb-[1rem] h-[20rem]"
+              data-image-editable="photo_10"
+            ></picture>
+            <picture
+              class="mb-[1rem] h-[40rem]"
+              data-image-editable="photo_11"
+            ></picture>
+          </div>
+        </div>
+      </section>
+      <!-- Gallery Section End -->
+      <!-- Timer Section Begin -->
+      <section id="SECTION_TIMER">
+        <div class="wrapper">
+          <div
+            class="relative flex justify-center m-auto p-[1rem] gap-[1rem] text-center text-black"
+          >
+            <div
+              id="TIMER_DAY"
+              class="flex-1 py-[2rem] px-3 md:px-[3rem] shadow-[0_23px_34px_rgba(0,0,0,0.25)]"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              <span
+                class="font-rochester text-[3rem] md:text-[4rem] text-black font-bold"
+                >00</span
+              >
+              <p class="text-[1.2rem] uppercase tracking-widest font-bold">
+                Day
+              </p>
             </div>
-            <div class="flex max-md:flex-col gap-[1rem]">
-                <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="200">
-                    <picture class="mb-[1rem] h-[40rem]" data-image-editable="photo_4"></picture>
-                    <picture class="mb-[1rem] h-[20rem]" data-image-editable="photo_5"></picture>
-                </div>
-                <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="400">
-                    <picture class="mb-[1rem] h-[20rem]" data-image-editable="photo_6"></picture>
-                    <picture class="mb-[10px] h-[40rem]" data-image-editable="photo_7"></picture>
-                </div>
-                <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="600">
-                    <picture class="mb-[1rem] h-[40rem]" data-image-editable="photo_8"></picture>
-                    <picture class="mb-[10px] h-[20rem]" data-image-editable="photo_9"></picture>
-                </div>
-                <div class="flex-1 h-[60rem]" data-aos="fade-up" data-aos-delay="800">
-                    <picture class="mb-[1rem] h-[20rem]" data-image-editable="photo_10"></picture>
-                    <picture class="mb-[1rem] h-[40rem]" data-image-editable="photo_11"></picture>
-                </div>
+            <div
+              id="TIMER_HOUR"
+              class="flex-1 py-[2rem] px-3 md:px-[3rem] shadow-[0_23px_34px_rgba(0,0,0,0.25)]"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <span
+                class="font-rochester text-[3rem] md:text-[4rem] text-black font-bold"
+                >00</span
+              >
+              <p class="text-[1.2rem] uppercase tracking-widest font-bold">
+                Hour
+              </p>
             </div>
-        </section>
-        <!-- Gallery Section End -->
-        <!-- Timer Section Begin -->
-        <section id="SECTION_TIMER">
-            <div class="wrapper">
-                <div class="relative flex justify-center m-auto p-[1rem] gap-[1rem] text-center text-black">
-                    <div id="TIMER_DAY" class="flex-1 py-[2rem] px-3 md:px-[3rem] shadow-[0_23px_34px_rgba(0,0,0,0.25)]"
-                        data-aos="fade-up" data-aos-delay="100">
-                        <span class="font-rochester text-[3rem] md:text-[4rem] text-black font-bold">00</span>
-                        <p class="text-[1.2rem] uppercase tracking-widest font-bold">
-                            Day
-                        </p>
-                    </div>
-                    <div id="TIMER_HOUR"
-                        class="flex-1 py-[2rem] px-3 md:px-[3rem] shadow-[0_23px_34px_rgba(0,0,0,0.25)]"
-                        data-aos="fade-up" data-aos-delay="200">
-                        <span class="font-rochester text-[3rem] md:text-[4rem] text-black font-bold">00</span>
-                        <p class="text-[1.2rem] uppercase tracking-widest font-bold">
-                            Hour
-                        </p>
-                    </div>
-                    <div id="TIMER_MIN" class="flex-1 py-[2rem] px-3 md:px-[3rem] shadow-[0_23px_34px_rgba(0,0,0,0.25)]"
-                        data-aos="fade-up" data-aos-delay="300">
-                        <span class="font-rochester text-[3rem] md:text-[4rem] text-black font-bold">00</span>
-                        <p class="text-[1.2rem] uppercase tracking-widest font-bold">
-                            Min
-                        </p>
-                    </div>
-                    <div id="TIMER_SEC" class="flex-1 py-[2rem] px-3 md:px-[3rem] shadow-[0_23px_34px_rgba(0,0,0,0.25)]"
-                        data-aos="fade-up" data-aos-delay="400">
-                        <span class="font-rochester text-[3rem] md:text-[4rem] text-black font-bold">00</span>
-                        <p class="text-[1.2rem] uppercase tracking-widest font-bold">
-                            Sec
-                        </p>
-                    </div>
-                </div>
+            <div
+              id="TIMER_MIN"
+              class="flex-1 py-[2rem] px-3 md:px-[3rem] shadow-[0_23px_34px_rgba(0,0,0,0.25)]"
+              data-aos="fade-up"
+              data-aos-delay="300"
+            >
+              <span
+                class="font-rochester text-[3rem] md:text-[4rem] text-black font-bold"
+                >00</span
+              >
+              <p class="text-[1.2rem] uppercase tracking-widest font-bold">
+                Min
+              </p>
             </div>
-        </section>
-        <!-- Timer Section End -->
-        <!-- Information Section Begin -->
-        <section id="SECTION_INFORMATION" class="bg-[#f9f9ff] overflow-hidden">
-            <div class="wrapper">
-                <div class="text-center mb-[8rem]">
-                    <h2 class="h2 mb-[1.2rem]" data-editable="field_10" data-aos="fade-up">Wedding Information</h2>
-                    <p class="text-[#777777]" data-editable="field_11" data-aos="fade-up" data-aos-delay="200">Lorem
-                        ipsum dolor sit amet consectetur
-                        adipisicing elit. Quo laborum,
-                        perferendis accusamus
-                        quaerat, inventore alias ab ducimus fuga repellendus magnam obcaecati tenetur similique enim,
-                        iure neque at. Perspiciatis, culpa nostrum!</p>
-                </div>
-                <div class="flex max-md:flex-col mb-[5rem]">
-                    <div class="max-md:m-auto md:flex-1 max-md:size-[30rem]" data-aos="fade-right">
-                        <picture data-image-editable="photo_12"></picture>
-                    </div>
-                    <div class="md:flex-1 mt-[6rem] relative py-[3rem] md:py-[8rem] pr-[3rem] md:pr-[10rem] bg-white max-md:text-center
-                    shadow-[-35px_35px_50px_0px_rgba(157,157,157,0.3)]
-                    after:shadow-[-35px_35px_50px_0px_rgba(157,157,157,0.3)]
-                    after:content-[''] after:absolute after:right-full after:top-0 after:bg-white after:w-[7rem] after:h-full
-                    ">
-                        <h2 class="h2 mb-[3rem] font-semibold" data-editable="field_12" data-aos="fade-up">Main Ceremony
-                        </h2>
-                        <p class="mb-[1.6rem] text-[#777777]" data-editable="field_13" data-aos="fade-up"
-                            data-aos-delay="200">Lorem ipsum dolor sit, amet
-                            consectetur adipisicing elit.
-                            Sapiente,
-                            possimus voluptas
-                            veritatis voluptatibus beatae dolorum omnis iste totam deleniti in corrupti itaque quam
-                            soluta consequuntur error. Minus in cumque repudiandae.</p>
-                        <ul class="text-black text-[1.4rem]" data-aos="fade-up" data-aos-delay="400">
-                            <li class="mb-[1.6rem]" data-editable="field_15">Date: Friday, 20 March 2018</li>
-                            <li class="mb-[1.6rem]" data-editable="field_16">Time: 19.00</li>
-                            <li class="mb-[1.6rem]" data-editable="field_17">Address: 56/8, West Panthapath.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="flex md:flex-row-reverse max-md:flex-col">
-                    <div class="max-md:m-auto md:flex-1 max-md:size-[30rem]" data-aos="fade-left">
-                        <picture data-image-editable="photo_13"></picture>
-                    </div>
-                    <div class="md:flex-1 mt-[6rem] relative py-[3rem] md:py-[8rem] pl-[3rem] md:pl-[10rem] bg-white max-md:text-center
-                    shadow-[35px_-35px_50px_0px_rgba(157,157,157,0.3)]
-                    after:shadow-[35px_-35px_50px_0px_rgba(157,157,157,0.3)]
-                    after:content-[''] after:absolute after:left-full after:top-0 after:bg-white after:w-[7rem] after:h-full
-                    ">
-                        <h2 class="h2 mb-[3rem] font-semibold" data-editable="field_18" data-aos="fade-up">Main Ceremony
-                        </h2>
-                        <p class="mb-[1.6rem] text-[#777777]" data-editable="field_19" data-aos="fade-up"
-                            data-aos-delay="200">Lorem ipsum dolor sit, amet
-                            consectetur adipisicing elit.
-                            Sapiente,
-                            possimus voluptas
-                            veritatis voluptatibus beatae dolorum omnis iste totam deleniti in corrupti itaque quam
-                            soluta consequuntur error. Minus in cumque repudiandae.</p>
-                        <ul class="text-black text-[1.4rem]" data-aos="fade-up" data-aos-delay="400">
-                            <li class="mb-[1.6rem]" data-editable="field_20">Date: Friday, 20 March 2018</li>
-                            <li class="mb-[1.6rem]" data-editable="field_21">Time: 19.00</li>
-                            <li class="mb-[1.6rem]" data-editable="field_22">Address: 56/8, West Panthapath.</li>
-                        </ul>
-                    </div>
-                </div>
+            <div
+              id="TIMER_SEC"
+              class="flex-1 py-[2rem] px-3 md:px-[3rem] shadow-[0_23px_34px_rgba(0,0,0,0.25)]"
+              data-aos="fade-up"
+              data-aos-delay="400"
+            >
+              <span
+                class="font-rochester text-[3rem] md:text-[4rem] text-black font-bold"
+                >00</span
+              >
+              <p class="text-[1.2rem] uppercase tracking-widest font-bold">
+                Sec
+              </p>
             </div>
-        </section>
-        <!-- Information Section End -->
-        <!-- Form Section Begin  -->
-        <section id="SECTION_FORM" data-image-editable="photo_14"
-            class="relative bg-cover bg-no-repeat bg-center bg-fixed">
-            <div class="bg-black opacity-50 absolute inset-0 z-0"></div>
-            <div class="w-full wrapper z-[10] relative flex max-md:flex-col-reverse gap-[2rem] text-white">
-                <div class="flex-1" data-aos="fade-right">
-                    <div class="md:p-[3rem] rounded-2xl w-full max-w-[40rem]">
-                        <div class="">
-                            <h2 class="h2 mb-[2.4rem]">Will You Attend?</h2>
-                        </div>
-                        <form action="" class="space-y-4">
-                            <div class="relative">
-                                <input type="text" placeholder="Tên của bạn"
-                                    class="w-full px-4 py-3 text-[1.7rem] bg-transparent border-b border-b-white outline-none placeholder-white">
-                            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Timer Section End -->
+      <!-- Information Section Begin -->
+      <section id="SECTION_INFORMATION" class="bg-[#f9f9ff] overflow-hidden">
+        <div class="wrapper">
+          <div class="text-center mb-[8rem]">
+            <h2
+              class="h2 mb-[1.2rem]"
+              data-editable="field_10"
+              data-aos="fade-up"
+            >
+              Wedding Information
+            </h2>
+            <p
+              class="text-[#777777]"
+              data-editable="field_11"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo
+              laborum, perferendis accusamus quaerat, inventore alias ab ducimus
+              fuga repellendus magnam obcaecati tenetur similique enim, iure
+              neque at. Perspiciatis, culpa nostrum!
+            </p>
+          </div>
+          <div class="flex max-md:flex-col mb-[5rem]">
+            <div
+              class="max-md:m-auto md:flex-1 max-md:size-[30rem]"
+              data-aos="fade-right"
+            >
+              <picture data-image-editable="photo_12"></picture>
+            </div>
+            <div
+              class="md:flex-1 mt-[6rem] relative py-[3rem] md:py-[8rem] pr-[3rem] md:pr-[10rem] bg-white max-md:text-center shadow-[-35px_35px_50px_0px_rgba(157,157,157,0.3)] after:shadow-[-35px_35px_50px_0px_rgba(157,157,157,0.3)] after:content-[''] after:absolute after:right-full after:top-0 after:bg-white after:w-[7rem] after:h-full"
+            >
+              <h2
+                class="h2 mb-[3rem] font-semibold"
+                data-editable="field_12"
+                data-aos="fade-up"
+              >
+                Main Ceremony
+              </h2>
+              <p
+                class="mb-[1.6rem] text-[#777777]"
+                data-editable="field_13"
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                Sapiente, possimus voluptas veritatis voluptatibus beatae
+                dolorum omnis iste totam deleniti in corrupti itaque quam soluta
+                consequuntur error. Minus in cumque repudiandae.
+              </p>
+              <ul
+                class="text-black text-[1.4rem]"
+                data-aos="fade-up"
+                data-aos-delay="400"
+              >
+                <li class="mb-[1.6rem]" data-editable="field_15">
+                  Date: Friday, 20 March 2018
+                </li>
+                <li class="mb-[1.6rem]" data-editable="field_16">
+                  Time: 19.00
+                </li>
+                <li class="mb-[1.6rem]" data-editable="field_17">
+                  Address: 56/8, West Panthapath.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="flex md:flex-row-reverse max-md:flex-col">
+            <div
+              class="max-md:m-auto md:flex-1 max-md:size-[30rem]"
+              data-aos="fade-left"
+            >
+              <picture data-image-editable="photo_13"></picture>
+            </div>
+            <div
+              class="md:flex-1 mt-[6rem] relative py-[3rem] md:py-[8rem] pl-[3rem] md:pl-[10rem] bg-white max-md:text-center shadow-[35px_-35px_50px_0px_rgba(157,157,157,0.3)] after:shadow-[35px_-35px_50px_0px_rgba(157,157,157,0.3)] after:content-[''] after:absolute after:left-full after:top-0 after:bg-white after:w-[7rem] after:h-full"
+            >
+              <h2
+                class="h2 mb-[3rem] font-semibold"
+                data-editable="field_18"
+                data-aos="fade-up"
+              >
+                Main Ceremony
+              </h2>
+              <p
+                class="mb-[1.6rem] text-[#777777]"
+                data-editable="field_19"
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                Sapiente, possimus voluptas veritatis voluptatibus beatae
+                dolorum omnis iste totam deleniti in corrupti itaque quam soluta
+                consequuntur error. Minus in cumque repudiandae.
+              </p>
+              <ul
+                class="text-black text-[1.4rem]"
+                data-aos="fade-up"
+                data-aos-delay="400"
+              >
+                <li class="mb-[1.6rem]" data-editable="field_20">
+                  Date: Friday, 20 March 2018
+                </li>
+                <li class="mb-[1.6rem]" data-editable="field_21">
+                  Time: 19.00
+                </li>
+                <li class="mb-[1.6rem]" data-editable="field_22">
+                  Address: 56/8, West Panthapath.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Information Section End -->
+      <!-- Form Section Begin  -->
+      <section
+        id="SECTION_FORM"
+        data-image-editable="photo_14"
+        class="relative bg-cover bg-no-repeat bg-center bg-fixed"
+      >
+        <div class="bg-black opacity-50 absolute inset-0 z-0"></div>
+        <div
+          class="w-full wrapper z-[10] relative flex max-md:flex-col-reverse gap-[2rem] text-white"
+        >
+          <div class="flex-1" data-aos="fade-right">
+            <div class="md:p-[3rem] rounded-2xl w-full max-w-[40rem]">
+              <div class="">
+                <h2 class="h2 mb-[2.4rem]">Will You Attend?</h2>
+              </div>
+              <form action="" class="space-y-4">
+                <div class="relative">
+                  <input
+                    type="text"
+                    placeholder="Tên của bạn"
+                    class="w-full px-4 py-3 text-[1.7rem] bg-transparent border-b border-b-white outline-none placeholder-white"
+                  />
+                </div>
 
-                            <div class="relative">
-                                <input type="text" placeholder="Số điện thoại"
-                                    class="w-full px-4 py-3 text-[1.7rem] bg-transparent border-b border-b-white outline-none placeholder-white">
-                            </div>
-
-                            <div class="relative">
-                                <input type="number" min="1" max="5" placeholder="Số người tham dự"
-                                    class="w-full px-4 py-3 text-[1.7rem] bg-transparent border-b border-b-white outline-none placeholder-white">
-                            </div>
-
-                            <div class="flex justify-around py-[10px] text-[1.7rem]">
-                                <label class="flex items-center space-x-2 cursor-pointer group">
-                                    <input type="radio" name="guest_type" id="side_groom" class="accent-black">
-                                    <span class="group-hover:text-black">Nhà trai</span>
-                                </label>
-                                <label class="flex items-center space-x-2 cursor-pointer group">
-                                    <input type="radio" name="guest_type" id="side_bride" class="accent-black">
-                                    <span class="group-hover:text-black">Nhà gái</span>
-                                </label>
-                            </div>
-
-                            <div class="relative">
-                                <textarea name="congratulations" rows="4" placeholder="Lời chúc của bạn"
-                                    class="w-full px-4 py-3 text-[1.7rem] resize-none bg-transparent border-b border-b-white outline-none placeholder-white"></textarea>
-                            </div>
-
-                            <button type="submit"
-                                class="bg-[linear-gradient(to_right,#bb3df6,#89fcf0)] hover:bg-[#8e3a49] text-white font-medium px-[2.4rem] py-[1.6rem] rounded-[1rem] transition-all active:scale-95 uppercase text-[1.7rem]">
-                                Gửi lời chúc
-                            </button>
-                        </form>
-                    </div>
+                <div class="relative">
+                  <input
+                    type="text"
+                    placeholder="Số điện thoại"
+                    class="w-full px-4 py-3 text-[1.7rem] bg-transparent border-b border-b-white outline-none placeholder-white"
+                  />
                 </div>
+
+                <div class="relative">
+                  <input
+                    type="number"
+                    min="1"
+                    max="5"
+                    placeholder="Số người tham dự"
+                    class="w-full px-4 py-3 text-[1.7rem] bg-transparent border-b border-b-white outline-none placeholder-white"
+                  />
+                </div>
+
+                <div class="flex justify-around py-[10px] text-[1.7rem]">
+                  <label
+                    class="flex items-center space-x-2 cursor-pointer group"
+                  >
+                    <input
+                      type="radio"
+                      name="guest_type"
+                      id="side_groom"
+                      class="accent-black"
+                    />
+                    <span class="group-hover:text-black">Nhà trai</span>
+                  </label>
+                  <label
+                    class="flex items-center space-x-2 cursor-pointer group"
+                  >
+                    <input
+                      type="radio"
+                      name="guest_type"
+                      id="side_bride"
+                      class="accent-black"
+                    />
+                    <span class="group-hover:text-black">Nhà gái</span>
+                  </label>
+                </div>
+
+                <div class="relative">
+                  <textarea
+                    name="congratulations"
+                    rows="4"
+                    placeholder="Lời chúc của bạn"
+                    class="w-full px-4 py-3 text-[1.7rem] resize-none bg-transparent border-b border-b-white outline-none placeholder-white"
+                  ></textarea>
+                </div>
+
+                <button
+                  type="submit"
+                  class="bg-[linear-gradient(to_right,#bb3df6,#89fcf0)] hover:bg-[#8e3a49] text-white font-medium px-[2.4rem] py-[1.6rem] rounded-[1rem] transition-all active:scale-95 uppercase text-[1.7rem]"
+                >
+                  Gửi lời chúc
+                </button>
+              </form>
             </div>
-        </section>
-        <!-- Form Section End  -->
-        <!-- Wedding Gift Section Begin -->
+          </div>
+        </div>
+      </section>
+      <!-- Form Section End  -->
+      <!-- Wedding Gift Section Begin -->
       <section id="SECTION_GIFT">
         <div class="wrapper text-center py-[15px]">
           <div class="mb-[2rem]" data-aos="fade-up">
@@ -1066,82 +1268,81 @@
           </div>
         </div>
       </section>
-        <!-- Wedding Gift Section End -->
+      <!-- Wedding Gift Section End -->
 
-        <script>
-            const OPTIONS = { loop: true };
+      <script>
+        const OPTIONS = { loop: true };
 
-            const emblaNode = document.querySelector('.embla');
-            const viewportNode = emblaNode.querySelector('.embla__viewport');
-            const prevBtnNode = emblaNode.querySelector('.embla__button--prev');
-            const nextBtnNode = emblaNode.querySelector('.embla__button--next');
+        const emblaNode = document.querySelector(".embla");
+        const viewportNode = emblaNode.querySelector(".embla__viewport");
+        const prevBtnNode = emblaNode.querySelector(".embla__button--prev");
+        const nextBtnNode = emblaNode.querySelector(".embla__button--next");
 
-            const emblaApi = EmblaCarousel(viewportNode, OPTIONS);
+        const emblaApi = EmblaCarousel(viewportNode, OPTIONS);
 
-            const addPrevNextButtonClickHandlers = (emblaApi, prevBtn, nextBtn) => {
-                const scrollPrev = () => emblaApi.scrollPrev();
-                const scrollNext = () => emblaApi.scrollNext();
+        const addPrevNextButtonClickHandlers = (emblaApi, prevBtn, nextBtn) => {
+          const scrollPrev = () => emblaApi.scrollPrev();
+          const scrollNext = () => emblaApi.scrollNext();
 
-                prevBtn.addEventListener('click', scrollPrev, false);
-                nextBtn.addEventListener('click', scrollNext, false);
+          prevBtn.addEventListener("click", scrollPrev, false);
+          nextBtn.addEventListener("click", scrollNext, false);
 
-                const togglePrevNextButtonsState = () => {
-                    if (emblaApi.canScrollPrev()) prevBtn.removeAttribute('disabled');
-                    else prevBtn.setAttribute('disabled', 'disabled');
+          const togglePrevNextButtonsState = () => {
+            if (emblaApi.canScrollPrev()) prevBtn.removeAttribute("disabled");
+            else prevBtn.setAttribute("disabled", "disabled");
 
-                    if (emblaApi.canScrollNext()) nextBtn.removeAttribute('disabled');
-                    else nextBtn.setAttribute('disabled', 'disabled');
-                };
+            if (emblaApi.canScrollNext()) nextBtn.removeAttribute("disabled");
+            else nextBtn.setAttribute("disabled", "disabled");
+          };
 
-                emblaApi
-                    .on('select', togglePrevNextButtonsState)
-                    .on('reinit', togglePrevNextButtonsState);
+          emblaApi
+            .on("select", togglePrevNextButtonsState)
+            .on("reinit", togglePrevNextButtonsState);
 
-                togglePrevNextButtonsState();
-            };
+          togglePrevNextButtonsState();
+        };
 
-            addPrevNextButtonClickHandlers(emblaApi, prevBtnNode, nextBtnNode);
-            addDotButtonsAndClickHandlers(emblaApi);
-            function toggleGalleryPopup(show) {
-                const popup = document.getElementById('GALLERY_POPUP');
-                const viewportNode = popup.querySelector('.embla__viewport');
-                const prevBtn = popup.querySelector('.embla__button--prev');
-                const nextBtn = popup.querySelector('.embla__button--next');
+        addPrevNextButtonClickHandlers(emblaApi, prevBtnNode, nextBtnNode);
+        addDotButtonsAndClickHandlers(emblaApi);
+        function toggleGalleryPopup(show) {
+          const popup = document.getElementById("GALLERY_POPUP");
+          const viewportNode = popup.querySelector(".embla__viewport");
+          const prevBtn = popup.querySelector(".embla__button--prev");
+          const nextBtn = popup.querySelector(".embla__button--next");
 
-                if (show) {
-                    popup.classList.add('active');
-                    document.body.style.overflow = 'hidden';
+          if (show) {
+            popup.classList.add("active");
+            document.body.style.overflow = "hidden";
 
-                    if (!emblaApi) {
-                        emblaApi = EmblaCarousel(viewportNode, { loop: true });
+            if (!emblaApi) {
+              emblaApi = EmblaCarousel(viewportNode, { loop: true });
 
-                        prevBtn.addEventListener('click', () => emblaApi.scrollPrev());
-                        nextBtn.addEventListener('click', () => emblaApi.scrollNext());
-                    } else {
-                        setTimeout(() => {
-                            emblaApi.reInit();
-                        }, 10);
-                    }
-                } else {
-                    popup.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }
+              prevBtn.addEventListener("click", () => emblaApi.scrollPrev());
+              nextBtn.addEventListener("click", () => emblaApi.scrollNext());
+            } else {
+              setTimeout(() => {
+                emblaApi.reInit();
+              }, 10);
             }
-        </script>
-        <footer>
-            <p class="bg-gray-200 text-center">Bản quyền thuộc Hiweb</p>
-        </footer>
-        <div class="snowflakes" aria-hidden="true">
-            <div class="snowflake" style="font-size: 20px;">🌸</div>
-            <div class="snowflake">❅</div>
-            <div class="snowflake" style="font-size: 18px;">🤍 </div>
-            <div class="snowflake">❅</div>
-            <div class="snowflake" style="font-size: 20px;">🌸</div>
-            <div class="snowflake" style="font-size: 22px;">❅</div>
-            <div class="snowflake" style="font-size: 14px;">🤍</div>
-            <div class="snowflake" style="font-size: 15px;">❅</div>
-        </div>
+          } else {
+            popup.classList.remove("active");
+            document.body.style.overflow = "auto";
+          }
+        }
+      </script>
+      <footer>
+        <p class="bg-gray-200 text-center">Bản quyền thuộc Hiweb</p>
+      </footer>
+      <div class="snowflakes" aria-hidden="true">
+        <div class="snowflake" style="font-size: 20px">🌸</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake" style="font-size: 18px">🤍</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake" style="font-size: 20px">🌸</div>
+        <div class="snowflake" style="font-size: 22px">❅</div>
+        <div class="snowflake" style="font-size: 14px">🤍</div>
+        <div class="snowflake" style="font-size: 15px">❅</div>
+      </div>
     </main>
-</body>
-
+  </body>
 </html>
