@@ -229,14 +229,13 @@
     body {
       margin: 0;
       color: #212529;
-      background-color: #183032;
-      /* Default start color */
       transition: background-color 1s ease;
-      /* Magic scroll fade */
     }
 
     main {
       margin: auto;
+      max-width: 91.6rem;
+      background-color: #680e0e;
     }
 
     picture {
@@ -265,13 +264,13 @@
     }
 
     span {
-      /* color: #680e0e; */
+      color: #680e0e;
       font-size: 1.8rem;
     }
 
     p {
       font-size: 1.5rem;
-      /* color: #680e0e; */
+      color: #680e0e;
     }
 
     h1,
@@ -281,7 +280,7 @@
     h5,
     h6 {
       font-family: "The Nautigal";
-      /* color: #680e0e; */
+      color: #680e0e;
     }
 
     h1,
@@ -463,33 +462,27 @@
     /* --- Dynamic Background Colors --- */
     .color-default {
       background-color: #183032;
-      color: #183032;
     }
 
     .color-violet {
       /* background-color: #2e1a47; */
       background-color: #382548;
-      color: #382548;
     }
 
     .color-indigo {
       background-color: #1b1f4c;
-      color: #1b1f4c;
     }
 
     .color-blue {
       background-color: #102a43;
-      color: #102a43;
     }
 
     .color-green {
       background-color: #143326;
-      color: #143326;
     }
 
     .color-red {
       background-color: #4a151b;
-      color: #4a151b;
     }
 
     [data-aos] {
@@ -538,15 +531,11 @@
     }
 
     .element_3 {
-      background-image: url("https://img.freepik.com/premium-photo/beautiful-spring-flowers-paper-background_176873-20485.jpg");
-    }
-
-    .element_4 {
       background-image: url("https://chungdoi.com/images/themes/longphung-v2-red/rong-phuong.png");
     }
 
     [data-image-editable="photo_1"] {
-      background-image: url("https://w.ladicdn.com/s700x550/6801c7e1fbbd4d001283dac2/z6823838296252_9dc2a80595ceb2d9916440b01035f73d-20250720112650--nghd.jpg");
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342159_9a35bc8074ac983581f10a243218dee5-20250720112650-xdgti.jpg");
     }
 
     [data-image-editable="photo_2"] {
@@ -554,7 +543,7 @@
     }
 
     [data-image-editable="photo_3"] {
-      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342159_9a35bc8074ac983581f10a243218dee5-20250720112650-xdgti.jpg");
+      background-image: url("https://w.ladicdn.com/s700x550/6801c7e1fbbd4d001283dac2/z6823838296252_9dc2a80595ceb2d9916440b01035f73d-20250720112650--nghd.jpg");
     }
 
     [data-image-editable="photo_4"] {
@@ -753,49 +742,19 @@
     });
   </script>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const body = document.body;
-      const panels = document.querySelectorAll("section[data-color]");
-
-      const colorObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const color = entry.target.getAttribute("data-color");
-
-              body.className = body.className.replace(/\bcolor-\S+/g, "");
-
-              if (color) {
-                body.classList.add(`color-${color}`);
-              }
-            }
-          });
-        },
-        {
-          rootMargin: "-33% 0px -66% 0px",
-        },
-      );
-
-      panels.forEach((panel) => colorObserver.observe(panel));
-    });
-  </script>
 </head>
 
 <body>
   <main class="relative">
-    <div class="element_4 opacity-[0.06] absolute inset-0 z-0 "></div>
+    <div class="element_3 opacity-[0.06] absolute inset-0 z-0 "></div>
     <!-- Banner Begin-->
-    <section id="SECTION_BANNER" class="relative h-screen flex p-0 m-0 max-w-full bg-cover bg-no-repeart"
-      data-image-editable="photo_1">
-      <div class="bg-black opacity-50 absolute inset-0 z-0 "></div>
+    <section id="SECTION_BANNER" class="flex p-0 m-0 max-w-full bg-cover bg-no-repeart">
       <div class="wrapper z-[10] relative ">
         <div class="text-white text-center py-[5rem]">
-          <span
-            class="relative font-poppins font-bold uppercase tracking-[.6rem] mb-[1rem] text-[1.6rem] text-white before:absolute before:top-1/2 before:-left-[15rem] before:content-[''] before:w-[13rem] before:h-[.2rem] before:bg-white before:max-md:hidden after:absolute after:top-1/2 after:-right-[15rem] after:content-[''] after:w-[13rem] after:h-[.2rem] after:bg-white after:max-md:hidden"
-            data-editable="field_1" data-aos="fade-up">The Wedding of</span>
+          <p class="w-fit m-auto relative font-poppins font-bold uppercase tracking-[.6rem] mb-[1rem] text-[1.6rem] text-white before:absolute before:top-1/2 before:-left-[15rem] before:content-[''] before:w-[13rem] before:h-[.2rem] before:bg-white before:max-md:hidden after:absolute after:top-1/2 after:-right-[15rem] after:content-[''] after:w-[13rem] after:h-[.2rem] after:bg-white after:max-md:hidden"
+            data-editable="field_1" data-aos="fade-up">The Wedding of</p>
           <h1 class="h1 font-quaternary mb-[1rem] text-white" data-editable="field_2" data-aos="fade-up"
-            data-aos-delay="100">
+            data-aos-delay="300">
             Trần Trung Hiếu
             <br />& <br />
             Lê Minh Nguyệt
@@ -805,7 +764,7 @@
     </section>
     <!-- Banner End-->
     <!-- Wedding Details Section Begin -->
-    <section id="SECTION_FAMILY" class="bg-white inverted-corners" data-color="red">
+    <section id="SECTION_FAMILY" class="bg-white inverted-corners">
       <div class="wrapper">
         <div class="flex flex-col gap-[2.4rem] md:gap-[3.2rem] text-center mb-[4.8rem]">
           <div class="flex justify-center w-full gap-[1.2rem] md:gap-[3.2rem]">
@@ -814,11 +773,11 @@
                 <span class="text-[1.6rem] md:text-[1.7rem]" data-editable="field_2">Ông Bà</span>
               </div>
               <div class="mb-[.4rem]" data-aos="fade-right" data-aos-delay="100">
-                <span class="text-[1.6rem] md:text-[1.7rem] font-semibold" data-editable="field_3">Nguyễn Văn
+                <span class="text-[1.4rem] md:text-[1.7rem] font-semibold" data-editable="field_3">Nguyễn Văn
                   Tuấn</span>
               </div>
               <div class="mb-[.8rem]" data-aos="fade-right" data-aos-delay="100">
-                <span class="text-[1.6rem] md:text-[1.7rem] font-semibold" data-editable="field_4">Lê Thị Hương</span>
+                <span class="text-[1.4rem] md:text-[1.7rem] font-semibold" data-editable="field_4">Lê Thị Hương</span>
               </div>
               <div data-aos="fade-right" data-aos-delay="100">
                 <span class="text-[1.4rem] md:text-[1.5rem] leading-tight" data-editable="field_5">123 Nguyễn Huệ, Quận
@@ -831,10 +790,10 @@
                 <span class="text-[1.6rem] md:text-[1.7rem]" data-editable="field_6">Ông Bà</span>
               </div>
               <div class="mb-[.4rem]" data-aos="fade-left" data-aos-delay="100">
-                <span class="text-[1.6rem] md:text-[1.7rem] font-semibold" data-editable="field_7">Trần Văn Khoa</span>
+                <span class="text-[1.4rem] md:text-[1.7rem] font-semibold" data-editable="field_7">Trần Văn Khoa</span>
               </div>
               <div class="mb-[.8rem]" data-aos="fade-left" data-aos-delay="200">
-                <span class="text-[1.6rem] md:text-[1.7rem] font-semibold" data-editable="field_8">Phạm Thị Kim
+                <span class="text-[1.4rem] md:text-[1.7rem] font-semibold" data-editable="field_8">Phạm Thị Kim
                   Oanh</span>
               </div>
               <div data-aos="fade-left" data-aos-delay="300">
@@ -884,58 +843,108 @@
       </div>
     </section>
     <!-- Wedding Details Section End -->
-    <!-- Gallery Section Begin -->
-    <section id="SECTION_ALBUM" class="bg-white inverted-corners" data-color="violet">
+    <!-- Love Story Section Begin -->
+    <section id="SECTION_STORY" class="bg-white inverted-corners">
       <div class="wrapper">
-        <div class="flex flex-col items-center mb-[4.8rem]">
-          <h2 class="font-sans uppercase text-[1.8rem] md:text-[2.5rem] mb-[2.4rem] tracking-[.1rem]"
-            data-editable="field_12" data-aos="fade-up">
-            Album Ảnh Cưới
-          </h2>
-          <div class="w-full md:max-w-[55.0rem] h-[70rem]">
-            <div class="grid grid-cols-2 h-full gap-[1.2rem] md:gap-[1.6rem] p-4 md:p-6">
-              <div class="">
-                <div class="shadow-lg rounded-[1rem] h-1/2 mb-[1.2rem] md:mb-[1.6rem]" data-aos="fade-right">
-                  <picture class="rounded-[1rem]" data-image-editable="photo_1"></picture>
-                </div>
-                <div class="shadow-lg rounded-[1rem] h-1/2" data-aos="fade-right" data-aos-delay="200">
-                  <picture class="rounded-[1rem]" data-image-editable="photo_2"></picture>
-                </div>
-              </div>
-              <div class="">
-                <div class="shadow-lg rounded-[1rem] h-1/4 mb-[1.2rem] md:mb-[1.6rem]" data-aos="fade-left">
-                  <picture class="rounded-[1rem]" data-image-editable="photo_3"></picture>
-                </div>
-                <div class="shadow-lg rounded-[1rem] h-1/2 mb-[1.2rem] md:mb-[1.6rem]" data-aos="fade-left"
-                  data-aos-delay="200">
-                  <picture class="rounded-[1rem]" data-image-editable="photo_4"></picture>
-                </div>
-                <div class="shadow-lg rounded-[1rem] h-1/4" data-aos="fade-left" data-aos-delay="400">
-                  <picture class="rounded-[1rem]" data-image-editable="photo_5"></picture>
-                </div>
-              </div>
+        <p class="text-center uppercase text-[1.8rem] md:text-[2.5rem] mb-[2.4rem] tracking-[.1rem]"
+          data-editable="field_12" data-aos="fade-up">
+          Về chúng tớ
+        </p>
+        <ul class="relative">
+          <li class="relative mb-[4rem]">
+            <div
+              class="absolute min-[1024px]:right-[30%] top-0 z-10  size-[12rem] after:absolute after:top-[10px] after:left-[10px] after:right-[10px] after:bottom-[10px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:rounded-full"
+              data-aos="fade-up">
+              <picture class="rounded-full shadow-lg" data-image-editable="photo_5"></picture>
             </div>
-          </div>
-          <div class="text-center mt-[3rem]" data-aos="fade-up">
-            <button onclick="toggleGalleryPopup(true)"
-              class="group flex flex-col items-center mx-auto hover:scale-[1.1] duration-200">
-              <span class="text-[1.7rem] uppercase tracking-widest mb-1">Xem thêm</span>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="#680e0e" class="size-[2rem] animate-bounce">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-              </svg>
-            </button>
-          </div>
-        </div>
+            <div
+              class="relative min-[1024px]:ml-[6rem] max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[4rem] md:p-[5rem] min-[1024px]:text-right shadow-md bg-[#680e0e] before:absolute before:top-[20px] before:left-[20px] before:right-[20px] before:bottom-[20px] before:content-[''] before:border before:border-dashed before:border-[#ffffff80] before:-z-[1] before:rotate-[-1deg] after:absolute after:top-[20px] after:left-[20px] after:right-[20px] after:bottom-[20px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:-z-[1] after:rotate-[1deg]"
+              data-aos="fade-up">
+              <p class="mb-[1rem] text-white text-[1.3rem]" data-editable="field_17">
+                June 10, 2017
+              </p>
+              <h3 class="text-[4rem] mb-[1rem] text-[2.4rem] text-white" data-editable="field_18">
+                17 bẻ gãy sừng trâu
+              </h3>
+              <p class="text-white" data-editable="field_19">
+                17, độ tuổi với những rung động đầu đời, non nớt, trong trẻo như sớm ban mai. Anh bị thu hút bởi một cô
+                gái ngây ngô, vui vẻ và đáng mến. Em bị thu hút bởi chàng trai tóc đầu đinh, quậy quậy nhưng rất đáng
+                yêu. Và chúng mình gặp nhau nơi lòng hăng say phục vụ nhà Chúa.
+              </p>
+            </div>
+          </li>
+          <li class="relative mb-[4rem]">
+            <div
+              class="absolute min-[1024px]:left-[30%] top-0 z-10  size-[12rem] after:absolute after:top-[10px] after:left-[10px] after:right-[10px] after:bottom-[10px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:rounded-full"
+              data-aos="fade-up">
+              <picture class="rounded-full shadow-lg" data-image-editable="photo_6"></picture>
+            </div>
+            <div
+              class="relative min-[1024px]:mr-[6rem] max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[4rem] md:p-[5rem] shadow-md min-[1024px]:ml-auto bg-[#680e0e] before:absolute before:top-[20px] before:left-[20px] before:right-[20px] before:bottom-[20px] before:content-[''] before:border before:border-dashed before:border-[#ffffff80] before:-z-[1] before:rotate-[-1deg] after:absolute after:top-[20px] after:left-[20px] after:right-[20px] after:bottom-[20px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:-z-[1] after:rotate-[1deg]"
+              data-aos="fade-up">
+              <p class="mb-[1rem] text-[1.3rem] text-white" data-editable="field_20">
+                June 10, 2017
+              </p>
+              <h3 class="text-[4rem] mb-[1rem] text-[2.4rem] text-white" data-editable="field_21">
+                Thử thách, chông gai
+              </h3>
+              <p class="text-white" data-editable="field_22">
+                2021 - Thử thách, chông gai Xa mặt cách lòng, hiểu lầm, tổn thương, cãi vã liên tục khiến chúng mình
+                quyết định nói lời chia tay...
+              </p>
+            </div>
+          </li>
+          <li class="relative mb-[4rem]">
+            <div
+              class="absolute min-[1024px]:right-[30%] top-0 z-10  size-[12rem] after:absolute after:top-[10px] after:left-[10px] after:right-[10px] after:bottom-[10px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:rounded-full"
+              data-aos="fade-up">
+              <picture class="rounded-full shadow-lg" data-image-editable="photo_7"></picture>
+            </div>
+            <div
+              class="relative min-[1024px]:ml-[6rem] max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[4rem] md:p-[5rem] min-[1024px]:text-right shadow-md bg-[#680e0e] before:absolute before:top-[20px] before:left-[20px] before:right-[20px] before:bottom-[20px] before:content-[''] before:border before:border-dashed before:border-[#ffffff80] before:-z-[1] before:rotate-[-1deg] after:absolute after:top-[20px] after:left-[20px] after:right-[20px] after:bottom-[20px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:-z-[1] after:rotate-[1deg]"
+              data-aos="fade-up">
+              <p class="mb-[1rem] text-[1.3rem] text-white" data-editable="field_23">
+                June 10, 2017
+              </p>
+              <h3 class="text-[4rem] mb-[1rem] text-[2.4rem] text-white" data-editable="field_24">
+                Gương vỡ lại lành
+              </h3>
+              <p class="text-white" data-editable="field_25">
+                2 năm thử thách để chúng mình trân trọng, thấu hiểu nhau hơn. Chúng mình cầu nguyện với Chúa.Liệu đây có
+                phải người sẽ ở bên con suốt đời, cùng con yêu mến và phụng sự Chúa?
+              </p>
+            </div>
+          </li>
+          <li class="relative mb-[4rem]">
+            <div
+              class="absolute min-[1024px]:left-[30%] top-0 z-10  size-[12rem] after:absolute after:top-[10px] after:left-[10px] after:right-[10px] after:bottom-[10px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:rounded-full"
+              data-aos="fade-up">
+              <picture class="rounded-full shadow-lg" data-image-editable="photo_8"></picture>
+            </div>
+            <div
+              class="relative min-[1024px]:mr-[6rem] max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[4rem] md:p-[5rem] shadow-md min-[1024px]:ml-auto bg-[#680e0e] before:absolute before:top-[20px] before:left-[20px] before:right-[20px] before:bottom-[20px] before:content-[''] before:border before:border-dashed before:border-[#ffffff80] before:-z-[1] before:rotate-[-1deg] after:absolute after:top-[20px] after:left-[20px] after:right-[20px] after:bottom-[20px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:-z-[1] after:rotate-[1deg]"
+              data-aos="fade-up">
+              <p class="mb-[1rem] text-[1.3rem] text-white" data-editable="field_26">
+                June 10, 2017
+              </p>
+              <h3 class="text-[4rem] mb-[1rem] text-[2.4rem] text-white" data-editable="field_27">
+                Tiến lên lễ đường
+              </h3>
+              <p class="text-white" data-editable="field_28">
+                khi thịnh vượng cũng như lúc gian nan, khi mạnh khỏe cũng như lúc đau yếu, để yêu thương và tôn trọng.
+              </p>
+            </div>
+          </li>
+        </ul>
       </div>
     </section>
-    <!-- Gallery Section End -->
+    <!-- Love Story Section End -->
     <!-- Timer Section Begin -->
-    <section id="SECTION_COUNTDOWN" class="bg-white inverted-corners" data-color="indigo">
+    <section id="SECTION_COUNTDOWN" class="bg-white inverted-corners">
       <div class="wrapper">
         <div class="flex flex-col items-center gap-[1.6rem] md:gap-[2.4rem] text-center">
-          <span class="text-[1.8rem] md:text-[2.5rem] uppercase flex flex-col items-center" data-editable="field_23"
-            data-aos="fade-up">Tiệc cưới sẽ diễn ra vào lúc:</span>
+          <span class="text-[1.8rem] md:text-[2.5rem] uppercase" data-editable="field_23" data-aos="fade-up">Tiệc cưới
+            sẽ diễn ra vào lúc:</span>
           <span class="text-[1.8rem] md:text-[2.0rem] font-semibold" data-editable="field_24" data-aos="fade-up">THỨ
             SÁU</span>
           <span id="js-hour" class="text-[1.8rem] md:text-[2.0rem] font-semibold" data-aos="fade-up"
@@ -953,28 +962,29 @@
           <span class="text-[1.8rem] md:text-[2.0rem] uppercase" data-editable="field_28" data-aos="fade-up">Cùng đếm
             ngược</span>
 
-          <div class="flex max-md:items-center justify-center m-auto p-[1rem] gap-[1rem] md:gap-[4rem] text-center">
+          <div
+            class="flex max-md:items-center justify-center m-auto p-[1rem] gap-[1rem] md:gap-[4rem] text-center text-[#680e0e]">
             <div id="TIMER_DAY" data-aos="fade-up" data-aos-delay="100">
-              <span class="font-rochester text-[3rem] md:text-[4rem] font-bold">00</span>
-              <p class="text-[1.2rem] uppercase tracking-widest font-bold">
+              <span class="font-rochester text-[3rem] md:text-[4rem] text-[#680e0e] font-bold">00</span>
+              <p class="text-[#680e0e] text-[1.2rem] uppercase tracking-widest font-bold">
                 Day
               </p>
             </div>
             <div id="TIMER_HOUR" data-aos="fade-up" data-aos-delay="200">
-              <span class="font-rochester text-[3rem] md:text-[4rem] font-bold">00</span>
-              <p class="text-[1.2rem] uppercase tracking-widest font-bold">
+              <span class="font-rochester text-[3rem] md:text-[4rem] text-[#680e0e] font-bold">00</span>
+              <p class="text-[#680e0e] text-[1.2rem] uppercase tracking-widest font-bold">
                 Giờ
               </p>
             </div>
             <div id="TIMER_MIN" data-aos="fade-up" data-aos-delay="300">
-              <span class="font-rochester text-[3rem] md:text-[4rem] font-bold">00</span>
-              <p class="text-[1.2rem] uppercase tracking-widest font-bold">
+              <span class="font-rochester text-[3rem] md:text-[4rem] text-[#680e0e] font-bold">00</span>
+              <p class="text-[#680e0e] text-[1.2rem] uppercase tracking-widest font-bold">
                 Phút
               </p>
             </div>
             <div id="TIMER_SEC" data-aos="fade-up" data-aos-delay="400">
-              <span class="font-rochester text-[3rem] md:text-[4rem] font-bold">00</span>
-              <p class="text-[1.2rem] uppercase tracking-widest font-bold">
+              <span class="font-rochester text-[3rem] md:text-[4rem] text-[#680e0e] font-bold">00</span>
+              <p class="text-[#680e0e] text-[1.2rem] uppercase tracking-widest font-bold">
                 Giây
               </p>
             </div>
@@ -998,12 +1008,58 @@
       </div>
     </section>
     <!-- Timer Section End -->
+    <!-- Gallery Section Begin -->
+    <section id="SECTION_ALBUM" class="bg-white inverted-corners">
+      <div class="wrapper">
+        <div class="flex flex-col items-center mb-[4.8rem]">
+          <p class="uppercase text-[1.8rem] md:text-[2.5rem] mb-[2.4rem] tracking-[.1rem]" data-editable="field_12"
+            data-aos="fade-up">
+            Album Ảnh Cưới
+          </p>
+          <div class="w-full md:max-w-[55.0rem] h-[70rem]">
+            <div class="grid grid-cols-2 h-full gap-[1.2rem] md:gap-[1.6rem]">
+              <div class="">
+                <div class="shadow-lg rounded-[1rem] h-1/2 mb-[1.2rem] md:mb-[1.6rem]" data-aos="fade-right">
+                  <picture class="rounded-[1rem]" data-image-editable="photo_1"></picture>
+                </div>
+                <div class="shadow-lg rounded-[1rem] h-1/2" data-aos="fade-right" data-aos-delay="200">
+                  <picture class="rounded-[1rem]" data-image-editable="photo_2"></picture>
+                </div>
+              </div>
+              <div class="">
+                <div class="shadow-lg rounded-[1rem] h-1/4 mb-[1.2rem] md:mb-[1.6rem]" data-aos="fade-left">
+                  <picture class="rounded-[1rem]" data-image-editable="photo_3"></picture>
+                </div>
+                <div class="shadow-lg rounded-[1rem] h-1/2 mb-[1.2rem] md:mb-[1.6rem]" data-aos="fade-left"
+                  data-aos-delay="200">
+                  <picture class="rounded-[1rem]" data-image-editable="photo_4"></picture>
+                </div>
+                <div class="shadow-lg rounded-[1rem] h-1/4" data-aos="fade-left" data-aos-delay="400">
+                  <picture class="rounded-[1rem]" data-image-editable="photo_5"></picture>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-[5rem]" data-aos="fade-up">
+            <button onclick="toggleGalleryPopup(true)"
+              class="group flex flex-col items-center mx-auto hover:scale-[1.1] duration-200">
+              <span class="text-[1.7rem] uppercase tracking-widest mb-1">Xem thêm</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="#680e0e" class="size-[2rem] animate-bounce">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Gallery Section End -->
     <!-- Form Section Begin -->
-    <section id="SECTION_FORM" class="bg-white inverted-corners" data-color="blue">
+    <section id="SECTION_FORM" class="bg-white inverted-corners">
       <div class="w-full wrapper z-[10] relative gap-[2rem]">
         <div class="md:w-1/2 m-auto max-md:mb-[2rem] text-center" data-aos="fade-left" data-aos-delay="300"
           style="transition-delay: 300ms; transition-duration: 800ms">
-          <p class="mb-[1.2rem] text-[2.2rem] md:text-[2.4rem]" data-editable="form_1">
+          <p class="uppercase text-[1.8rem] md:text-[2.5rem] mb-[2.4rem] tracking-[.1rem]" data-editable="form_1">
             Sổ lưu bút
           </p>
           <h2 class="h2 mb-[1.2rem]" data-editable="form_2">
@@ -1036,11 +1092,11 @@
               <div class="flex justify-around py-[10px] text-[1.7rem] text-gray-600">
                 <label class="flex items-center space-x-2 cursor-pointer group">
                   <input type="radio" name="guest_type" id="side_groom" class="accent-black" />
-                  <span class="group-hover:text-[#680e0e]">Nhà trai</span>
+                  <span class="group-hover:text-black">Nhà trai</span>
                 </label>
                 <label class="flex items-center space-x-2 cursor-pointer group">
                   <input type="radio" name="guest_type" id="side_bride" class="accent-black" />
-                  <span class="group-hover:text-[#680e0e]">Nhà gái</span>
+                  <span class="group-hover:text-black">Nhà gái</span>
                 </label>
               </div>
 
@@ -1059,10 +1115,10 @@
     </section>
     <!-- Form Section End -->
     <!-- Wedding Gift Section Begin -->
-    <section id="SECTION_GIFT" class="bg-white inverted-corners" data-color="default">
+    <section id="SECTION_GIFT" class="bg-white inverted-corners">
       <div class="wrapper text-center py-[15px]">
         <div class="mb-[2rem]" data-aos="fade-up">
-          <h2 class="h2 mb-[1rem]" data-editable="gift_title">
+          <h2 class="h2 mb-[1rem] text-[#680e0e]" data-editable="gift_title">
             Wedding box
           </h2>
           <p class="text-[1.6rem] md:text-[1.7rem]" data-editable="gift_des">
@@ -1072,7 +1128,8 @@
         <div class="justify-self-center text-black p-[10px] rounded-[10px]">
           <div class="flex max-md:flex-col gap-[3rem]">
             <div class="flex-1 p-[1rem] shadow-md rounded-[1rem]">
-              <h6 class="text-[3rem] mb-[1rem]" data-editable="groom_title" data-aos="fade-right" data-aos-delay="100">
+              <h6 class="text-[3rem] mb-[1rem] text-[#680e0e]" data-editable="groom_title" data-aos="fade-right"
+                data-aos-delay="100">
                 Groom
               </h6>
               <picture class="size-[300px] aspect-[1/1] m-auto mb-[1rem]" data-image-editable="qr_1"
@@ -1089,7 +1146,8 @@
               </p>
             </div>
             <div class="flex-1 p-[1rem] shadow-md rounded-[1rem]">
-              <h6 class="text-[3rem] mb-[1rem]" data-editable="bride_title" data-aos="fade-left" data-aos-delay="100">
+              <h6 class="text-[3rem] mb-[1rem] text-[#680e0e]" data-editable="bride_title" data-aos="fade-left"
+                data-aos-delay="100">
                 Bride
               </h6>
               <picture class="size-[300px] aspect-[1/1] m-auto mb-[1rem]" data-image-editable="qr_2"
@@ -1112,7 +1170,7 @@
     <!-- Wedding Gift Section End -->
     <!-- Gallery Popup Section Begin -->
     <section id="GALLERY_POPUP" class="embla">
-      <button onclick="toggleGalleryPopup(false)" class="absolute top-10 right-10 text-white text-[2rem] z-[10000]">
+      <button onclick="toggleGalleryPopup(false)" class="absolute top-10 right-10 text-white text-[4rem] z-[10000]">
         &times;
       </button>
 
