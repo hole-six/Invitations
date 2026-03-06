@@ -150,7 +150,7 @@ const DashboardSettingsPage = () => {
           />
         </div>
       </div>
-      
+
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Mô tả website
@@ -634,11 +634,10 @@ const DashboardSettingsPage = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium transition-colors ${
-                    activeTab === tab.id
+                  className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium transition-colors ${activeTab === tab.id
                       ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                  }`}
+                    }`}
                 >
                   <span>{tab.icon}</span>
                   {tab.name}

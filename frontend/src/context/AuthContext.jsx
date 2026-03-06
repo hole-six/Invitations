@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import authService from '../services/auth.service';
 
 const AuthContext = createContext(null);
@@ -23,14 +23,36 @@ export const AuthProvider = ({ children }) => {
   const checkAuth = async () => {
     try {
       if (authService.isAuthenticated()) {
-        const response = await authService.getCurrentUser();
-        setUser(response.data);
+        // Try to get stored user first (HiWeb_id pattern)
+        const storedUser = authService.getUser();
+        if (storedUser) {
+          setUser(storedUser);
+        }
+        
+        // Then fetch fresh user data
+        try {
+          const data = await authService.getCurrentUser();
+          if (data?.user) {
+            setUser(data.user);
+            // Update stored user
+            const currentUser = {
+              ...data.user,
+              userToken: authService.getToken()
+            };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+          }
+        } catch (err) {
+          console.error('Failed to fetch fresh user data:', err);
+          // Keep using stored user if API call fails
+        }
       }
     } catch (err) {
       console.error('Auth check failed:', err);
-      // If auth check fails, clear auth state and logout
-      authService.logout();
-      setUser(null);
+      // Don't clear token - let user stay logged in with stored token
+      const storedUser = authService.getUser();
+      if (storedUser) {
+        setUser(storedUser);
+      }
     } finally {
       setLoading(false);
     }
@@ -39,11 +61,18 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       setError(null);
-      const response = await authService.login(credentials);
-      setUser(response.data.user);
-      return response;
+      const data = await authService.login(credentials);
+      
+      // Get user from localStorage (extracted from token)
+      const storedUser = authService.getUser();
+      if (storedUser) {
+        setUser(storedUser);
+      }
+      
+      return { data }; // Return in expected format for LoginPage
     } catch (err) {
-      setError(err.message);
+      const errorMessage = err.response?.data?.message || err.response?.data?.msg || err.message || 'Login failed. Please try again.';
+      setError(errorMessage);
       throw err;
     }
   };
@@ -51,11 +80,17 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       setError(null);
-      const response = await authService.register(userData);
-      setUser(response.data.user);
-      return response;
+      const data = await authService.register(userData);
+      
+      // Store user data (HiWeb_id format)
+      if (data?.user) {
+        setUser(data.user);
+      }
+      
+      return { data }; // Return in expected format for RegisterPage
     } catch (err) {
-      setError(err.message);
+      const errorMessage = err.response?.data?.message || err.response?.data?.msg || 'Registration failed. Please try again.';
+      setError(errorMessage);
       throw err;
     }
   };
@@ -63,8 +98,11 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await authService.logout();
+    } catch (err) {
+      console.error('Logout error:', err);
     } finally {
       setUser(null);
+      // authService.logout() already clears localStorage
     }
   };
 

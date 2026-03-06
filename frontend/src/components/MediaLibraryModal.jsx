@@ -1,0 +1,575 @@
+import { useState, useRef, useEffect } from 'react'
+import mediaService from '../services/media.service'
+import { useToast } from '../context/ToastContext'
+
+const MediaLibraryModal = ({ onSelectImage, onClose }) => {
+  const toast = useToast()
+  const [activeTab, setActiveTab] = useState('library') // 'library' or 'upload'
+  const [isDragging, setIsDragging] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [loading, setLoading] = useState(false)
+  const fileInputRef = useRef(null)
+
+  // Real data from API
+  const [userImages, setUserImages] = useState([])
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 20,
+    total: 0,
+    total_pages: 1,
+    has_next: false
+  })
+
+  // Load images on mount
+  useEffect(() => {
+    loadImages()
+    checkUserQuota()
+  }, [])
+
+  const checkUserQuota = async () => {
+    try {
+      const token = localStorage.getItem('userToken')
+      const response = await fetch('/user/profile', {
+        method: 'GET',
+        headers: {
+          'Authorization': token || '',
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        const user = data.data
+        console.log('👤 User quota:', {
+          max_file_size: user.max_file_size,
+          max_file_size_MB: (user.max_file_size / 1024 / 1024).toFixed(2) + ' MB',
+          max_total_size: user.max_total_size,
+          max_total_size_MB: (user.max_total_size / 1024 / 1024).toFixed(2) + ' MB',
+          used_size: user.used_size,
+          used_size_MB: (user.used_size / 1024 / 1024).toFixed(2) + ' MB',
+          available_MB: ((user.max_total_size - user.used_size) / 1024 / 1024).toFixed(2) + ' MB'
+        })
+        
+        // Update storage display
+        const usedGB = user.used_size / 1024 / 1024 / 1024
+        const totalGB = user.max_total_size / 1024 / 1024 / 1024
+        // TODO: Update UI with real quota
+      }
+    } catch (error) {
+      console.error('Failed to check quota:', error)
+    }
+  }
+
+  const loadImages = async (page = 1) => {
+    try {
+      setLoading(true)
+      const response = await mediaService.getAll({ page, limit: 20 })
+      
+      console.log('📸 Media response:', response)
+      
+      if (response.data && Array.isArray(response.data)) {
+        // Transform API response to component format
+        const images = response.data.map(item => ({
+          id: item.file_key, // Use file_key as unique ID
+          file_key: item.file_key,
+          url: item.url,
+          name: item.file_key.split('/').pop(), // Extract filename from path
+          size: item.file_size,
+          created_at: item.created_at,
+          usage_count: 0 // API doesn't provide this yet
+        }))
+        
+        setUserImages(images)
+        
+        if (response.pagination) {
+          setPagination(response.pagination)
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load images:', error)
+      toast.error('Không thể tải danh sách ảnh')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const storageUsed = 0.75 // GB - TODO: Get from API
+  const storageLimit = 5 // GB - TODO: Get from API
+  const imagesCount = userImages.length
+  const imagesLimit = 100 // TODO: Get from API
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e) => {
+    e.preventDefault()
+    setIsDragging(false)
+    
+    const files = Array.from(e.dataTransfer.files)
+    const imageFiles = files.filter(file => file.type.startsWith('image/'))
+    
+    if (imageFiles.length > 0) {
+      handleUpload(imageFiles)
+    }
+  }
+
+  const handleFileSelect = (e) => {
+    const files = Array.from(e.target.files)
+    if (files.length > 0) {
+      handleUpload(files)
+    }
+  }
+
+  // Resize image before upload to ensure it's under size limit
+  const resizeImage = (file, maxWidth = 1920, maxHeight = 1920, quality = 0.8) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const img = new Image()
+        img.onload = () => {
+          // Calculate new dimensions
+          let width = img.width
+          let height = img.height
+
+          if (width > maxWidth || height > maxHeight) {
+            const ratio = Math.min(maxWidth / width, maxHeight / height)
+            width = width * ratio
+            height = height * ratio
+          }
+
+          // Create canvas and resize
+          const canvas = document.createElement('canvas')
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0, width, height)
+
+          // Convert to blob
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                // Create new file with same name
+                const resizedFile = new File([blob], file.name, {
+                  type: 'image/jpeg',
+                  lastModified: Date.now()
+                })
+                resolve(resizedFile)
+              } else {
+                reject(new Error('Failed to resize image'))
+              }
+            },
+            'image/jpeg',
+            quality
+          )
+        }
+        img.onerror = () => reject(new Error('Failed to load image'))
+        img.src = e.target.result
+      }
+      reader.onerror = () => reject(new Error('Failed to read file'))
+      reader.readAsDataURL(file)
+    })
+  }
+
+  const handleUpload = async (files) => {
+    if (files.length === 0) return
+
+    setUploading(true)
+    let successCount = 0
+    let failCount = 0
+
+    try {
+      // Upload each file
+      for (const file of files) {
+        try {
+          // Validate file type
+          if (!file.type.startsWith('image/')) {
+            toast.error(`${file.name} không phải là file ảnh`)
+            failCount++
+            continue
+          }
+
+          console.log('📤 Original file:', file.name, `(${(file.size / 1024).toFixed(0)}KB)`)
+
+          // Auto-resize image to ensure it's under 2MB
+          let fileToUpload = file
+          const maxSize = 2 * 1024 * 1024 // 2MB target size
+          
+          if (file.size > maxSize) {
+            toast.info(`Đang nén ${file.name}...`)
+            try {
+              fileToUpload = await resizeImage(file, 1920, 1920, 0.8)
+              console.log('✅ Resized to:', `(${(fileToUpload.size / 1024).toFixed(0)}KB)`)
+              
+              // If still too large, reduce quality more
+              if (fileToUpload.size > maxSize) {
+                fileToUpload = await resizeImage(file, 1920, 1920, 0.6)
+                console.log('✅ Resized again to:', `(${(fileToUpload.size / 1024).toFixed(0)}KB)`)
+              }
+              
+              // If STILL too large, reduce dimensions
+              if (fileToUpload.size > maxSize) {
+                fileToUpload = await resizeImage(file, 1280, 1280, 0.7)
+                console.log('✅ Resized to smaller dimensions:', `(${(fileToUpload.size / 1024).toFixed(0)}KB)`)
+              }
+            } catch (resizeError) {
+              console.error('Resize failed:', resizeError)
+              toast.warning(`Không thể nén ${file.name}, thử upload bản gốc...`)
+            }
+          }
+
+          // Final size check
+          if (fileToUpload.size > 5 * 1024 * 1024) {
+            toast.error(`${file.name} vẫn quá lớn sau khi nén (${(fileToUpload.size / 1024 / 1024).toFixed(2)}MB)`)
+            failCount++
+            continue
+          }
+
+          console.log('📤 Uploading:', file.name, `(${(fileToUpload.size / 1024).toFixed(0)}KB)`)
+
+          // Step 1: Upload file to backend
+          const uploadResponse = await mediaService.upload(fileToUpload)
+          console.log('✅ Upload response:', uploadResponse)
+
+          if (uploadResponse.file_key) {
+            // Step 2: Confirm upload
+            await mediaService.confirmUpload(uploadResponse.file_key)
+            console.log('✅ Confirmed:', uploadResponse.file_key)
+            successCount++
+          } else {
+            failCount++
+          }
+        } catch (error) {
+          console.error(`Failed to upload ${file.name}:`, error)
+          
+          // Show specific error message
+          if (error.message.includes('invalid.size')) {
+            toast.error(`${file.name}: File quá lớn hoặc vượt quá dung lượng`)
+          } else if (error.message.includes('invalid.type')) {
+            toast.error(`${file.name}: Loại file không được hỗ trợ`)
+          } else {
+            toast.error(`${file.name}: ${error.message}`)
+          }
+          
+          failCount++
+        }
+      }
+
+      // Show result
+      if (successCount > 0) {
+        toast.success(`✅ Đã tải lên ${successCount} ảnh`)
+        // Reload images
+        await loadImages()
+        // Switch to library tab
+        setActiveTab('library')
+      }
+
+      if (failCount > 0 && successCount === 0) {
+        toast.error(`❌ Tất cả ${failCount} ảnh tải lên thất bại`)
+      }
+    } catch (error) {
+      console.error('Upload error:', error)
+      toast.error('Có lỗi xảy ra khi tải ảnh')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const handleDeleteImage = async (image, e) => {
+    e.stopPropagation() // Prevent image selection
+
+    if (!confirm(`Xóa ảnh "${image.name}"?`)) return
+
+    try {
+      await mediaService.delete(image.file_key)
+      toast.success('✅ Đã xóa ảnh')
+      
+      // Remove from list
+      setUserImages(prev => prev.filter(img => img.id !== image.id))
+    } catch (error) {
+      console.error('Failed to delete image:', error)
+      toast.error('Không thể xóa ảnh')
+    }
+  }
+
+  const handleImageSelect = (image) => {
+    onSelectImage(image)
+    onClose()
+  }
+
+  const formatFileSize = (bytes) => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
+  }
+
+  const formatDate = (dateString) => {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
+  }
+
+  const filteredImages = userImages.filter(img => 
+    img.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-5xl h-[80vh] flex flex-col overflow-hidden">
+        
+        {/* Header */}
+        <div className="p-6 border-b border-gray-200 dark:border-gray-800">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Thư viện ảnh của tôi</h2>
+            <button
+              onClick={onClose}
+              className="size-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[24px]">close</span>
+            </button>
+          </div>
+
+          {/* Tabs */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setActiveTab('library')}
+              className={`px-6 py-2.5 rounded-lg font-semibold text-sm transition-all ${
+                activeTab === 'library'
+                  ? 'bg-primary text-white shadow-lg'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[20px]">photo_library</span>
+                Kho ảnh ({imagesCount})
+              </span>
+            </button>
+            <button
+              onClick={() => setActiveTab('upload')}
+              className={`px-6 py-2.5 rounded-lg font-semibold text-sm transition-all ${
+                activeTab === 'upload'
+                  ? 'bg-primary text-white shadow-lg'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[20px]">cloud_upload</span>
+                Tải lên
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto p-6">
+          
+          {/* TAB: Library */}
+          {activeTab === 'library' && (
+            <div className="space-y-4">
+              {/* Search & Filter */}
+              <div className="flex items-center gap-3">
+                <div className="flex-1 relative">
+                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]">
+                    search
+                  </span>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Tìm kiếm ảnh..."
+                    className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                <button className="px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <span className="material-symbols-outlined text-[20px]">filter_list</span>
+                </button>
+              </div>
+
+              {/* Image Grid */}
+              {loading ? (
+                <div className="text-center py-16">
+                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                  <p className="mt-4 text-gray-500 text-sm">Đang tải...</p>
+                </div>
+              ) : filteredImages.length === 0 ? (
+                <div className="text-center py-16">
+                  <div className="size-20 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mx-auto mb-4">
+                    <span className="material-symbols-outlined text-[40px] text-gray-400">photo_library</span>
+                  </div>
+                  <p className="text-gray-500 dark:text-gray-400 mb-2">
+                    {searchQuery ? 'Không tìm thấy ảnh nào' : 'Chưa có ảnh trong thư viện'}
+                  </p>
+                  <button
+                    onClick={() => setActiveTab('upload')}
+                    className="text-primary hover:underline text-sm font-medium"
+                  >
+                    Tải ảnh lên ngay
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-4">
+                  {filteredImages.map((image) => (
+                    <div
+                      key={image.id}
+                      onClick={() => handleImageSelect(image)}
+                      className="group relative aspect-square rounded-xl overflow-hidden border-2 border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary cursor-pointer transition-all hover:shadow-xl"
+                    >
+                      <img
+                        src={image.url}
+                        alt={image.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                      
+                      {/* Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="absolute bottom-0 left-0 right-0 p-3">
+                          <p className="text-white text-xs font-semibold truncate mb-1">{image.name}</p>
+                          <div className="flex items-center justify-between text-white/80 text-[10px]">
+                            <span>{formatFileSize(image.size)}</span>
+                            <span>{formatDate(image.created_at)}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Select Icon */}
+                      <div className="absolute top-2 right-2 size-8 rounded-full bg-white dark:bg-gray-900 shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+                      </div>
+
+                      {/* Delete Button */}
+                      <button
+                        onClick={(e) => handleDeleteImage(image, e)}
+                        className="absolute top-2 left-2 size-8 rounded-full bg-red-500 shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                      >
+                        <span className="material-symbols-outlined text-white text-[18px]">delete</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB: Upload */}
+          {activeTab === 'upload' && (
+            <div className="space-y-4">
+              {/* Storage Info */}
+              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="material-symbols-outlined text-blue-600 text-[20px]">cloud_upload</span>
+                  <span className="text-sm font-semibold text-blue-900 dark:text-blue-100">Dung lượng lưu trữ</span>
+                </div>
+                <div className="flex items-center justify-between text-sm mb-2">
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Đã tải: <span className="font-semibold text-gray-900 dark:text-white">{imagesCount}/{imagesLimit}</span> ảnh
+                  </span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Còn lại: <span className="font-semibold text-gray-900 dark:text-white">{imagesLimit - imagesCount}</span> ảnh
+                  </span>
+                </div>
+                <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-blue-600 transition-all"
+                    style={{ width: `${(storageUsed / storageLimit) * 100}%` }}
+                  />
+                </div>
+                <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">
+                  {storageUsed.toFixed(2)} GB / {storageLimit} GB đã sử dụng
+                </p>
+              </div>
+
+              {/* Upload Area */}
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all ${
+                  isDragging
+                    ? 'border-primary bg-primary/5 scale-[1.02]'
+                    : 'border-gray-300 dark:border-gray-700 hover:border-primary hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                }`}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+                
+                <div className="flex flex-col items-center gap-4">
+                  <div className="size-20 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-[40px] text-blue-600">
+                      {uploading ? 'hourglass_empty' : 'cloud_upload'}
+                    </span>
+                  </div>
+                  
+                  <div>
+                    <p className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                      {uploading ? 'Đang tải lên...' : 'Kéo thả ảnh vào đây'}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                      hoặc click để chọn file từ máy tính
+                    </p>
+                    <div className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+                      <span className="material-symbols-outlined text-[20px]">add_photo_alternate</span>
+                      Chọn ảnh
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tips */}
+              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+                <div className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-[20px] text-gray-600 dark:text-gray-400 mt-0.5">
+                    info
+                  </span>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="font-semibold mb-2">Lưu ý khi tải ảnh:</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Hỗ trợ: JPG, PNG, GIF, WebP</li>
+                      <li>Kích thước tối đa: 10MB/ảnh</li>
+                      <li>Có thể tải nhiều ảnh cùng lúc</li>
+                      <li>Ảnh trùng lặp sẽ không được tải lên</li>
+                      <li>Ảnh sẽ được lưu vào kho để tái sử dụng</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="p-6 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              <span className="font-semibold">{imagesCount}</span> ảnh • 
+              <span className="font-semibold ml-1">{storageUsed.toFixed(2)} GB</span> đã sử dụng
+            </div>
+            <button
+              onClick={onClose}
+              className="px-6 py-2.5 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default MediaLibraryModal

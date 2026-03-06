@@ -15,6 +15,7 @@ const DashboardTemplateEditorPage = () => {
   const [activeTab, setActiveTab] = useState('basic') // basic | html | preview
 
   const [formData, setFormData] = useState({
+    uuid: '', // Add uuid field
     name: '',
     slug: '',
     description: '',
@@ -22,7 +23,7 @@ const DashboardTemplateEditorPage = () => {
     category_id: 1,
     is_premium: false,
     template_type: 'html',
-    html_content: '',
+    html_template: '',
     design_data: null,
     tags: []
   })
@@ -51,7 +52,32 @@ const DashboardTemplateEditorPage = () => {
       const response = await templateService.getById(templateId)
       const template = response.data
 
+      console.log('📦 Loaded template:', template);
+      console.log('📄 html_template length:', template.html_template?.length || 0);
+
+      // Get html_template with fallback to design_data.html
+      let htmlContent = template.html_template || '';
+      
+      // If html_template is empty, try to get from design_data
+      if (!htmlContent && template.design_data) {
+        try {
+          const designData = typeof template.design_data === 'string'
+            ? JSON.parse(template.design_data)
+            : template.design_data;
+          
+          if (designData?.html) {
+            console.log('📄 Loading HTML from design_data');
+            htmlContent = designData.html;
+          }
+        } catch (parseErr) {
+          console.error('Failed to parse design_data:', parseErr);
+        }
+      }
+
+      console.log('✅ Final htmlContent length:', htmlContent.length);
+
       setFormData({
+        uuid: template.uuid || '', // Store uuid
         name: template.name || '',
         slug: template.slug || '',
         description: template.description || '',
@@ -59,7 +85,7 @@ const DashboardTemplateEditorPage = () => {
         category_id: template.category_id || 1,
         is_premium: template.is_premium === 1 || template.is_premium === true,
         template_type: template.template_type || 'html',
-        html_content: template.html_content || '',
+        html_template: htmlContent, // Use fallback HTML
         design_data: template.design_data ? (typeof template.design_data === 'string' ? template.design_data : JSON.stringify(template.design_data, null, 2)) : null,
         tags: template.tags || []
       })
@@ -112,9 +138,20 @@ const DashboardTemplateEditorPage = () => {
         }
       }
 
+      // Convert tags array to JSON string for database
+      if (Array.isArray(submitData.tags)) {
+        submitData.tags = JSON.stringify(submitData.tags)
+      } else if (!submitData.tags) {
+        submitData.tags = '[]' // Empty array as string
+      }
+
+      console.log('📤 Submitting template data:', submitData)
+
       let response
       if (id) {
-        response = await templateService.update(id, submitData)
+        // Use uuid from formData if available, otherwise use id
+        const identifier = formData.uuid || id;
+        response = await templateService.update(identifier, submitData)
         toast.success('✨ Template đã được cập nhật thành công!')
       } else {
         response = await templateService.create(submitData)
@@ -394,8 +431,8 @@ const DashboardTemplateEditorPage = () => {
                 </div>
                 {!previewMode ? (
                   <textarea
-                    name="html_content"
-                    value={formData.html_content}
+                    name="html_template"
+                    value={formData.html_template}
                     onChange={handleChange}
                     required={formData.template_type === 'html'}
                     rows={20}
@@ -404,9 +441,9 @@ const DashboardTemplateEditorPage = () => {
                   />
                 ) : (
                   <div className="border border-gray-300 dark:border-gray-600 bg-white rounded-lg overflow-hidden">
-                    {formData.html_content ? (
+                    {formData.html_template ? (
                       <iframe
-                        srcDoc={formData.html_content}
+                        srcDoc={formData.html_template}
                         className="w-full h-[500px] md:h-[600px]"
                         title="HTML Preview"
                         sandbox="allow-scripts"
@@ -454,9 +491,9 @@ const DashboardTemplateEditorPage = () => {
                 Live Preview
               </h3>
               <div className="border border-gray-200 dark:border-gray-700 bg-white rounded-lg overflow-hidden shadow-inner">
-                {formData.html_content ? (
+                {formData.html_template ? (
                   <iframe
-                    srcDoc={formData.html_content}
+                    srcDoc={formData.html_template}
                     className="w-full h-[600px] md:h-[800px]"
                     title="Template Preview"
                     sandbox="allow-scripts"

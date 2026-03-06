@@ -109,85 +109,227 @@ class UltimateEditableTool:
         return sorted(list(set(files)))
     
     def extract_text_elements(self, html: str) -> List[Dict]:
-        """Trích xuất TẤT CẢ text elements có thể chỉnh sửa"""
+        """Trích xuất TẤT CẢ text elements - MAXIMUM AGGRESSIVE VERSION"""
         elements = []
-        seen_ids = set()
+        seen_positions = set()
         
-        # Pattern 1: HEADLINE
-        headline_patterns = [
-            r'id="(HEADLINE\d+)"[^>]*>(?:(?!</div>).)*?<(h[1-6])[^>]*>(.*?)</\2>',
-            r'<(h[1-6])[^>]*id="(HEADLINE\d+)"[^>]*>(.*?)</\1>',
-            r'id="(HEADLINE\d+)"[^>]*>(?:(?!</div>).)*?<div[^>]*class="[^"]*ladi-headline[^"]*"[^>]*>(.*?)</div>',
-        ]
+        # STRATEGY 1: Find ALL opening tags that might contain text
+        # Pattern: <TAG ...> followed by some content (may include nested tags)
+        opening_tag_pattern = r'<(h[1-6]|p|span|div|strong|em|i|b|a|li|td|th|label|figcaption|small|mark|del|ins|sub|sup|button|option)([^>]*)>'
         
-        for pattern in headline_patterns:
-            for match in re.finditer(pattern, html, re.DOTALL | re.IGNORECASE):
-                groups = match.groups()
-                if 'HEADLINE' in groups[0]:
-                    element_id, content = groups[0], groups[-1]
-                elif len(groups) >= 3:
-                    element_id, content = groups[1], groups[2]
-                else:
-                    continue
-                
-                if element_id not in seen_ids:
-                    content = self._clean_text(content)
-                    if content:
-                        seen_ids.add(element_id)
-                        elements.append({'type': 'headline', 'id': element_id, 'content': content})
+        for match in re.finditer(opening_tag_pattern, html, re.IGNORECASE):
+            tag_name = match.group(1)
+            attributes = match.group(2)
+            start_pos = match.start()
+            
+            # Skip if already processed
+            if start_pos in seen_positions:
+                continue
+            
+            # Skip if already has data-editable
+            if 'data-editable=' in attributes:
+                continue
+            
+            # Find the closing tag
+            closing_pattern = f'</{tag_name}>'
+            end_match = re.search(closing_pattern, html[start_pos:], re.IGNORECASE)
+            if not end_match:
+                continue
+            
+            end_pos = start_pos + end_match.end()
+            full_element = html[start_pos:end_pos]
+            content = html[match.end():start_pos + end_match.start()]
+            
+            # Clean content
+            clean_content = self._clean_text(content)
+            
+            # MAXIMUM RELAXED FILTERS
+            # Skip ONLY if:
+            # 1. Completely empty after cleaning
+            if not clean_content:
+                continue
+            
+            # 2. Skip if EXTREMELY long (definitely a major container)
+            if len(content) > 3000:
+                continue
+            
+            # 3. Skip if contains TOO MANY block elements (is a major wrapper)
+            block_count = len(re.findall(r'<(div|section|article|header|footer|nav|ul|ol|table)', content, re.IGNORECASE))
+            if block_count > 8:
+                continue
+            
+            # 4. Skip script/style/svg/iframe
+            skip_patterns = [
+                r'<script', r'<style', r'<svg[^>]*>', r'<iframe',
+            ]
+            if any(re.search(pattern, content, re.IGNORECASE) for pattern in skip_patterns):
+                continue
+            
+            # 5. Skip if it's ONLY whitespace/nbsp
+            if re.match(r'^[\s\n\r\t&nbsp;]+$', clean_content):
+                continue
+            
+            # 6. Skip common UI elements that shouldn't be editable
+            skip_classes = ['icon', 'fa-', 'material-icons', 'close', 'menu-toggle']
+            if any(cls in attributes.lower() for cls in skip_classes):
+                continue
+            
+            # Store the opening tag
+            opening_tag = match.group(0)
+            
+            seen_positions.add(start_pos)
+            elements.append({
+                'type': 'text_element',
+                'content': clean_content,
+                'position': start_pos,
+                'tag': tag_name,
+                'attributes': attributes,
+                'opening_tag': opening_tag
+            })
         
-        # Pattern 2: PARAGRAPH
-        para_patterns = [
-            r'id="(PARAGRAPH\d+)"[^>]*>(?:(?!</div>).)*?<div[^>]*class="[^"]*ladi-paragraph[^"]*"[^>]*>(.*?)</div>',
-            r'id="(PARAGRAPH\d+)"[^>]*>(?:(?!</div>).)*?<p[^>]*>(.*?)</p>',
-        ]
+        log_msg = f"  ✓ Found {len(elements)} text elements (maximum aggressive matching)"
         
-        for pattern in para_patterns:
-            for match in re.finditer(pattern, html, re.DOTALL | re.IGNORECASE):
-                element_id, content = match.group(1), match.group(2)
-                if element_id not in seen_ids:
-                    content = self._clean_text(content)
-                    if content:
-                        seen_ids.add(element_id)
-                        elements.append({'type': 'paragraph', 'id': element_id, 'content': content})
-        
-        # Pattern 3: BUTTON_TEXT
-        button_patterns = [
-            r'id="(BUTTON_TEXT\d+)"[^>]*>(?:(?!</div>).)*?<div[^>]*class="[^"]*ladi-headline[^"]*"[^>]*>(.*?)</div>',
-            r'id="(BUTTON_TEXT\d+)"[^>]*>(?:(?!</div>).)*?<p[^>]*>(.*?)</p>',
-        ]
-        
-        for pattern in button_patterns:
-            for match in re.finditer(pattern, html, re.DOTALL | re.IGNORECASE):
-                element_id, content = match.group(1), match.group(2)
-                if element_id not in seen_ids:
-                    content = self._clean_text(content)
-                    if content:
-                        seen_ids.add(element_id)
-                        elements.append({'type': 'button', 'id': element_id, 'content': content})
-        
-        # Pattern 4: FORM_ITEM
-        form_patterns = [
-            r'id="(FORM_ITEM\d+)"[^>]*>(?:(?!</div>).)*?(?:placeholder|value)="([^"]+)"',
-        ]
-        
-        for pattern in form_patterns:
-            for match in re.finditer(pattern, html, re.DOTALL | re.IGNORECASE):
-                element_id, content = match.group(1), match.group(2)
-                if element_id not in seen_ids:
-                    content = self._clean_text(content)
-                    if content:
-                        seen_ids.add(element_id)
-                        elements.append({'type': 'form', 'id': element_id, 'content': content})
+        # STRATEGY 2: FALLBACK PATTERNS for older templates (mau1-20)
+        # Only use if we didn't find many elements
+        if len(elements) < 15:
+            seen_ids = set()
+            
+            # Pattern: HEADLINE
+            headline_patterns = [
+                r'id="(HEADLINE\d+)"[^>]*>(?:(?!</div>).)*?<(h[1-6])[^>]*>(.*?)</\2>',
+                r'<(h[1-6])[^>]*id="(HEADLINE\d+)"[^>]*>(.*?)</\1>',
+                r'id="(HEADLINE\d+)"[^>]*>(?:(?!</div>).)*?<div[^>]*class="[^"]*ladi-headline[^"]*"[^>]*>(.*?)</div>',
+            ]
+            
+            for pattern in headline_patterns:
+                for match in re.finditer(pattern, html, re.DOTALL | re.IGNORECASE):
+                    groups = match.groups()
+                    if 'HEADLINE' in groups[0]:
+                        element_id, content = groups[0], groups[-1]
+                    elif len(groups) >= 3:
+                        element_id, content = groups[1], groups[2]
+                    else:
+                        continue
+                    
+                    if element_id not in seen_ids:
+                        content = self._clean_text(content)
+                        if content:
+                            seen_ids.add(element_id)
+                            elements.append({'type': 'headline', 'id': element_id, 'content': content})
+            
+            # Pattern: PARAGRAPH
+            para_patterns = [
+                r'id="(PARAGRAPH\d+)"[^>]*>(?:(?!</div>).)*?<div[^>]*class="[^"]*ladi-paragraph[^"]*"[^>]*>(.*?)</div>',
+                r'id="(PARAGRAPH\d+)"[^>]*>(?:(?!</div>).)*?<p[^>]*>(.*?)</p>',
+            ]
+            
+            for pattern in para_patterns:
+                for match in re.finditer(pattern, html, re.DOTALL | re.IGNORECASE):
+                    element_id, content = match.group(1), match.group(2)
+                    if element_id not in seen_ids:
+                        content = self._clean_text(content)
+                        if content:
+                            seen_ids.add(element_id)
+                            elements.append({'type': 'paragraph', 'id': element_id, 'content': content})
+            
+            # Pattern: BUTTON_TEXT
+            button_patterns = [
+                r'id="(BUTTON_TEXT\d+)"[^>]*>(?:(?!</div>).)*?<div[^>]*class="[^"]*ladi-headline[^"]*"[^>]*>(.*?)</div>',
+                r'id="(BUTTON_TEXT\d+)"[^>]*>(?:(?!</div>).)*?<p[^>]*>(.*?)</p>',
+            ]
+            
+            for pattern in button_patterns:
+                for match in re.finditer(pattern, html, re.DOTALL | re.IGNORECASE):
+                    element_id, content = match.group(1), match.group(2)
+                    if element_id not in seen_ids:
+                        content = self._clean_text(content)
+                        if content:
+                            seen_ids.add(element_id)
+                            elements.append({'type': 'button', 'id': element_id, 'content': content})
+            
+            # Pattern: FORM_ITEM
+            form_patterns = [
+                r'id="(FORM_ITEM\d+)"[^>]*>(?:(?!</div>).)*?(?:placeholder|value)="([^"]+)"',
+            ]
+            
+            for pattern in form_patterns:
+                for match in re.finditer(pattern, html, re.DOTALL | re.IGNORECASE):
+                    element_id, content = match.group(1), match.group(2)
+                    if element_id not in seen_ids:
+                        content = self._clean_text(content)
+                        if content:
+                            seen_ids.add(element_id)
+                            elements.append({'type': 'form', 'id': element_id, 'content': content})
         
         return elements
     
     def extract_image_elements(self, html: str) -> List[Dict]:
         """Trích xuất TẤT CẢ image elements"""
         images = []
-        seen_ids = set()
+        seen_positions = set()  # Track by position to avoid duplicates
         
-        # Pattern: IMAGE, GALLERY, BACKGROUND
+        # 1. PLAIN IMG TAGS (for templates like mau21-mau100)
+        # Find all <img> tags and add data-image-editable to them
+        img_pattern = r'<img[^>]*>'
+        for match in re.finditer(img_pattern, html, re.IGNORECASE):
+            img_tag = match.group(0)
+            position = match.start()
+            
+            # Skip if already has data-image-editable
+            if 'data-image-editable=' in img_tag:
+                continue
+            
+            # Skip tiny images (likely icons)
+            if 'width="50"' in img_tag or 'height="50"' in img_tag:
+                continue
+            if 'width: 50px' in img_tag or 'height: 50px' in img_tag:
+                continue
+            
+            # Skip common icon/UI element patterns
+            skip_patterns = [
+                'play-icon', 'pause-icon', 'music', 'play.png',
+                'menu.svg', 'icon', 'logo', 'favicon'
+            ]
+            if any(pattern in img_tag.lower() for pattern in skip_patterns):
+                continue
+            
+            # Skip very small images by checking src filename
+            src_match = re.search(r'src="([^"]+)"', img_tag)
+            if src_match:
+                src = src_match.group(1).lower()
+                # Skip if filename suggests it's an icon/small graphic
+                if any(x in src for x in ['icon', 'logo', 'menu', 'play.png', 'pause.png']):
+                    continue
+            
+            if position not in seen_positions:
+                seen_positions.add(position)
+                images.append({
+                    'type': 'plain_img',
+                    'position': position,
+                    'original_tag': img_tag,
+                    'is_plain': True
+                })
+        
+        # 2. GENERIC IMAGES WITH DATA-UUID
+        # <img ... data-uuid="UUID" ...>
+        img_uuid_pattern = r'<img[^>]*data-uuid="([^"]+)"[^>]*>'
+        for match in re.finditer(img_uuid_pattern, html, re.IGNORECASE):
+            uuid = match.group(1)
+            position = match.start()
+            if position not in seen_positions:
+                seen_positions.add(position)
+                images.append({'type': 'generic_image', 'id': uuid, 'is_uuid': True})
+
+        # 3. GENERIC BACKGROUNDS WITH DATA-UUID
+        bg_pattern = r'<(div|section)[^>]*class="[^"]*?(?:bg|banner|image|photo|pattern)[^"]*"[^>]*data-uuid="([^"]+)"[^>]*>'
+        for match in re.finditer(bg_pattern, html, re.IGNORECASE):
+            uuid = match.group(2)
+            position = match.start()
+            if position not in seen_positions:
+                seen_positions.add(position)
+                images.append({'type': 'generic_background', 'id': uuid, 'is_uuid': True})
+
+        # 4. STANDARD PATTERNS (Existing logic for mau1-20)
         patterns = [
             (r'id="(IMAGE\d+)"', 'image'),
             (r'id="(GALLERY\d+)"', 'gallery'),
@@ -197,11 +339,13 @@ class UltimateEditableTool:
         for pattern, img_type in patterns:
             for match in re.finditer(pattern, html, re.IGNORECASE):
                 element_id = match.group(1)
-                if element_id not in seen_ids:
-                    seen_ids.add(element_id)
-                    images.append({'type': img_type, 'id': element_id})
+                position = match.start()
+                if position not in seen_positions:
+                    seen_positions.add(position)
+                    images.append({'type': img_type, 'id': element_id, 'is_uuid': False})
         
         return images
+
     
     def _clean_text(self, text: str) -> str:
         """Làm sạch text"""
@@ -273,45 +417,97 @@ class UltimateEditableTool:
             self.used_names.clear()
             original_html = html
             
-            # CLEAN: Remove editor-styles CSS if exists
-            html = re.sub(r'<style[^>]*id=["\']editor-styles["\'][^>]*>.*?</style>', '', html, flags=re.DOTALL | re.IGNORECASE)
-            
-            # CLEAN: Remove ALL existing data-editable and data-image-editable attributes
+            # STEP 1: REMOVE ALL data-editable attributes (including ="true" and named ones)
             html = re.sub(r'\s+data-editable="[^"]*"', '', html)
             html = re.sub(r'\s+data-image-editable="[^"]*"', '', html)
             
-            log(f"  🧹 Cleaned existing editable attributes and styles")
+            log(f"  🧹 Removed all existing data-editable attributes")
             
-            # Process TEXT
+            # STEP 2: Find ALL text elements
             text_elements = self.extract_text_elements(html)
-            log(f"  � Found {len(text_elements)} text elements")
+            log(f"  ✓ Found {len(text_elements)} text elements")
             
+            # STEP 3: Add unique data-editable to each element
             count_text = 0
             for idx, el in enumerate(text_elements, 1):
-                field_name = self.get_smart_field_name(el['content'], el['type'], idx)
+                field_name = self.get_smart_field_name(el['content'], el.get('type', 'text'), idx)
                 
-                # FILTER REMOVED: Allow all text fields
-                # if not field_name.startswith(('groom', 'bride')):
-                #     continue
-
-                # Add new
-                pattern = r'(id="' + re.escape(el['id']) + r'"[^>]*?)>'
-                # We cleaned all so just add
-                html = re.sub(pattern, r'\1 data-editable="' + field_name + '">', html)
-                count_text += 1
-                log(f"    ✓ {el['type']}: {el['id']} → data-editable=\"{field_name}\"")
+                # Check if this is a new-style element (with opening_tag) or old-style (with id)
+                if 'opening_tag' in el:
+                    # NEW STYLE: Find and replace the opening tag
+                    original_tag = el['opening_tag']
+                    
+                    # Add data-editable attribute before the closing >
+                    if original_tag.endswith('>'):
+                        new_tag = original_tag[:-1] + f' data-editable="{field_name}">'
+                    else:
+                        new_tag = original_tag + f' data-editable="{field_name}">'
+                    
+                    # Replace in HTML (only first occurrence)
+                    if original_tag in html:
+                        html = html.replace(original_tag, new_tag, 1)
+                        count_text += 1
+                        content_preview = el['content'][:50] + '...' if len(el['content']) > 50 else el['content']
+                        log(f"    ✓ {el.get('tag', 'element')}: \"{content_preview}\" → data-editable=\"{field_name}\"")
+                elif 'id' in el:
+                    # OLD STYLE: Use ID-based replacement
+                    element_id = el['id']
+                    pattern = r'(id="' + re.escape(element_id) + r'"[^>]*?)>'
+                    replacement = r'\1 data-editable="' + field_name + '">'
+                    new_html = re.sub(pattern, replacement, html, count=1)
+                    if new_html != html:
+                        html = new_html
+                        count_text += 1
+                        content_preview = el['content'][:50] + '...' if len(el['content']) > 50 else el['content']
+                        log(f"    ✓ {el.get('type', 'element')}: {element_id} \"{content_preview}\" → data-editable=\"{field_name}\"")
             
-            # Process IMAGES
+            # STEP 4: Process IMAGES
             image_elements = self.extract_image_elements(html)
             count_images = 0
             for idx, el in enumerate(image_elements, 1):
-                image_name = self.get_smart_image_name(el['id'], idx)
+                image_name = self.get_smart_image_name(el.get('id', f'img_{idx}'), idx)
                 
-                pattern = r'(id="' + re.escape(el['id']) + r'"[^>]*?)>'
-                # Add data-image-editable
-                html = re.sub(pattern, r'\1 data-image-editable="' + image_name + '">', html)
-                count_images += 1
-                log(f"    🖼️ {el['type']}: {el['id']} → data-image-editable=\"{image_name}\"")
+                if el.get('is_plain'):
+                    # PLAIN IMG TAG - Add data-image-editable attribute
+                    original_tag = el['original_tag']
+                    # Insert data-image-editable before the closing >
+                    if original_tag.endswith('>'):
+                        new_tag = original_tag[:-1] + f' data-image-editable="{image_name}">'
+                    else:
+                        new_tag = original_tag + f' data-image-editable="{image_name}">'
+                    
+                    # Replace only the first occurrence at this position
+                    html = html.replace(original_tag, new_tag, 1)
+                    count_images += 1
+                    # Extract src for logging
+                    src_match = re.search(r'src="([^"]+)"', original_tag)
+                    src_preview = src_match.group(1)[-50:] if src_match else 'unknown'
+                    log(f"    🖼️ img: ...{src_preview} → data-image-editable=\"{image_name}\"")
+                    
+                elif el.get('is_uuid'):
+                    # GENERIC IMAGE REPLACEMENT
+                    tag_regex = r'<[^>]*data-uuid="' + re.escape(el['id']) + r'"[^>]*>'
+                    match = re.search(tag_regex, html)
+                    if match:
+                        original_tag = match.group(0)
+                        # Add or Replace data-image-editable
+                        if 'data-image-editable=' in original_tag:
+                             # Replace existing value
+                             new_tag = re.sub(r'data-image-editable="[^"]*"', f'data-image-editable="{image_name}"', original_tag)
+                        else:
+                             # Append
+                             new_tag = original_tag[:-1] + f' data-image-editable="{image_name}">'
+                        
+                        html = html.replace(original_tag, new_tag)
+                        count_images += 1
+                        log(f"    🖼️ {el['type']}: {el['id']} → data-image-editable=\"{image_name}\"")
+                else:
+                    # LEGACY IMAGE REPLACEMENT (id="IMAGE1" pattern)
+                    pattern = r'(id="' + re.escape(el['id']) + r'"[^>]*?)>'
+                    # Add data-image-editable
+                    html = re.sub(pattern, r'\1 data-image-editable="' + image_name + '">', html)
+                    count_images += 1
+                    log(f"    🖼️ {el['type']}: {el['id']} → data-image-editable=\"{image_name}\"")
             
             # Save if changed
             if html != original_html:
@@ -321,8 +517,8 @@ class UltimateEditableTool:
                     with open(backup_path, 'w', encoding='utf-8') as f:
                         f.write(original_html)
                 
-                # Save
-                with open(filename, 'w', encoding='utf-8') as f:
+                # Save - Use newline='' to prevent double-spacing
+                with open(filename, 'w', encoding='utf-8', newline='') as f:
                     f.write(html)
                 
                 log(f"\n  ✅ SUCCESS: +{count_text} text fields, +{count_images} image fields")

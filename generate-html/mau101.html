@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Editorial — Minh Quân & Hồng Nhung</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --noir: #0A0A0A;
+            --ivory: #F8F6F0;
+            --sand: #D4C5B0;
+            --rust: #B85C38;
+            --olive: #6B7F5E;
+            --slate: #4A5568;
+            --cream: #FAF8F4;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--ivory);
+            color: var(--noir);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .serif { font-family: 'Playfair Display', serif; }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            height: 100vh;
+            background: var(--noir);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .hero-left {
+            background: var(--noir);
+            color: var(--ivory);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+        }
+
+        .hero-content {
+            max-width: 500px;
+        }
+
+        .hero-issue {
+            font-size: 0.625rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 3rem;
+            color: var(--sand);
+        }
+
+        .hero-names {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 400;
+            line-height: 0.9;
+            letter-spacing: -3px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-names .ampersand {
+            font-size: 0.5em;
+            font-style: italic;
+            color: var(--rust);
+            margin: 0.5rem 0;
+            display: block;
+        }
+
+        .hero-date {
+            font-size: 0.875rem;
+            letter-spacing: 3px;
+            font-weight: 300;
+            color: var(--sand);
+        }
+
+        .hero-right {
+            position: relative;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-frame {
+            position: absolute;
+            inset: 2rem;
+            border: 1px solid rgba(255,255,255,0.3);
+            pointer-events: none;
+        }
+
+        /* Section Base */
+        section {
+            position: relative;
+        }
+
+        .section-number {
+            font-size: 0.625rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--rust);
+            margin-bottom: 1rem;
+        }
+
+        /* Intro */
+        .intro {
+            padding: 10rem 4rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .intro-title {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 3rem;
+        }
+
+        .intro-text {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            font-weight: 300;
+            color: var(--slate);
+        }
+
+        /* Spread */
+        .spread {
+            padding: 8rem 4rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .spread-grid {
+            display: grid;
+            grid-template-columns: repeat(24, 1fr);
+            gap: 0;
+            position: relative;
+        }
+
+        .spread-img {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spread-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .spread-1 { grid-column: 1 / 15; aspect-ratio: 3/4; z-index: 2; }
+        .spread-2 { grid-column: 13 / 25; aspect-ratio: 4/5; margin-top: 4rem; }
+
+        .spread-overlay {
+            position: absolute;
+            bottom: -3rem;
+            left: 3rem;
+            background: var(--rust);
+            color: white;
+            padding: 2.5rem 3rem;
+            max-width: 350px;
+            z-index: 3;
+        }
+
+        .spread-overlay h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Feature */
+        .feature {
+            background: var(--sand);
+            padding: 10rem 4rem;
+        }
+
+        .feature-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 6rem;
+        }
+
+        .feature-sidebar {
+            position: sticky;
+            top: 4rem;
+        }
+
+        .feature-number {
+            font-size: 8rem;
+            font-weight: 200;
+            line-height: 1;
+            color: rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .feature-title {
+            font-size: 2.5rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+        }
+
+        .feature-content p {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            color: var(--slate);
+        }
+
+        .feature-quote {
+            border-left: 3px solid var(--noir);
+            padding-left: 2rem;
+            margin: 3rem 0;
+            font-style: italic;
+            font-size: 1.5rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            padding: 10rem 4rem;
+            background: var(--cream);
+        }
+
+        .timeline-header {
+            text-align: center;
+            margin-bottom: 6rem;
+        }
+
+        .timeline-header h2 {
+            font-size: clamp(2.5rem, 4vw, 4rem);
+            font-weight: 400;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 6rem;
+            align-items: center;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            order: 2;
+        }
+
+        .timeline-image {
+            aspect-ratio: 4/5;
+            overflow: hidden;
+        }
+
+        .timeline-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .timeline-content h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-date {
+            font-size: 0.875rem;
+            letter-spacing: 2px;
+            color: var(--rust);
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--slate);
+        }
+
+        /* Collage */
+        .collage {
+            padding: 0;
+        }
+
+        .collage-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 0 4rem;
+        }
+
+        .collage-item {
+            overflow: hidden;
+        }
+
+        .collage-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .c-1 { grid-column: span 5; aspect-ratio: 3/4; }
+        .c-2 { grid-column: span 7; aspect-ratio: 16/9; margin-top: 3rem; }
+        .c-3 { grid-column: span 4; aspect-ratio: 1; }
+        .c-4 { grid-column: span 8; aspect-ratio: 4/3; }
+        .c-5 { grid-column: span 6; aspect-ratio: 3/4; }
+        .c-6 { grid-column: span 6; aspect-ratio: 1; margin-top: -4rem; }
+
+        /* Parents */
+        .parents {
+            padding: 10rem 4rem;
+            background: var(--ivory);
+        }
+
+        .parents-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .parents-header {
+            text-align: center;
+            margin-bottom: 6rem;
+        }
+
+        .parents-header h2 {
+            font-size: clamp(2.5rem, 4vw, 4rem);
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .parents-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+        }
+
+        .parent-side h3 {
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .parent-info {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .parent-info h4 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .parent-info p {
+            font-size: 1rem;
+            color: var(--slate);
+        }
+
+        /* Details */
+        .details {
+            background: var(--noir);
+            color: var(--ivory);
+            padding: 10rem 4rem;
+        }
+
+        .details-header {
+            text-align: center;
+            margin-bottom: 8rem;
+        }
+
+        .details-header h2 {
+            font-size: clamp(3rem, 5vw, 5rem);
+            font-weight: 400;
+            letter-spacing: -2px;
+            margin-bottom: 2rem;
+        }
+
+        .details-line {
+            width: 80px;
+            height: 1px;
+            background: var(--rust);
+            margin: 0 auto;
+        }
+
+        .details-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6rem;
+        }
+
+        .detail-card {
+            text-align: center;
+            position: relative;
+        }
+
+        .detail-card::before {
+            content: '';
+            position: absolute;
+            top: -3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 2rem;
+            background: var(--rust);
+        }
+
+        .detail-card h3 {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+        }
+
+        .detail-card .time {
+            font-size: 3rem;
+            font-weight: 200;
+            color: var(--sand);
+            margin: 1.5rem 0;
+        }
+
+        .detail-card p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--sand);
+        }
+
+        /* Venue */
+        .venue {
+            padding: 10rem 4rem;
+            background: var(--cream);
+        }
+
+        .venue-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .venue-header {
+            text-align: center;
+            margin-bottom: 6rem;
+        }
+
+        .venue-header h2 {
+            font-size: clamp(2.5rem, 4vw, 4rem);
+            font-weight: 400;
+            margin-bottom: 2rem;
+        }
+
+        .venue-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .venue-image {
+            aspect-ratio: 16/10;
+            overflow: hidden;
+        }
+
+        .venue-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .venue-info h3 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .venue-info p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--slate);
+            margin-bottom: 1.5rem;
+        }
+
+        .venue-details {
+            margin-top: 3rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--sand);
+        }
+
+        .venue-detail-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .venue-detail-item strong {
+            display: block;
+            font-size: 0.875rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Gallery */
+        .gallery {
+            padding: 0;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 1;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-item:nth-child(1) {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .gallery-item:nth-child(5) {
+            grid-column: span 2;
+        }
+
+        /* RSVP */
+        .rsvp {
+            background: var(--olive);
+            color: white;
+            padding: 12rem 4rem;
+            text-align: center;
+        }
+
+        .rsvp-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .rsvp-content h2 {
+            font-size: clamp(3.5rem, 6vw, 6rem);
+            font-weight: 400;
+            line-height: 1;
+            letter-spacing: -3px;
+            margin-bottom: 3rem;
+        }
+
+        .rsvp-content p {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            margin-bottom: 4rem;
+        }
+
+        .rsvp-button {
+            display: inline-block;
+            padding: 1.5rem 4rem;
+            background: white;
+            color: var(--olive);
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .rsvp-button:hover {
+            background: var(--ivory);
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--noir);
+            color: var(--ivory);
+            padding: 6rem 4rem;
+            text-align: center;
+        }
+
+        .footer-names {
+            font-size: 3rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-date {
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--sand);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero { grid-template-columns: 1fr; }
+            .hero-left { padding: 3rem 2rem; }
+            .hero-right { min-height: 60vh; }
+            .spread-grid { grid-template-columns: 1fr; }
+            .spread-1, .spread-2 { grid-column: 1; margin-top: 0; }
+            .feature-container, .venue-grid, .parents-grid { grid-template-columns: 1fr; }
+            .timeline-item { grid-template-columns: 1fr; }
+            .timeline-item:nth-child(even) .timeline-content { order: 1; }
+            .collage-grid { grid-template-columns: repeat(6, 1fr); }
+            .c-1, .c-2, .c-4 { grid-column: span 6; }
+            .c-3, .c-5, .c-6 { grid-column: span 3; }
+            .details-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 640px) {
+            .intro, .feature, .timeline, .parents, .details, .venue, .rsvp { padding: 5rem 1.5rem; }
+            .spread, .collage-grid { padding: 0 1rem; }
+            .collage-grid { grid-template-columns: 1fr; }
+            .c-1, .c-2, .c-3, .c-4, .c-5, .c-6 { grid-column: span 1; margin-top: 0; }
+            .gallery-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-left">
+            <div class="hero-content">
+                <div class="hero-issue" data-editable="issue">ISSUE NO. 01 — SPRING 2026</div>
+                <h1 class="hero-names serif">
+                    <span data-editable="groom-name">Minh Quân</span>
+                    <span class="ampersand">&</span>
+                    <span data-editable="bride-name">Hồng Nhung</span>
+                </h1>
+                <div class="hero-date" data-editable="wedding-date">15 THÁNG 06, 2026</div>
+            </div>
+        </div>
+        <div class="hero-right">
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1200" alt="Hero" class="hero-image" data-image-editable="hero-image">
+            <div class="hero-frame"></div>
+        </div>
+    </section>
+
+    <!-- Intro Section -->
+    <section class="intro">
+        <div class="section-number">INTRODUCTION</div>
+        <h2 class="serif intro-title" data-editable="intro-title">Một Câu Chuyện Tình Yêu Vượt Thời Gian</h2>
+        <p class="intro-text" data-editable="intro-text">
+            Trong thế giới đầy biến động này, tình yêu của chúng tôi là điểm tựa vững chắc nhất. 
+            Từ những ngày đầu gặp gỡ tại thư viện đại học, qua những chuyến du lịch khắp châu Á, 
+            đến quyết định xây dựng tổ ấm chung, mỗi khoảnh khắc đều là một trang sách quý giá 
+            trong cuốn tiểu thuyết tình yêu của chúng tôi. Hôm nay, chúng tôi mời bạn cùng chứng kiến 
+            chương mới nhất và đẹp nhất của câu chuyện này.
+        </p>
+    </section>
+
+    <!-- Editorial Spread -->
+    <section class="spread">
+        <div class="spread-grid">
+            <div class="spread-img spread-1">
+                <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=1200" alt="Spread 1" data-image-editable="spread-1">
+            </div>
+            <div class="spread-img spread-2">
+                <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1200" alt="Spread 2" data-image-editable="spread-2">
+            </div>
+            <div class="spread-overlay">
+                <h3 class="serif" data-editable="spread-title">Vẻ Đẹp Của Sự Giản Dị</h3>
+                <p data-editable="spread-text">Trong mỗi khoảnh khắc bên nhau, chúng tôi tìm thấy vẻ đẹp của sự chân thật và giản dị.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Story -->
+    <section class="feature">
+        <div class="feature-container">
+            <div class="feature-sidebar">
+                <div class="feature-number serif">01</div>
+                <div class="section-number">FEATURE STORY</div>
+            </div>
+            <div class="feature-content">
+                <h2 class="serif feature-title" data-editable="feature-title">Hành Trình Tìm Thấy Nhau</h2>
+                <p data-editable="feature-p1">
+                    Mùa thu năm 2018, trong một buổi chiều mưa phùn tại thư viện trường đại học, 
+                    Minh Quân đã vô tình làm rơi một cuốn sách xuống chân Hồng Nhung. Đó là cuốn 
+                    "Trăm Năm Cô Đơn" của Gabriel García Márquez. Khi cô cúi xuống nhặt, anh đã 
+                    nhìn thấy ánh mắt sâu thẳm và nụ cười ấm áp nhất mà anh từng gặp.
+                </p>
+
+                <p data-editable="feature-p2">
+                    "Anh cũng thích Márquez à?" - câu hỏi đơn giản đó đã mở ra một cuộc trò chuyện 
+                    kéo dài ba tiếng đồng hồ. Họ nói về văn học, về nghệ thuật, về những giấc mơ 
+                    và khát vọng. Từ đó, thư viện trở thành nơi hẹn hò bí mật của hai người, nơi 
+                    tình yêu nảy nở giữa những trang sách cũ và mùi giấy cổ.
+                </p>
+                <div class="feature-quote serif" data-editable="feature-quote">
+                    "Tình yêu không phải là nhìn vào mắt nhau, mà là cùng nhau nhìn về một hướng."
+                </div>
+                <p data-editable="feature-p3">
+                    Năm 2020, khi đại dịch ập đến, khoảng cách địa lý đã thử thách tình yêu của họ. 
+                    Minh Quân ở Hà Nội, Hồng Nhung về quê Đà Lạt. Nhưng mỗi đêm, họ lại cùng nhau 
+                    đọc sách qua video call, cùng nấu ăn từ xa, cùng xem hoàng hôn qua màn hình. 
+                    Khoảng cách không làm họ xa nhau, mà còn khiến trái tim họ gần nhau hơn.
+                </p>
+                <p data-editable="feature-p4">
+                    Tháng 12 năm 2023, trong chuyến du lịch Kyoto, Nhật Bản, giữa khu vườn tre 
+                    Arashiyama đầy thơ mộng, Minh Quân đã quỳ gối cầu hôn. "Em có muốn viết tiếp 
+                    câu chuyện này cùng anh không?" - anh hỏi với đôi mắt rưng rưng. Và câu trả lời 
+                    của Hồng Nhung là một cái gật đầu và dòng nước mắt hạnh phúc.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline">
+        <div class="timeline-header">
+            <div class="section-number">OUR JOURNEY</div>
+            <h2 class="serif" data-editable="timeline-main-title">Những Cột Mốc Đáng Nhớ</h2>
+        </div>
+        <div class="timeline-container">
+            <div class="timeline-item">
+                <div class="timeline-image">
+                    <img src="https://images.unsplash.com/photo-1481653125770-b78c206c59d4?w=800" alt="First Meet" data-image-editable="timeline-1">
+                </div>
+                <div class="timeline-content">
+                    <div class="section-number timeline-date" data-editable="timeline-date-1">THÁNG 10, 2018</div>
+                    <h3 class="serif" data-editable="timeline-title-1">Lần Đầu Gặp Gỡ</h3>
+                    <p class="timeline-text" data-editable="timeline-text-1">
+                        Thư viện trường đại học, một buổi chiều mưa phùn. Một cuốn sách rơi xuống 
+                        đã kết nối hai trái tim. Từ đó, mỗi chiều thứ Sáu đều là ngày họ cùng nhau 
+                        đọc sách, uống cà phê và chia sẻ những câu chuyện về cuộc sống.
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-image">
+                    <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=800" alt="First Date" data-image-editable="timeline-2">
+                </div>
+                <div class="timeline-content">
+                    <div class="section-number timeline-date" data-editable="timeline-date-2">THÁNG 12, 2018</div>
+                    <h3 class="serif" data-editable="timeline-title-2">Buổi Hẹn Đầu Tiên</h3>
+                    <p class="timeline-text" data-editable="timeline-text-2">
+                        Một quán cà phê nhỏ ở phố cổ Hà Nội, với ánh đèn vàng ấm áp và tiếng nhạc jazz 
+                        nhẹ nhàng. Họ nói chuyện từ 7 giờ tối đến khi quán đóng cửa lúc nửa đêm. 
+                        Đó là đêm Minh Quân biết mình đã yêu.
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-image">
+                    <img src="https://images.unsplash.com/photo-1464047736614-af63643285bf?w=800" alt="Travel" data-image-editable="timeline-3">
+                </div>
+                <div class="timeline-content">
+                    <div class="section-number timeline-date" data-editable="timeline-date-3">THÁNG 6, 2019</div>
+                    <h3 class="serif" data-editable="timeline-title-3">Chuyến Du Lịch Đầu Tiên</h3>
+                    <p class="timeline-text" data-editable="timeline-text-3">
+                        Đà Lạt - thành phố ngàn hoa. Họ cùng nhau khám phá những con đường mòn, 
+                        ngắm hoàng hôn trên đồi chè, và hứa hẹn sẽ cùng nhau đi khắp thế gian. 
+                        Đây là nơi Minh Quân lần đầu nói "Anh yêu em".
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-image">
+                    <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800" alt="Pandemic" data-image-editable="timeline-4">
+                </div>
+                <div class="timeline-content">
+                    <div class="section-number timeline-date" data-editable="timeline-date-4">THÁNG 3, 2020</div>
+                    <h3 class="serif" data-editable="timeline-title-4">Thử Thách Đại Dịch</h3>
+                    <p class="timeline-text" data-editable="timeline-text-4">
+                        Khi thế giới đóng băng, tình yêu của họ vẫn ấm áp. Những cuộc gọi video mỗi đêm, 
+                        những bức thư tay gửi qua đường bưu điện, những món quà nhỏ bất ngờ. 
+                        Khoảng cách chỉ làm trái tim họ gần nhau hơn.
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-image">
+                    <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800" alt="Moving In" data-image-editable="timeline-5">
+                </div>
+                <div class="timeline-content">
+                    <div class="section-number timeline-date" data-editable="timeline-date-5">THÁNG 9, 2022</div>
+                    <h3 class="serif" data-editable="timeline-title-5">Chung Một Mái Nhà</h3>
+                    <p class="timeline-text" data-editable="timeline-text-5">
+                        Căn hộ nhỏ ở quận Tây Hồ trở thành tổ ấm của hai người. Họ cùng nhau trang trí, 
+                        trồng cây, nấu ăn và xây dựng những thói quen nhỏ nhặt nhưng ý nghĩa. 
+                        Mỗi buổi sáng thức dậy bên nhau là một món quà.
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-image">
+                    <img src="https://images.unsplash.com/photo-1478436127897-769e1b3f0f36?w=800" alt="Proposal" data-image-editable="timeline-6">
+                </div>
+                <div class="timeline-content">
+                    <div class="section-number timeline-date" data-editable="timeline-date-6">THÁNG 12, 2023</div>
+                    <h3 class="serif" data-editable="timeline-title-6">Lời Cầu Hôn</h3>
+                    <p class="timeline-text" data-editable="timeline-text-6">
+                        Kyoto, Nhật Bản. Giữa khu vườn tre Arashiyama đầy thơ mộng, với ánh nắng 
+                        chiều lọt qua những thân tre xanh mướt, Minh Quân đã quỳ gối và hỏi câu hỏi 
+                        quan trọng nhất đời mình. Và Hồng Nhung đã nói "Có".
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Second Editorial Spread -->
+    <section class="spread" style="padding-top: 4rem;">
+        <div class="spread-grid">
+            <div class="spread-img spread-2" style="grid-column: 1 / 13; margin-top: 0;">
+                <img src="https://images.unsplash.com/photo-1545291730-faff8ca1d4b0?w=1200" alt="Spread 3" data-image-editable="spread-3">
+            </div>
+            <div class="spread-img spread-1" style="grid-column: 11 / 25; margin-top: -6rem;">
+                <img src="https://images.unsplash.com/photo-1594552072238-5cb99b6b6c3a?w=1200" alt="Spread 4" data-image-editable="spread-4">
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Collage -->
+    <section class="collage">
+        <div class="collage-grid">
+            <div class="collage-item c-1">
+                <img src="https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=800" alt="Collage 1" data-image-editable="collage-1">
+            </div>
+            <div class="collage-item c-2">
+                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1200" alt="Collage 2" data-image-editable="collage-2">
+            </div>
+            <div class="collage-item c-3">
+                <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800" alt="Collage 3" data-image-editable="collage-3">
+            </div>
+            <div class="collage-item c-4">
+                <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1200" alt="Collage 4" data-image-editable="collage-4">
+            </div>
+            <div class="collage-item c-5">
+                <img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?w=800" alt="Collage 5" data-image-editable="collage-5">
+            </div>
+            <div class="collage-item c-6">
+                <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800" alt="Collage 6" data-image-editable="collage-6">
+            </div>
+            <div class="collage-item c-2" style="margin-top: 0;">
+                <img src="https://images.unsplash.com/photo-1460978812857-470ed1c77af0?w=1200" alt="Collage 7" data-image-editable="collage-7">
+            </div>
+            <div class="collage-item c-3">
+                <img src="https://images.unsplash.com/photo-1545291730-faff8ca1d4b0?w=800" alt="Collage 8" data-image-editable="collage-8">
+            </div>
+            <div class="collage-item c-5">
+                <img src="https://images.unsplash.com/photo-1594552072238-5cb99b6b6c3a?w=800" alt="Collage 9" data-image-editable="collage-9">
+            </div>
+            <div class="collage-item c-4">
+                <img src="https://images.unsplash.com/photo-1519167758481-83f29da8c2b6?w=1200" alt="Collage 10" data-image-editable="collage-10">
+            </div>
+        </div>
+    </section>
+
+    <!-- Parents Section -->
+    <section class="parents">
+        <div class="parents-container">
+            <div class="parents-header">
+                <div class="section-number">WITH GRATITUDE</div>
+                <h2 class="serif" data-editable="parents-main-title">Gia Đình Hai Bên</h2>
+            </div>
+            <div class="parents-grid">
+                <div class="parent-side">
+                    <h3 class="serif" data-editable="bride-family-title">Gia Đình Nhà Gái</h3>
+                    <div class="parent-info">
+                        <h4 class="serif" data-editable="bride-father">Ông Nguyễn Văn Hùng</h4>
+                        <p data-editable="bride-father-title">Cha của cô dâu</p>
+                    </div>
+                    <div class="parent-info">
+                        <h4 class="serif" data-editable="bride-mother">Bà Trần Thị Mai</h4>
+                        <p data-editable="bride-mother-title">Mẹ của cô dâu</p>
+                    </div>
+                    <p data-editable="bride-family-message" style="text-align: center; margin-top: 2rem; color: var(--slate); font-style: italic;">
+                        "Con gái là niềm tự hào của chúng tôi. Hôm nay, chúng tôi trao con vào tay 
+                        một người đàn ông tốt bụng và đáng tin cậy. Chúc hai con hạnh phúc mãi mãi."
+                    </p>
+                </div>
+                <div class="parent-side">
+                    <h3 class="serif" data-editable="groom-family-title">Gia Đình Nhà Trai</h3>
+                    <div class="parent-info">
+                        <h4 class="serif" data-editable="groom-father">Ông Lê Minh Tuấn</h4>
+                        <p data-editable="groom-father-title">Cha của chú rể</p>
+                    </div>
+                    <div class="parent-info">
+                        <h4 class="serif" data-editable="groom-mother">Bà Phạm Thị Lan</h4>
+                        <p data-editable="groom-mother-title">Mẹ của chú rể</p>
+                    </div>
+                    <p data-editable="groom-family-message" style="text-align: center; margin-top: 2rem; color: var(--slate); font-style: italic;">
+                        "Con trai chúng tôi đã trưởng thành và tìm được người bạn đời tuyệt vời. 
+                        Chúng tôi chào đón Hồng Nhung vào gia đình với tất cả tình yêu thương."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wedding Party Section -->
+    <section class="timeline" style="background: var(--ivory);">
+        <div class="timeline-header">
+            <div class="section-number">THE WEDDING PARTY</div>
+            <h2 class="serif" data-editable="party-main-title">Phù Dâu & Phù Rể</h2>
+            <p data-editable="party-subtitle" style="max-width: 700px; margin: 1rem auto 0; color: var(--slate);">
+                Những người bạn thân thiết nhất, những người đã đồng hành cùng chúng tôi 
+                qua mọi thăng trầm của cuộc đời.
+            </p>
+        </div>
+        <div class="timeline-container">
+            <div class="timeline-item">
+                <div class="timeline-image">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800" alt="Bridesmaid 1" data-image-editable="bridesmaid-1">
+                </div>
+                <div class="timeline-content">
+                    <div class="section-number timeline-date" data-editable="bridesmaid-1-role">PHÙ DÂU</div>
+                    <h3 class="serif" data-editable="bridesmaid-1-name">Nguyễn Thị Lan Anh</h3>
+                    <p class="timeline-text" data-editable="bridesmaid-1-bio">
+                        Bạn thân từ thời cấp 3, người đã ở bên Hồng Nhung qua mọi khoảnh khắc 
+                        vui buồn. Lan Anh là người đầu tiên biết về mối tình này và luôn ủng hộ 
+                        hai người đến cùng.
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-image">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800" alt="Groomsman 1" data-image-editable="groomsman-1">
+                </div>
+                <div class="timeline-content">
+                    <div class="section-number timeline-date" data-editable="groomsman-1-role">PHÙ RỂ</div>
+                    <h3 class="serif" data-editable="groomsman-1-name">Trần Đức Anh</h3>
+                    <p class="timeline-text" data-editable="groomsman-1-bio">
+                        Bạn thân từ thời đại học, người anh em tri kỷ của Minh Quân. Đức Anh 
+                        là người đã động viên và khuyên Minh Quân mạnh dạn tỏ tình với Hồng Nhung 
+                        ngay từ những ngày đầu.
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-image">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=800" alt="Bridesmaid 2" data-image-editable="bridesmaid-2">
+                </div>
+                <div class="timeline-content">
+                    <div class="section-number timeline-date" data-editable="bridesmaid-2-role">PHÙ DÂU</div>
+                    <h3 class="serif" data-editable="bridesmaid-2-name">Phạm Thu Hà</h3>
+                    <p class="timeline-text" data-editable="bridesmaid-2-bio">
+                        Đồng nghiệp thân thiết và là người bạn tâm giao của Hồng Nhung. Thu Hà 
+                        luôn là nguồn động viên tinh thần và là người tư vấn thời trang đắc lực 
+                        cho đám cưới này.
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-image">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800" alt="Groomsman 2" data-image-editable="groomsman-2">
+                </div>
+                <div class="timeline-content">
+                    <div class="section-number timeline-date" data-editable="groomsman-2-role">PHÙ RỂ</div>
+                    <h3 class="serif" data-editable="groomsman-2-name">Hoàng Minh Tuấn</h3>
+                    <p class="timeline-text" data-editable="groomsman-2-bio">
+                        Em trai của Minh Quân, người đã chứng kiến anh trai mình trưởng thành 
+                        và tìm được tình yêu đích thực. Minh Tuấn rất yêu quý chị dâu tương lai 
+                        và háo hức cho ngày trọng đại này.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wedding Details -->
+    <section class="details">
+        <div class="details-header">
+            <h2 class="serif" data-editable="details-main-title">Chi Tiết Hôn Lễ</h2>
+            <div class="details-line"></div>
+        </div>
+        <div class="details-grid">
+            <div class="detail-card">
+                <h3 class="serif" data-editable="ceremony-title">Lễ Vu Quy</h3>
+                <div class="time serif" data-editable="ceremony-time">09:00</div>
+                <p data-editable="ceremony-date">Chủ Nhật, 15 Tháng 6, 2026</p>
+                <p data-editable="ceremony-location">Nhà Riêng Cô Dâu<br>123 Phố Huế, Hai Bà Trưng<br>Hà Nội</p>
+                <p data-editable="ceremony-note" style="margin-top: 1.5rem; font-size: 0.875rem;">
+                    Lễ vu quy sẽ được tổ chức theo nghi thức truyền thống Việt Nam, 
+                    với sự hiện diện của gia đình hai bên và bạn bè thân thiết.
+                </p>
+            </div>
+            <div class="detail-card">
+                <h3 class="serif" data-editable="reception-title">Tiệc Cưới</h3>
+                <div class="time serif" data-editable="reception-time">18:00</div>
+                <p data-editable="reception-date">Chủ Nhật, 15 Tháng 6, 2026</p>
+                <p data-editable="reception-location">Khách Sạn Metropole<br>15 Ngô Quyền, Hoàn Kiếm<br>Hà Nội</p>
+                <p data-editable="reception-note" style="margin-top: 1.5rem; font-size: 0.875rem;">
+                    Tiệc cưới sẽ được tổ chức trong không gian sang trọng với thực đơn 
+                    cao cấp và chương trình văn nghệ đặc sắc.
+                </p>
+            </div>
+            <div class="detail-card">
+                <h3 class="serif" data-editable="dresscode-title">Dress Code</h3>
+                <div class="time serif" data-editable="dresscode-style">Formal</div>
+                <p data-editable="dresscode-description">Trang phục lịch sự, trang trọng</p>
+                <p data-editable="dresscode-colors">Tông màu: Đen, Trắng, Be, Xanh Navy</p>
+                <p data-editable="dresscode-note" style="margin-top: 1.5rem; font-size: 0.875rem;">
+                    Quý khách vui lòng tránh mặc trang phục màu đỏ hoặc trắng tinh 
+                    để tôn trọng trang phục của cô dâu chú rể.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Venue Section -->
+    <section class="venue">
+        <div class="venue-container">
+            <div class="venue-header">
+                <div class="section-number">THE VENUE</div>
+                <h2 class="serif" data-editable="venue-main-title">Địa Điểm Tổ Chức</h2>
+            </div>
+            <div class="venue-grid">
+                <div class="venue-image">
+                    <img src="https://images.unsplash.com/photo-1519167758481-83f29da8c2b6?w=1400" alt="Venue" data-image-editable="venue-main-image">
+                </div>
+                <div class="venue-info">
+                    <h3 class="serif" data-editable="venue-name">Khách Sạn Metropole Hà Nội</h3>
+                    <p data-editable="venue-description">
+                        Được xây dựng từ năm 1901, Sofitel Legend Metropole Hà Nội là một trong những 
+                        khách sạn lâu đời và danh giá nhất Đông Nam Á. Với kiến trúc thuộc địa Pháp 
+                        đặc trưng, không gian sang trọng và dịch vụ đẳng cấp quốc tế, đây là địa điểm 
+                        hoàn hảo cho một đám cưới đáng nhớ.
+                    </p>
+                    <p data-editable="venue-history">
+                        Khách sạn đã từng đón tiếp nhiều nguyên thủ quốc gia, nghệ sĩ nổi tiếng và 
+                        là nơi diễn ra các sự kiện quan trọng của thủ đô. Hôm nay, nơi đây sẽ chứng 
+                        kiến một trong những ngày trọng đại nhất cuộc đời chúng tôi.
+                    </p>
+                    <div class="venue-details">
+                        <div class="venue-detail-item">
+                            <strong data-editable="venue-address-label">ĐỊA CHỈ</strong>
+                            <p data-editable="venue-address">15 Ngô Quyền, Hoàn Kiếm, Hà Nội</p>
+                        </div>
+                        <div class="venue-detail-item">
+                            <strong data-editable="venue-phone-label">ĐIỆN THOẠI</strong>
+                            <p data-editable="venue-phone">(+84) 24 3826 6919</p>
+                        </div>
+                        <div class="venue-detail-item">
+                            <strong data-editable="venue-parking-label">BÃI ĐỖ XE</strong>
+                            <p data-editable="venue-parking">Bãi đỗ xe rộng rãi, miễn phí cho khách mời</p>
+                        </div>
+                        <div class="venue-detail-item">
+                            <strong data-editable="venue-access-label">HƯỚNG DẪN</strong>
+                            <p data-editable="venue-access">Cách Hồ Hoàn Kiếm 5 phút đi bộ. Có thể di chuyển bằng taxi, Grab hoặc xe riêng.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery">
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=1200" alt="Gallery 1" data-image-editable="gallery-1">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=800" alt="Gallery 2" data-image-editable="gallery-2">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=800" alt="Gallery 3" data-image-editable="gallery-3">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800" alt="Gallery 4" data-image-editable="gallery-4">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1200" alt="Gallery 5" data-image-editable="gallery-5">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800" alt="Gallery 6" data-image-editable="gallery-6">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800" alt="Gallery 7" data-image-editable="gallery-7">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?w=800" alt="Gallery 8" data-image-editable="gallery-8">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800" alt="Gallery 9" data-image-editable="gallery-9">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1481653125770-b78c206c59d4?w=800" alt="Gallery 10" data-image-editable="gallery-10">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1464047736614-af63643285bf?w=800" alt="Gallery 11" data-image-editable="gallery-11">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800" alt="Gallery 12" data-image-editable="gallery-12">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1478436127897-769e1b3f0f36?w=800" alt="Gallery 13" data-image-editable="gallery-13">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800" alt="Gallery 14" data-image-editable="gallery-14">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=800" alt="Gallery 15" data-image-editable="gallery-15">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=800" alt="Gallery 16" data-image-editable="gallery-16">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1519167758481-83f29da8c2b6?w=800" alt="Gallery 17" data-image-editable="gallery-17">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1460978812857-470ed1c77af0?w=800" alt="Gallery 18" data-image-editable="gallery-18">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1545291730-faff8ca1d4b0?w=800" alt="Gallery 19" data-image-editable="gallery-19">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1594552072238-5cb99b6b6c3a?w=800" alt="Gallery 20" data-image-editable="gallery-20">
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP Section -->
+    <section class="rsvp">
+        <div class="rsvp-content">
+            <h2 class="serif" data-editable="rsvp-title">Xác Nhận Tham Dự</h2>
+            <p data-editable="rsvp-text">
+                Sự hiện diện của quý khách là niềm vinh hạnh lớn lao đối với gia đình chúng tôi. 
+                Vui lòng xác nhận tham dự trước ngày 01 tháng 6, 2026 để chúng tôi có thể 
+                chuẩn bị chu đáo nhất.
+            </p>
+            <button class="rsvp-button" data-editable="rsvp-button">XÁC NHẬN NGAY</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <h3 class="serif footer-names" data-editable="footer-names">Minh Quân & Hồng Nhung</h3>
+        <p class="footer-date" data-editable="footer-date">15.06.2026 — HÀ NỘI</p>
+    </footer>
+
+</body>
+</html>

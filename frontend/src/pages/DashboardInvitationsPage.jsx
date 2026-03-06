@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
 import adminService from '../services/admin.service'
+import invitationService from '../services/invitation.service'
+import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 
 const DashboardInvitationsPage = () => {
   const navigate = useNavigate()
   const toast = useToast()
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'admin'
   const [invitations, setInvitations] = useState([])
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
@@ -22,9 +26,11 @@ const DashboardInvitationsPage = () => {
   const [invitationToDelete, setInvitationToDelete] = useState(null)
 
   useEffect(() => {
-    loadUsers() // Load users list for admin
+    if (isAdmin) {
+      loadUsers() // Load users list for admin only
+    }
     loadInvitations()
-  }, [filters])
+  }, [filters, isAdmin])
 
   const loadUsers = async () => {
     try {
@@ -38,9 +44,17 @@ const DashboardInvitationsPage = () => {
   const loadInvitations = async () => {
     try {
       setLoading(true)
-      const response = await adminService.getAllInvitations(filters)
+      let response
+      
+      if (isAdmin) {
+        // Admin: get all invitations
+        response = await adminService.getAllInvitations(filters)
+      } else {
+        // Regular user: get only their invitations
+        response = await invitationService.getAll(filters)
+      }
+      
       let data = response.data || []
-
       setInvitations(data)
     } catch (error) {
       console.error('Failed to load invitations:', error)
@@ -167,24 +181,26 @@ const DashboardInvitationsPage = () => {
 
         {/* Filters - Stacked Card Style for Mobile */}
         <div className="bg-white dark:bg-gray-800 p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div className="bg-gray-50 dark:bg-gray-900/50 p-1 rounded-lg border border-gray-200 dark:border-gray-700">
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider px-2 pt-1 mb-1">
-                👤 Người dùng
-              </label>
-              <select
-                value={filters.userId}
-                onChange={(e) => setFilters({ ...filters, userId: e.target.value })}
-                className="w-full px-2 py-1.5 bg-transparent text-gray-900 dark:text-white font-medium border-none outline-none focus:ring-0 text-sm"
-              >
-                <option value="all">Tất cả người dùng</option>
-                {users.map(user => (
-                  <option key={user.id} value={user.id}>
-                    {user.full_name} ({user.invitation_count})
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className={`grid grid-cols-1 md:grid-cols-2 ${isAdmin ? 'lg:grid-cols-5' : 'lg:grid-cols-4'} gap-4`}>
+            {isAdmin && (
+              <div className="bg-gray-50 dark:bg-gray-900/50 p-1 rounded-lg border border-gray-200 dark:border-gray-700">
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider px-2 pt-1 mb-1">
+                  👤 Người dùng
+                </label>
+                <select
+                  value={filters.userId}
+                  onChange={(e) => setFilters({ ...filters, userId: e.target.value })}
+                  className="w-full px-2 py-1.5 bg-transparent text-gray-900 dark:text-white font-medium border-none outline-none focus:ring-0 text-sm"
+                >
+                  <option value="all">Tất cả người dùng</option>
+                  {users.map(user => (
+                    <option key={user.id} value={user.id}>
+                      {user.full_name} ({user.invitation_count})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="bg-gray-50 dark:bg-gray-900/50 p-1 rounded-lg border border-gray-200 dark:border-gray-700">
               <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider px-2 pt-1 mb-1">
@@ -273,81 +289,99 @@ const DashboardInvitationsPage = () => {
             <>
               {/* DESKTOP TABLE VIEW */}
               <div className="hidden md:block overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
-                    <tr>
-                      <th className="px-6 py-4 text-left w-4">
-                        <input
-                          type="checkbox"
-                          checked={selectedInvitations.length === invitations.length && invitations.length > 0}
-                          onChange={(e) => handleSelectAll(e.target.checked)}
-                          className="w-4 h-4 rounded border-gray-300 text-black focus:ring-black"
-                        />
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Thông tin thiệp</th>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Người dùng</th>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Trạng thái</th>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Ngày tạo</th>
-                      <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Hành động</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-                    {invitations.map((invitation) => (
-                      <tr key={invitation.id} className="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                        <td className="px-6 py-4">
+                {invitations.length === 0 ? (
+                  <div className="p-16 text-center">
+                    <span className="material-symbols-outlined text-6xl text-gray-200 dark:text-gray-700 mb-4 block">inbox</span>
+                    <p className="font-bold text-gray-900 dark:text-white mb-2">Chưa có thiệp mời nào</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Bắt đầu tạo thiệp mời đầu tiên của bạn</p>
+                    <button
+                      onClick={() => navigate('/collection')}
+                      className="px-6 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-black font-bold text-sm uppercase tracking-wider hover:bg-black dark:hover:bg-gray-100 transition-colors"
+                    >
+                      Tạo thiệp mới
+                    </button>
+                  </div>
+                ) : (
+                  <table className="w-full">
+                    <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
+                      <tr>
+                        <th className="px-6 py-4 text-left w-4">
                           <input
                             type="checkbox"
-                            checked={selectedInvitations.includes(invitation.id)}
-                            onChange={(e) => handleSelectInvitation(invitation.id, e.target.checked)}
+                            checked={selectedInvitations.length === invitations.length && invitations.length > 0}
+                            onChange={(e) => handleSelectAll(e.target.checked)}
                             className="w-4 h-4 rounded border-gray-300 text-black focus:ring-black"
                           />
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-12 h-9 bg-gray-100 dark:bg-gray-700 rounded overflow-hidden shadow-sm flex-shrink-0">
-                              {invitation.template_thumbnail ? (
-                                <img src={invitation.template_thumbnail} className="w-full h-full object-cover" alt="" />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-gray-300">
-                                  <span className="material-symbols-outlined text-sm">image</span>
-                                </div>
-                              )}
-                            </div>
-                            <div>
-                              <p className="font-bold text-gray-900 dark:text-white text-sm">{invitation.title || 'Chưa đặt tên'}</p>
-                              <p className="text-xs text-gray-500">{invitation.groom_name} & {invitation.bride_name}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-[10px] font-bold">
-                              {invitation.user_name?.charAt(0)}
-                            </div>
-                            <span className="text-sm text-gray-600 dark:text-gray-300">{invitation.user_name}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">{getStatusBadge(invitation.status)}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">{formatDate(invitation.created_at)}</td>
-                        <td className="px-6 py-4 text-right">
-                          <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onClick={() => navigate(`/ultimate-html-editor?invitationId=${invitation.id}`)} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full" title="Sửa">
-                              <span className="material-symbols-outlined text-gray-600 dark:text-gray-400 text-lg">edit</span>
-                            </button>
-                            {invitation.status === 'published' && (
-                              <button onClick={() => window.open(`/invitation/${invitation.slug}`, '_blank')} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full" title="Xem">
-                                <span className="material-symbols-outlined text-blue-600 text-lg">visibility</span>
-                              </button>
-                            )}
-                            <button onClick={() => { setInvitationToDelete(invitation); setShowDeleteModal(true); }} className="p-2 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-full" title="Xóa">
-                              <span className="material-symbols-outlined text-red-600 text-lg">delete</span>
-                            </button>
-                          </div>
-                        </td>
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Thông tin thiệp</th>
+                        {isAdmin && (
+                          <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Người dùng</th>
+                        )}
+                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Ngày tạo</th>
+                        <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Hành động</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                      {invitations.map((invitation) => (
+                        <tr key={invitation.id} className="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                          <td className="px-6 py-4">
+                            <input
+                              type="checkbox"
+                              checked={selectedInvitations.includes(invitation.id)}
+                              onChange={(e) => handleSelectInvitation(invitation.id, e.target.checked)}
+                              className="w-4 h-4 rounded border-gray-300 text-black focus:ring-black"
+                            />
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-12 h-9 bg-gray-100 dark:bg-gray-700 rounded overflow-hidden shadow-sm flex-shrink-0">
+                                {invitation.template_thumbnail ? (
+                                  <img src={invitation.template_thumbnail} className="w-full h-full object-cover" alt="" />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                    <span className="material-symbols-outlined text-sm">image</span>
+                                  </div>
+                                )}
+                              </div>
+                              <div>
+                                <p className="font-bold text-gray-900 dark:text-white text-sm">{invitation.title || 'Chưa đặt tên'}</p>
+                                <p className="text-xs text-gray-500">{invitation.groom_name} & {invitation.bride_name}</p>
+                              </div>
+                            </div>
+                          </td>
+                          {isAdmin && (
+                            <td className="px-6 py-4">
+                              <div className="flex items-center gap-2">
+                                <div className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-[10px] font-bold">
+                                  {invitation.user_name?.charAt(0)}
+                                </div>
+                                <span className="text-sm text-gray-600 dark:text-gray-300">{invitation.user_name}</span>
+                              </div>
+                            </td>
+                          )}
+                          <td className="px-6 py-4">{getStatusBadge(invitation.status)}</td>
+                          <td className="px-6 py-4 text-sm text-gray-500">{formatDate(invitation.created_at)}</td>
+                          <td className="px-6 py-4 text-right">
+                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button onClick={() => navigate(`/ultimate-html-editor?invitationId=${invitation.id}`)} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full" title="Sửa">
+                                <span className="material-symbols-outlined text-gray-600 dark:text-gray-400 text-lg">edit</span>
+                              </button>
+                              {invitation.status === 'published' && (
+                                <button onClick={() => window.open(`/invitation/${invitation.slug}`, '_blank')} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full" title="Xem">
+                                  <span className="material-symbols-outlined text-blue-600 text-lg">visibility</span>
+                                </button>
+                              )}
+                              <button onClick={() => { setInvitationToDelete(invitation); setShowDeleteModal(true); }} className="p-2 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-full" title="Xóa">
+                                <span className="material-symbols-outlined text-red-600 text-lg">delete</span>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </div>
 
               {/* MOBILE LIST VIEW (Cards) */}

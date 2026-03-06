@@ -1,40 +1,68 @@
 import API_BASE_URL from '../config/api';
 
+/**
+ * API Service for Wedding System
+ * Uses same authentication pattern as HiWeb_id ERP system
+ * - Token stored in localStorage as 'userToken'
+ * - Token sent in 'Authorization' header (no "Bearer " prefix)
+ * - Automatic token refresh on 401 invalid.token error
+ */
+
 class ApiService {
   constructor() {
-    this.baseURL = API_BASE_URL;
+    // In development, use empty baseURL to leverage Vite proxy
+    // In production, use full API URL
+    this.baseURL = import.meta.env.DEV ? '' : API_BASE_URL;
+    this.isRefreshing = false;
+    this.failedQueue = [];
   }
 
+  /**
+   * Process queued requests after token refresh
+   */
+  processQueue(error, token = null) {
+    this.failedQueue.forEach((promise) => {
+      if (error) {
+        promise.reject(error);
+      } else {
+        promise.resolve(token);
+      }
+    });
+    this.failedQueue = [];
+  }
+
+  /**
+   * Get stored auth token
+   */
   getAuthToken() {
-    return localStorage.getItem('auth_token');
+    return localStorage.getItem('userToken');
   }
 
+  /**
+   * Set auth token
+   */
   setAuthToken(token) {
-    localStorage.setItem('auth_token', token);
+    localStorage.setItem('userToken', token);
   }
 
+  /**
+   * Remove auth token
+   */
   removeAuthToken() {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('currentUser');
   }
 
-  getRefreshToken() {
-    return localStorage.getItem('refresh_token');
-  }
-
-  setRefreshToken(token) {
-    localStorage.setItem('refresh_token', token);
-  }
-
+  /**
+   * Main request method with automatic token refresh
+   */
   async request(endpoint, options = {}) {
     const token = this.getAuthToken();
     
-    // Debug: Log token status
-    console.log('🔐 API Request Debug:', {
+    console.log('🔐 API Request:', {
       endpoint,
-      hasToken: !!token,
-      tokenPreview: token ? token.substring(0, 20) + '...' : 'NO TOKEN',
-      method: options.method || 'GET'
+      method: options.method || 'GET',
+      hasToken: !!token
     });
     
     const headers = {
@@ -42,11 +70,9 @@ class ApiService {
       ...options.headers,
     };
 
+    // Add Authorization header (HiWeb_id pattern - no "Bearer " prefix)
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-      console.log('✅ Authorization header added');
-    } else {
-      console.warn('⚠️ No token found in localStorage!');
+      headers['Authorization'] = token;
     }
 
     const config = {
@@ -54,84 +80,119 @@ class ApiService {
       headers,
     };
 
-    console.log('📤 Request config:', {
-      url: `${this.baseURL}${endpoint}`,
-      method: config.method,
-      headers: config.headers
-    });
-
     try {
       const response = await fetch(`${this.baseURL}${endpoint}`, config);
       const data = await response.json();
 
-      // If token expired (401), try to refresh
-      if (response.status === 401 && this.getRefreshToken() && !endpoint.includes('/auth/refresh')) {
-        console.log('🔄 Token expired, attempting refresh...');
-        const refreshed = await this.refreshAuthToken();
-        if (refreshed) {
-          // Retry original request with new token
-          console.log('✅ Token refreshed, retrying request...');
-          return this.request(endpoint, options);
-        } else {
-          // Refresh failed, clear tokens and throw error
-          console.error('❌ Token refresh failed, clearing auth state');
+      // Handle 401 invalid.token error (HiWeb_id pattern)
+      if (data.code === 401 && data.msg === 'invalid.token' && !endpoint.includes('/user/refresh')) {
+        console.log('🔄 Token invalid, attempting refresh...');
+        
+        // If already refreshing, queue this request
+        if (this.isRefreshing) {
+          return new Promise((resolve, reject) => {
+            this.failedQueue.push({ resolve, reject });
+          })
+            .then((newToken) => {
+              // Retry with new token
+              const newOptions = {
+                ...options,
+                headers: {
+                  ...headers,
+                  'Authorization': newToken
+                }
+              };
+              return this.request(endpoint, newOptions);
+            })
+            .catch((err) => Promise.reject(err));
+        }
+
+        // Start refresh process
+        this.isRefreshing = true;
+
+        try {
+          // Call refresh endpoint (HiWeb_id pattern)
+          const refreshResponse = await fetch(`${this.baseURL}/user/refresh`, {
+            method: 'GET',
+            credentials: 'include' // Send cookies
+          });
+
+          const refreshData = await refreshResponse.json();
+
+          if (refreshResponse.ok && refreshData.Authorization) {
+            const newToken = refreshData.Authorization;
+
+            // Update stored token
+            this.setAuthToken(newToken);
+
+            // Update currentUser object
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (currentUser) {
+              currentUser.userToken = newToken;
+              localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+
+            console.log('✅ Token refreshed successfully');
+
+            // Process queued requests
+            this.processQueue(null, newToken);
+
+            // Retry original request
+            const newOptions = {
+              ...options,
+              headers: {
+                ...headers,
+                'Authorization': newToken
+              }
+            };
+            return this.request(endpoint, newOptions);
+          } else {
+            throw new Error('Token refresh failed');
+          }
+        } catch (refreshError) {
+          console.error('❌ Token refresh failed:', refreshError);
+          
+          // Process queue with error
+          this.processQueue(refreshError, null);
+
+          // Clear auth data
           this.removeAuthToken();
-          throw new Error('Unauthorized access');
+
+          // Redirect to login
+          if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+          }
+
+          throw refreshError;
+        } finally {
+          this.isRefreshing = false;
         }
       }
 
       if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
+        throw new Error(data.message || data.msg || 'Something went wrong');
       }
 
       return data;
     } catch (error) {
-      console.error('API Error:', error);
+      console.error('❌ API Error:', error);
       throw error;
     }
   }
 
-  async refreshAuthToken() {
-    const refreshToken = this.getRefreshToken();
-    if (!refreshToken) {
-      console.warn('⚠️ No refresh token available');
-      return false;
-    }
-
-    try {
-      const response = await fetch(`${this.baseURL}/auth/refresh`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ refresh_token: refreshToken }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.data?.tokens) {
-        this.setAuthToken(data.data.tokens.access_token);
-        this.setRefreshToken(data.data.tokens.refresh_token);
-        console.log('✅ Token refresh successful');
-        return true;
-      }
-
-      console.error('❌ Token refresh failed');
-      this.removeAuthToken();
-      return false;
-    } catch (error) {
-      console.error('❌ Token refresh error:', error);
-      this.removeAuthToken();
-      return false;
-    }
-  }
-
-  async get(endpoint) {
-    return this.request(endpoint, {
+  /**
+   * GET request
+   */
+  async get(endpoint, params = null) {
+    const url = params ? `${endpoint}?${new URLSearchParams(params)}` : endpoint;
+    return this.request(url, {
       method: 'GET',
     });
   }
 
+  /**
+   * POST request
+   */
   async post(endpoint, body) {
     return this.request(endpoint, {
       method: 'POST',
@@ -139,6 +200,9 @@ class ApiService {
     });
   }
 
+  /**
+   * PUT request
+   */
   async put(endpoint, body) {
     return this.request(endpoint, {
       method: 'PUT',
@@ -146,12 +210,18 @@ class ApiService {
     });
   }
 
+  /**
+   * DELETE request
+   */
   async delete(endpoint) {
     return this.request(endpoint, {
       method: 'DELETE',
     });
   }
 
+  /**
+   * Upload file
+   */
   async uploadFile(endpoint, file, additionalData = {}) {
     const token = this.getAuthToken();
     const formData = new FormData();
@@ -163,7 +233,7 @@ class ApiService {
 
     const headers = {};
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+      headers['Authorization'] = token; // No "Bearer " prefix
     }
 
     try {
@@ -176,12 +246,12 @@ class ApiService {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Upload failed');
+        throw new Error(data.message || data.msg || 'Upload failed');
       }
 
       return data;
     } catch (error) {
-      console.error('Upload Error:', error);
+      console.error('❌ Upload Error:', error);
       throw error;
     }
   }

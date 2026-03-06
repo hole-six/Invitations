@@ -20,6 +20,13 @@ const DashboardTemplatesPage = () => {
   })
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [templateToDelete, setTemplateToDelete] = useState(null)
+  const [showFilters, setShowFilters] = useState(false) // Collapsed by default
+  
+  // Auto list view on mobile
+  const getInitialViewMode = () => {
+    return window.innerWidth < 768 ? 'list' : 'grid'
+  }
+  const [viewMode, setViewMode] = useState(getInitialViewMode())
 
   const categories = [
     { value: 'wedding', label: 'Thiệp cưới' },
@@ -104,8 +111,10 @@ const DashboardTemplatesPage = () => {
           break
         case 'delete':
           if (window.confirm(`Bạn có chắc muốn xóa ${selectedTemplates.length} templates?`)) {
-            await Promise.all(selectedTemplates.map(id =>
-              templateService.delete(id)
+            // Map selected IDs to templates to get uuid
+            const templatesToDelete = templates.filter(t => selectedTemplates.includes(t.id));
+            await Promise.all(templatesToDelete.map(template =>
+              templateService.delete(template.uuid || template.id)
             ))
             toast.success(`Đã xóa ${selectedTemplates.length} templates`)
           }
@@ -127,7 +136,9 @@ const DashboardTemplatesPage = () => {
     if (!templateToDelete) return
 
     try {
-      await templateService.delete(templateToDelete.id)
+      // Use uuid if available, otherwise use id
+      const identifier = templateToDelete.uuid || templateToDelete.id;
+      await templateService.delete(identifier)
       toast.success('Đã xóa template thành công')
       setShowDeleteModal(false)
       setTemplateToDelete(null)
@@ -140,15 +151,13 @@ const DashboardTemplatesPage = () => {
 
   const getStatusBadge = (status) => {
     const badges = {
-      active: { text: 'Hoạt động', color: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' },
-      inactive: { text: 'Vô hiệu hóa', color: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400' },
-      draft: { text: 'Nháp', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400' }
+      active: { text: '', color: 'bg-green-500 dark:bg-green-600' },
+      inactive: { text: '', color: 'bg-red-500 dark:bg-red-600' },
+      draft: { text: '', color: 'bg-yellow-500 dark:bg-yellow-600' }
     }
     const badge = badges[status] || badges.draft
     return (
-      <span className={`inline-flex px-2 py-1 text-xs font-semibold ${badge.color}`}>
-        {badge.text}
-      </span>
+      <span className={`inline-block w-2 h-2 rounded-full ${badge.color}`} title={status === 'active' ? 'Hoạt động' : status === 'inactive' ? 'Vô hiệu hóa' : 'Nháp'}></span>
     )
   }
 
@@ -244,80 +253,147 @@ const DashboardTemplatesPage = () => {
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Danh mục
-              </label>
-              <select
-                value={filters.category}
-                onChange={(e) => setFilters({ ...filters, category: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none"
-              >
-                <option value="all">Tất cả</option>
-                {categories.map(cat => (
-                  <option key={cat.value} value={cat.value}>{cat.label}</option>
-                ))}
-              </select>
+        {/* Filters - Collapsible */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          {/* Header with toggle */}
+          <div 
+            className="p-3 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-gray-600 dark:text-gray-400">
+                {showFilters ? 'expand_less' : 'tune'}
+              </span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Bộ lọc {showFilters ? '' : `(${templates.length} templates)`}
+              </span>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Trạng thái
-              </label>
-              <select
-                value={filters.status}
-                onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none"
-              >
-                <option value="all">Tất cả</option>
-                <option value="active">Hoạt động</option>
-                <option value="inactive">Vô hiệu hóa</option>
-                <option value="draft">Nháp</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Sắp xếp theo
-              </label>
-              <select
-                value={filters.sortBy}
-                onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none"
-              >
-                <option value="created_at">Ngày tạo</option>
-                <option value="updated_at">Ngày cập nhật</option>
-                <option value="name">Tên template</option>
-                <option value="category">Danh mục</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Thứ tự
-              </label>
-              <select
-                value={filters.sortOrder}
-                onChange={(e) => setFilters({ ...filters, sortOrder: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none"
-              >
-                <option value="desc">Mới nhất</option>
-                <option value="asc">Cũ nhất</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Tìm kiếm
-              </label>
-              <input
-                type="text"
-                placeholder="Tìm theo tên, mô tả..."
-                value={filters.search}
-                onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none"
-              />
+            <div className="flex items-center gap-3">
+              {!showFilters && (
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {filters.category !== 'all' && `${categories.find(c => c.value === filters.category)?.label} • `}
+                  {filters.status !== 'all' && `${filters.status} • `}
+                  {filters.search && `"${filters.search}"`}
+                </span>
+              )}
+              <div className="flex items-center p-0.5 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setViewMode('grid')
+                  }}
+                  className={`p-1 rounded-md transition-all ${viewMode === 'grid'
+                    ? 'bg-white dark:bg-gray-800 text-black dark:text-white shadow-sm'
+                    : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                    }`}
+                  title="Grid View"
+                >
+                  <span className="material-symbols-outlined text-lg">grid_view</span>
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setViewMode('list')
+                  }}
+                  className={`p-1 rounded-md transition-all ${viewMode === 'list'
+                    ? 'bg-white dark:bg-gray-800 text-black dark:text-white shadow-sm'
+                    : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                    }`}
+                  title="List View"
+                >
+                  <span className="material-symbols-outlined text-lg">view_list</span>
+                </button>
+              </div>
             </div>
           </div>
+
+          {/* Collapsible content */}
+          {showFilters && (
+            <div className="p-3 pt-0 border-t border-gray-200 dark:border-gray-700">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 md:gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Danh mục
+                  </label>
+                  <select
+                    value={filters.category}
+                    onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+                    className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none rounded-lg"
+                  >
+                    <option value="all">Tất cả</option>
+                    {categories.map(cat => (
+                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Trạng thái
+                  </label>
+                  <select
+                    value={filters.status}
+                    onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+                    className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none rounded-lg"
+                  >
+                    <option value="all">Tất cả</option>
+                    <option value="active">Hoạt động</option>
+                    <option value="inactive">Vô hiệu hóa</option>
+                    <option value="draft">Nháp</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Sắp xếp
+                  </label>
+                  <select
+                    value={filters.sortBy}
+                    onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
+                    className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none rounded-lg"
+                  >
+                    <option value="created_at">Ngày tạo</option>
+                    <option value="updated_at">Cập nhật</option>
+                    <option value="name">Tên</option>
+                    <option value="category">Danh mục</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Thứ tự
+                  </label>
+                  <select
+                    value={filters.sortOrder}
+                    onChange={(e) => setFilters({ ...filters, sortOrder: e.target.value })}
+                    className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none rounded-lg"
+                  >
+                    <option value="desc">Mới nhất</option>
+                    <option value="asc">Cũ nhất</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Tìm kiếm
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Tìm..."
+                    value={filters.search}
+                    onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                    className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none rounded-lg"
+                  />
+                </div>
+              </div>
+              
+              {/* Clear filters button */}
+              {(filters.category !== 'all' || filters.status !== 'all' || filters.search) && (
+                <button
+                  onClick={() => setFilters({ ...filters, category: 'all', status: 'all', search: '' })}
+                  className="mt-3 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  Xóa bộ lọc
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Bulk Actions */}
@@ -359,72 +435,143 @@ const DashboardTemplatesPage = () => {
             </div>
           ) : (
             <div className="p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
-                {templates.map((template) => (
-                  <div key={template.id} className="border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow rounded-lg overflow-hidden">
-                    <div className="relative">
-                      <input
-                        type="checkbox"
-                        checked={selectedTemplates.includes(template.id)}
-                        onChange={(e) => handleSelectTemplate(template.id, e.target.checked)}
-                        className="absolute top-3 left-3 w-5 h-5 text-gray-900 dark:text-white focus:ring-gray-900 dark:focus:ring-white z-10 cursor-pointer"
-                      />
-                      <div className="aspect-video bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+              {/* Grid View */}
+              {viewMode === 'grid' && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+                  {templates.map((template) => (
+                    <div key={template.id} className="border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow rounded-lg overflow-hidden">
+                      <div className="relative">
+                        <input
+                          type="checkbox"
+                          checked={selectedTemplates.includes(template.id)}
+                          onChange={(e) => handleSelectTemplate(template.id, e.target.checked)}
+                          className="absolute top-3 left-3 w-5 h-5 text-gray-900 dark:text-white focus:ring-gray-900 dark:focus:ring-white z-10 cursor-pointer"
+                        />
+                        <div className="aspect-video bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                          {template.thumbnail ? (
+                            <img
+                              src={template.thumbnail}
+                              alt={template.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.target.style.display = 'none'
+                                e.target.parentElement.innerHTML = '<svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>'
+                              }}
+                            />
+                          ) : (
+                            <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <div className="flex items-start justify-between mb-2 gap-2">
+                          <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate flex-1">
+                            {template.name}
+                          </h3>
+                          {getStatusBadge(template.status)}
+                        </div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                          {getCategoryLabel(template.category)}
+                        </p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                          {template.description || 'Không có mô tả'}
+                        </p>
+                        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4">
+                          <span>ID: {template.id}</span>
+                          <span>{formatDate(template.created_at)}</span>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => navigate(`/dashboard/templates/edit/${template.id}`)}
+                            className="flex-1 px-4 py-2.5 text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded"
+                          >
+                            Chỉnh sửa
+                          </button>
+                          <button
+                            onClick={() => {
+                              setTemplateToDelete(template)
+                              setShowDeleteModal(true)
+                            }}
+                            className="px-4 py-2.5 text-sm font-medium bg-red-100 text-red-700 hover:bg-red-200 transition-colors rounded"
+                          >
+                            Xóa
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* List View */}
+              {viewMode === 'list' && (
+                <div className="space-y-2">
+                  {templates.map((template) => (
+                    <div key={template.id} className="border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow rounded-lg overflow-hidden flex h-20">
+                      {/* Checkbox & Thumbnail - Compact */}
+                      <div className="relative w-20 shrink-0 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                        <input
+                          type="checkbox"
+                          checked={selectedTemplates.includes(template.id)}
+                          onChange={(e) => handleSelectTemplate(template.id, e.target.checked)}
+                          className="absolute top-1 left-1 w-4 h-4 text-gray-900 dark:text-white focus:ring-gray-900 dark:focus:ring-white z-10 cursor-pointer"
+                        />
                         {template.thumbnail ? (
                           <img
                             src={template.thumbnail}
                             alt={template.name}
                             className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.target.style.display = 'none'
-                              e.target.parentElement.innerHTML = '<svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>'
-                            }}
                           />
                         ) : (
-                          <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                          <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
                         )}
                       </div>
+
+                      {/* Content - Compact */}
+                      <div className="flex-1 px-3 py-2 flex items-center gap-3 min-w-0">
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate mb-0.5">
+                            {template.name}
+                          </h3>
+                          <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+                            <span className="truncate">{getCategoryLabel(template.category)}</span>
+                            <span className="shrink-0">ID: {template.id}</span>
+                          </div>
+                        </div>
+
+                        {/* Status Badge */}
+                        <div className="shrink-0">
+                          {getStatusBadge(template.status)}
+                        </div>
+
+                        {/* Actions - Vertical Stack */}
+                        <div className="flex flex-col gap-1 shrink-0 w-16">
+                          <button
+                            onClick={() => navigate(`/dashboard/templates/edit/${template.id}`)}
+                            className="w-full px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded"
+                          >
+                            Sửa
+                          </button>
+                          <button
+                            onClick={() => {
+                              setTemplateToDelete(template)
+                              setShowDeleteModal(true)
+                            }}
+                            className="w-full px-2 py-1 text-xs font-medium bg-red-100 text-red-700 hover:bg-red-200 transition-colors rounded"
+                          >
+                            Xóa
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <div className="p-4">
-                      <div className="flex items-start justify-between mb-2 gap-2">
-                        <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate flex-1">
-                          {template.name}
-                        </h3>
-                        {getStatusBadge(template.status)}
-                      </div>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                        {getCategoryLabel(template.category)}
-                      </p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                        {template.description || 'Không có mô tả'}
-                      </p>
-                      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4">
-                        <span>ID: {template.id}</span>
-                        <span>{formatDate(template.created_at)}</span>
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => navigate(`/dashboard/templates/edit/${template.id}`)}
-                          className="flex-1 px-4 py-2.5 text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded"
-                        >
-                          Chỉnh sửa
-                        </button>
-                        <button
-                          onClick={() => {
-                            setTemplateToDelete(template)
-                            setShowDeleteModal(true)
-                          }}
-                          className="px-4 py-2.5 text-sm font-medium bg-red-100 text-red-700 hover:bg-red-200 transition-colors rounded"
-                        >
-                          Xóa
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
 
               {templates.length === 0 && (
                 <div className="text-center py-12">

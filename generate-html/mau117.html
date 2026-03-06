@@ -1,0 +1,3019 @@
+<html lang="en" class="mdl-js">
+<head>
+    <style>
+        body {
+            transition: opacity ease-in 0.2s;
+        }
+        body[unresolved] {
+            opacity: 0;
+            display: block;
+            overflow: hidden;
+            position: relative;
+        }
+    </style>
+    <style data-rc-order="prepend" rc-util-key="@ant-design-icons">
+        .anticon {
+            display: inline-flex;
+            alignItems: center;
+            color: inherit;
+            font-style: normal;
+            line-height: 0;
+            text-align: center;
+            text-transform: none;
+            vertical-align: -0.125em;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .anticon>* {
+            line-height: 1;
+        }
+        .anticon svg {
+            display: inline-block;
+        }
+        .anticon::before {
+            display: none;
+        }
+        .anticon .anticon-icon {
+            display: block;
+        }
+        .anticon[tabindex] {
+            cursor: pointer;
+        }
+        .anticon-spin::before,
+        .anticon-spin {
+            display: inline-block;
+            -webkit-animation: loadingCircle 1s infinite linear;
+            animation: loadingCircle 1s infinite linear;
+        }
+        @-webkit-keyframes loadingCircle {
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes loadingCircle {
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <style data-emotion="css-global" data-s=""></style>
+    <style data-emotion="css-global" data-s=""></style>
+    <style data-emotion="css" data-s=""></style>
+    <meta charset="utf-8">
+    <link href="/letsCelebrate.svg" rel="icon">
+    <meta content="width=device-width,initial-scale=1" name="viewport">
+    <meta content="#1f1f1f" name="theme-color">
+    <meta content="Let's Celebrate" name="title">
+    <meta
+        content="Let's Celebrate is a platform help you to organize, plan and manage personal event effectively (like wedding, birthday)">
+    <meta content="wedding, wedding planner, let's celebrate" name="keywords">
+    <meta content="CodedThemes" name="author">
+    <link href="/logo192.png" rel="apple-touch-icon">
+    <meta content="en_US" property="og:locale">
+    <meta content="website" property="og:type">
+    <meta content="letscelebrate.vn" property="og:site_name">
+    <meta content="Let's Celebrate - Chạm đến trái tim bằng sự sáng tạo" property="og:description">
+    <meta content="summary_large_image" property="twitter:card">
+    <title> Let's Celebrate </title>
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@400;500;600;700&amp;family=Roboto:wght@400;500;700&amp;display=swap&amp;family=Public+Sans:wght@400;500;600;700"
+        rel="stylesheet">
+    <meta name="og:image"
+        content="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/static/Cover-Lets-Celebrate.png">
+    <meta name="og:image" content="/cover-lets-celebrate.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="og:description" content="Let's Celebrate - Chạm đến trái tim bằng sự sáng tạo">
+    <meta name="description" content="Let's Celebrate - Chạm đến trái tim bằng sự sáng tạo">
+    <meta name="og:title" content="Let's Celebrate">
+    <script defer="defer" src="/static/js/main.bfd4cd02.js"></script>
+    <link href="/static/css/main.34d80c1b.css" rel="stylesheet">
+    <style id="custom-cursor" type="text/css">
+        body button,
+        body [type='button'],
+        body input[type='reset'],
+        body input[type='submit'],
+        body [role="button"],
+        ::-webkit-search-cancel-button,
+        ::-webkit-search-decoration,
+        ::-webkit-scrollbar-button,
+        ::-webkit-file-upload-button,
+        [role^=button],
+        .cc_pointer,
+        [type="search"]::-webkit-search-cancel-button,
+        a,
+        select,
+        [type="search"]::-webkit-search-decoration,
+        .paper-button,
+        .ytp-progress-bar-container,
+        input[type=submit],
+        :link,
+        :visited,
+        a>*,
+        img,
+        ::-webkit-scrollbar-button,
+        .ogdlpmhglpejoiomcodnpjnfgcpmgale_pointer,
+        ::-webkit-file-upload-button,
+        .ytp-volume-panel,
+        #myogdlpmhglpejoiomcodnpjnfgcpmgale .icon,
+        body .custom-cursor-on-hover {
+            cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFrUlEQVR4AbRWaWxUVRT+7n2ztPPa6TJ0mymdtqEIlAioFRFRNjEqBtKQEEkaIPoHjUuICfIHAzEhxl8mxpgYf2hiQghEo2JciEVq0RhqLHShtEzb6Qyd7sy+vcXzZpipHabSaejNOffdc+5Zvnfu8h5HRrOV2zft2Ffb1fxabWD1OvuXtbW1eRkmD1TMBKBbuRnndr/NGzfvF8Tmd1kL5zj2QDNmBJsDwGazVVY1MKsis4RZqY1DtChrEsISdXMACIIQjEVmMzGa1elhnNU8+BGlmA3qdDpD8aiqpDRaHXQGZkjJS/GcA4ASRKUYIkzLTALAQBXIxxK2TACQogim8qk0EPSqiR5LRvcCiM8CACEQDExXXVbdUG6p37kURzIBoLKyvqlhtf0TW4V9Oy1BgPKm31iWsOqZw7ru5uPyL+X1yjWbzb5p3Ub7+fWbln9tLa/ZmTZc5IBrb/dks9J64HTsyCN7YhcifpSlYxGS2g2SybY+qDdbw3i6RW6wNwqXX/lI17zjSGjvht3sB6vVujxtv4gBt9Tp39tygIvmEhMatyl50TAqGKPMd4OtesKIquVFqLAVQixVsXZXSOfs9yESkmBtYHpTof6LrXvsvStW1p4kl/T2pfGCiK94DLsUKelnNAlQZCB1ClTCkScCikIDAObifDzUJMJgFFBVY4akRPD80eC2LS3yqq2H5BO2yroWMsuJuM7IisGSPowxFFjS10BCydjdyYSU7KIRCaYCA9Y+JaJuTRFUpiCvJAxjAR5PWiy859GgejtlbhINePi5COR4SnPvU8PDOYNWHW1Wu7aKLXkwlxihykpU0+XCfLhbbRf0SRcucFSvFKnkSTmz15L67kTTyVPzjDEqog5SDNMp3UKf3H1DPee5lVxjigOudfN4B/1RRIJxAkj2bK5RNATEwhidq72/xMenhr+7dlEd+W9e7U0zXV2OO4hHZZRZC2ApN8HRMzXHxDtOIlOHqc+JtItI6vxJPe0dp7ciV+0LGPLHEPRFMT0exOiwl9iHUkoajcjQgE6MBlGzogTO/hn4aUm4AEw6gfxC3k0hciINANyeoc/avlJ6tUBcYIjHFGhw/N4YbHXFqLKbkS/qYS42YqB7MlEFnZ5DINYAuW55MeWWnENDQ56cspMxJ9ZI6mpXX+39XZEFHZBvMqDAbKTkRRi5dQdaY4whSJUxl+RheiyEUCAGkY5iQZERlooCTDt1v2l2uXIKAMbHh6/8/Kl6yjsB2mTJMAJVQyv9mMsP95AXYqEByypFlFeL6L8+ARPJoDY2qGLCxS7QMGdKA9A8qYSnzr+vfh6YJkkFtPMeCcVpSWjtSSWaDbQHGCZuB9HYVAXfTAQepw997UoAPPw9meRMcwBo3j2dg0eut8pBj8sH96AXebT21fXFWFZVAOfATGJjakC06lgqRBRbRAx0sDNjY2NBzT9XvgcABYh7brLWwiIRolgI382DcP/5Fkb/OIG442MM//oBJq+exGDbQYz3bUTnRVkK++QPyW9RlA0AjCYmTt+WMNGzHZ6ONzHV8zK8jpcQGHkWQugFBJx7EBh4HV3fvIP+1hc9brf75qKyk9M8AFCiKgzQiBjzNfoICYZ41hjzuWTqszpLcYTo1JGtjMSFQKNspNKVKce4L9vcQnVZAegMqpliA1yaN44GkHMOxgyF8xotYIJns9HpYQI1nbkDxmV0vxg7EJE6EJX/Bjd1guv99EXkxCqxRJ8hMl4kZQUwMcI6td+yvitBXPrxKC63HsI/vfvRNbQXHTd2o29qLWZo4ytqBIFA28VF5k64ZQUwMyq/ceWM0BX2MxTbIiiq8cNYKIELHALd1UqwCZPuGTidx9pkOXI8EWmRXVYALpfL/del4UcdV9lhVTJ9W2axuCqtlmilzRIpLbUMhWc8Z539Z/f1dLdvdTgc3v/Lfb+5fwEAAP//5D+1iAAAAAZJREFUAwCBJxLPrapFpwAAAABJRU5ErkJggg==") 6 1, pointer !important;
+        }
+        html,
+        body,
+        body select,
+        body .custom-cursor-default-hover {
+            cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAIqUlEQVR4AZRXCVhU1xX+3xt2FREkiODC4mcrqSKiAZvYuhQVqYIiItEIIoqFRBO0BFPFShvSOOqHDeKKQQyiMYAr7rZxi0aBtFJF2SKyGJBtgAGGmek5Lw6CzORL5rvn3XvPPds959xz74hOTk5aHYwcOTKXwAx6ftbW1pZ2dnaLhw4dun/s2LF3J02aVBsdHd0RFRXVERYWVjtjxox7jo6O+5mGafWI0IsSdVitVnuOxgHl5eXt1Hc3Z2fnUcOGDTsQFBRUnZqamlFUVBSen58/YevWrYPt7e1NAgMDTZJTdg8+lp3j8c3dvPBdu/dkBAYurGYe5u0WZGAgGaBPOe3G3MHBQR4QEFB4+/bt5SkpKRa+vr7o378/IAiYMOkNRL67BspOFbZvk6P48WPU1FRjrLs7EuXbLK5+fW353HnzClkGy4KBn6hPOVnvYmlp+W12dnaMXC43pp1K7ESLFmU76hoVUt+lVsPzDS9UVVdj3hxf+M2aiSmTveHt6YHYdevg7OJi/H5MTAzLYpmSkFc+7IFebieL3UeNGnVr7dq1bhMnTuwmb6ed1jUp0NreAQjUyAugX963d3AyJwdmZmYwNzeXepVKhby8e9gul+PLo0dx/tJlt9+Mc7/FsomlVxN7xpyt9PLyuuDj42MbGhoqEfKum1uVaGptg5YwgkDaqecmigJSkj+DsbExT/uAIAioJu/cunULO/6ZbDtuvMcF1tGTkD0gzTlOw4cPP5GcnGw7YMAASSgrb1C0Upw7IQgvFUsM9HleV4e7d+7QyHCTyWRIT0vDwIGWiP/bx7YUzhOsS8fRbQApS0hKSnK7efMm5syZA5qDlXdpNL2U865pEeWlJTh08CCMTUx0sgz2effuoqH+OSwsLBC36a9uJDtBRywZwMclJCRkDccxISEBO3fuxLO651BRkjEhMQBaDXJPn8TBPbuRmZ6GGnLtgsCFWBi0CF1dXUxmEDhEVy5ehDnliZOLC/7oH7CGdTKDZIBarY6bP3++EZ11NDY2IisrCz7Tp+F0TjZk5PpL53ORuncPPD0nImxVJBYtXQav374JxxEjsD5uA5J374GJqSnL0wuCIODq5UswNzeFhjy6ZFmYESVqHBOLXLXI5cHx8fFQKpWMk1ze0tKCLZvj4Td7JlxdR2H5qtWwHWJPArTSukRIHy3BJO/JyPzyOAYNGkSzvm1hUBAio6IpZKngnOhPOTZ1+oxg1i2Se/wIzB8+fNiHk4nfemsKnMiAPos9EIIgwN7BEYe+OAIrKytphcPiS7l0/spVxHy4Aa+Pc8esWbNx9tQJaX3K1GkUETM/NmBqZWWlZJm00uNDoYHX5Mk9MIaHgiBgsJ0d9qUehIOjIw4fyUR8wt8x0OpHrwgCGek4DHTv4D8F+aAjCVHENHHMmDHjHzx4oFcy72Kcu7veNX1IQRDg7OoK/4AAjB7jJtWNV+lGj3kdJcWPYWRkhJHOruPFEfRra2t7lU6aszutbQZL41/yUVOiCULfusEJqNFo4b9gIdIO7EOLQjFcNDU1teTzqU/BEHt7QnOaUfczG3vNxEBt6KQSzXZptVo6ERZoamy05MsIHh4eesVb29hATRbrXTSArKyogAMlpL7lzs4fK6ogCOCLjGlEOnrNwcHBYMsZwcCELi6usLG2wQ90xTLu50JBPiWYu7teciXdpLqF5qZGHjaLFRUV39OZhCfdfDa04xUrV+L85SvI/CoLCYmf4GjGF1Crf7rSsSQd1NTUwPa113TT7p43pX5RWfl4P614AgrFE7GwsDC/SaHA734/FbmXLiOcC47dEHK9Rsri0BURSN6xA1pKrG5pegaccnXPaqClkt2p6mtws6Klu4AJdP6KHz3ieb5IVl29eeOGxCgTZYzsJd6iX3+8Ex6O5KQd6FC2EV3vpBQEQQrTx1s2w5ceJOmHDtGcDXlJ19HRAQad4DK6yLjSajSaKyLV5NMXzuUqRRL0kkVHCskgq0HWWB39HtI/P4i8O99AFAWIRH/75nXEvBcNX58/4AQ9ShjXTuU8YnkolK2t4J+WMr6hoVGSw+NWKvFp+/eBTopSoVCcFuvr65vPnjmT+by+gYiYRT/I6NER8adoUm6ETR/GYvqUNxEVGYnr165JRaUn1w/PniEyIhxdlPUsV03hE0URF8+fw7+uXEZk9Lug2pPJuqXbkO6CxNOnTnZVPHnSU06fMe9gPCWrKJOBrO+juCfDo6IihIcuQyt5gm9CTmYu637+Afjq2NGufv36JTK9ZEBpaeljet0kfZ6aSl7gdOIlw8Bl1PDqy5Wihw+w/R+JmEDXeNDiEAwYYImy4mKcyslOYp1MKRnAA0rGjcePHS3cuytZii/jDAHRGlrqhTelB8gHsXF0IVlJydvVpULilvhCQRA26gi7DXj69KmSkPP2pOyqlZPVP+UHpYG7g/i7Gxe22L9s7BEmLTZ/tKG2qqrK/4UuibbbAJ5RUSqRyWQ+mRkZtRHLw1BDycQxpJMi7YBpjOkWq62r46FBYOUrV0dhvIenRKNSdeKjP6+v/S4/z4eUF0vIF59eBjCuvLy8gM6nNxEXLgkKxI3r18mQWty/fx+H6YzLt36K2X5zsShkCeitDzP6L8BVjs85h4YT9f31sZg7fwGLw/flZYiOWFH43+8KvOndUSAhe3z6GMBr7AnqPVsUim1x6z5QHctIR2lJCbzpHRj89lLwe3DR20uQ8MmnOH7yDLLOnMPetHT6S7Ydi5e8gxkzZ6G5uRm7P9upil65YltVVeXEFzJJbO+m1wAmIU+0l5WVraOC4XbkcHrqja//3fa/wvvopKrGD1BKJHofasC7pysdTs4uGP2rX0PRouDMbwtZ4J96IfesG+16Hbmd84vF9gGDBugo+biQ9eGnTuTYb4qLDfH3nXlgVejSPMrmup3b5J0MPGYcr2Udywg5mZNtzzzMq5NjqP8/AAAA///9byUEAAAABklEQVQDAF/uzVMKRiB9AAAAAElFTkSuQmCC") 0 0, auto !important;
+        }
+    </style>
+    <style data-emotion="css-global" data-s=""></style>
+    <style>
+        .swal2-popup.swal2-toast {
+            box-sizing: border-box;
+            grid-column: 1/4 !important;
+            grid-row: 1/4 !important;
+            grid-template-columns: min-content auto min-content;
+            padding: 1em;
+            overflow-y: hidden;
+            background: #fff;
+            box-shadow: 0 0 1px rgba(0, 0, 0, .075), 0 1px 2px rgba(0, 0, 0, .075), 1px 2px 4px rgba(0, 0, 0, .075), 1px 3px 8px rgba(0, 0, 0, .075), 2px 4px 16px rgba(0, 0, 0, .075);
+            pointer-events: all
+        }
+        .swal2-popup.swal2-toast>* {
+            grid-column: 2
+        }
+        .swal2-popup.swal2-toast .swal2-title {
+            margin: .5em 1em;
+            padding: 0;
+            font-size: 1em;
+            text-align: initial
+        }
+        .swal2-popup.swal2-toast .swal2-loading {
+            justify-content: center
+        }
+        .swal2-popup.swal2-toast .swal2-input {
+            height: 2em;
+            margin: .5em;
+            font-size: 1em
+        }
+        .swal2-popup.swal2-toast .swal2-validation-message {
+            font-size: 1em
+        }
+        .swal2-popup.swal2-toast .swal2-footer {
+            margin: .5em 0 0;
+            padding: .5em 0 0;
+            font-size: .8em
+        }
+        .swal2-popup.swal2-toast .swal2-close {
+            grid-column: 3/3;
+            grid-row: 1/99;
+            align-self: center;
+            width: .8em;
+            height: .8em;
+            margin: 0;
+            font-size: 2em
+        }
+        .swal2-popup.swal2-toast .swal2-html-container {
+            margin: .5em 1em;
+            padding: 0;
+            overflow: initial;
+            font-size: 1em;
+            text-align: initial
+        }
+        .swal2-popup.swal2-toast .swal2-html-container:empty {
+            padding: 0
+        }
+        .swal2-popup.swal2-toast .swal2-loader {
+            grid-column: 1;
+            grid-row: 1/99;
+            align-self: center;
+            width: 2em;
+            height: 2em;
+            margin: .25em
+        }
+        .swal2-popup.swal2-toast .swal2-icon {
+            grid-column: 1;
+            grid-row: 1/99;
+            align-self: center;
+            width: 2em;
+            min-width: 2em;
+            height: 2em;
+            margin: 0 .5em 0 0
+        }
+        .swal2-popup.swal2-toast .swal2-icon .swal2-icon-content {
+            display: flex;
+            align-items: center;
+            font-size: 1.8em;
+            font-weight: bold
+        }
+        .swal2-popup.swal2-toast .swal2-icon.swal2-success .swal2-success-ring {
+            width: 2em;
+            height: 2em
+        }
+        .swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line] {
+            top: .875em;
+            width: 1.375em
+        }
+        .swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left] {
+            left: .3125em
+        }
+        .swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right] {
+            right: .3125em
+        }
+        .swal2-popup.swal2-toast .swal2-actions {
+            justify-content: flex-start;
+            height: auto;
+            margin: 0;
+            margin-top: .5em;
+            padding: 0 .5em
+        }
+        .swal2-popup.swal2-toast .swal2-styled {
+            margin: .25em .5em;
+            padding: .4em .6em;
+            font-size: 1em
+        }
+        .swal2-popup.swal2-toast .swal2-success {
+            border-color: #a5dc86
+        }
+        .swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line] {
+            position: absolute;
+            width: 1.6em;
+            height: 3em;
+            border-radius: 50%
+        }
+        .swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=left] {
+            top: -0.8em;
+            left: -0.5em;
+            transform: rotate(-45deg);
+            transform-origin: 2em 2em;
+            border-radius: 4em 0 0 4em
+        }
+        .swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=right] {
+            top: -0.25em;
+            left: .9375em;
+            transform-origin: 0 1.5em;
+            border-radius: 0 4em 4em 0
+        }
+        .swal2-popup.swal2-toast .swal2-success .swal2-success-ring {
+            width: 2em;
+            height: 2em
+        }
+        .swal2-popup.swal2-toast .swal2-success .swal2-success-fix {
+            top: 0;
+            left: .4375em;
+            width: .4375em;
+            height: 2.6875em
+        }
+        .swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line] {
+            height: .3125em
+        }
+        .swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=tip] {
+            top: 1.125em;
+            left: .1875em;
+            width: .75em
+        }
+        .swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=long] {
+            top: .9375em;
+            right: .1875em;
+            width: 1.375em
+        }
+        .swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-tip {
+            animation: swal2-toast-animate-success-line-tip .75s
+        }
+        .swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-long {
+            animation: swal2-toast-animate-success-line-long .75s
+        }
+        .swal2-popup.swal2-toast.swal2-show {
+            animation: swal2-toast-show .5s
+        }
+        .swal2-popup.swal2-toast.swal2-hide {
+            animation: swal2-toast-hide .1s forwards
+        }
+        div:where(.swal2-container) {
+            display: grid;
+            position: fixed;
+            z-index: 1060;
+            inset: 0;
+            box-sizing: border-box;
+            grid-template-areas: "top-start     top            top-end" "center-start  center         center-end" "bottom-start  bottom-center  bottom-end";
+            grid-template-rows: minmax(min-content, auto) minmax(min-content, auto) minmax(min-content, auto);
+            height: 100%;
+            padding: .625em;
+            overflow-x: hidden;
+            transition: background-color .1s;
+            -webkit-overflow-scrolling: touch
+        }
+        div:where(.swal2-container).swal2-backdrop-show,
+        div:where(.swal2-container).swal2-noanimation {
+            background: rgba(0, 0, 0, .4)
+        }
+        div:where(.swal2-container).swal2-backdrop-hide {
+            background: rgba(0, 0, 0, 0) !important
+        }
+        div:where(.swal2-container).swal2-top-start,
+        div:where(.swal2-container).swal2-center-start,
+        div:where(.swal2-container).swal2-bottom-start {
+            grid-template-columns: minmax(0, 1fr) auto auto
+        }
+        div:where(.swal2-container).swal2-top,
+        div:where(.swal2-container).swal2-center,
+        div:where(.swal2-container).swal2-bottom {
+            grid-template-columns: auto minmax(0, 1fr) auto
+        }
+        div:where(.swal2-container).swal2-top-end,
+        div:where(.swal2-container).swal2-center-end,
+        div:where(.swal2-container).swal2-bottom-end {
+            grid-template-columns: auto auto minmax(0, 1fr)
+        }
+        div:where(.swal2-container).swal2-top-start>.swal2-popup {
+            align-self: start
+        }
+        div:where(.swal2-container).swal2-top>.swal2-popup {
+            grid-column: 2;
+            place-self: start center
+        }
+        div:where(.swal2-container).swal2-top-end>.swal2-popup,
+        div:where(.swal2-container).swal2-top-right>.swal2-popup {
+            grid-column: 3;
+            place-self: start end
+        }
+        div:where(.swal2-container).swal2-center-start>.swal2-popup,
+        div:where(.swal2-container).swal2-center-left>.swal2-popup {
+            grid-row: 2;
+            align-self: center
+        }
+        div:where(.swal2-container).swal2-center>.swal2-popup {
+            grid-column: 2;
+            grid-row: 2;
+            place-self: center center
+        }
+        div:where(.swal2-container).swal2-center-end>.swal2-popup,
+        div:where(.swal2-container).swal2-center-right>.swal2-popup {
+            grid-column: 3;
+            grid-row: 2;
+            place-self: center end
+        }
+        div:where(.swal2-container).swal2-bottom-start>.swal2-popup,
+        div:where(.swal2-container).swal2-bottom-left>.swal2-popup {
+            grid-column: 1;
+            grid-row: 3;
+            align-self: end
+        }
+        div:where(.swal2-container).swal2-bottom>.swal2-popup {
+            grid-column: 2;
+            grid-row: 3;
+            place-self: end center
+        }
+        div:where(.swal2-container).swal2-bottom-end>.swal2-popup,
+        div:where(.swal2-container).swal2-bottom-right>.swal2-popup {
+            grid-column: 3;
+            grid-row: 3;
+            place-self: end end
+        }
+        div:where(.swal2-container).swal2-grow-row>.swal2-popup,
+        div:where(.swal2-container).swal2-grow-fullscreen>.swal2-popup {
+            grid-column: 1/4;
+            width: 100%
+        }
+        div:where(.swal2-container).swal2-grow-column>.swal2-popup,
+        div:where(.swal2-container).swal2-grow-fullscreen>.swal2-popup {
+            grid-row: 1/4;
+            align-self: stretch
+        }
+        div:where(.swal2-container).swal2-no-transition {
+            transition: none !important
+        }
+        div:where(.swal2-container) div:where(.swal2-popup) {
+            display: none;
+            position: relative;
+            box-sizing: border-box;
+            grid-template-columns: minmax(0, 100%);
+            width: 32em;
+            max-width: 100%;
+            padding: 0 0 1.25em;
+            border: none;
+            border-radius: 5px;
+            background: #fff;
+            color: #545454;
+            font-family: inherit;
+            font-size: 1rem
+        }
+        div:where(.swal2-container) div:where(.swal2-popup):focus {
+            outline: none
+        }
+        div:where(.swal2-container) div:where(.swal2-popup).swal2-loading {
+            overflow-y: hidden
+        }
+        div:where(.swal2-container) h2:where(.swal2-title) {
+            position: relative;
+            max-width: 100%;
+            margin: 0;
+            padding: .8em 1em 0;
+            color: inherit;
+            font-size: 1.875em;
+            font-weight: 600;
+            text-align: center;
+            text-transform: none;
+            word-wrap: break-word
+        }
+        div:where(.swal2-container) div:where(.swal2-actions) {
+            display: flex;
+            z-index: 1;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            margin: 1.25em auto 0;
+            padding: 0
+        }
+        div:where(.swal2-container) div:where(.swal2-actions):not(.swal2-loading) .swal2-styled[disabled] {
+            opacity: .4
+        }
+        div:where(.swal2-container) div:where(.swal2-actions):not(.swal2-loading) .swal2-styled:hover {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1))
+        }
+        div:where(.swal2-container) div:where(.swal2-actions):not(.swal2-loading) .swal2-styled:active {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2))
+        }
+        div:where(.swal2-container) div:where(.swal2-loader) {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 2.2em;
+            height: 2.2em;
+            margin: 0 1.875em;
+            animation: swal2-rotate-loading 1.5s linear 0s infinite normal;
+            border-width: .25em;
+            border-style: solid;
+            border-radius: 100%;
+            border-color: #2778c4 rgba(0, 0, 0, 0) #2778c4 rgba(0, 0, 0, 0)
+        }
+        div:where(.swal2-container) button:where(.swal2-styled) {
+            margin: .3125em;
+            padding: .625em 1.1em;
+            transition: box-shadow .1s;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0);
+            font-weight: 500
+        }
+        div:where(.swal2-container) button:where(.swal2-styled):not([disabled]) {
+            cursor: pointer
+        }
+        div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+            border: 0;
+            border-radius: .25em;
+            background: initial;
+            background-color: #7066e0;
+            color: #fff;
+            font-size: 1em
+        }
+        div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus {
+            box-shadow: 0 0 0 3px rgba(112, 102, 224, .5)
+        }
+        div:where(.swal2-container) button:where(.swal2-styled).swal2-deny {
+            border: 0;
+            border-radius: .25em;
+            background: initial;
+            background-color: #dc3741;
+            color: #fff;
+            font-size: 1em
+        }
+        div:where(.swal2-container) button:where(.swal2-styled).swal2-deny:focus {
+            box-shadow: 0 0 0 3px rgba(220, 55, 65, .5)
+        }
+        div:where(.swal2-container) button:where(.swal2-styled).swal2-cancel {
+            border: 0;
+            border-radius: .25em;
+            background: initial;
+            background-color: #6e7881;
+            color: #fff;
+            font-size: 1em
+        }
+        div:where(.swal2-container) button:where(.swal2-styled).swal2-cancel:focus {
+            box-shadow: 0 0 0 3px rgba(110, 120, 129, .5)
+        }
+        div:where(.swal2-container) button:where(.swal2-styled).swal2-default-outline:focus {
+            box-shadow: 0 0 0 3px rgba(100, 150, 200, .5)
+        }
+        div:where(.swal2-container) button:where(.swal2-styled):focus {
+            outline: none
+        }
+        div:where(.swal2-container) button:where(.swal2-styled)::-moz-focus-inner {
+            border: 0
+        }
+        div:where(.swal2-container) div:where(.swal2-footer) {
+            margin: 1em 0 0;
+            padding: 1em 1em 0;
+            border-top: 1px solid #eee;
+            color: inherit;
+            font-size: 1em;
+            text-align: center
+        }
+        div:where(.swal2-container) .swal2-timer-progress-bar-container {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            grid-column: auto !important;
+            overflow: hidden;
+            border-bottom-right-radius: 5px;
+            border-bottom-left-radius: 5px
+        }
+        div:where(.swal2-container) div:where(.swal2-timer-progress-bar) {
+            width: 100%;
+            height: .25em;
+            background: rgba(0, 0, 0, .2)
+        }
+        div:where(.swal2-container) img:where(.swal2-image) {
+            max-width: 100%;
+            margin: 2em auto 1em
+        }
+        div:where(.swal2-container) button:where(.swal2-close) {
+            z-index: 2;
+            align-items: center;
+            justify-content: center;
+            width: 1.2em;
+            height: 1.2em;
+            margin-top: 0;
+            margin-right: 0;
+            margin-bottom: -1.2em;
+            padding: 0;
+            overflow: hidden;
+            transition: color .1s, box-shadow .1s;
+            border: none;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0);
+            color: #ccc;
+            font-family: monospace;
+            font-size: 2.5em;
+            cursor: pointer;
+            justify-self: end
+        }
+        div:where(.swal2-container) button:where(.swal2-close):hover {
+            transform: none;
+            background: rgba(0, 0, 0, 0);
+            color: #f27474
+        }
+        div:where(.swal2-container) button:where(.swal2-close):focus {
+            outline: none;
+            box-shadow: inset 0 0 0 3px rgba(100, 150, 200, .5)
+        }
+        div:where(.swal2-container) button:where(.swal2-close)::-moz-focus-inner {
+            border: 0
+        }
+        div:where(.swal2-container) .swal2-html-container {
+            z-index: 1;
+            justify-content: center;
+            margin: 1em 1.6em .3em;
+            padding: 0;
+            overflow: auto;
+            color: inherit;
+            font-size: 1.125em;
+            font-weight: normal;
+            line-height: normal;
+            text-align: center;
+            word-wrap: break-word;
+            word-break: break-word
+        }
+        div:where(.swal2-container) input:where(.swal2-input),
+        div:where(.swal2-container) input:where(.swal2-file),
+        div:where(.swal2-container) textarea:where(.swal2-textarea),
+        div:where(.swal2-container) select:where(.swal2-select),
+        div:where(.swal2-container) div:where(.swal2-radio),
+        div:where(.swal2-container) label:where(.swal2-checkbox) {
+            margin: 1em 2em 3px
+        }
+        div:where(.swal2-container) input:where(.swal2-input),
+        div:where(.swal2-container) input:where(.swal2-file),
+        div:where(.swal2-container) textarea:where(.swal2-textarea) {
+            box-sizing: border-box;
+            width: auto;
+            transition: border-color .1s, box-shadow .1s;
+            border: 1px solid #d9d9d9;
+            border-radius: .1875em;
+            background: rgba(0, 0, 0, 0);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .06), 0 0 0 3px rgba(0, 0, 0, 0);
+            color: inherit;
+            font-size: 1.125em
+        }
+        div:where(.swal2-container) input:where(.swal2-input).swal2-inputerror,
+        div:where(.swal2-container) input:where(.swal2-file).swal2-inputerror,
+        div:where(.swal2-container) textarea:where(.swal2-textarea).swal2-inputerror {
+            border-color: #f27474 !important;
+            box-shadow: 0 0 2px #f27474 !important
+        }
+        div:where(.swal2-container) input:where(.swal2-input):focus,
+        div:where(.swal2-container) input:where(.swal2-file):focus,
+        div:where(.swal2-container) textarea:where(.swal2-textarea):focus {
+            border: 1px solid #b4dbed;
+            outline: none;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .06), 0 0 0 3px rgba(100, 150, 200, .5)
+        }
+        div:where(.swal2-container) input:where(.swal2-input)::placeholder,
+        div:where(.swal2-container) input:where(.swal2-file)::placeholder,
+        div:where(.swal2-container) textarea:where(.swal2-textarea)::placeholder {
+            color: #ccc
+        }
+        div:where(.swal2-container) .swal2-range {
+            margin: 1em 2em 3px;
+            background: #fff
+        }
+        div:where(.swal2-container) .swal2-range input {
+            width: 80%
+        }
+        div:where(.swal2-container) .swal2-range output {
+            width: 20%;
+            color: inherit;
+            font-weight: 600;
+            text-align: center
+        }
+        div:where(.swal2-container) .swal2-range input,
+        div:where(.swal2-container) .swal2-range output {
+            height: 2.625em;
+            padding: 0;
+            font-size: 1.125em;
+            line-height: 2.625em
+        }
+        div:where(.swal2-container) .swal2-input {
+            height: 2.625em;
+            padding: 0 .75em
+        }
+        div:where(.swal2-container) .swal2-file {
+            width: 75%;
+            margin-right: auto;
+            margin-left: auto;
+            background: rgba(0, 0, 0, 0);
+            font-size: 1.125em
+        }
+        div:where(.swal2-container) .swal2-textarea {
+            height: 6.75em;
+            padding: .75em
+        }
+        div:where(.swal2-container) .swal2-select {
+            min-width: 50%;
+            max-width: 100%;
+            padding: .375em .625em;
+            background: rgba(0, 0, 0, 0);
+            color: inherit;
+            font-size: 1.125em
+        }
+        div:where(.swal2-container) .swal2-radio,
+        div:where(.swal2-container) .swal2-checkbox {
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            color: inherit
+        }
+        div:where(.swal2-container) .swal2-radio label,
+        div:where(.swal2-container) .swal2-checkbox label {
+            margin: 0 .6em;
+            font-size: 1.125em
+        }
+        div:where(.swal2-container) .swal2-radio input,
+        div:where(.swal2-container) .swal2-checkbox input {
+            flex-shrink: 0;
+            margin: 0 .4em
+        }
+        div:where(.swal2-container) label:where(.swal2-input-label) {
+            display: flex;
+            justify-content: center;
+            margin: 1em auto 0
+        }
+        div:where(.swal2-container) div:where(.swal2-validation-message) {
+            align-items: center;
+            justify-content: center;
+            margin: 1em 0 0;
+            padding: .625em;
+            overflow: hidden;
+            background: #f0f0f0;
+            color: #666;
+            font-size: 1em;
+            font-weight: 300
+        }
+        div:where(.swal2-container) div:where(.swal2-validation-message)::before {
+            content: "!";
+            display: inline-block;
+            width: 1.5em;
+            min-width: 1.5em;
+            height: 1.5em;
+            margin: 0 .625em;
+            border-radius: 50%;
+            background-color: #f27474;
+            color: #fff;
+            font-weight: 600;
+            line-height: 1.5em;
+            text-align: center
+        }
+        div:where(.swal2-container) .swal2-progress-steps {
+            flex-wrap: wrap;
+            align-items: center;
+            max-width: 100%;
+            margin: 1.25em auto;
+            padding: 0;
+            background: rgba(0, 0, 0, 0);
+            font-weight: 600
+        }
+        div:where(.swal2-container) .swal2-progress-steps li {
+            display: inline-block;
+            position: relative
+        }
+        div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step {
+            z-index: 20;
+            flex-shrink: 0;
+            width: 2em;
+            height: 2em;
+            border-radius: 2em;
+            background: #2778c4;
+            color: #fff;
+            line-height: 2em;
+            text-align: center
+        }
+        div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step {
+            background: #2778c4
+        }
+        div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step {
+            background: #add8e6;
+            color: #fff
+        }
+        div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step-line {
+            background: #add8e6
+        }
+        div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step-line {
+            z-index: 10;
+            flex-shrink: 0;
+            width: 2.5em;
+            height: .4em;
+            margin: 0 -1px;
+            background: #2778c4
+        }
+        div:where(.swal2-icon) {
+            position: relative;
+            box-sizing: content-box;
+            justify-content: center;
+            width: 5em;
+            height: 5em;
+            margin: 2.5em auto .6em;
+            border: 0.25em solid rgba(0, 0, 0, 0);
+            border-radius: 50%;
+            border-color: #000;
+            font-family: inherit;
+            line-height: 5em;
+            cursor: default;
+            user-select: none
+        }
+        div:where(.swal2-icon) .swal2-icon-content {
+            display: flex;
+            align-items: center;
+            font-size: 3.75em
+        }
+        div:where(.swal2-icon).swal2-error {
+            border-color: #f27474;
+            color: #f27474
+        }
+        div:where(.swal2-icon).swal2-error .swal2-x-mark {
+            position: relative;
+            flex-grow: 1
+        }
+        div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line] {
+            display: block;
+            position: absolute;
+            top: 2.3125em;
+            width: 2.9375em;
+            height: .3125em;
+            border-radius: .125em;
+            background-color: #f27474
+        }
+        div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line][class$=left] {
+            left: 1.0625em;
+            transform: rotate(45deg)
+        }
+        div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line][class$=right] {
+            right: 1em;
+            transform: rotate(-45deg)
+        }
+        div:where(.swal2-icon).swal2-error.swal2-icon-show {
+            animation: swal2-animate-error-icon .5s
+        }
+        div:where(.swal2-icon).swal2-error.swal2-icon-show .swal2-x-mark {
+            animation: swal2-animate-error-x-mark .5s
+        }
+        div:where(.swal2-icon).swal2-warning {
+            border-color: #facea8;
+            color: #f8bb86
+        }
+        div:where(.swal2-icon).swal2-warning.swal2-icon-show {
+            animation: swal2-animate-error-icon .5s
+        }
+        div:where(.swal2-icon).swal2-warning.swal2-icon-show .swal2-icon-content {
+            animation: swal2-animate-i-mark .5s
+        }
+        div:where(.swal2-icon).swal2-info {
+            border-color: #9de0f6;
+            color: #3fc3ee
+        }
+        div:where(.swal2-icon).swal2-info.swal2-icon-show {
+            animation: swal2-animate-error-icon .5s
+        }
+        div:where(.swal2-icon).swal2-info.swal2-icon-show .swal2-icon-content {
+            animation: swal2-animate-i-mark .8s
+        }
+        div:where(.swal2-icon).swal2-question {
+            border-color: #c9dae1;
+            color: #87adbd
+        }
+        div:where(.swal2-icon).swal2-question.swal2-icon-show {
+            animation: swal2-animate-error-icon .5s
+        }
+        div:where(.swal2-icon).swal2-question.swal2-icon-show .swal2-icon-content {
+            animation: swal2-animate-question-mark .8s
+        }
+        div:where(.swal2-icon).swal2-success {
+            border-color: #a5dc86;
+            color: #a5dc86
+        }
+        div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line] {
+            position: absolute;
+            width: 3.75em;
+            height: 7.5em;
+            border-radius: 50%
+        }
+        div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line][class$=left] {
+            top: -0.4375em;
+            left: -2.0635em;
+            transform: rotate(-45deg);
+            transform-origin: 3.75em 3.75em;
+            border-radius: 7.5em 0 0 7.5em
+        }
+        div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line][class$=right] {
+            top: -0.6875em;
+            left: 1.875em;
+            transform: rotate(-45deg);
+            transform-origin: 0 3.75em;
+            border-radius: 0 7.5em 7.5em 0
+        }
+        div:where(.swal2-icon).swal2-success .swal2-success-ring {
+            position: absolute;
+            z-index: 2;
+            top: -0.25em;
+            left: -0.25em;
+            box-sizing: content-box;
+            width: 100%;
+            height: 100%;
+            border: .25em solid rgba(165, 220, 134, .3);
+            border-radius: 50%
+        }
+        div:where(.swal2-icon).swal2-success .swal2-success-fix {
+            position: absolute;
+            z-index: 1;
+            top: .5em;
+            left: 1.625em;
+            width: .4375em;
+            height: 5.625em;
+            transform: rotate(-45deg)
+        }
+        div:where(.swal2-icon).swal2-success [class^=swal2-success-line] {
+            display: block;
+            position: absolute;
+            z-index: 2;
+            height: .3125em;
+            border-radius: .125em;
+            background-color: #a5dc86
+        }
+        div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
+            top: 2.875em;
+            left: .8125em;
+            width: 1.5625em;
+            transform: rotate(45deg)
+        }
+        div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=long] {
+            top: 2.375em;
+            right: .5em;
+            width: 2.9375em;
+            transform: rotate(-45deg)
+        }
+        div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-line-tip {
+            animation: swal2-animate-success-line-tip .75s
+        }
+        div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-line-long {
+            animation: swal2-animate-success-line-long .75s
+        }
+        div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-circular-line-right {
+            animation: swal2-rotate-success-circular-line 4.25s ease-in
+        }
+        [class^=swal2] {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+        }
+        .swal2-show {
+            animation: swal2-show .3s
+        }
+        .swal2-hide {
+            animation: swal2-hide .15s forwards
+        }
+        .swal2-noanimation {
+            transition: none
+        }
+        .swal2-scrollbar-measure {
+            position: absolute;
+            top: -9999px;
+            width: 50px;
+            height: 50px;
+            overflow: scroll
+        }
+        .swal2-rtl .swal2-close {
+            margin-right: initial;
+            margin-left: 0
+        }
+        .swal2-rtl .swal2-timer-progress-bar {
+            right: 0;
+            left: auto
+        }
+        @keyframes swal2-toast-show {
+            0% {
+                transform: translateY(-0.625em) rotateZ(2deg)
+            }
+            33% {
+                transform: translateY(0) rotateZ(-2deg)
+            }
+            66% {
+                transform: translateY(0.3125em) rotateZ(2deg)
+            }
+            100% {
+                transform: translateY(0) rotateZ(0deg)
+            }
+        }
+        @keyframes swal2-toast-hide {
+            100% {
+                transform: rotateZ(1deg);
+                opacity: 0
+            }
+        }
+        @keyframes swal2-toast-animate-success-line-tip {
+            0% {
+                top: .5625em;
+                left: .0625em;
+                width: 0
+            }
+            54% {
+                top: .125em;
+                left: .125em;
+                width: 0
+            }
+            70% {
+                top: .625em;
+                left: -0.25em;
+                width: 1.625em
+            }
+            84% {
+                top: 1.0625em;
+                left: .75em;
+                width: .5em
+            }
+            100% {
+                top: 1.125em;
+                left: .1875em;
+                width: .75em
+            }
+        }
+        @keyframes swal2-toast-animate-success-line-long {
+            0% {
+                top: 1.625em;
+                right: 1.375em;
+                width: 0
+            }
+            65% {
+                top: 1.25em;
+                right: .9375em;
+                width: 0
+            }
+            84% {
+                top: .9375em;
+                right: 0;
+                width: 1.125em
+            }
+            100% {
+                top: .9375em;
+                right: .1875em;
+                width: 1.375em
+            }
+        }
+        @keyframes swal2-show {
+            0% {
+                transform: scale(0.7)
+            }
+            45% {
+                transform: scale(1.05)
+            }
+            80% {
+                transform: scale(0.95)
+            }
+            100% {
+                transform: scale(1)
+            }
+        }
+        @keyframes swal2-hide {
+            0% {
+                transform: scale(1);
+                opacity: 1
+            }
+            100% {
+                transform: scale(0.5);
+                opacity: 0
+            }
+        }
+        @keyframes swal2-animate-success-line-tip {
+            0% {
+                top: 1.1875em;
+                left: .0625em;
+                width: 0
+            }
+            54% {
+                top: 1.0625em;
+                left: .125em;
+                width: 0
+            }
+            70% {
+                top: 2.1875em;
+                left: -0.375em;
+                width: 3.125em
+            }
+            84% {
+                top: 3em;
+                left: 1.3125em;
+                width: 1.0625em
+            }
+            100% {
+                top: 2.8125em;
+                left: .8125em;
+                width: 1.5625em
+            }
+        }
+        @keyframes swal2-animate-success-line-long {
+            0% {
+                top: 3.375em;
+                right: 2.875em;
+                width: 0
+            }
+            65% {
+                top: 3.375em;
+                right: 2.875em;
+                width: 0
+            }
+            84% {
+                top: 2.1875em;
+                right: 0;
+                width: 3.4375em
+            }
+            100% {
+                top: 2.375em;
+                right: .5em;
+                width: 2.9375em
+            }
+        }
+        @keyframes swal2-rotate-success-circular-line {
+            0% {
+                transform: rotate(-45deg)
+            }
+            5% {
+                transform: rotate(-45deg)
+            }
+            12% {
+                transform: rotate(-405deg)
+            }
+            100% {
+                transform: rotate(-405deg)
+            }
+        }
+        @keyframes swal2-animate-error-x-mark {
+            0% {
+                margin-top: 1.625em;
+                transform: scale(0.4);
+                opacity: 0
+            }
+            50% {
+                margin-top: 1.625em;
+                transform: scale(0.4);
+                opacity: 0
+            }
+            80% {
+                margin-top: -0.375em;
+                transform: scale(1.15)
+            }
+            100% {
+                margin-top: 0;
+                transform: scale(1);
+                opacity: 1
+            }
+        }
+        @keyframes swal2-animate-error-icon {
+            0% {
+                transform: rotateX(100deg);
+                opacity: 0
+            }
+            100% {
+                transform: rotateX(0deg);
+                opacity: 1
+            }
+        }
+        @keyframes swal2-rotate-loading {
+            0% {
+                transform: rotate(0deg)
+            }
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+        @keyframes swal2-animate-question-mark {
+            0% {
+                transform: rotateY(-360deg)
+            }
+            100% {
+                transform: rotateY(0)
+            }
+        }
+        @keyframes swal2-animate-i-mark {
+            0% {
+                transform: rotateZ(45deg);
+                opacity: 0
+            }
+            25% {
+                transform: rotateZ(-25deg);
+                opacity: .4
+            }
+            50% {
+                transform: rotateZ(15deg);
+                opacity: .8
+            }
+            75% {
+                transform: rotateZ(-5deg);
+                opacity: 1
+            }
+            100% {
+                transform: rotateX(0);
+                opacity: 1
+            }
+        }
+        body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
+            overflow: hidden
+        }
+        body.swal2-height-auto {
+            height: auto !important
+        }
+        body.swal2-no-backdrop .swal2-container {
+            background-color: rgba(0, 0, 0, 0) !important;
+            pointer-events: none
+        }
+        body.swal2-no-backdrop .swal2-container .swal2-popup {
+            pointer-events: all
+        }
+        body.swal2-no-backdrop .swal2-container .swal2-modal {
+            box-shadow: 0 0 10px rgba(0, 0, 0, .4)
+        }
+        @media print {
+            body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
+                overflow-y: scroll !important
+            }
+            body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown)>[aria-hidden=true] {
+                display: none
+            }
+            body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) .swal2-container {
+                position: static !important
+            }
+        }
+        body.swal2-toast-shown .swal2-container {
+            box-sizing: border-box;
+            width: 360px;
+            max-width: 100%;
+            background-color: rgba(0, 0, 0, 0);
+            pointer-events: none
+        }
+        body.swal2-toast-shown .swal2-container.swal2-top {
+            inset: 0 auto auto 50%;
+            transform: translateX(-50%)
+        }
+        body.swal2-toast-shown .swal2-container.swal2-top-end,
+        body.swal2-toast-shown .swal2-container.swal2-top-right {
+            inset: 0 0 auto auto
+        }
+        body.swal2-toast-shown .swal2-container.swal2-top-start,
+        body.swal2-toast-shown .swal2-container.swal2-top-left {
+            inset: 0 auto auto 0
+        }
+        body.swal2-toast-shown .swal2-container.swal2-center-start,
+        body.swal2-toast-shown .swal2-container.swal2-center-left {
+            inset: 50% auto auto 0;
+            transform: translateY(-50%)
+        }
+        body.swal2-toast-shown .swal2-container.swal2-center {
+            inset: 50% auto auto 50%;
+            transform: translate(-50%, -50%)
+        }
+        body.swal2-toast-shown .swal2-container.swal2-center-end,
+        body.swal2-toast-shown .swal2-container.swal2-center-right {
+            inset: 50% 0 auto auto;
+            transform: translateY(-50%)
+        }
+        body.swal2-toast-shown .swal2-container.swal2-bottom-start,
+        body.swal2-toast-shown .swal2-container.swal2-bottom-left {
+            inset: auto auto 0 0
+        }
+        body.swal2-toast-shown .swal2-container.swal2-bottom {
+            inset: auto auto 0 50%;
+            transform: translateX(-50%)
+        }
+        body.swal2-toast-shown .swal2-container.swal2-bottom-end,
+        body.swal2-toast-shown .swal2-container.swal2-bottom-right {
+            inset: auto 0 0 auto
+        }
+    </style>
+    <style id="spin-keyframes">
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <style type="text/css" data-styled-id="rCS1w3zcxh" data-styled-count="75">
+        .rCS1w3zcxh {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            left: 0;
+            top: 0;
+            z-index: 3000;
+            --moveable-color: #4af;
+            --zoom: 1;
+            --zoompx: 1px;
+            --moveable-line-padding: 0;
+            --moveable-control-padding: 0;
+            will-change: transform;
+            outline: 1px solid transparent;
+        }
+        .rCS1w3zcxh .moveable-control-box {
+            z-index: 0;
+        }
+        .rCS1w3zcxh .moveable-line,
+        .rCS1w3zcxh .moveable-control {
+            position: absolute;
+            left: 0;
+            top: 0;
+            will-change: transform;
+        }
+        .rCS1w3zcxh .moveable-control {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-sizing: border-box;
+            background: #4af;
+            background: var(--moveable-color);
+            margin-top: -7px;
+            margin-left: -7px;
+            border: 2px solid #fff;
+            z-index: 10;
+        }
+        .rCS1w3zcxh .moveable-around-control {
+            position: absolute;
+            will-change: transform;
+            width: calc(var(--moveable-control-padding, 20) * 1px);
+            height: calc(var(--moveable-control-padding, 20) * 1px);
+            left: calc(var(--moveable-control-padding, 20) * -0.5px);
+            top: calc(var(--moveable-control-padding, 20) * -0.5px);
+            box-sizing: border-box;
+            background: transparent;
+            z-index: 8;
+            cursor: alias;
+            transform-origin: center center;
+        }
+        .rCS1w3zcxh .moveable-around-control[data-direction*="n"] {
+            top: calc(var(--moveable-control-padding, 20) * -1px);
+            transform-origin: center bottom;
+        }
+        .rCS1w3zcxh .moveable-around-control[data-direction*="w"] {
+            left: calc(var(--moveable-control-padding, 20) * -1px);
+            transform-origin: right center;
+        }
+        .rCS1w3zcxh .moveable-around-control[data-direction*="s"] {
+            top: 0px;
+            transform-origin: center top;
+        }
+        .rCS1w3zcxh .moveable-around-control[data-direction*="e"] {
+            left: 0px;
+            transform-origin: left center;
+        }
+        .rCS1w3zcxh .moveable-around-control[data-direction*="nw"] {
+            left: calc(var(--moveable-control-padding, 20) * -1px);
+            top: calc(var(--moveable-control-padding, 20) * -1px);
+            transform-origin: right bottom;
+        }
+        .rCS1w3zcxh .moveable-around-control[data-direction*="ne"] {
+            left: 0px;
+            top: calc(var(--moveable-control-padding, 20) * -1px);
+            transform-origin: left bottom;
+        }
+        .rCS1w3zcxh .moveable-around-control[data-direction*="sw"] {
+            left: calc(var(--moveable-control-padding, 20) * -1px);
+            top: 0px;
+            transform-origin: right top;
+        }
+        .rCS1w3zcxh .moveable-around-control[data-direction*="se"] {
+            left: 0px;
+            top: 0px;
+            transform-origin: left top;
+        }
+        .rCS1w3zcxh .moveable-padding {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100px;
+            height: 100px;
+            transform-origin: 0 0;
+        }
+        .rCS1w3zcxh .moveable-line {
+            width: 1px;
+            height: 1px;
+            background: #4af;
+            background: var(--moveable-color);
+            transform-origin: 0px 50%;
+        }
+        .rCS1w3zcxh .moveable-line.moveable-edge {
+            z-index: 1;
+            background: transparent;
+        }
+        .rCS1w3zcxh .moveable-line.moveable-dashed {
+            box-sizing: border-box;
+            background: transparent;
+        }
+        .rCS1w3zcxh .moveable-line.moveable-dashed.moveable-horizontal {
+            border-top: 1px dashed #4af;
+            border-top-color: #4af;
+            border-top-color: var(--moveable-color);
+        }
+        .rCS1w3zcxh .moveable-line.moveable-dashed.moveable-vertical {
+            border-left: 1px dashed #4af;
+            border-left-color: #4af;
+            border-left-color: var(--moveable-color);
+        }
+        .rCS1w3zcxh .moveable-line.moveable-vertical {
+            transform: translateX(-50%);
+        }
+        .rCS1w3zcxh .moveable-line.moveable-horizontal {
+            transform: translateY(-50%);
+        }
+        .rCS1w3zcxh .moveable-line.moveable-vertical.moveable-bold {
+            width: 2px;
+        }
+        .rCS1w3zcxh .moveable-line.moveable-horizontal.moveable-bold {
+            height: 2px;
+        }
+        .rCS1w3zcxh .moveable-control.moveable-origin {
+            border-color: #f55;
+            background: #fff;
+            width: 12px;
+            height: 12px;
+            margin-top: -6px;
+            margin-left: -6px;
+            pointer-events: none;
+        }
+        .rCS1w3zcxh .moveable-direction[data-rotation="0"],
+        .moveable-view-control-rotation0 {
+            cursor: ns-resize;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(0deg);transform-origin: 16px 16px"></path></svg>') 16 16, ns-resize;
+        }
+        .rCS1w3zcxh .moveable-direction[data-rotation="15"],
+        .moveable-view-control-rotation15 {
+            cursor: ns-resize;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(15deg);transform-origin: 16px 16px"></path></svg>') 16 16, ns-resize;
+        }
+        .rCS1w3zcxh .moveable-direction[data-rotation="30"],
+        .moveable-view-control-rotation30 {
+            cursor: nesw-resize;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(30deg);transform-origin: 16px 16px"></path></svg>') 16 16, nesw-resize;
+        }
+        .rCS1w3zcxh .moveable-direction[data-rotation="45"],
+        .moveable-view-control-rotation45 {
+            cursor: nesw-resize;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(45deg);transform-origin: 16px 16px"></path></svg>') 16 16, nesw-resize;
+        }
+        .rCS1w3zcxh .moveable-direction[data-rotation="60"],
+        .moveable-view-control-rotation60 {
+            cursor: nesw-resize;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(60deg);transform-origin: 16px 16px"></path></svg>') 16 16, nesw-resize;
+        }
+        .rCS1w3zcxh .moveable-direction[data-rotation="75"],
+        .moveable-view-control-rotation75 {
+            cursor: ew-resize;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(75deg);transform-origin: 16px 16px"></path></svg>') 16 16, ew-resize;
+        }
+        .rCS1w3zcxh .moveable-direction[data-rotation="90"],
+        .moveable-view-control-rotation90 {
+            cursor: ew-resize;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(90deg);transform-origin: 16px 16px"></path></svg>') 16 16, ew-resize;
+        }
+        .rCS1w3zcxh .moveable-direction[data-rotation="105"],
+        .moveable-view-control-rotation105 {
+            cursor: ew-resize;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(105deg);transform-origin: 16px 16px"></path></svg>') 16 16, ew-resize;
+        }
+        .rCS1w3zcxh .moveable-direction[data-rotation="120"],
+        .moveable-view-control-rotation120 {
+            cursor: nwse-resize;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(120deg);transform-origin: 16px 16px"></path></svg>') 16 16, nwse-resize;
+        }
+        .rCS1w3zcxh .moveable-direction[data-rotation="135"],
+        .moveable-view-control-rotation135 {
+            cursor: nwse-resize;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(135deg);transform-origin: 16px 16px"></path></svg>') 16 16, nwse-resize;
+        }
+        .rCS1w3zcxh .moveable-direction[data-rotation="150"],
+        .moveable-view-control-rotation150 {
+            cursor: nwse-resize;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(150deg);transform-origin: 16px 16px"></path></svg>') 16 16, nwse-resize;
+        }
+        .rCS1w3zcxh .moveable-direction[data-rotation="165"],
+        .moveable-view-control-rotation165 {
+            cursor: ns-resize;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(165deg);transform-origin: 16px 16px"></path></svg>') 16 16, ns-resize;
+        }
+        .rCS1w3zcxh .moveable-line.moveable-direction:before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: calc(var(--moveable-line-padding, 0) * 1px);
+            bottom: 0;
+            left: 0;
+        }
+        .rCS1w3zcxh .moveable-group {
+            z-index: -1;
+        }
+        .rCS1w3zcxh .moveable-area {
+            position: absolute;
+        }
+        .rCS1w3zcxh .moveable-area-pieces {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+        .rCS1w3zcxh .moveable-area.moveable-avoid,
+        .rCS1w3zcxh .moveable-area.moveable-pass {
+            pointer-events: none;
+        }
+        .rCS1w3zcxh .moveable-area.moveable-avoid+.moveable-area-pieces {
+            display: block;
+        }
+        .rCS1w3zcxh .moveable-area-piece {
+            position: absolute;
+        }
+        .rCS1w3zcxh {
+            --bounds-color: #d66;
+        }
+        .rCS1w3zcxh .moveable-guideline {
+            pointer-events: none;
+            z-index: 2;
+        }
+        .rCS1w3zcxh .moveable-guideline.moveable-bounds {
+            background: #d66;
+            background: var(--bounds-color);
+        }
+        .rCS1w3zcxh .moveable-guideline-group {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .rCS1w3zcxh .moveable-guideline-group .moveable-size-value {
+            position: absolute;
+            color: #f55;
+            font-size: 12px;
+            font-size: calc(12px * var(--zoom));
+            font-weight: bold;
+        }
+        .rCS1w3zcxh .moveable-guideline-group.moveable-horizontal .moveable-size-value {
+            transform-origin: 50% 100%;
+            transform: translateX(-50%);
+            left: 50%;
+            bottom: 5px;
+            bottom: calc(2px + 3px * var(--zoom));
+        }
+        .rCS1w3zcxh .moveable-guideline-group.moveable-vertical .moveable-size-value {
+            transform-origin: 0% 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 5px;
+            left: calc(2px + 3px * var(--zoom));
+        }
+        .rCS1w3zcxh .moveable-guideline.moveable-gap {
+            background: #f55;
+        }
+        .rCS1w3zcxh .moveable-size-value.moveable-gap {
+            color: #f55;
+        }
+        .rCS1w3zcxh .moveable-edge.moveable-edgeDraggable.moveable-line {
+            cursor: move;
+        }
+        .rCS1w3zcxh .moveable-rotation {
+            position: absolute;
+            height: 40px;
+            width: 1px;
+            transform-origin: 50% 100%;
+            height: calc(40px * var(--zoom));
+            top: auto;
+            left: 0;
+            bottom: 100%;
+            will-change: transform;
+        }
+        .rCS1w3zcxh .moveable-rotation .moveable-rotation-line {
+            display: block;
+            width: 100%;
+            height: 100%;
+            transform-origin: 50% 50%;
+        }
+        .rCS1w3zcxh .moveable-rotation .moveable-rotation-control {
+            border-color: #4af;
+            border-color: var(--moveable-color);
+            background: #fff;
+            cursor: alias;
+        }
+        .moveable-view-rotation-dragging,
+        .rCS1w3zcxh .moveable-rotatable.moveable-direction.moveable-control {
+            cursor: alias;
+        }
+        .rCS1w3zcxh .moveable-rotatable.moveable-direction.moveable-control.moveable-move {
+            cursor: move;
+        }
+        .rCS1w3zcxh[data-able-origindraggable] .moveable-control.moveable-origin {
+            pointer-events: auto;
+        }
+        .rCS1w3zcxh .moveable-control.moveable-clip-control {
+            background: #6d6;
+            cursor: pointer;
+        }
+        .rCS1w3zcxh .moveable-control.moveable-clip-control.moveable-clip-radius {
+            background: #d66;
+        }
+        .rCS1w3zcxh .moveable-line.moveable-clip-line {
+            background: #6e6;
+            cursor: move;
+            z-index: 1;
+        }
+        .rCS1w3zcxh .moveable-clip-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .rCS1w3zcxh .moveable-clip-ellipse {
+            position: absolute;
+            cursor: move;
+            border: 1px solid #6d6;
+            border: var(--zoompx) solid #6d6;
+            border-radius: 50%;
+            transform-origin: 0px 0px;
+        }
+        .rCS1w3zcxh {
+            --bounds-color: #d66;
+        }
+        .rCS1w3zcxh .moveable-guideline {
+            pointer-events: none;
+            z-index: 2;
+        }
+        .rCS1w3zcxh .moveable-line.moveable-guideline.moveable-bounds {
+            background: #d66;
+            background: var(--bounds-color);
+        }
+        .rCS1w3zcxh .moveable-control.moveable-border-radius {
+            background: #d66;
+            cursor: pointer;
+            z-index: 3;
+        }
+        .rCS1w3zcxh .moveable-control.moveable-border-radius.moveable-vertical {
+            background: #d6d;
+            z-index: 2;
+        }
+        .rCS1w3zcxh .moveable-control.moveable-border-radius.moveable-virtual {
+            opacity: 0.5;
+            z-index: 1;
+        }
+        .rCS1w3zcxh.moveable-round-line-clickable .moveable-line.moveable-direction {
+            cursor: pointer;
+        }
+    </style>
+    <style>
+        .ejoy-sub-active {
+            color: #1296ba !important;
+        }
+        .ejoy-sub-hovered {
+            color: #1296ba !important;
+        }
+        .ejoy-sub-clzz {
+            cursor: pointer;
+            lineHeight: 1.2;
+            font-size: 28px;
+            color: #FFCC00;
+            background: rgba(17, 17, 17, 0.7);
+        }
+        .ejoy-sub-clzz:hover {
+            color: #1296ba !important;
+        }
+        .ej-trans-sub {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999999;
+            cursor: move;
+        }
+        .ej-trans-sub>span {
+            color: #3CF9ED;
+            font-size: 18px;
+            text-align: center;
+            padding: 0 16px;
+            line-height: 1.5;
+            background: rgba(32, 26, 25, 0.8);
+            // text-shadow: 0px 1px 4px black;
+            padding: 0 8px;
+            lineHeight: 1.2;
+            font-size: 16px;
+            color: #0CB1C7;
+            background: rgba(67, 65, 65, 0.7);
+        }
+        .ej-full-screen-video {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            top: 30px;
+            right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999999;
+            cursor: pointer;
+        }
+        .ej-main-sub {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999999;
+            cursor: move;
+            padding: 0 8px;
+        }
+        .ej-main-sub>span {
+            color: white;
+            font-size: 20px;
+            line-height: 1.5;
+            text-align: center;
+            background: rgba(32, 26, 25, 0.8);
+            padding: 2px 8px;
+            lineHeight: 1.2;
+            font-size: 28px;
+            color: #FFCC00;
+            background: rgba(17, 17, 17, 0.7);
+        }
+        .ej-main-sub .ejoy-sub-clzz {
+            background: transparent !important
+        }
+        .tran-subtitle>span {
+            cursor: pointer;
+            padding-left: 10px;
+            top: 2px;
+            position: relative;
+        }
+        .tran-subtitle>span>span {
+            position: absolute;
+            top: -170%;
+            background: rgba(0, 0, 0, 0.5);
+            font-size: 13px;
+            line-height: 20px;
+            padding: 2px 8px;
+            color: white;
+            display: none;
+            border-radius: 4px;
+            white-space: nowrap;
+            left: -50%;
+            font-weight: normal;
+        }
+        .viewPopupPro {
+            z-index: 2147483647;
+            cursor: auto;
+            position: absolute;
+            z-index: 2147483647;
+            background: #111111;
+            transition: opacity 1s;
+            width: 172px;
+            height: 66px;
+            opacity: 1;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .titlePopupPro {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 10px;
+            line-height: 12px;
+            color: #E5E5E5;
+            text-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25);
+        }
+        .viewGoPro {
+            background: #FFCC00;
+            border-radius: 72.6257px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 8px;
+            padding-left: 10px;
+            cursor: pointer;
+        }
+        .viewGoPro svg {
+            pointer-events: none;
+        }
+        .textGoPro {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 10px;
+            line-height: 12px;
+            pointer-events: none;
+            text-align: center;
+            color: #FFFFFF;
+            padding: 4px 14px 4px 4px;
+        }
+        .viewPopupPro {
+            top: auto !important;
+            bottom: 15px !important;
+        }
+        .view-icon-copy-main-sub:hover>span,
+        .view-icon-edit-sub:hover>span,
+        .view-icon-exit-full-sub:hover>span,
+        .view-icon-full-sub:hover>span,
+        .iconCrownGoPro:hover>span,
+        .view-icon-copy-tran-sub:hover>span {
+            display: block;
+        }
+        .iconCrownGoPro {
+            padding-left: 0px !important;
+            padding-right: 8px !important;
+        }
+        .iconCrownGoPro svg {
+            width: 17px;
+            height: 17px;
+        }
+        .view-icon-full-sub,
+        .view-icon-exit-full-sub {
+            display: flex;
+        }
+        .view-icon-full-sub>svg,
+        .view-icon-exit-full-sub>svg {
+            pointer-events: none;
+        }
+        .tran-subtitle>span>svg {
+            width: 16px;
+            height: 16px;
+            pointer-events: none;
+            display: inline-flex !important;
+            vertical-align: baseline !important;
+        }
+        .view-icon-copy-main-sub>svg {
+            pointer-events: none;
+            color: #FFCC00
+        }
+        .iconCrownGoPro {
+            padding-left: 0 !important;
+            padding-right: 8px !important;
+        }
+        .view-icon-copy-tran-sub>svg {
+            pointer-events: none;
+            color: #0CB1C7
+        }
+    </style>
+    <style data-styled="active" data-styled-version="6.1.11"></style>
+
+    
+
+
+    
+
+
+    <!-- BỘ TỐI ƯU GIAO DIỆN & FIX LỖI (Antigravity Global Fix V2) -->
+    <style id="premium-design-system">
+        /* Khắc phục lỗi tràn viền màn hình và thanh cuộn ngang */
+        html, body {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+            scroll-behavior: smooth;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* TỰ ĐỘNG SCALE GIAO DIỆN VỪA MỌI MÀN HÌNH ĐIỆN THOẠI (FIX BỂ FORM CỰC ĐỈNH) */
+        @media only screen and (max-width: 600px) {
+            .view-port {
+                width: 100vw !important;
+                /* Tính toán tỷ lệ scale dựa trên khung 568px gốc của editor */
+                transform: scale(calc(100vw / 568)) !important;
+                transform-origin: top center !important;
+                margin: 0 auto !important;
+                height: auto !important;
+                /* Bỏ padding top dư thừa */
+                padding-top: 0 !important; 
+            }
+            /* Đảm bảo khung cha chứa view-port không bị giới hạn chiều cao gây mất đuôi thiệp */
+            #root, .full-page {
+                height: auto !important;
+                min-height: 100vh !important;
+            }
+        }
+
+        /* Căn giữa thiệp trên nền Desktop */
+        @media only screen and (min-width: 601px) {
+            .view-port {
+                margin: 0 auto !important;
+                box-shadow: 0 0 30px rgba(0,0,0,0.15);
+                border-radius: 8px;
+            }
+        }
+
+        .resizer-container {
+            max-width: 100% !important;
+            overflow: hidden !important;
+        }
+
+        /* Đảm bảo hình ảnh không bị méo */
+        img {
+            object-fit: cover !important;
+            max-width: 100% !important;
+        }
+
+        /* ========================================================
+           THIẾT KẾ LẠI FORM (HỘP MỪNG CƯỚI / RSVP / SỔ LƯU BÚT)
+           ======================================================== */
+        
+        .invite-form-container, #wish-form, .guestbook-form, .rsvp-form {
+            background: rgba(255, 255, 255, 0.92) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border-radius: 24px !important;
+            padding: 30px 24px !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), 0 5px 15px rgba(0,0,0,0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.9) !important;
+            box-sizing: border-box !important;
+            width: 90% !important;
+            max-width: 600px !important;
+            margin: 0 auto !important;
+            position: relative;
+        }
+
+        .invite-form-container .MuiStack-root, #wish-form .mb-3 {
+            margin-bottom: 18px !important;
+            margin-top: 0 !important;
+        }
+
+        .invite-form-container label.MuiFormLabel-root, #wish-form label {
+            font-weight: 700 !important;
+            color: #4b5563 !important;
+            margin-bottom: 8px !important;
+            position: relative !important;
+            transform: none !important;
+            display: inline-block !important;
+            font-size: 15px !important;
+            font-family: 'Inter', 'Quicksand', sans-serif !important;
+        }
+
+        .invite-form-container input.MuiInputBase-input, 
+        .invite-form-container textarea, 
+        .invite-form-container select,
+        .invite-form-container .MuiSelect-select,
+        #wish-form input,
+        #wish-form textarea,
+        #wish-form select {
+            border-radius: 12px !important;
+            border: 2px solid #e5e7eb !important;
+            background: #ffffff !important;
+            padding: 14px 16px !important;
+            font-family: 'Inter', 'Quicksand', sans-serif !important;
+            font-size: 16px !important;
+            color: #1f2937 !important;
+            transition: all 0.25s ease !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            height: auto !important;
+        }
+
+        .invite-form-container fieldset { display: none !important; }
+        .invite-form-container .MuiInputBase-root { padding: 0 !important; background: transparent !important; }
+        .invite-form-container .MuiOutlinedInput-notchedOutline { border: none !important; }
+
+        .invite-form-container input.MuiInputBase-input:focus, 
+        .invite-form-container textarea:focus, 
+        .invite-form-container .MuiSelect-select:focus,
+        #wish-form input:focus,
+        #wish-form textarea:focus,
+        #wish-form select:focus {
+            border-color: #8b5cf6 !important;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+            outline: none !important;
+        }
+
+        .invite-form-container button[type="submit"],
+        #wish-form button[type="submit"] {
+            background: linear-gradient(135deg, #f43f5e 0%, #fb7185 100%) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 14px !important;
+            padding: 16px 24px !important;
+            font-weight: 800 !important;
+            font-size: 17px !important;
+            cursor: pointer !important;
+            font-family: 'Inter', 'Quicksand', sans-serif !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            width: 100% !important;
+            margin-top: 16px !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1.5px !important;
+            box-shadow: 0 8px 20px rgba(244, 63, 94, 0.3) !important;
+        }
+
+        .invite-form-container button[type="submit"]:hover,
+        #wish-form button[type="submit"]:hover {
+            transform: translateY(-4px) !important;
+            box-shadow: 0 12px 25px rgba(244, 63, 94, 0.4) !important;
+            background: linear-gradient(135deg, #fb7185 0%, #fda4af 100%) !important;
+        }
+
+        .invite-form-container button[type="submit"]:active,
+        #wish-form button[type="submit"]:active {
+            transform: translateY(0) !important;
+        }
+    </style>
+
+</head>
+<body style=""><noscript>You need to enable JavaScript to run this app.</noscript><noscript></noscript>
+    <div id="root">
+        <div class="full-page MuiBox-root css-yij4jy">
+            <header
+                class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorInherit MuiAppBar-positionFixed mui-fixed css-8n1cbo"
+                style="">
+                <div class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-wf18hp"><button
+                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-edgeStart MuiIconButton-sizeMedium css-15vogpg"
+                        tabindex="0" type="button" aria-label="open drawer"><span role="img" aria-label="menu-unfold"
+                            class="anticon anticon-menu-unfold"><svg viewBox="64 64 896 896" focusable="false"
+                                data-icon="menu-unfold" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM142.4 642.1L298.7 519a8.84 8.84 0 000-13.9L142.4 381.9c-5.8-4.6-14.4-.5-14.4 6.9v246.3a8.9 8.9 0 0014.4 7z">
+                                </path>
+                            </svg></span></button>
+                    <div class="MuiBox-root css-1o59fpk"></div>
+                </div>
+            </header>
+            <div class="MuiBox-root css-10tnq6j" aria-label="mailbox folders"></div>
+            <div class="view-port MuiBox-root css-0"
+                style="width: 568px; max-width: 100%; max-width: 100%; height: 100%; padding-top: 7%; background: rgb(243, 243, 243);">
+                <main class="page-content-wrapper MuiBox-root css-11v8kxu">
+                    <div class="MuiBox-root css-0" style="width: 100%; background: white;">
+                        <div class="resizer-container MuiBox-root css-0"
+                            style="width: 100%; height: 584.793px; transform: translate(0px, 0px) rotate(0deg); z-index: 0;">
+                            <div class="MuiBox-root css-0"
+                                style="width: 100%; height: 584.793px; transform: translate(0px, 0px) rotate(0deg);">
+                                <div class="row-contain-box row-section-name- MuiBox-root css-gd9e9d"
+                                    id="row-box-DqNsldPU7i" backgroundimage="" transform="rotate(0deg)"
+                                    effecttype="none" effectelement="heart" effectspeed="900" sectionname=""
+                                    style="height: 100%; width: 100%; position: relative; display: flex; justify-content: flex-start; background-color: rgb(239, 238, 232); background-image: url(&quot;&quot;); background-size: cover; background-position: center center; overflow: hidden;">
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-vCBELONUZg"
+                                            style="width: 515.645px; height: 412.417px; transform: translate(24.6956px, 29.3792px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1200w9p"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/07660936-15fb-46d1-bf7d-984978f37816_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <audio id="audio-player-rqptjRLa-w" loop=""
+                                        allow="autoplay" style="display: none;">
+                                        <source
+                                            src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/static/audio/motnha.mp3"
+                                            type="audio/mp3">Your browser does not support the audio element.
+                                        <track kind="captions" srclang="en" label="English">
+                                    </audio>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-rqptjRLa-w"
+                                            style="width: 44.375px; height: 44.375px; transform: translate(0px, 0px) rotate(0deg);">
+                                            <div class="" style="width: 100%; height: 100%;"><button
+                                                    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-172sy2j"
+                                                    tabindex="0" type="button"><img
+                                                        src="https://khan-web-dev.s3.ap-southeast-1.amazonaws.com/music_player.png"
+                                                        alt="#" style="width: 100%; height: 100%;">
+                                                    <div class="MuiBox-root css-vuvez3">
+                                                        <h6 class="MuiTypography-root MuiTypography-h6 css-1sb08z9">Bấm
+                                                            vào nghe nhạc nhé !</h6>
+                                                    </div><span class="MuiTouchRipple-root css-w0pj6f"></span>
+                                                </button></div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-I9qmc52reN"
+                                            style="width: 478.108px; height: 321.537px; transform: translate(43.4644px, 102.718px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1jdpwof"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/c9ac4d64-1d49-4ea3-810a-3c7124e58f03_jpeg"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-SowEHh6hlV"
+                                            style="width: 250.908px; height: 278.073px; transform: translate(-107.353px, 428.38px) rotate(1.91241deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1200w9p"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/3e5df7ac-ff5b-4e0d-a45a-d52ae45a86aa_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-k-EmJwSH9T"
+                                            style="width: 359.438px; height: 74.2542px; transform: translate(103.507px, 474.7px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(87, 105, 85); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 47.3333px; font-weight: normal; font-family: &quot;Playfair Display&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    WEDDING</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-VvLb-nvSVq"
+                                            style="width: 359.438px; height: 27.8083px; transform: translate(175.833px, 540.193px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(4, 4, 4); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 17.75px; font-weight: normal; font-family: &quot;Le Jour Script&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    invitation</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-DN2ccXHkCI"
+                                            style="width: 246.957px; height: 252.39px; transform: translate(414.393px, -93.3172px) rotate(11.0661deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1juc2ye component-selected"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/641668fd-2312-4a95-b298-cfa1ff4c4249_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-nYBqeyrPgy"
+                                            style="width: 462.683px; height: 27.8083px; transform: translate(51.9103px, 460.821px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(10, 10, 10); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 17.75px; font-weight: normal; font-family: &quot;Playfair Display&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    CHÚNG MÌNH MỜI CƯỚI!</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-alJLQL4MIJ"
+                                            style="width: 462.683px; height: 51.1792px; transform: translate(44.3534px, 38.5252px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(239, 238, 232); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 32.5417px; font-weight: normal; font-family: &quot;Dancing Script&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    Phương Thảo&nbsp; &nbsp; Trung Dũng&nbsp;</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-ZjE9ofsc8o"
+                                            style="width: 18.7687px; height: 18.2748px; transform: translate(270.17px, 58.7757px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1200w9p"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/ed98862a-458e-43a9-9645-58269386845c_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resizer-container MuiBox-root css-0"
+                            style="width: 100%; height: 1114.57px; transform: translate(0px, 0px) rotate(0deg); z-index: 0;">
+                            <div class="MuiBox-root css-0"
+                                style="width: 100%; height: 1114.57px; transform: translate(0px, 0px) rotate(0deg);">
+                                <div class="row-contain-box row-section-name- MuiBox-root css-1x0ymgh"
+                                    id="row-box-dCeOR_wZI1" backgroundimage="" transform="rotate(0deg)"
+                                    effecttype="none" effectelement="heart" effectspeed="900" sectionname=""
+                                    style="height: 100%; width: 100%; position: relative; display: flex; justify-content: flex-start; background-color: rgb(239, 238, 232); background-image: url(&quot;&quot;); background-size: cover; background-position: center center; overflow: hidden;">
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 2;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-BgSaxr6PQI"
+                                            style="width: 142.247px; height: 5.92696px; transform: translate(0px, 30.6226px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0"
+                                                style="width: 100%; height: 100%; position: relative;">
+                                                <div class="MuiBox-root css-0"
+                                                    style="position: absolute; width: 100%; height: 0px; top: calc(50% - 0.6px); border-color: rgb(175, 172, 172); border-radius: 0px; border-width: 0.6px; border-style: solid;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-pZUNCxX3Ws"
+                                            style="width: 460.821px; height: 39.513px; transform: translate(65.9374px, 47.4157px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(4, 4, 4); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 26.625px; font-weight: normal; font-family: &quot;Playfair Display&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    BẠN TỚI DỰ BỮA CƠM THÂN MẬT</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-NKdyKZfQeM"
+                                            style="width: 359.438px; height: 27.8083px; transform: translate(103.211px, 16.7184px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(87, 105, 85); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 17.75px; font-weight: normal; font-family: &quot;Playfair Display&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    TRÂN TRỌNG KÍNH MỜI</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 2;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-m0UUppim7e"
+                                            style="width: 142.247px; height: 5.92696px; transform: translate(425.753px, 30.6226px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0"
+                                                style="width: 100%; height: 100%; position: relative;">
+                                                <div class="MuiBox-root css-0"
+                                                    style="position: absolute; width: 100%; height: 0px; top: calc(50% - 0.6px); border-color: rgb(175, 172, 172); border-radius: 0px; border-width: 0.6px; border-style: solid;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-anBPzDqejc"
+                                            style="width: 88.4104px; height: 85.447px; transform: translate(238.758px, 115.576px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1200w9p"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/0f8feea9-c844-4924-a14f-608fe192d53c_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-ltW06Ed7c3"
+                                            style="width: 103.246px; height: 97.625px; transform: translate(88.4509px, 116.832px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(74, 92, 73); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 62.125px; font-weight: normal; font-family: &quot;Playfair Display&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    T</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-ZoIsNVx6Tf"
+                                            style="width: 103.246px; height: 97.625px; transform: translate(370.435px, 119.154px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(74, 92, 73); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 62.125px; font-weight: normal; font-family: &quot;Playfair Display&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    D</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-k06rH52GKA"
+                                            style="width: 248.5px; height: 34.9083px; transform: translate(15.8052px, 214.438px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(0, 0, 0); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 22.1875px; font-weight: normal; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    PHƯƠNG THẢO</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-04zTT8bYRI"
+                                            style="width: 168.921px; height: 34.9083px; transform: translate(335.366px, 214.438px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(0, 0, 0); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 22.1875px; font-weight: normal; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    TRUNG DŨNG</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container--ecL8fwfmx"
+                                            style="width: 124.546px; height: 30.175px; transform: translate(220.69px, 216.781px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(87, 105, 102); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 19.2292px; font-weight: normal; font-family: &quot;Le Jour Script&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    and</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 2;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-j731RhH1Jb"
+                                            style="width: 142.247px; height: 5.92696px; transform: translate(42.0801px, 313.832px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0"
+                                                style="width: 100%; height: 100%; position: relative;">
+                                                <div class="MuiBox-root css-0"
+                                                    style="position: absolute; width: 100%; height: 0px; top: calc(50% - 0.6px); border-color: rgb(175, 172, 172); border-radius: 0px; border-width: 0.6px; border-style: solid;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-1KjXN3Z5Qv"
+                                            style="width: 149.692px; height: 37.275px; transform: translate(208.117px, 282.501px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(0, 0, 0); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 23.6667px; font-weight: normal; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    THÁNG 05</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-oXTIu0vnt8"
+                                            style="width: 149.692px; height: 92.8917px; transform: translate(208.135px, 299.294px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(74, 92, 73); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 59.1667px; font-weight: normal; font-family: &quot;DM Serif Display&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    25</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 2;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-n4fZSqVWZn"
+                                            style="width: 126.936px; height: 5.92696px; transform: translate(137.061px, 343.023px) rotate(90deg);">
+                                            <div class="MuiBox-root css-cdkrf0"
+                                                style="width: 100%; height: 100%; position: relative;">
+                                                <div class="MuiBox-root css-0"
+                                                    style="position: absolute; width: 100%; height: 0px; top: calc(50% - 0.6px); border-color: rgb(175, 172, 172); border-radius: 0px; border-width: 0.6px; border-style: solid;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-FTDbUqJa0o"
+                                            style="width: 149.692px; height: 39.3458px; transform: translate(208.117px, 376.529px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(0, 0, 0); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 25.1458px; font-weight: normal; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    2024</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 2;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-tsL-NlI3BG"
+                                            style="width: 126.936px; height: 5.92696px; transform: translate(301.419px, 343.023px) rotate(90deg);">
+                                            <div class="MuiBox-root css-cdkrf0"
+                                                style="width: 100%; height: 100%; position: relative;">
+                                                <div class="MuiBox-root css-0"
+                                                    style="position: absolute; width: 100%; height: 0px; top: calc(50% - 0.6px); border-color: rgb(175, 172, 172); border-radius: 0px; border-width: 0.6px; border-style: solid;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-w51eV1PQWV"
+                                            style="width: 149.692px; height: 34.9083px; transform: translate(34.6366px, 328.551px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(0, 0, 0); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 22.1875px; font-weight: normal; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    THỨ BẢY</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 2;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-i2WEGlLNio"
+                                            style="width: 142.247px; height: 5.92696px; transform: translate(42.1162px, 370.435px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0"
+                                                style="width: 100%; height: 100%; position: relative;">
+                                                <div class="MuiBox-root css-0"
+                                                    style="position: absolute; width: 100%; height: 0px; top: calc(50% - 0.6px); border-color: rgb(175, 172, 172); border-radius: 0px; border-width: 0.6px; border-style: solid;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 2;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-QHTsejw2Tf"
+                                            style="width: 142.247px; height: 5.92696px; transform: translate(381.633px, 313.832px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0"
+                                                style="width: 100%; height: 100%; position: relative;">
+                                                <div class="MuiBox-root css-0"
+                                                    style="position: absolute; width: 100%; height: 0px; top: calc(50% - 0.6px); border-color: rgb(175, 172, 172); border-radius: 0px; border-width: 0.6px; border-style: solid;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-25Gbg2EamY"
+                                            style="width: 149.692px; height: 34.9083px; transform: translate(377.875px, 328.532px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(0, 0, 0); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 22.1875px; font-weight: normal; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    15 GIỜ 30</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 2;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-tZYMU9U3eV"
+                                            style="width: 142.247px; height: 5.92696px; transform: translate(381.597px, 370.583px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0"
+                                                style="width: 100%; height: 100%; position: relative;">
+                                                <div class="MuiBox-root css-0"
+                                                    style="position: absolute; width: 100%; height: 0px; top: calc(50% - 0.6px); border-color: rgb(175, 172, 172); border-radius: 0px; border-width: 0.6px; border-style: solid;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-gZpawKiNhu"
+                                            style="width: 376.856px; height: 30.6226px; transform: translate(99.6717px, 419.826px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(0, 0, 0); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 17.75px; font-weight: normal; font-family: &quot;Times New Roman&quot;; outline: none; text-transform: none; text-decoration: none; font-style: italic;">
+                                                    (Tức Ngày 18 Tháng 04 Năm Giáp Thìn)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-OhrWDsgdi5"
+                                            style="width: 359.438px; height: 27.8083px; transform: translate(101.515px, 483.095px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(0, 0, 0); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 17.75px; font-weight: normal; font-family: &quot;Playfair Display&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    ĐỊA ĐIỂM</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-1k2ZbMhcWV"
+                                            style="width: 358.55px; height: 38.4583px; transform: translate(108.358px, 510.881px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(74, 92, 73); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 24.5542px; font-weight: normal; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    TƯ GIA NHÀ GÁI</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-FusVGjExPF"
+                                            style="width: 568px; max-width: 100%; max-width: 100%; height: 25.4417px; transform: translate(-2.76591px, 548.13px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(0, 0, 0); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 16.2708px; font-weight: normal; font-family: &quot;Playfair Display&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    Khu 7, Xã Phú Nham, Huyện Phù Ninh, Tỉnh Phú Thọ</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-ClQWRUalWe"
+                                            style="width: 113.6px; height: 27.6591px; transform: translate(123.478px, 600.598px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(0, 0, 0); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 17.75px; font-weight: normal; font-family: &quot;Playfair Display&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    Nhà gái</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-xdIa5zXdCp"
+                                            style="width: 113.6px; height: 27.8083px; transform: translate(342.776px, 600.498px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(0, 0, 0); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 17.75px; font-weight: normal; font-family: &quot;Playfair Display&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    Nhà trai</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-FckK8m9M8x"
+                                            style="width: 229.271px; height: 46.4458px; transform: translate(65.641px, 631.746px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(87, 105, 85); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 14.7917px; font-weight: normal; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    Bố HÀ VĂN CHƯƠNG&nbsp;<div>Mẹ PHÙNG THỊ THÁI</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 10;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-4Rv71Q32AL"
+                                            style="width: 207.083px; height: 88.75px; transform: translate(185.535px, 736.531px) rotate(0deg);">
+                                            <div class="MuiBox-root css-p89rkq">
+                                                <div
+                                                    class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column MuiGrid-grid-xs-3 MuiGrid-grid-md-6 MuiGrid-grid-lg-6 css-e2ykqf">
+                                                    <div class="MuiBox-root css-u6v8er"
+                                                        style="text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; font-size: 11.8333px; font-weight: normal; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                        <div class="MuiBox-root css-0" style="color: rgb(87, 105, 85);">
+                                                            Ngày</div>
+                                                        <div class="MuiBox-root css-0" style="color: rgb(87, 105, 85);">
+                                                            0</div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column MuiGrid-grid-xs-3 MuiGrid-grid-md-6 MuiGrid-grid-lg-6 css-e2ykqf">
+                                                    <div class="MuiBox-root css-u6v8er"
+                                                        style="text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; font-size: 11.8333px; font-weight: normal; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                        <div class="MuiBox-root css-0" style="color: rgb(87, 105, 85);">
+                                                            Giờ</div>
+                                                        <div class="MuiBox-root css-0" style="color: rgb(87, 105, 85);">
+                                                            0</div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column MuiGrid-grid-xs-3 MuiGrid-grid-md-6 MuiGrid-grid-lg-6 css-e2ykqf">
+                                                    <div class="MuiBox-root css-u6v8er"
+                                                        style="text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; font-size: 11.8333px; font-weight: normal; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                        <div class="MuiBox-root css-0" style="color: rgb(87, 105, 85);">
+                                                            Phút</div>
+                                                        <div class="MuiBox-root css-0" style="color: rgb(87, 105, 85);">
+                                                            0</div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column MuiGrid-grid-xs-3 MuiGrid-grid-md-6 MuiGrid-grid-lg-6 css-e2ykqf">
+                                                    <div class="MuiBox-root css-u6v8er"
+                                                        style="text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; font-size: 11.8333px; font-weight: normal; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                        <div class="MuiBox-root css-0" style="color: rgb(87, 105, 85);">
+                                                            Giây</div>
+                                                        <div class="MuiBox-root css-0" style="color: rgb(87, 105, 85);">
+                                                            0</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-TDdpTOv9Io"
+                                            style="width: 481.565px; height: 286.47px; transform: translate(45.5904px, 820.546px) rotate(0deg);">
+                                            <div class="MuiBox-root css-0"
+                                                style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: space-evenly;">
+                                                <iframe title="google-map-TDdpTOv9Io"
+                                                    src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCq1WmG5O6WVoW3Ovpm3wEMniiUP88vZac&amp;q=nhà văn hoá khu 7 xã phú nham huyện phù ninh"
+                                                    allowfullscreen="" loading="lazy"
+                                                    style="width: 100%; height: 100%; padding: 20px; border: none;"></iframe>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-9kWhRGuerw"
+                                            style="width: 229.271px; height: 46.4458px; transform: translate(284.94px, 631.764px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(87, 105, 85); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 14.7917px; font-weight: normal; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    Bố NGUYỄN TRUNG THỰC<div>Mẹ NGUYỄN HẠNH MAI</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-mXmzcHS62t"
+                                            style="width: 178.387px; height: 25.4417px; transform: translate(202.401px, 726.725px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0 component-selected">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(0, 0, 0); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 16.2708px; font-weight: bold; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    CÙNG ĐẾM NGƯỢC</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resizer-container MuiBox-root css-0"
+                            style="width: 100%; height: 676.386px; transform: translate(0px, 0px) rotate(0deg); z-index: 0;">
+                            <div class="MuiBox-root css-0"
+                                style="width: 100%; height: 676.386px; transform: translate(0px, 0px) rotate(0deg);">
+                                <div class="row-contain-box row-section-name- MuiBox-root css-1whzjyi"
+                                    id="row-box-zlweOWEmJM"
+                                    backgroundimage="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/cbbafa2d-db99-46b7-b8f8-66c71cbecc6e_png"
+                                    transform="rotate(0deg)" effecttype="none" effectelement="heart" effectspeed="900"
+                                    sectionname=""
+                                    style="height: 100%; width: 100%; position: relative; display: flex; justify-content: flex-start; background-color: rgb(120, 24, 24); background-image: url(&quot;https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/cbbafa2d-db99-46b7-b8f8-66c71cbecc6e_png&quot;); background-size: cover; background-position: center center; overflow: hidden;">
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-qrKqnpFOGz"
+                                            style="width: 76.5565px; height: 74.5809px; transform: translate(413.405px, 13.4838px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1200w9p"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/9552cf4b-3e0b-4397-be9c-b38ab44ded7f_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-6CcHvRwy2T"
+                                            style="width: 365.946px; height: 62.7167px; transform: translate(93.3688px, 45.9337px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(239, 238, 232); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 39.9375px; font-weight: normal; font-family: &quot;Le Jour Script&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    Our photobook</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 2;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-pOMyNYrGCY"
+                                            style="width: 164.967px; height: 235.103px; transform: translate(201.517px, 148.174px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-dod9k2"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/04ab9129-4212-4723-af34-227847f972bd_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-PbWZSvGrHL"
+                                            style="width: 140.765px; height: 212.383px; transform: translate(213.617px, 159.534px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-dod9k2"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/1eb55e48-7f80-4871-9ddb-31dd0cc48461_jpeg"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-z_siyqZgZs"
+                                            style="width: 630.727px; height: 225.224px; transform: translate(-13.3357px, 405.997px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1200w9p"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/04ab9129-4212-4723-af34-227847f972bd_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 2;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-99UDuS75p6"
+                                            style="width: 164.967px; height: 235.103px; transform: translate(21.7322px, 148.174px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-dod9k2"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/04ab9129-4212-4723-af34-227847f972bd_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 2;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container--EyRkJ5aQZ"
+                                            style="width: 164.967px; height: 235.103px; transform: translate(381.301px, 148.174px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-dod9k2"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/04ab9129-4212-4723-af34-227847f972bd_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-3zG47WfUHQ"
+                                            style="width: 140.765px; height: 212.383px; transform: translate(33.8301px, 159.552px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-dod9k2"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/816b489d-0ff2-42e6-8a92-c5712e21c36a_jpeg"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-iAC1a0VrLi"
+                                            style="width: 140.765px; height: 212.383px; transform: translate(393.402px, 159.534px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-dod9k2"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/7905611c-71fa-431f-b673-459331933c27_jpeg"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-lTEUrV-XHw"
+                                            style="width: 273.134px; height: 189.169px; transform: translate(11.1314px, 424.024px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-dod9k2"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/afebadad-cf0a-4265-bc93-d7326282e924_jpeg"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-1Tsolj1hSi"
+                                            style="width: 125.948px; height: 189.169px; transform: translate(293.137px, 424.024px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-dod9k2"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/5fa22cd2-4638-4cae-b87f-3f0776aa7ef4_jpeg"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-ZOOsQrOp5G"
+                                            style="width: 125.948px; height: 189.169px; transform: translate(427.976px, 424.024px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-dod9k2"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/d0af572b-dbb2-400a-8e7d-1cde1529f7cc_jpeg"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-466lc92NqC"
+                                            style="width: 250.908px; height: 278.073px; transform: translate(404.412px, 564.208px) rotate(-51.6856deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1200w9p"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/3e5df7ac-ff5b-4e0d-a45a-d52ae45a86aa_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resizer-container MuiBox-root css-0"
+                            style="width: 100%; height: 173.857px; transform: translate(0px, 0px) rotate(0deg); z-index: 0;">
+                            <div class="MuiBox-root css-0"
+                                style="width: 100%; height: 173.857px; transform: translate(0px, 0px) rotate(0deg);">
+                                <div class="row-contain-box row-section-name- MuiBox-root css-189f71c"
+                                    id="row-box-vXsw5sJJiM" backgroundimage="" transform="rotate(0deg)"
+                                    effecttype="none" effectelement="heart" effectspeed="900" sectionname=""
+                                    style="height: 100%; width: 100%; position: relative; display: flex; justify-content: flex-start; background-color: rgb(239, 238, 232); background-image: url(&quot;&quot;); background-size: cover; background-position: center center; overflow: hidden;">
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-JoVUTEcF-s"
+                                            style="width: 457.857px; height: 80.5078px; transform: translate(57.2939px, 28.3451px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(0, 0, 0); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 26.625px; font-weight: normal; font-family: &quot;Playfair Display&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    RẤT MONG BẠN SẼ ĐẾN CHUNG VUI CÙNG VỢ CHỒNG MÌNH</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-WYwp5Ucd-Y"
+                                            style="width: 525.03px; height: 51.8609px; transform: translate(23.7078px, 115.082px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(90, 76, 73); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 16.2708px; font-weight: normal; font-family: &quot;Playfair Display&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    Bạn có thể xác nhận tham gia bằng cách điền nội dung dưới đây để
+                                                    chúng mình chuẩn bị đón tiếp một cách chu đáo nhất. Hẹn gặp bạn!
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resizer-container MuiBox-root css-0"
+                            style="width: 100%; height: 216.828px; transform: translate(0px, 0px) rotate(0deg); z-index: 0;">
+                            <div class="MuiBox-root css-0"
+                                style="width: 100%; height: 216.828px; transform: translate(0px, 0px) rotate(0deg);">
+                                <div class="row-contain-box row-section-name- MuiBox-root css-1aavele"
+                                    id="row-box-xpDzX36t2-" backgroundimage="" transform="rotate(0deg)"
+                                    effecttype="none" effectelement="heart" effectspeed="900" sectionname=""
+                                    style="height: 100%; width: 100%; position: relative; display: flex; justify-content: flex-start; background-color: rgb(239, 238, 232); background-image: url(&quot;&quot;); background-size: cover; background-position: center center; overflow: hidden;">
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-KmWrQUKqfc"
+                                            style="width: 451.437px; height: 459.562px; transform: translate(60.5043px, 0px) rotate(0deg);">
+                                            <form style="width: 100%; height: 100%; padding: 10px;">
+                                                <div
+                                                    class="custom-form-container form-KmWrQUKqfc MuiBox-root css-uwwqev">
+                                                    <div class="MuiStack-root css-17u8plo"><label
+                                                            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-animated MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-animated css-17td2vf"
+                                                            for="name">Tên của Quý khách*</label>
+                                                        <div required=""
+                                                            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-sizeSmall form-outlined-input-container css-1d8dujs">
+                                                            <input disabled="" id="name" name="name"
+                                                                placeholder="Your name" required="" type="text"
+                                                                class="MuiInputBase-input MuiOutlinedInput-input Mui-disabled MuiInputBase-inputSizeSmall css-h3k2qk"
+                                                                value="" style="border-color: rgb(4, 4, 4);">
+                                                            <fieldset aria-hidden="true"
+                                                                class="MuiOutlinedInput-notchedOutline css-1yi3i18">
+                                                                <legend class="css-ihdtdm"><span
+                                                                        class="notranslate">​</span></legend>
+                                                            </fieldset>
+                                                        </div>
+                                                    </div>
+                                                    <div class="MuiStack-root select-container css-h2jw4a"><label
+                                                            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-animated MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-animated css-jtxrvz"
+                                                            for="is-attend">Quý khách sẽ tham dự chứ?</label>
+                                                        <div class="MuiBox-root css-0"
+                                                            style="width: 100%; display: flex;">
+                                                            <div
+                                                                class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary form-outlined-input-container css-a2zeri">
+                                                                <div tabindex="0" role="combobox" aria-controls=":r8n:"
+                                                                    aria-expanded="false" aria-haspopup="listbox"
+                                                                    aria-labelledby="attend" id="attend"
+                                                                    class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input css-1e266q1 custom-cursor-on-hover"
+                                                                    style="border-color: rgb(4, 4, 4);">Chắc chắn rồi
+                                                                </div><input aria-invalid="false" aria-hidden="true"
+                                                                    tabindex="-1"
+                                                                    class="MuiSelect-nativeInput css-1k3x8v3"
+                                                                    value="yes" style="border-color: rgb(4, 4, 4);"><svg
+                                                                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined css-7jobiw"
+                                                                    focusable="false" aria-hidden="true"
+                                                                    viewBox="0 0 24 24" data-testid="ArrowDropDownIcon">
+                                                                    <path d="M7 10l5 5 5-5z"></path>
+                                                                </svg>
+                                                                <fieldset aria-hidden="true"
+                                                                    class="MuiOutlinedInput-notchedOutline css-1yi3i18">
+                                                                    <legend class="css-ihdtdm"><span
+                                                                            class="notranslate">​</span></legend>
+                                                                </fieldset>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="MuiStack-root best-wishes-container custom-question-container css-d8f9xn">
+                                                        <label
+                                                            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-animated MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-animated css-17td2vf"
+                                                            for="bestWishes">Gửi lời chúc cho “chông vợ
+                                                            hài”</label><textarea rows="1" id="bestWishes" type="text"
+                                                            placeholder="Type here or Film a video to let us have your kind blessings"
+                                                            class="best-wishes-textarea form-outlined-input-container custom-cursor-default-hover"
+                                                            disabled="" sx="[object Object]"
+                                                            style="height: 114px; overflow: hidden; border-color: rgb(4, 4, 4);"></textarea><textarea
+                                                            aria-hidden="true"
+                                                            class="best-wishes-textarea form-outlined-input-container"
+                                                            readonly="" tabindex="-1"
+                                                            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0px); padding-top: 0px; padding-bottom: 0px; width: 431.425px; border-color: rgb(4, 4, 4);"></textarea>
+                                                    </div>
+                                                    <div class="MuiStack-root css-1vp8jwk"><button
+                                                            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-1mq3vb0"
+                                                            tabindex="0" type="submit">Gửi lời chúc<span
+                                                                class="MuiTouchRipple-root css-w0pj6f"></span></button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resizer-container MuiBox-root css-0"
+                            style="width: 100%; height: 384.758px; transform: translate(0px, 0px) rotate(0deg); z-index: 0;">
+                            <div class="MuiBox-root css-0"
+                                style="width: 100%; height: 384.758px; transform: translate(0px, 0px) rotate(0deg);">
+                                <div class="row-contain-box row-section-name- MuiBox-root css-87bgnf"
+                                    id="row-box-Ced7w35hba"
+                                    backgroundimage="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/ae0407f8-5e0d-4611-90ac-79f43e79984e_png"
+                                    transform="rotate(0deg)" effecttype="none" effectelement="heart" effectspeed="900"
+                                    sectionname=""
+                                    style="height: 100%; width: 100%; position: relative; display: flex; justify-content: flex-start; background-color: rgb(239, 238, 232); background-image: url(&quot;https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/ae0407f8-5e0d-4611-90ac-79f43e79984e_png&quot;); background-size: cover; background-position: center center; overflow: hidden;">
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-Ka0eQ3H6kh"
+                                            style="width: 278.567px; height: 41.4887px; transform: translate(146.939px, 24.9426px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(239, 238, 232); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 26.625px; font-weight: normal; font-family: &quot;Playfair Display&quot;; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    HỘP MỪNG CƯỚI</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-hN3cvtV2vr"
+                                            style="width: 60.2574px; height: 51.8609px; transform: translate(395.377px, 19.2626px) rotate(24.8574deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1200w9p"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/9552cf4b-3e0b-4397-be9c-b38ab44ded7f_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-7FBJXhYFBe"
+                                            style="width: 193.614px; height: 253.377px; transform: translate(184.921px, 92.3617px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1200w9p"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/1972a70b-2345-48a6-88e0-aa58288eb9b5_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-Qr7_M62U-h"
+                                            style="width: 60.2574px; height: 51.8609px; transform: translate(118.045px, 19.7565px) rotate(-18.2783deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-p3k0ln"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/9552cf4b-3e0b-4397-be9c-b38ab44ded7f_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-xdKn01oqp9"
+                                            style="width: 269.677px; height: 278.567px; transform: translate(-94.4148px, 216.812px) rotate(-146.397deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1juc2ye"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/641668fd-2312-4a95-b298-cfa1ff4c4249_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-wfPP9W42MU"
+                                            style="width: 168.424px; height: 228.188px; transform: translate(197.565px, 104.957px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-dod9k2"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/b619bd86-00e9-4acd-a6e6-470e4cd109c6_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 4;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-RD29tV_zGI"
+                                            style="width: 163.892px; height: 51.475px; transform: translate(199.782px, 265.429px) rotate(0deg);">
+                                            <div class="MuiBox-root css-cdkrf0">
+                                                <div contenteditable="true" variant="h5"
+                                                    style="margin: 0px; color: rgb(239, 238, 232); text-shadow: rgba(0, 0, 0, 0) 0px 0px 2px; text-align: center; font-size: 10.9458px; font-weight: normal; font-family: Bodoni; outline: none; text-transform: none; text-decoration: none; font-style: normal;">
+                                                    HA THI PHUONG THAO<div>4240285781</div>
+                                                    <div>Ngân hàng BIDV<br></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 2;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-TPHgnZ6bhF"
+                                            style="width: 103.722px; height: 103.228px; transform: translate(229.867px, 143.729px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1200w9p"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/952c410a-a90a-41a9-9332-d498ce871059_image-copied-de26445c-1794-4f28-98eb-d4806df2c3a1"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-Qp0jRL4JKs"
+                                            style="width: 130.887px; height: 127.43px; transform: translate(216.285px, 123.478px) rotate(0deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1200w9p"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/8760512b-7878-48f1-a4b8-7966943e2ed9_image-copied-fbd59a8e-5653-45ce-9741-2e7bcc6f6680"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                    <div class="drag-drop-rotate-resize-container MuiBox-root css-0"
+                                        style="position: absolute; width: 1px; height: 1px; z-index: 3;">
+                                        <div class="box-drag-drop-rotate-resize-container MuiBox-root css-0"
+                                            id="drag-drop-container-OKWzj7swcq"
+                                            style="width: 269.677px; height: 278.567px; transform: translate(387.235px, 222.205px) rotate(-212.474deg);">
+                                            <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-id0ytl"
+                                                src="https://khan-web-prod.s3.ap-southeast-1.amazonaws.com/uploads/641668fd-2312-4a95-b298-cfa1ff4c4249_png"
+                                                height="100%" width="100%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resizer-container MuiBox-root css-0"
+                            style="width: 100%; height: 29.5833px; transform: translate(0px, 0px) rotate(0deg); z-index: 10;">
+                            <div class="MuiBox-root css-0"
+                                style="width: 100%; height: 29.5833px; transform: translate(0px, 0px) rotate(0deg);">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sc-aYaIB fmYkKo node-controller-container"
+                        style="left: 740px; top: 2980.48px; z-index: 10;">
+                        <div class="MuiStack-root grid-container css-1eauz8e">
+                            <div class="node-action MuiBox-root css-0" id="ai-text-writer">
+                                <div class="tool-button MuiBox-root css-3z11qh" aria-label="Trợ lý soạn thảo"><svg
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.445 5.489c-2.033-.407-2.91-1.387-3.317-3.37a.25.25 0 0 0-.241-.189.25.25 0 0 0-.241.192c-.407 2.033-1.335 2.96-3.317 3.367a.254.254 0 0 0 0 .508c2.033.407 2.906 1.366 3.313 3.349a.25.25 0 0 0 .245.21.25.25 0 0 0 .243-.197c.406-2.034 1.333-2.955 3.315-3.362a.254.254 0 1 0 0-.508Z"
+                                            fill="url(#_2812518982__a)"></path>
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M21.224 5.24a3.057 3.057 0 0 0-4.323 0L6.871 15.267a5.42 5.42 0 0 0-1.295 2.08l-1.12 3.282a1.087 1.087 0 0 0 1.378 1.38L9.1 20.896a5.422 5.422 0 0 0 2.086-1.299L21.224 9.562a3.057 3.057 0 0 0 0-4.323ZM19.09 9.573l1.073-1.073A1.557 1.557 0 1 0 17.962 6.3l-1.073 1.073 2.201 2.201Zm-1.06 1.06-2.202-2.2-6.633 6.632a6.215 6.215 0 0 1 2.2 2.204l6.634-6.635Zm-7.743 7.744a4.71 4.71 0 0 0-2.199-2.204l-.156.155a3.918 3.918 0 0 0-.937 1.505l-.53 1.55c.28.113.501.337.61.618l1.543-.525a3.921 3.921 0 0 0 1.509-.94l.16-.16Z"
+                                            fill="url(#_2812518982__b)"></path>
+                                        <path
+                                            d="M3.97 8.141c.172.858.67 1.271 1.528 1.528a.187.187 0 0 1 0 .374c-.857.171-1.27.67-1.528 1.528a.187.187 0 0 1-.374 0c-.171-.858-.67-1.27-1.527-1.528a.187.187 0 0 1 0-.374c.857-.171 1.27-.67 1.527-1.528a.187.187 0 0 1 .374 0Z"
+                                            fill="url(#_2812518982__c)"></path>
+                                        <defs>
+                                            <linearGradient id="_2812518982__a" x1="-8.237" y1="12" x2="11.902"
+                                                y2="32.237" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#03A5AB"></stop>
+                                                <stop offset="1" stop-color="#8B3DFF"></stop>
+                                            </linearGradient>
+                                            <linearGradient id="_2812518982__b" x1="-8.237" y1="12" x2="11.902"
+                                                y2="32.237" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#03A5AB"></stop>
+                                                <stop offset="1" stop-color="#8B3DFF"></stop>
+                                            </linearGradient>
+                                            <linearGradient id="_2812518982__c" x1="-8.237" y1="12" x2="11.902"
+                                                y2="32.237" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#03A5AB"></stop>
+                                                <stop offset="1" stop-color="#8B3DFF"></stop>
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <p class="MuiTypography-root MuiTypography-body1 css-1hfw0pt">Trợ lý soạn thảo</p>
+                                </div>
+                            </div>
+                            <div class="node-action MuiBox-root css-0"><svg width="64px" height="64px"
+                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                    aria-label="Tạo bản sao" class="tool-button" sx="[object Object]">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path
+                                            d="M8 15.9615C3.92665 15.7245 3 14.3107 3 9.5C3 4.14725 4.14725 3 9.5 3C14.3107 3 15.7245 3.92665 15.9615 8"
+                                            stroke="#323232" stroke-width="2" stroke-linecap="round"></path>
+                                        <path
+                                            d="M8 14.5C8 9.14725 9.14725 8 14.5 8C19.8527 8 21 9.14725 21 14.5C21 19.8527 19.8527 21 14.5 21C9.14725 21 8 19.8527 8 14.5Z"
+                                            stroke="#323232" stroke-width="2"></path>
+                                    </g>
+                                </svg></div>
+                            <div class="node-action MuiBox-root css-0"><svg width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Khóa" class="tool-button"
+                                    sx="[object Object]">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path
+                                            d="M7 10.0288C7.47142 10 8.05259 10 8.8 10H15.2C15.9474 10 16.5286 10 17 10.0288M7 10.0288C6.41168 10.0647 5.99429 10.1455 5.63803 10.327C5.07354 10.6146 4.6146 11.0735 4.32698 11.638C4 12.2798 4 13.1198 4 14.8V16.2C4 17.8802 4 18.7202 4.32698 19.362C4.6146 19.9265 5.07354 20.3854 5.63803 20.673C6.27976 21 7.11984 21 8.8 21H15.2C16.8802 21 17.7202 21 18.362 20.673C18.9265 20.3854 19.3854 19.9265 19.673 19.362C20 18.7202 20 17.8802 20 16.2V14.8C20 13.1198 20 12.2798 19.673 11.638C19.3854 11.0735 18.9265 10.6146 18.362 10.327C18.0057 10.1455 17.5883 10.0647 17 10.0288M7 10.0288V8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8V10.0288"
+                                            stroke="#000000" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round"></path>
+                                    </g>
+                                </svg></div>
+                            <div class="node-action MuiBox-root css-0" xs="2.4" md="2.4"><svg width="64px" height="64px"
+                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Xóa"
+                                    class="tool-button" sx="[object Object]">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path d="M10 11V17" stroke="#000000" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round"></path>
+                                        <path d="M14 11V17" stroke="#000000" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round"></path>
+                                        <path d="M4 7H20" stroke="#000000" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round"></path>
+                                        <path
+                                            d="M6 7H12H18V18C18 19.6569 16.6569 21 15 21H9C7.34315 21 6 19.6569 6 18V7Z"
+                                            stroke="#000000" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round"></path>
+                                        <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z"
+                                            stroke="#000000" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round"></path>
+                                    </g>
+                                </svg></div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

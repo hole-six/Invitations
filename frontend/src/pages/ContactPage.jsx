@@ -13,7 +13,7 @@ const ContactPage = () => {
         {/* Hero Section - Wedding Background */}
         <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden bg-gray-900 border-b border-gray-800">
           {/* Wedding Background Image */}
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: "url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069')",
@@ -28,7 +28,7 @@ const ContactPage = () => {
 
           <div className="relative z-10 text-center px-6 max-w-4xl mx-auto pt-20">
             {/* System Badge */}
-       
+
 
             <h1 className="font-serif text-5xl md:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-2xl">
               Trung Tâm <br className="md:hidden" />
@@ -48,10 +48,39 @@ const ContactPage = () => {
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
 
             {/* Left Column: Contact Info */}
-            <div className="space-y-12">
+            <div className="space-y-10">
+              {/* Company Info Block */}
+              <div className="p-6 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-10 h-10 bg-black dark:bg-white rounded-lg flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white dark:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold">CÔNG TY TNHH HIWEB.VN</h2>
+                    <p className="text-xs text-gray-500 font-mono uppercase tracking-wider">Thông tin pháp lý</p>
+                  </div>
+                </div>
+                <dl className="space-y-2 text-sm">
+                  <div className="flex gap-2">
+                    <dt className="text-gray-500 shrink-0 w-40">MST / ĐKKD / QĐTL:</dt>
+                    <dd className="font-semibold text-gray-900 dark:text-white">0402298058</dd>
+                  </div>
+                  <div className="flex gap-2">
+                    <dt className="text-gray-500 shrink-0 w-40">Cơ quan cấp phép:</dt>
+                    <dd className="font-semibold text-gray-900 dark:text-white">STC TP Đà Nẵng – PDN & ĐKKD</dd>
+                  </div>
+                  <div className="flex gap-2">
+                    <dt className="text-gray-500 shrink-0 w-40">Đại diện pháp luật:</dt>
+                    <dd className="font-semibold text-gray-900 dark:text-white">Tạ Thị Kim Chi</dd>
+                  </div>
+                </dl>
+              </div>
+
+              {/* Contact Details */}
               <div>
                 <h2 className="text-3xl font-bold mb-8" style={{ fontFamily: "'Playfair Display', serif" }}>Thông tin liên hệ</h2>
-                <div className="space-y-8">
+                <div className="space-y-6">
+                  {/* Address */}
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 flex items-center justify-center border border-gray-200 dark:border-gray-800 rounded-full shrink-0">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,14 +89,15 @@ const ContactPage = () => {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg mb-1">Văn phòng chính</h3>
+                      <h3 className="font-bold text-lg mb-1">Địa chỉ</h3>
                       <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                        123 Đường Hoa Lan, Quận 1<br />
-                        TP. Hồ Chí Minh, Việt Nam
+                        121 Đặng Huy Trứ, Phường Hòa Khánh<br />
+                        TP. Đà Nẵng, Việt Nam
                       </p>
                     </div>
                   </div>
 
+                  {/* Email */}
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 flex items-center justify-center border border-gray-200 dark:border-gray-800 rounded-full shrink-0">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,12 +105,14 @@ const ContactPage = () => {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg mb-1">Email & Hỗ trợ</h3>
-                      <p className="text-gray-600 dark:text-gray-400 mb-1">support@luxuryinvite.com</p>
-                      <p className="text-gray-600 dark:text-gray-400">collaboration@luxuryinvite.com</p>
+                      <h3 className="font-bold text-lg mb-1">Email</h3>
+                      <a href="mailto:contact@hiweb.vn" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">
+                        contact@hiweb.vn
+                      </a>
                     </div>
                   </div>
 
+                  {/* Hotline */}
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 flex items-center justify-center border border-gray-200 dark:border-gray-800 rounded-full shrink-0">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,17 +120,19 @@ const ContactPage = () => {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg mb-1">Hotline 24/7</h3>
-                      <p className="text-gray-600 dark:text-gray-400">1900 1234 (8:00 - 22:00)</p>
+                      <h3 className="font-bold text-lg mb-1">Hotline</h3>
+                      <a href="tel:0773760043" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors font-semibold text-lg">
+                        0773 760 043
+                      </a>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Map */}
-              <div className="w-full h-64 grayscale opacity-90 hover:grayscale-0 transition-all duration-500 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800">
+              {/* Google Maps - Đà Nẵng */}
+              <div className="w-full h-64 grayscale opacity-90 hover:grayscale-0 transition-all duration-500 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4245648509355!2d106.6905583!3d10.7787474!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f385570472f%3A0x1787491df0ed8d6a!2sIndependence%20Palace!5e0!3m2!1sen!2s!4v1651479836421!5m2!1sen!2s"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3833.6872583403827!2d108.15388087580898!3d16.072290039600626!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3142183b6c8e5cc7%3A0x9dfe86ca3e4db279!2zMTIxIMSQ4bq3bmcgSHV5IFRy4buvLCBIb8OgIEtow6FuaCBCw6hjLCBMacOqbiBDaGnhu4N1LCDEkMOgIE7hurVuZywgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1708671234567!5m2!1svi!2s"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}

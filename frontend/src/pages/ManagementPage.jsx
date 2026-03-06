@@ -19,6 +19,11 @@ const ManagementPage = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [activeFilter, setActiveFilter] = useState('all') // 'all', 'draft', 'published', 'archived'
   const [openMenuId, setOpenMenuId] = useState(null) // For dropdown menus
+  const [confirmDialog, setConfirmDialog] = useState({
+    show: false,
+    type: '', // 'edit', 'copy', 'delete'
+    invitation: null
+  })
 
   useEffect(() => {
     loadInvitations()
@@ -69,31 +74,64 @@ const ManagementPage = () => {
   // ACTIONS
   const handleEdit = (e, invitation) => {
     e.stopPropagation()
-    navigate(`/ultimate-html-editor?invitationId=${invitation.id}`)
+    setConfirmDialog({
+      show: true,
+      type: 'edit',
+      invitation
+    })
+  }
+
+  const confirmEdit = () => {
+    if (confirmDialog.invitation) {
+      navigate(`/ultimate-html-editor?invitationId=${confirmDialog.invitation.id}`)
+    }
+    setConfirmDialog({ show: false, type: '', invitation: null })
   }
 
   const handleDelete = async (e, invitation) => {
     e.stopPropagation()
-    if (!window.confirm(`Bạn có chắc muốn xóa thiệp "${invitation.title}"?`)) return
+    setConfirmDialog({
+      show: true,
+      type: 'delete',
+      invitation
+    })
+  }
+
+  const confirmDelete = async () => {
+    if (!confirmDialog.invitation) return
 
     try {
-      await invitationService.delete(invitation.id)
+      // Use UUID for delete as per new API
+      const deleteId = confirmDialog.invitation.uuid || confirmDialog.invitation.id
+      await invitationService.delete(deleteId)
       toast.success('✨ Đã xóa thiệp mời thành công!')
       loadInvitations()
     } catch (error) {
       toast.error('❌ Không thể xóa thiệp mời.')
     }
+    setConfirmDialog({ show: false, type: '', invitation: null })
   }
 
   const handleDuplicate = async (e, invitation) => {
     e.stopPropagation()
+    setConfirmDialog({
+      show: true,
+      type: 'copy',
+      invitation
+    })
+  }
+
+  const confirmDuplicate = async () => {
+    if (!confirmDialog.invitation) return
+
     try {
-      await invitationService.duplicate(invitation.id)
+      await invitationService.duplicate(confirmDialog.invitation.id)
       toast.success('🎉 Đã sao chép thiệp mời!')
       loadInvitations()
     } catch (error) {
       toast.error('❌ Không thể sao chép thiệp.')
     }
+    setConfirmDialog({ show: false, type: '', invitation: null })
   }
 
   const handleViewPublic = (e, invitation) => {
@@ -114,7 +152,7 @@ const ManagementPage = () => {
     <div className="bg-gray-50 dark:bg-black text-gray-900 dark:text-white min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-1 flex flex-col min-w-0 px-4 md:px-8 pt-20 pb-20">
+      <main className="flex-1 flex flex-col min-w-0 px-4 md:px-8 pt-8 pb-20">
 
         {/* HERO HEADER */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
@@ -133,7 +171,7 @@ const ManagementPage = () => {
         </div>
 
         {/* TOOLBAR: Search & Filter */}
-        <div className="sticky top-[70px] z-20 bg-gray-50/95 dark:bg-black/95 backdrop-blur-xl py-4 -mx-4 px-4 md:mx-0 md:px-0 mb-8 border-b md:border-none border-gray-200 dark:border-gray-800 transition-all">
+        <div className="sticky top-16 z-20 bg-gray-50/95 dark:bg-black/95 backdrop-blur-xl py-4 -mx-4 px-4 md:mx-0 md:px-0 mb-8 border-b md:border-none border-gray-200 dark:border-gray-800 transition-all">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
 
             {/* Filter Tabs */}
@@ -197,22 +235,41 @@ const ManagementPage = () => {
                     <img
                       src={invitation.template_thumbnail}
                       className="w-full h-full object-cover"
+                      alt={invitation.title}
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
                       <span className="material-symbols-outlined text-2xl md:text-4xl text-gray-300">image</span>
                     </div>
                   )}
 
                   {/* Status Badge - Desktop Only (On Image) */}
-                  <div className="hidden md:block absolute top-3 left-3 px-2 py-1 rounded-md bg-white/90 dark:bg-black/80 backdrop-blur text-xs font-bold uppercase shadow-sm">
-                    {invitation.status === 'published' ? <span className="text-green-600">Published</span> : <span className="text-gray-500">Draft</span>}
+                  <div className="hidden md:block absolute top-3 left-3">
+                    {invitation.status === 'published' ? (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/80 backdrop-blur text-white text-xs font-semibold shadow-lg">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+                        Đã xuất bản
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/90 backdrop-blur text-gray-700 text-xs font-semibold shadow-lg">
+                        <span className="material-symbols-outlined text-[14px]">edit_note</span>
+                        Bản nháp
+                      </span>
+                    )}
                   </div>
+
+                  {/* Views Count - Desktop Only */}
+                  {invitation.views_count > 0 && (
+                    <div className="hidden md:flex absolute bottom-3 right-3 items-center gap-1 px-2 py-1 rounded-full bg-black/60 backdrop-blur text-white text-xs font-semibold">
+                      <span className="material-symbols-outlined text-[14px]">visibility</span>
+                      {invitation.views_count}
+                    </div>
+                  )}
 
                   {/* Three Dots - Desktop Position (Top Right of Image) */}
                   <button
                     onClick={(e) => toggleMenu(e, invitation.id)}
-                    className="hidden md:flex absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur items-center justify-center hover:bg-white dark:hover:bg-black transition-colors shadow-sm z-10"
+                    className="hidden md:flex absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 dark:bg-black/80 backdrop-blur items-center justify-center hover:bg-white dark:hover:bg-black transition-colors shadow-lg z-10"
                   >
                     <span className="material-symbols-outlined text-base">more_vert</span>
                   </button>
@@ -221,40 +278,70 @@ const ManagementPage = () => {
                 {/* 2. CONTENT AREA */}
                 <div className="p-3 md:p-5 flex-1 flex flex-col min-w-0 justify-center md:justify-start">
                   {/* Mobile Status Badge (Inline) */}
-                  <div className="md:hidden flex items-center justify-between mb-1">
-                    <span className={`text-[10px] font-bold uppercase ${invitation.status === 'published' ? 'text-green-600' : 'text-gray-400'}`}>
-                      {invitation.status === 'published' ? 'Published' : 'Draft'}
-                    </span>
+                  <div className="md:hidden flex items-center justify-between mb-2">
+                    {invitation.status === 'published' ? (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-black text-white text-[10px] font-bold">
+                        <span className="w-1 h-1 rounded-full bg-white"></span>
+                        Đã xuất bản
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-[10px] font-bold">
+                        Nháp
+                      </span>
+                    )}
                     {/* Mobile Three Dots (Top Right of Content) */}
                     <button
                       onClick={(e) => toggleMenu(e, invitation.id)}
-                      className="w-6 h-6 flex items-center justify-center text-gray-400 active:text-black"
+                      className="w-6 h-6 flex items-center justify-center text-gray-400 active:text-black dark:active:text-white"
                     >
                       <span className="material-symbols-outlined text-base">more_vert</span>
                     </button>
                   </div>
 
-                  <h3 className="text-sm md:text-lg font-bold text-gray-900 dark:text-white mb-1 line-clamp-1 group-hover:text-purple-600 transition-colors">
+                  <h3 className="text-sm md:text-lg font-bold text-gray-900 dark:text-white mb-1 line-clamp-1 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors">
                     {invitation.title || 'Thiệp chưa đặt tên'}
                   </h3>
-                  <p className="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 mb-2 md:mb-4 font-mono truncate">
-                    {new Date(invitation.updated_at).toLocaleDateString()}
-                  </p>
 
+                  {/* Info Row */}
+                  <div className="flex items-center gap-2 text-[10px] md:text-xs text-gray-400 dark:text-gray-500 mb-2 md:mb-3">
+                    <span className="flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[12px] md:text-[14px]">calendar_today</span>
+                      {new Date(invitation.updated_at).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })}
+                    </span>
+                    {invitation.views_count > 0 && (
+                      <>
+                        <span className="text-gray-300">•</span>
+                        <span className="flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[12px] md:text-[14px]">visibility</span>
+                          {invitation.views_count}
+                        </span>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Action Buttons - Desktop */}
                   <div className="mt-auto hidden md:flex gap-2">
                     <button
                       onClick={(e) => handleEdit(e, invitation)}
-                      className="flex-1 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg bg-black dark:bg-white text-white dark:text-black text-sm font-bold hover:opacity-80 transition-opacity"
                     >
+                      <span className="material-symbols-outlined text-[18px]">edit</span>
                       Chỉnh sửa
+                    </button>
+                    <button
+                      onClick={(e) => handleDuplicate(e, invitation)}
+                      className="px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors"
+                      title="Sao chép"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">content_copy</span>
                     </button>
                     {invitation.status === 'published' && (
                       <button
                         onClick={(e) => handleViewPublic(e, invitation)}
-                        className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-500 transition-colors"
-                        title="Xem online"
+                        className="px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors"
+                        title="Xem thiệp"
                       >
-                        <span className="material-symbols-outlined text-lg">visibility</span>
+                        <span className="material-symbols-outlined text-[18px]">visibility</span>
                       </button>
                     )}
                   </div>
@@ -262,20 +349,36 @@ const ManagementPage = () => {
 
                 {/* 3. DROPDOWN MENU (Absolute) */}
                 {openMenuId === invitation.id && (
-                  <div className="absolute top-8 right-2 md:top-12 md:right-3 w-40 md:w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden z-30 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
-                    <button onClick={(e) => handleEdit(e, invitation)} className="md:hidden w-full px-4 py-3 text-left text-sm font-bold text-gray-900 hover:bg-gray-50 flex items-center gap-2 border-b border-gray-100">
-                      <span className="material-symbols-outlined text-purple-600">edit</span> Chỉnh sửa
+                  <div className="absolute top-10 right-2 md:top-14 md:right-3 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden z-30 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
+                    <button
+                      onClick={(e) => handleEdit(e, invitation)}
+                      className="md:hidden w-full px-4 py-3 text-left text-sm font-bold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 border-b border-gray-100 dark:border-gray-700"
+                    >
+                      <span className="material-symbols-outlined text-gray-700 dark:text-gray-300">edit</span>
+                      <span>Chỉnh sửa</span>
                     </button>
-                    <button onClick={(e) => handleDuplicate(e, invitation)} className="w-full px-4 py-3 text-left text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2">
-                      <span className="material-symbols-outlined text-gray-500">content_copy</span> Sao chép
+                    <button
+                      onClick={(e) => handleDuplicate(e, invitation)}
+                      className="w-full px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
+                    >
+                      <span className="material-symbols-outlined text-gray-600 dark:text-gray-400">content_copy</span>
+                      <span>Sao chép thiệp</span>
                     </button>
                     {invitation.status === 'published' && (
-                      <button onClick={(e) => handleViewPublic(e, invitation)} className="md:hidden w-full px-4 py-3 text-left text-sm font-medium hover:bg-gray-50 flex items-center gap-2">
-                        <span className="material-symbols-outlined text-gray-500">visibility</span> Xem
+                      <button
+                        onClick={(e) => handleViewPublic(e, invitation)}
+                        className="md:hidden w-full px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 border-b border-gray-100 dark:border-gray-700"
+                      >
+                        <span className="material-symbols-outlined text-gray-600 dark:text-gray-400">visibility</span>
+                        <span>Xem thiệp</span>
                       </button>
                     )}
-                    <button onClick={(e) => handleDelete(e, invitation)} className="w-full px-4 py-3 text-left text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 flex items-center gap-2">
-                      <span className="material-symbols-outlined">delete</span> Xóa thiệp
+                    <button
+                      onClick={(e) => handleDelete(e, invitation)}
+                      className="w-full px-4 py-3 text-left text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 flex items-center gap-3"
+                    >
+                      <span className="material-symbols-outlined text-gray-600 dark:text-gray-400">delete</span>
+                      <span>Xóa thiệp</span>
                     </button>
                   </div>
                 )}
@@ -284,6 +387,90 @@ const ManagementPage = () => {
           </div>
         )}
       </main>
+
+      {/* Confirmation Dialog */}
+      {confirmDialog.show && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full border border-gray-200 dark:border-gray-700">
+            {/* Icon & Title */}
+            <div className="p-6 text-center">
+              <div className={`mx-auto w-12 h-12 rounded-lg flex items-center justify-center mb-4 ${confirmDialog.type === 'delete'
+                  ? 'bg-red-50 dark:bg-red-900/20'
+                  : confirmDialog.type === 'copy'
+                    ? 'bg-blue-50 dark:bg-blue-900/20'
+                    : 'bg-orange-50 dark:bg-orange-900/20'
+                }`}>
+                {confirmDialog.type === 'delete' ? (
+                  <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                ) : confirmDialog.type === 'copy' ? (
+                  <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                )}
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                {confirmDialog.type === 'delete' && 'Xác nhận xóa'}
+                {confirmDialog.type === 'copy' && 'Xác nhận sao chép'}
+                {confirmDialog.type === 'edit' && 'Xác nhận chỉnh sửa'}
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                {confirmDialog.type === 'delete' && (
+                  <>
+                    Bạn có chắc chắn muốn xóa thiệp <span className="font-semibold">"{confirmDialog.invitation?.title}"</span>?<br />
+                    <span className="text-red-600 dark:text-red-400 font-medium">Hành động này không thể hoàn tác!</span>
+                  </>
+                )}
+                {confirmDialog.type === 'copy' && (
+                  <>
+                    Bạn có muốn sao chép thiệp <span className="font-semibold">"{confirmDialog.invitation?.title}"</span>?<br />
+                    Một bản sao mới sẽ được tạo trong danh sách của bạn.
+                  </>
+                )}
+                {confirmDialog.type === 'edit' && (
+                  <>
+                    Bạn có muốn chỉnh sửa thiệp <span className="font-semibold">"{confirmDialog.invitation?.title}"</span>?<br />
+                    Bạn sẽ được chuyển đến trang chỉnh sửa.
+                  </>
+                )}
+              </p>
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-3 p-6 pt-0">
+              <button
+                onClick={() => setConfirmDialog({ show: false, type: '', invitation: null })}
+                className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={() => {
+                  if (confirmDialog.type === 'delete') confirmDelete()
+                  else if (confirmDialog.type === 'copy') confirmDuplicate()
+                  else if (confirmDialog.type === 'edit') confirmEdit()
+                }}
+                className={`flex-1 px-4 py-2.5 rounded-lg font-semibold transition-colors ${confirmDialog.type === 'delete'
+                    ? 'bg-red-600 hover:bg-red-700 text-white'
+                    : confirmDialog.type === 'copy'
+                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                      : 'bg-orange-600 hover:bg-orange-700 text-white'
+                  }`}
+              >
+                {confirmDialog.type === 'delete' && 'Xóa'}
+                {confirmDialog.type === 'copy' && 'Sao chép'}
+                {confirmDialog.type === 'edit' && 'Chỉnh sửa'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   )

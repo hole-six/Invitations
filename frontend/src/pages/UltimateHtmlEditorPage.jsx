@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
@@ -5,6 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import invitationService from '../services/invitation.service'
 import authService from '../services/auth.service'
 import { useToast } from '../context/ToastContext'
+import MediaLibraryModal from '../components/MediaLibraryModal'
 
 // Custom debounce hook for smooth preview
 const useDebounce = (value, delay) => {
@@ -32,6 +34,8 @@ const UltimateHtmlEditorPage = () => {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [showPublishConfirm, setShowPublishConfirm] = useState(false)
+  const [showMediaLibrary, setShowMediaLibrary] = useState(false)
+  const [selectedImageId, setSelectedImageId] = useState(null)
 
   // Mobile Responsive State
   const [activeMobileTab, setActiveMobileTab] = useState('preview')
@@ -62,7 +66,9 @@ const UltimateHtmlEditorPage = () => {
     event_location: '',
     event_address: '',
     music_url: '',
-    music_autoplay: true
+    music_autoplay: true,
+    slug: '', // Use slug instead of subdomain
+    visibility: 'private' // Add visibility field (public/private/password)
   })
 
   // Debounce Hooks
@@ -198,13 +204,71 @@ const UltimateHtmlEditorPage = () => {
     // Update Ref
     lastRenderedHtmlRef.current = previewHtml
 
-    // 4. Inject Styles & Listeners
-    try {
+    // Define functions first (before calling them)
+    const injectViewportAndStyles = () => {
+      // Inject viewport meta tag if not exists
+      const injectViewport = () => {
+        if (doc.querySelector('meta[name="viewport"]')) return; // Already exists
+        const viewport = doc.createElement('meta')
+        viewport.name = 'viewport'
+        viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes'
+        doc.head.insertBefore(viewport, doc.head.firstChild)
+      }
+
+      injectViewport()
+
       const injectStyles = () => {
         if (doc.getElementById('editor-styles')) return; // Already exists
         const style = doc.createElement('style')
         style.id = 'editor-styles'
         style.textContent = `
+            /* Ensure iframe content is fully visible */
+            html, body {
+              width: 100% !important;
+              min-height: 100vh !important;
+              overflow-x: hidden !important;
+              margin: 0 !important;
+              padding: 0 !important;
+            }
+            
+            /* Fix for templates with fixed height containers */
+            body > div:first-child,
+            body > section:first-child,
+            #root,
+            #app,
+            #__next,
+            .app,
+            .container-fluid,
+            [class*="container"] {
+              width: 100% !important;
+              min-height: auto !important;
+              height: auto !important;
+              max-width: 100% !important;
+              transform: none !important;
+              scale: 1 !important;
+            }
+
+            /* Unset specific height constraints that might clip content */
+            [class*="h-[calc(100vh"],
+            [class*="min-h-screen"],
+            [class*="h-screen"] {
+              height: auto !important;
+              min-height: 100vh !important;
+              overflow: visible !important;
+            }
+            
+            /* Remove any transform/scale that might shrink content */
+            * {
+              transform: none !important;
+              scale: 1 !important;
+            }
+            
+            /* Ensure all sections are visible */
+            section, div[class*="section"] {
+              width: 100% !important;
+              min-height: auto !important;
+            }
+            
             [data-editable] {
               cursor: text !important;
               outline: 1px dashed transparent;
@@ -223,20 +287,47 @@ const UltimateHtmlEditorPage = () => {
 
       injectStyles()
 
-      // OBSERVER: Watch for head changes (scripts wiping head) and re-inject styles
+      // Force layout recalculation for React-based templates
+      if (doc.body) {
+        // Remove any inline styles that might constrain size
+        doc.body.style.width = '100%'
+        doc.body.style.minHeight = '100vh'
+        doc.body.style.height = 'auto'
+
+        // Find and fix root containers
+        const rootContainers = doc.querySelectorAll('#root, #app, #__next, .app, [class*="App"], body > div:first-child')
+        rootContainers.forEach(el => {
+          el.style.width = '100%'
+          el.style.minHeight = '100vh'
+          el.style.height = 'auto'
+          el.style.transform = 'none'
+          el.style.scale = '1'
+        })
+      }
+    }
+
+    const setupEventListeners = () => {
       const observer = new MutationObserver((mutations) => {
         if (!doc.getElementById('editor-styles')) {
           console.log(' styles lost, re-injecting...')
+          const injectStyles = () => {
+            if (doc.getElementById('editor-styles')) return;
+            const style = doc.createElement('style')
+            style.id = 'editor-styles'
+            style.textContent = `
+              [data-editable] { cursor: text !important; outline: 1px dashed transparent; }
+              [data-editable]:hover { outline: 2px dashed #a855f7 !important; background: rgba(168, 85, 247, 0.05); }
+              [data-editable]:focus { outline: 2px solid #f59e0b !important; background: rgba(251, 191, 36, 0.05); }
+            `
+            doc.head.appendChild(style)
+          }
           injectStyles()
         }
       })
       observer.observe(doc.head, { childList: true })
 
       // EVENT DELEGATION: Listen on Body to handle dynamic DOM replacements
-      // This fixes the "sometimes works" issue caused by scripts replacing nodes after we attached listeners.
-
       const handleInteraction = (e) => {
-        // Find closest editable element
         const el = e.target.closest('[data-editable]')
         if (!el) return
 
@@ -261,25 +352,20 @@ const UltimateHtmlEditorPage = () => {
           if (el.isContentEditable) {
             el.contentEditable = 'false'
             const newContent = el.innerText
-            // Send update to parent logic
-            // Note: Since we are inside the iframe logic in scope, we need access to setCustomFieldData 
-            // OR dispatch a message. Since we are in React scope here, we can use setCustomFieldData directly.
             setCustomFieldData(prev => ({ ...prev, [fieldId]: newContent }))
           }
         }
       }
 
-      // Remove existing listeners if any (though likely fresh doc)
-      // Attach delegated listeners
       doc.body.removeEventListener('click', handleInteraction)
       doc.body.removeEventListener('dblclick', handleInteraction)
-      doc.body.removeEventListener('focusout', handleInteraction) // focusout bubbles, blur does not
+      doc.body.removeEventListener('focusout', handleInteraction)
 
       doc.body.addEventListener('click', handleInteraction)
       doc.body.addEventListener('dblclick', handleInteraction)
       doc.body.addEventListener('focusout', handleInteraction)
 
-      // 5. Global Key Listener for Undo/Redo inside Iframe
+      // Global Key Listener for Undo/Redo inside Iframe
       doc.addEventListener('keydown', (e) => {
         if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'y')) {
           e.preventDefault();
@@ -291,18 +377,30 @@ const UltimateHtmlEditorPage = () => {
             shiftKey: e.shiftKey
           }, '*');
         }
-      })
+      });
+    };
 
-    } catch (err) {
-      console.error("Iframe setup error", err)
+    // Wait for DOM to be fully loaded before injecting styles
+    const waitForBody = () => {
+      if (!doc.body) {
+        setTimeout(waitForBody, 10)
+        return
+      }
+
+      // Inject styles & listeners after body is ready
+      injectViewportAndStyles()
+      setupEventListeners()
     }
+
+    waitForBody()
+
 
     // Restore Scroll
     try {
-      if (scrollX || scrollY) win.scrollTo(scrollX, scrollY)
+      if (scrollX || scrollY) win.scrollTo(scrollX, scrollY);
     } catch (e) { }
 
-  }, [previewHtml])
+  }, [previewHtml]);
 
 
   // (Removed Duplicate State Declarations - They are now moved to top for history access)
@@ -429,7 +527,29 @@ const UltimateHtmlEditorPage = () => {
       })
     })
 
-    // 2b. Scan background images with data-image-editable
+    // 2b. PRE-SCAN CSS: Identify background images defined in style blocks
+    // This allows us to link elements with data-image-editable to their CSS-defined URLs
+    const cssBgMap = {}
+    const styleTags = doc.querySelectorAll('style')
+    styleTags.forEach(style => {
+      const cssContent = style.innerHTML
+      // Regex to find #IMAGE... defined in CSS with a background image
+      const ladiRegex = /#(IMAGE\w+)[^{]*\{[\s\S]*?background(?:-image)?:\s*url\(['"]?([^'"\)]+)['"]?\)/gi
+      let match
+      while ((match = ladiRegex.exec(cssContent)) !== null) {
+        const id = match[1]
+        const url = match[2]
+        if (url.startsWith('data:') || url.startsWith('chrome-extension:')) continue
+
+        const element = doc.getElementById(id);
+        if (!element || !element.hasAttribute('data-image-editable')) {
+          continue; // Skip if element doesn't exist or isn't editable
+        }
+        cssBgMap[id] = url
+      }
+    })
+
+    // 2c. Scan background images with data-image-editable (Managed Backgrounds)
     const bgEditableEls = doc.querySelectorAll('[data-image-editable]')
     bgEditableEls.forEach((el) => {
       // IGNORE invalid tags and extension junk
@@ -443,131 +563,110 @@ const UltimateHtmlEditorPage = () => {
 
       let bgUrl = ''
 
-      // Check if this is a Ladipage element
+      // Try 1: Ladipage element (Inline Style override)
       const isLadipage = el.classList.contains('ladi-element') || el.querySelector('.ladi-image-background') !== null
-
       if (isLadipage) {
-        // Try to find the image URL from Child (Inline Style override)
         const bgChild = el.querySelector('.ladi-image-background')
         if (bgChild && bgChild.style.backgroundImage) {
           const match = bgChild.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/)
           if (match) bgUrl = match[1]
         }
-
-        // CRITICAL FIX: 
-        // 1. If no inline URL found, SKIP adding it here. Let 2c (CSS Scan) find it with the CSS URL.
-        // This prevents "broken image" placeholders from showing up.
-        if (!bgUrl) return
-
-        // 2. Use the element's HTML ID as the Map Key if available.
-        // This ensures that if 2c finds #IMAGE1 later, it sees it's already added and won't duplicate.
-        // (The tool might have named it 'gallery_12' in attrId, but CSS knows it as 'IMAGE1')
-        const mapKey = el.id || attrId
-
-        imageMap.set(mapKey, {
-          id: mapKey,
-          originalSrc: bgUrl,
-          currentSrc: bgUrl,
-          alt: el.getAttribute('alt') || mapKey.replace(/_/g, ' '),
-          className: el.className || '',
-          type: 'ladi-background',
-          isManaged: true
-        })
-        return;
       }
 
-      // Standard Background Image Logic
-      if (el.style.backgroundImage) {
+      // Try 2: Standard Inline Style
+      if (!bgUrl && el.style.backgroundImage) {
         const match = el.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/)
         if (match) bgUrl = match[1]
       }
 
-      // Similarly, if standard element has no background image, it's not useful to list it
-      if (!bgUrl) return
+      // Try 3: Fallback to CSS Pre-scan
+      // This bridges the gap where an element has data-image-editable but its image is in CSS
+      if (!bgUrl && el.id && cssBgMap[el.id]) {
+        bgUrl = cssBgMap[el.id]
+        // Mark as consumed so we don't add it again in step 2d
+        delete cssBgMap[el.id]
+      }
 
+      // CRITICAL: If element has data-image-editable, ALWAYS add it to the list
+      // Even if no URL is found yet - user should be able to upload an image for it
+      // Use empty string as placeholder if no URL found
+      if (!bgUrl) {
+        bgUrl = '' // Empty placeholder - will be replaced when user uploads
+      }
+
+      // Use the Custom Name (attrId) as the key
       imageMap.set(attrId, {
         id: attrId,
+        htmlId: el.id, // Store HTML ID for DOM lookup
         originalSrc: bgUrl,
         currentSrc: bgUrl,
         alt: attrId.replace(/_/g, ' '),
         className: el.className || '',
-        type: 'background',
+        type: isLadipage ? 'ladi-background' : 'background',
         isManaged: true
       })
     })
 
-    // 2c. LADIPAGE SUPPORT: Scan #IMAGE elements defined in CSS
-    const styleTags = doc.querySelectorAll('style')
-    styleTags.forEach(style => {
-      const cssContent = style.innerHTML
-      // Relaxed Regex: Just find #IMAGE... with a background image URL inside its block
-      // Matches: #IMAGE1 ... { ... dist ... background ... url(...) }
-      const ladiRegex = /#(IMAGE\w+)[^{]*\{[\s\S]*?background(?:-image)?:\s*url\(['"]?([^'"\)]+)['"]?\)/gi
 
-      let match
-      while ((match = ladiRegex.exec(cssContent)) !== null) {
-        const id = match[1]
-        const url = match[2]
 
-        // Skip data URIs (svg icons) and chrome extensions
-        if (url.startsWith('data:') || url.startsWith('chrome-extension:')) continue
-
-        if (!imageMap.has(id)) {
-          imageMap.set(id, {
-            id: id,
-            originalSrc: url,
-            currentSrc: url,
-            alt: 'Ladipage Image ' + id,
-            className: 'ladi-image-element',
-            type: 'ladi-background',
-            isManaged: false
-          })
-        }
+    // 2d. Add remaining CSS images that weren't managed (didn't have data-image-editable)
+    Object.keys(cssBgMap).forEach(id => {
+      const url = cssBgMap[id]
+      if (!imageMap.has(id)) {
+        imageMap.set(id, {
+          id: id,
+          originalSrc: url,
+          currentSrc: url,
+          alt: 'Ladipage Image ' + id,
+          className: 'ladi-image-element',
+          type: 'ladi-background',
+          isManaged: false
+        })
       }
     })
 
     // 2d. Scan ALL remaining img tags (Fallback for un-managed images)
-    const allImgs = doc.querySelectorAll('img')
-    allImgs.forEach((img, idx) => {
-      // Skip if already captured via data-editable
-      if (img.hasAttribute('data-editable')) return
+    // const allImgs = doc.querySelectorAll('img')
+    // allImgs.forEach((img, idx) => {
+    //   // Skip if already captured via data-editable
+    //   if (img.hasAttribute('data-editable')) return
 
-      // FILTER JUNK IMAGES
-      const src = img.getAttribute('src') || ''
-      if (!src || src.startsWith('data:') || src.startsWith('chrome-extension:') || src.includes('extension')) return
-      if (img.id && img.id.includes('eJOY')) return
-      if (img.className && typeof img.className === 'string' && img.className.includes('extension')) return
+    //   // FILTER JUNK IMAGES
+    //   const src = img.getAttribute('src') || ''
+    //   if (!src || src.startsWith('data:') || src.startsWith('chrome-extension:') || src.includes('extension')) return
+    //   if (img.id && img.id.includes('eJOY')) return
+    //   if (img.className && typeof img.className === 'string' && img.className.includes('extension')) return
 
-      // Generate an ID if not present
-      let id = img.id || ''
-      if (!id) {
-        // Try to derive from class
-        if (img.className && typeof img.className === 'string') id = img.className.split(' ')[0]
-        // Try to derive from alt
-        if (!id && img.alt) id = img.alt.replace(/[^a-zA-Z0-9]/gi, '_').toLowerCase()
-        // Fallback to index
-        if (!id) id = `image_auto_${idx + 1}`
-      }
+    //   // Generate an ID if not present
+    //   let id = img.id || ''
+    //   if (!id) {
+    //     // Try to derive from class
+    //     if (img.className && typeof img.className === 'string') id = img.className.split(' ')[0]
+    //     // Try to derive from alt
+    //     if (!id && img.alt) id = img.alt.replace(/[^a-zA-Z0-9]/gi, '_').toLowerCase()
+    //     // Fallback to index
+    //     if (!id) id = `image_auto_${idx + 1}`
+    //   }
 
-      // Ensure ID is unique
-      let originalId = id
-      let counter = 1
-      while (imageMap.has(id)) {
-        id = `${originalId}_${counter}`
-        counter++
-      }
+    //   // Ensure ID is unique
+    //   let originalId = id
+    //   let counter = 1
+    //   while (imageMap.has(id)) {
+    //     id = `${originalId}_${counter}`
+    //     counter++
+    //   }
 
-      imageMap.set(id, {
-        id: id,
-        originalSrc: src,
-        currentSrc: src,
-        alt: img.getAttribute('alt') || `Ảnh ${idx + 1}`,
-        className: img.className || '',
-        index: idx, // Keep index for fallback replacement
-        type: 'img',
-        isManaged: false
-      })
-    })
+    //   imageMap.set(id, {
+    //     id: id,
+    //     originalSrc: src,
+    //     currentSrc: src,
+    //     alt: img.getAttribute('alt') || `Ảnh ${idx + 1}`,
+    //     className: img.className || '',
+    //     index: idx, // Keep index for fallback replacement
+    //     type: 'img',
+    //     isManaged: false
+    //   })
+    // })
 
     const images = Array.from(imageMap.values())
 
@@ -656,6 +755,7 @@ const UltimateHtmlEditorPage = () => {
   const [lastSavedData, setLastSavedData] = useState(null)
   const [isUserEditing, setIsUserEditing] = useState(false) // Track if user is actively editing
   const editingTimerRef = useRef(null) // Timer for editing state
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false) // Track unsaved changes
 
   // (Removed Duplicate Debounce hooks - Moved to top)
 
@@ -684,14 +784,20 @@ const UltimateHtmlEditorPage = () => {
 
     // Skip if data hasn't changed
     const currentData = JSON.stringify({ formData, imageData, customFieldData, htmlCode })
-    if (currentData === lastSavedData) return
+    if (currentData === lastSavedData) {
+      setHasUnsavedChanges(false)
+      return
+    }
+
+    // Mark as having unsaved changes
+    setHasUnsavedChanges(true)
 
     // Clear previous timer
     if (autoSaveTimer) {
       clearTimeout(autoSaveTimer)
     }
 
-    // Set new timer for auto-save after 3 seconds of inactivity (increased from 2s)
+    // Set new timer for auto-save after 5 minutes (300 seconds) of inactivity
     const timer = setTimeout(async () => {
       try {
         console.log('🔄 Auto-saving...')
@@ -703,21 +809,24 @@ const UltimateHtmlEditorPage = () => {
           .trim()
 
         // Auto-save without blocking UI (don't use setSaving)
-        await invitationService.update(invitation.id, {
+        await invitationService.update(invitation.uuid, {
           ...formData,
-          html_content: compressedHtml,
+          event_date: formData.event_date || null, // Fix: Send null if empty to avoid SQL error
+          html_content: compressedHtml, // Invitation uses html_content
           image_data: JSON.stringify(imageData),
           custom_field_data: JSON.stringify(customFieldData),
           status: invitation.status // Keep current status
         })
 
         setLastSavedData(currentData)
+        setHasUnsavedChanges(false)
         console.log('✅ Auto-saved successfully')
+        toast.success('✅ Đã tự động lưu')
       } catch (error) {
         console.error('❌ Auto-save failed:', error)
         // Don't show error toast for auto-save failures to avoid annoying user
       }
-    }, 3000) // 3 seconds delay (increased for better UX)
+    }, 300000) // 5 minutes delay (300 seconds)
 
     setAutoSaveTimer(timer)
 
@@ -744,14 +853,67 @@ const UltimateHtmlEditorPage = () => {
         const res = await invitationService.getById(invitationId)
         setInvitation(res.data)
 
-        // Handle html_content - if null or empty, use empty string
+        console.log('📦 Loaded invitation:', res.data);
+        console.log('📄 html_content from API:', res.data.html_content?.substring(0, 100) || 'EMPTY');
+
+        // Handle html_content - Invitation uses html_content (not html_template)
         const htmlContent = res.data.html_content || ''
         setHtmlCode(htmlContent)
 
+        console.log('✅ Set htmlCode length:', htmlContent.length);
+
         // If html_content is empty but we have a template, try to load template HTML
         if (!htmlContent && res.data.template_id) {
-          console.warn('⚠️ Invitation has no HTML content, this may cause editing issues')
-          toast.warning('Thiệp mời chưa có nội dung HTML. Vui lòng liên hệ admin.')
+          console.warn('⚠️ Invitation has no HTML content, attempting to load from template...')
+          
+          try {
+            // Import template service
+            const templateService = (await import('../services/template.service')).default
+            const templateRes = await templateService.getById(res.data.template_id)
+            
+            let templateHtml = templateRes.data?.html_template; // Template uses html_template
+            
+            // Fallback to designData if html_template is empty
+            if (!templateHtml && templateRes.data?.design_data) {
+              try {
+                const designData = typeof templateRes.data.design_data === 'string'
+                  ? JSON.parse(templateRes.data.design_data)
+                  : templateRes.data.design_data;
+                
+                if (designData?.html) {
+                  console.log('📄 Using HTML from template designData');
+                  templateHtml = designData.html;
+                }
+              } catch (parseErr) {
+                console.error('Failed to parse design_data:', parseErr);
+              }
+            }
+            
+            if (templateHtml) {
+              console.log('✅ Loaded HTML from template:', templateRes.data.name)
+              setHtmlCode(templateHtml)
+              
+              // Auto-save the HTML to the invitation
+              try {
+                // Include multiple fields - Invitation uses html_content
+                await invitationService.update(invitationId, {
+                  html_content: templateHtml, // Invitation uses html_content
+                  title: res.data.title,
+                  status: res.data.status || 'draft'
+                })
+                console.log('✅ Saved template HTML to invitation')
+                toast.success('✅ Đã tải nội dung từ template')
+              } catch (saveErr) {
+                console.error('Failed to save template HTML:', saveErr)
+              }
+            } else {
+              console.warn('⚠️ Template has no HTML content')
+              toast.warning('Template không có nội dung HTML. Vui lòng liên hệ admin để thêm nội dung cho template này.')
+            }
+          } catch (templateErr) {
+            console.error('Failed to load template:', templateErr)
+            toast.error('Không thể tải template. Vui lòng liên hệ admin.')
+          }
         }
 
         const loadedFormData = {
@@ -763,7 +925,9 @@ const UltimateHtmlEditorPage = () => {
           event_location: res.data.event_location || '',
           event_address: res.data.event_address || '',
           music_url: res.data.music_url || '',
-          music_autoplay: res.data.music_autoplay !== undefined ? res.data.music_autoplay : true
+          music_autoplay: res.data.music_autoplay !== undefined ? res.data.music_autoplay : true,
+          slug: res.data.slug || '', // Load slug from backend
+          visibility: res.data.visibility || 'private' // Load visibility from backend
         }
 
         setFormData(loadedFormData)
@@ -812,12 +976,13 @@ const UltimateHtmlEditorPage = () => {
     }
   }
 
-  const updatePreview = () => {
-    let html = htmlCode
+  // Helper to compile HTML with current data (Synchronous)
+  const compileHtml = (templateHtml, currentFormData, currentImageData, currentCustomFieldData) => {
+    let html = templateHtml || ''
 
     // 1. Text Replacements (Regex is fine/faster for placeholders)
-    Object.keys(debouncedFormData).forEach(key => {
-      const value = debouncedFormData[key]
+    Object.keys(currentFormData).forEach(key => {
+      const value = currentFormData[key]
       if (value && key !== 'music_url' && key !== 'music_autoplay') {
         if (key === 'event_date') {
           const date = new Date(value)
@@ -839,32 +1004,23 @@ const UltimateHtmlEditorPage = () => {
       }
     })
 
-    // 2. DOM Replacements (Text & Images) - Using DOMParser for safe & correct HTML manipulation
+    // 2. DOM Replacements (Text & Images)
     try {
       const parser = new DOMParser()
       const doc = parser.parseFromString(html, 'text/html')
-      let hasChanges = false
 
-      // 2a. Update Custom Text Fields (NON-DESTRUCTIVE MODE)
-      Object.keys(debouncedCustomFieldData).forEach(key => {
-        const val = debouncedCustomFieldData[key]
+      // 2a. Update Custom Text Fields
+      Object.keys(currentCustomFieldData).forEach(key => {
+        const val = currentCustomFieldData[key]
         if (val === undefined) return
 
         const els = doc.querySelectorAll(`[data-editable="${key}"]`)
         els.forEach(el => {
-          // SAFETY CHECK: If element contains critical structure (Images, Sections), be very careful.
-
-          // Convert newlines to <br> for proper rendering
           const htmlContent = val ? val.replace(/\n/g, '<br/>') : '';
 
-          // 1. Find the best block-level container
-          let targetEl = el.querySelector('h1, h2, h3, h4, h5, h6, p, ul, ol');
-
-          // 2. If no block found, look for inline wrappers or use self
+          let targetEl = el.querySelector('h1, h2, h3, h4, h5, h6, p, ul, ol, div');
           if (!targetEl) targetEl = el.querySelector('span, b, strong, i, em, mark, small') || el;
 
-          // 3. DEEP DRILL: Check if the target has a SINGLE styling child (span, b, etc.)
-          // Many editors wrap text in a <span> for font-size/color. We must update the SPAN to keep style.
           if (targetEl.children.length === 1) {
             const innerNode = targetEl.children[0];
             if (['SPAN', 'B', 'STRONG', 'I', 'EM', 'MARK', 'SMALL'].includes(innerNode.tagName)) {
@@ -872,112 +1028,74 @@ const UltimateHtmlEditorPage = () => {
             }
           }
 
-          // 4. Update Logic with Safety Checks
-          // Do not update if target contains structure
-          if (targetEl.querySelector('img, div, section, video, iframe, table')) {
-            return; // Abort to protect layout
-          }
+          if (targetEl.querySelector('img, div, section, video, iframe, table')) return;
+          if (targetEl === el && el.querySelectorAll('div').length > 1) return;
 
-          // Also abort if we are falling back to 'el' but 'el' is a complex wrapper
-          if (targetEl === el && el.querySelectorAll('div').length > 1) {
-            return;
-          }
-
-          // Apply Update
           targetEl.innerHTML = htmlContent;
         })
       })
 
       // 2b. Image Replacements
-
       templateAnalysis.images.forEach(img => {
-        if (debouncedImageData[img.id]) {
-          const newSrc = debouncedImageData[img.id]
-          hasChanges = true
+        if (currentImageData[img.id]) {
+          const newSrc = currentImageData[img.id]
 
           if (img.type === 'ladi-background') {
-            // For Ladipage, we need to find #IMAGE_ID > .ladi-image > .ladi-image-background
-            const container = doc.getElementById(img.id)
+            // Use htmlId for DOM lookup if available (e.g., IMAGE11), otherwise fall back to img.id
+            const lookupId = img.htmlId || img.id
+            const container = doc.getElementById(lookupId)
             if (container) {
-              // Try standard Ladipage structure
               let bgEl = container.querySelector('.ladi-image-background')
-
-              // Fallback: If not found, look for any direct child with class starting with ladi-image
-              if (!bgEl) {
-                bgEl = container.querySelector('[class*="ladi-image-background"]')
-              }
-
-              if (bgEl) {
-                // Apply inline style WITH !important to override CSS
-                bgEl.style.setProperty('background-image', `url('${newSrc}')`, 'important')
-              }
+              if (!bgEl) bgEl = container.querySelector('[class*="ladi-image-background"]')
+              if (bgEl) bgEl.style.setProperty('background-image', `url('${newSrc}')`, 'important')
             } else {
-              // Fallback using querySelector for ID if getElementById fails (rare)
-              const bgEl = doc.querySelector(`#${img.id} .ladi-image-background`)
-              if (bgEl) {
-                bgEl.style.setProperty('background-image', `url('${newSrc}')`, 'important')
-              }
+              const bgEl = doc.querySelector(`#${lookupId} .ladi-image-background`)
+              if (bgEl) bgEl.style.setProperty('background-image', `url('${newSrc}')`, 'important')
             }
           }
           else if (img.type === 'background') {
-            // Find elements with data-image-editable
             const elements = doc.querySelectorAll(`[data-image-editable="${img.id}"]`)
             elements.forEach(el => {
               el.style.backgroundImage = `url('${newSrc}')`
             })
           } else {
-            // Try finding by data-editable first
             let imgEl = doc.querySelector(`img[data-editable="${img.id}"]`)
-
-            // Fallback: Try finding by ID
             if (!imgEl) {
               imgEl = doc.getElementById(img.id)
               if (imgEl && imgEl.tagName !== 'IMG') imgEl = null
             }
-
-            // Fallback: Try finding by Src match (if unique and not found by ID)
             if (!imgEl && img.originalSrc) {
-              // This is risky if multiple images share src, but helpful for legacy format
               const allImgs = doc.querySelectorAll('img')
               for (let el of allImgs) {
-                // Compare logical paths
                 if (el.getAttribute('src') === img.originalSrc) {
                   imgEl = el
                   break
                 }
               }
             }
-
-            // Fallback: Use index from analysis if strictly fallback mode (no data-editable found in analysis)
-            // Note: templateAnalysis defines 'index' only when it falls back to scanning all images
             if (!imgEl && typeof img.index === 'number') {
               const allImgs = doc.querySelectorAll('img')
-              if (allImgs[img.index]) {
-                imgEl = allImgs[img.index]
-              }
+              if (allImgs[img.index]) imgEl = allImgs[img.index]
             }
 
             if (imgEl) {
               imgEl.src = newSrc
-              // Ensure we update attribute for consistency
               imgEl.setAttribute('src', newSrc)
             }
           }
         }
       })
 
-      // Music Player Injection (Appending to Body)
-      if (debouncedFormData.music_url) {
-        // ... (Music Player Code logic matches previous string injection, but via DOM)
-        // Ideally we inject HTML string. Since doc.body is available:
+      // Music Player Injection
+      if (currentFormData.music_url) {
         const musicPlayer = `
                 <div id="music-player" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
-                  <audio id="background-music" ${debouncedFormData.music_autoplay ? 'autoplay' : ''} loop>
-                    <source src="${debouncedFormData.music_url}" type="audio/mpeg">
+                  <audio id="background-music" ${currentFormData.music_autoplay ? 'autoplay' : ''} loop>
+                    <source src="${currentFormData.music_url}" type="audio/mpeg">
                   </audio>
                   <button id="music-toggle" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
-                    <svg id="play-icon" style="display: ${debouncedFormData.music_autoplay ? 'none' : 'block'}; width: 24px; height: 24px;" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    <svg id="pause-icon" style="display: ${debouncedFormData.music_autoplay ? 'block' : 'none'}; width: 24px; height: 24px;" fill="white" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
+                    <svg id="play-icon" style="display: ${currentFormData.music_autoplay ? 'none' : 'block'}; width: 24px; height: 24px;" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <svg id="pause-icon" style="display: ${currentFormData.music_autoplay ? 'block' : 'none'}; width: 24px; height: 24px;" fill="white" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
                   </button>
                 </div>
                 <script>
@@ -1003,21 +1121,23 @@ const UltimateHtmlEditorPage = () => {
                   })();
                 </script>
               `
-        // Inject Music Player at end of body
         const tempDiv = doc.createElement('div');
         tempDiv.innerHTML = musicPlayer;
         while (tempDiv.firstChild) {
           doc.body.appendChild(tempDiv.firstChild);
         }
-      } // End of music conditional block
+      }
 
-      // Serialize back to HTML string (Add DOCTYPE for Standards Mode)
       html = '<!DOCTYPE html>' + doc.documentElement.outerHTML
-
     } catch (e) {
-      console.error("DOM Processing Error", e)
+      console.error("Compile HTML Error", e)
     }
+    return html
+  }
 
+
+  const updatePreview = () => {
+    const html = compileHtml(htmlCode, debouncedFormData, debouncedImageData, debouncedCustomFieldData)
     setPreviewHtml(html)
   }
 
@@ -1075,8 +1195,27 @@ const UltimateHtmlEditorPage = () => {
       clearTimeout(editingTimerRef.current)
     }
 
+    // Special handling for slug field - sanitize input
+    let sanitizedValue = value
+    if (name === 'slug') {
+      // Simple sanitization: lowercase and replace spaces with hyphens
+      sanitizedValue = value
+        .toLowerCase()
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/[àáạảãâầấậẩẫăằắặẳẵ]/g, 'a')
+        .replace(/[èéẹẻẽêềếệểễ]/g, 'e')
+        .replace(/[ìíịỉĩ]/g, 'i')
+        .replace(/[òóọỏõôồốộổỗơờớợởỡ]/g, 'o')
+        .replace(/[ùúụủũưừứựửữ]/g, 'u')
+        .replace(/[ỳýỵỷỹ]/g, 'y')
+        .replace(/đ/g, 'd')
+        .replace(/[^a-z0-9-]/g, '-') // Replace invalid chars with hyphen
+        .replace(/-+/g, '-') // Replace multiple hyphens with single
+        .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
+    }
+
     setFormData(prev => {
-      const newData = { ...prev, [name]: value }
+      const newData = { ...prev, [name]: sanitizedValue }
       console.log('📝 New formData:', newData)
       return newData
     })
@@ -1133,27 +1272,51 @@ const UltimateHtmlEditorPage = () => {
     }
   }
 
+  const handleOpenMediaLibrary = (imageId) => {
+    setSelectedImageId(imageId)
+    setShowMediaLibrary(true)
+  }
+
+  const handleSelectFromLibrary = (image) => {
+    if (selectedImageId) {
+      setImageData(prev => ({
+        ...prev,
+        [selectedImageId]: image.url
+      }))
+      toast.success('✅ Đã chọn ảnh từ thư viện!')
+    }
+  }
+
+  // Generate subdomain URL with random suffix
+  const generateSubdomainUrl = (subdomain) => {
+    if (!subdomain) return ''
+    // Generate 2 random uppercase characters
+    const randomSuffix = Math.random().toString(36).substring(2, 4).toUpperCase()
+    return `${window.location.origin}/invitation/${subdomain}-${randomSuffix}`
+  }
+
   const handleSaveAndExit = async () => {
     if (!invitation) return
 
     try {
       setSaving(true)
 
-      // Clean HTML: Remove editor styles before saving
-      let cleanHtml = htmlCode
-      
+      // COMPILE HTML with CURRENT state (not debounced) to capture latest edits
+      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData)
+
       // Remove editor-styles
       cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
 
-      // Compress HTML by removing unnecessary whitespace
+      // Compress HTML
       const compressedHtml = cleanHtml
         .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
         .replace(/>\s+</g, '><')  // Remove spaces between tags
         .trim()
 
-      await invitationService.update(invitation.id, {
+      await invitationService.update(invitation.uuid, {
         ...formData,
-        html_content: compressedHtml,
+        event_date: formData.event_date || null, // Fix: Send null if empty
+        html_content: compressedHtml, // Invitation uses html_content
         image_data: JSON.stringify(imageData),
         custom_field_data: JSON.stringify(customFieldData),
         status: invitation.status // Keep current status
@@ -1183,25 +1346,32 @@ const UltimateHtmlEditorPage = () => {
     try {
       setSaving(true)
 
-      // Clean HTML: Remove editor styles before saving
-      let cleanHtml = htmlCode
-      
+      // COMPILE HTML with CURRENT state
+      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData)
+
       // Remove editor-styles
       cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
-      
-      // Compress HTML by removing unnecessary whitespace
+
+      // Compress HTML
       const compressedHtml = cleanHtml
         .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
         .replace(/>\s+</g, '><')  // Remove spaces between tags
         .trim()
 
-      await invitationService.update(invitation.id, {
+      await invitationService.update(invitation.uuid, {
         ...formData,
-        html_content: compressedHtml,
+        event_date: formData.event_date || null, // Fix: Send null if empty
+        html_content: compressedHtml, // Invitation uses html_content
         image_data: JSON.stringify(imageData),
         custom_field_data: JSON.stringify(customFieldData),
         status: invitation.status // Keep current status (published/draft)
       })
+      
+      // Update lastSavedData and clear unsaved changes flag
+      const currentData = JSON.stringify({ formData, imageData, customFieldData, htmlCode })
+      setLastSavedData(currentData)
+      setHasUnsavedChanges(false)
+      
       toast.success('✅ Đã lưu thành công!')
     } catch (error) {
       console.error('Save failed:', error)
@@ -1218,9 +1388,10 @@ const UltimateHtmlEditorPage = () => {
   const handlePublish = async () => {
     if (!invitation) return
 
-    if (!formData.groom_name || !formData.bride_name) {
-      toast.warning('⚠️ Vui lòng nhập tên chú rể và cô dâu!')
-      return
+    // Auto-save before publishing if there are unsaved changes
+    if (hasUnsavedChanges) {
+      toast.info('💾 Đang lưu thay đổi trước khi xuất bản...')
+      await handleSave()
     }
 
     // Show confirmation modal
@@ -1233,38 +1404,38 @@ const UltimateHtmlEditorPage = () => {
     try {
       setSaving(true)
 
-      // Clean HTML: Remove editor styles before saving
-      let cleanHtml = htmlCode
-      
+      // COMPILE HTML with CURRENT state
+      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData)
+
       // Remove editor-styles
       cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
 
-      // Compress HTML by removing unnecessary whitespace
+      // Compress HTML
       const compressedHtml = cleanHtml
         .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
         .replace(/>\s+</g, '><')  // Remove spaces between tags
         .trim()
 
-      // Update invitation
-      const updateResponse = await invitationService.update(invitation.id, {
+      // Update invitation with published status AND public visibility
+      // CRITICAL FIX: Backend checks 'visibility' field, not just 'status'
+      // Database has TWO fields: status (draft/published) and visibility (public/private/password)
+      const updateResponse = await invitationService.update(invitation.uuid, {
         ...formData,
+        event_date: formData.event_date || null,
         html_content: compressedHtml,
         image_data: JSON.stringify(imageData),
         custom_field_data: JSON.stringify(customFieldData),
-        status: 'published'
+        status: 'published', // Set lifecycle status
+        visibility: 'public' // Set access control - REQUIRED for public view!
       })
 
-      // Publish
-      await invitationService.publish(invitation.id)
-
-      // Get updated invitation with new slug
-      const updatedInvitation = updateResponse.data || invitation
-      const newSlug = updatedInvitation.slug || invitation.slug
-
-      toast.success('🎉 Đã xuất bản thiệp mời!')
-      setTimeout(() => {
-        navigate(`/invitation/${newSlug}`)
-      }, 1500)
+      toast.success('✅ Đã xuất bản thiệp mời!')
+      
+      // Get slug for public URL
+      const slug = formData.slug || invitation.slug
+      if (slug) {
+        toast.info(`🔗 Link thiệp: ${window.location.origin}/invitation/${slug}`)
+      }
     } catch (error) {
       console.error('Publish failed:', error)
       if (error.message && error.message.includes('max_allowed_packet')) {
@@ -1280,38 +1451,49 @@ const UltimateHtmlEditorPage = () => {
   const handlePreview = async () => {
     if (!invitation) return
 
+    // Auto-save before preview if there are unsaved changes
+    if (hasUnsavedChanges) {
+      toast.info('💾 Đang lưu thay đổi trước khi xem trước...')
+      await handleSave()
+    }
+
     try {
       setSaving(true)
 
-      // Clean HTML: Remove editor styles before saving
-      let cleanHtml = htmlCode
-      
+      // COMPILE HTML with CURRENT state
+      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData)
+
       // Remove editor-styles
       cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
 
-      // Compress HTML by removing unnecessary whitespace
+      // Compress HTML
       const compressedHtml = cleanHtml
         .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
         .replace(/>\s+</g, '><')  // Remove spaces between tags
         .trim()
 
-      // Update and get new slug
-      const updateResponse = await invitationService.update(invitation.id, {
+      // Update and get subdomain
+      console.log('📤 Sending update with subdomain:', formData.subdomain)
+      const updateResponse = await invitationService.update(invitation.uuid, {
         ...formData,
-        html_content: compressedHtml,
+        event_date: formData.event_date || null, // Fix: Send null if empty
+        html_content: compressedHtml, // Invitation uses html_content
         image_data: JSON.stringify(imageData),
         custom_field_data: JSON.stringify(customFieldData),
         status: invitation.status // Keep current status
       })
 
-      // Get updated slug from response
-      const updatedInvitation = updateResponse.data || invitation
-      const newSlug = updatedInvitation.slug || invitation.slug
+      console.log('📥 Update response:', updateResponse)
+      
+      // Get slug for preview
+      const slug = formData.slug || invitation.slug
+      
+      console.log('🔗 Opening preview with slug:', slug)
 
       toast.success('✅ Đã lưu! Đang mở xem trước...')
 
       setTimeout(() => {
-        window.open(`/invitation/${newSlug}`, '_blank')
+        window.open(`/invitation/${slug}`, '_blank')
         setSaving(false)
       }, 500)
     } catch (error) {
@@ -1348,18 +1530,33 @@ const UltimateHtmlEditorPage = () => {
           <div>
             <h2 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">{invitation?.title || 'Chỉnh sửa thiệp'}</h2>
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-              <span className="text-[10px] text-gray-500 font-medium">Auto-saving...</span>
+              {hasUnsavedChanges ? (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
+                  <span className="text-[10px] text-orange-600 dark:text-orange-400 font-medium">Chưa lưu • Tự động lưu sau 5 phút</span>
+                </>
+              ) : (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                  <span className="text-[10px] text-green-600 dark:text-green-400 font-medium">Đã lưu</span>
+                </>
+              )}
             </div>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <button
-            onClick={handleSaveAndExit}
+            onClick={handleSave}
             disabled={saving}
-            className="px-4 py-1.5 rounded-full bg-blue-500 text-white text-xs font-bold uppercase hover:bg-blue-600 transition-colors disabled:opacity-50"
+            className="px-4 py-1.5 rounded-full bg-gray-800 text-white text-xs font-bold uppercase hover:bg-gray-700 transition-colors disabled:opacity-50"
           >
-            {saving ? 'Đang lưu...' : 'Lưu & Quay lại'}
+            {saving ? 'Đang lưu...' : 'Lưu'}
+          </button>
+          <button
+            onClick={() => navigate('/management')}
+            className="px-4 py-1.5 rounded-full bg-gray-100 text-gray-700 text-xs font-bold uppercase hover:bg-gray-200 transition-colors"
+          >
+            Quay lại
           </button>
           <button onClick={handlePreview} className="px-4 py-1.5 rounded-full bg-gray-100 text-gray-700 text-xs font-bold uppercase hover:bg-gray-200 transition-colors">Xem thử</button>
           <button onClick={handlePublish} disabled={saving} className="px-5 py-1.5 rounded-full bg-black text-white text-xs font-bold uppercase hover:bg-gray-800 transition-colors shadow-lg disabled:opacity-50">
@@ -1426,32 +1623,37 @@ const UltimateHtmlEditorPage = () => {
                   <span className="material-symbols-outlined text-purple-600">edit_note</span> Thông tin
                 </h3>
                 <div className="space-y-4">
+                  {/* Slug Input - Editable */}
                   <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1 block">Tên Chú Rể</label>
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 block">
+                      URL Thiệp (Slug)
+                    </label>
                     <input
-                      name="groom_name"
-                      value={formData.groom_name}
+                      type="text"
+                      name="slug"
+                      value={formData.slug}
                       onChange={handleChange}
-                      className="w-full bg-transparent text-lg font-serif font-bold text-gray-900 dark:text-white outline-none placeholder-gray-300"
-                      placeholder="Nguyễn Văn A"
+                      placeholder="vd: dam-cuoi-cua-chung-toi"
+                      className="w-full bg-white dark:bg-gray-900 text-sm font-mono font-medium text-gray-900 dark:text-white px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
                     />
-                  </div>
-                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1 block">Tên Cô Dâu</label>
-                    <input
-                      name="bride_name"
-                      value={formData.bride_name}
-                      onChange={handleChange}
-                      className="w-full bg-transparent text-lg font-serif font-bold text-gray-900 dark:text-white outline-none placeholder-gray-300"
-                      placeholder="Lê Thị B"
-                    />
+                    <p className="text-[9px] text-gray-500 dark:text-gray-400 mt-1">
+                      💡 Chỉ dùng chữ thường, số, và dấu gạch ngang (-). VD: dam-cuoi-2026
+                    </p>
+                    {formData.slug && (
+                      <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                        <p className="text-[10px] font-bold text-blue-600 dark:text-blue-400 mb-1">✨ URL thiệp của bạn:</p>
+                        <code className="text-xs text-blue-800 dark:text-blue-300 break-all block">
+                          {window.location.origin}/invitation/{formData.slug}
+                        </code>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
 
             {/* TAB: IMAGES */}
-            <div className={`${(isMobile && activeMobileTab !== 'images') ? 'hidden' : 'block'} space-y-6 animate-fade-in`}>
+            <div className={`${(isMobile && activeMobileTab !== 'images') ? 'hidden' : 'block'} space-y-4 animate-fade-in`}>
               {/* Desktop only header for images section */}
               <div className="hidden md:block">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
@@ -1462,21 +1664,88 @@ const UltimateHtmlEditorPage = () => {
               {templateAnalysis.images.length === 0 ? (
                 <p className="text-center text-gray-400 text-sm py-10">Không tìm thấy ảnh chỉnh sửa được trong mẫu này.</p>
               ) : (
-                <div className="grid grid-cols-2 gap-3">
-                  {templateAnalysis.images.map(img => (
-                    <div key={img.id} className="group relative aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-100">
-                      <img src={imageData[img.id] || img.originalSrc} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                      <label htmlFor={`upload-${img.id}`} className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer">
-                        <span className="material-symbols-outlined text-white text-2xl mb-1">cloud_upload</span>
-                        <span className="text-[10px] text-white font-bold uppercase tracking-wider">Thay ảnh</span>
-                      </label>
-                      <input type="file" id={`upload-${img.id}`} className="hidden" accept="image/*" onChange={(e) => handleImageUpload(img.id, e.target.files[0])} />
-                      <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent p-2">
-                        <p className="text-[10px] text-white truncate">{img.alt || 'Image'}</p>
+                <>
+                  {/* Storage Info */}
+                  <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="material-symbols-outlined text-blue-600 text-[18px]">cloud_upload</span>
+                      <span className="text-xs font-semibold text-blue-900 dark:text-blue-100">Free</span>
+                    </div>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                      Kéo thả hoặc nhấn vào đây để tải lên file. Có thể tải lên tối đa 15 ảnh cùng một lúc.
+                    </p>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Đã tải: <span className="font-semibold text-gray-900 dark:text-white">0/{templateAnalysis.images.length}</span>
+                      </span>
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Còn lại: <span className="font-semibold text-gray-900 dark:text-white">{templateAnalysis.images.length}</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Image Grid */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {templateAnalysis.images.map(img => (
+                      <div key={img.id} className="relative">
+                        <div className="group relative aspect-square rounded-xl overflow-hidden border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-primary dark:hover:border-primary bg-gray-50 dark:bg-gray-800 transition-all">
+                          <img 
+                            src={imageData[img.id] || img.originalSrc} 
+                            className="w-full h-full object-cover" 
+                            alt={img.alt || 'Image'}
+                          />
+                          <label 
+                            htmlFor={`upload-${img.id}`} 
+                            className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer"
+                          >
+                            <div className="size-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-2">
+                              <span className="material-symbols-outlined text-blue-600 text-[24px]">cloud_upload</span>
+                            </div>
+                            <span className="text-xs text-white font-semibold">Hãy chọn ảnh bạn muốn thay thế</span>
+                            <span className="text-[10px] text-white/80 mt-1">Kéo thả hoặc click để chọn file</span>
+                          </label>
+                          <input 
+                            type="file" 
+                            id={`upload-${img.id}`} 
+                            className="hidden" 
+                            accept="image/*" 
+                            onChange={(e) => handleImageUpload(img.id, e.target.files[0])} 
+                          />
+                          <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-2">
+                            <p className="text-[10px] text-white truncate font-medium">{img.alt || 'Image'}</p>
+                          </div>
+                        </div>
+                        
+                        {/* Button: Chọn từ thư viện */}
+                        <button
+                          onClick={() => handleOpenMediaLibrary(img.id)}
+                          className="mt-2 w-full px-3 py-2 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-1.5"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">photo_library</span>
+                          Chọn từ thư viện
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Tips */}
+                  <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                    <div className="flex items-start gap-2">
+                      <span className="material-symbols-outlined text-[18px] text-gray-600 dark:text-gray-400 mt-0.5">
+                        info
+                      </span>
+                      <div className="text-xs text-gray-600 dark:text-gray-400">
+                        <p className="font-semibold mb-1">Mẹo:</p>
+                        <ul className="list-disc list-inside space-y-0.5">
+                          <li>Hỗ trợ: JPG, PNG, GIF, WebP</li>
+                          <li>Kích thước tối đa: 10MB/ảnh</li>
+                          <li>Ảnh nên có tỉ lệ giống mẫu gốc</li>
+                          <li>Click vào ảnh để thay thế</li>
+                        </ul>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                </>
               )}
             </div>
 
@@ -1499,12 +1768,6 @@ const UltimateHtmlEditorPage = () => {
               <div className="w-3 h-3 rounded-full bg-red-400"></div>
               <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
               <div className="w-3 h-3 rounded-full bg-green-400"></div>
-            </div>
-            <div className="flex-1 text-center">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white dark:bg-black rounded-md text-[10px] text-gray-500 font-mono shadow-sm">
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                {window.location.origin}/invitation/{invitation?.slug}
-              </div>
             </div>
           </div>
 
@@ -1542,11 +1805,20 @@ const UltimateHtmlEditorPage = () => {
           <div className="w-px h-6 bg-gray-700"></div>
 
           <button
-            onClick={handleSaveAndExit}
+            onClick={handleSave}
             disabled={saving}
             className="flex flex-col items-center gap-1 text-blue-400 active:text-blue-300 disabled:opacity-50"
           >
             <span className="material-symbols-outlined text-2xl">save</span>
+          </button>
+
+          <div className="w-px h-6 bg-gray-700"></div>
+
+          <button
+            onClick={() => navigate('/management')}
+            className="flex flex-col items-center gap-1 text-gray-500 active:text-white"
+          >
+            <span className="material-symbols-outlined text-2xl">arrow_back</span>
           </button>
 
           <div className="w-px h-6 bg-gray-700"></div>
@@ -1615,6 +1887,15 @@ const UltimateHtmlEditorPage = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Media Library Modal */}
+      {showMediaLibrary && (
+        <MediaLibraryModal
+          onSelectImage={handleSelectFromLibrary}
+          onClose={() => setShowMediaLibrary(false)}
+          currentImageId={selectedImageId}
+        />
       )}
     </div>
   )

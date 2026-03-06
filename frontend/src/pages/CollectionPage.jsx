@@ -12,12 +12,12 @@ const CollectionPage = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const toast = useToast()
-  
+
   // Default to list view on mobile, grid on desktop
   const getInitialViewMode = () => {
     return window.innerWidth < 768 ? 'list' : 'grid'
   }
-  
+
   const [viewMode, setViewMode] = useState(getInitialViewMode())
   const [templates, setTemplates] = useState([])
   const [categories, setCategories] = useState([])
@@ -28,8 +28,7 @@ const CollectionPage = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [showEditorModal, setShowEditorModal] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState(null)
-  const [showNameModal, setShowNameModal] = useState(false)
-  const [coupleNames, setCoupleNames] = useState({ groomName: '', brideName: '' })
+  const [previewTemplate, setPreviewTemplate] = useState(null) // For full-screen preview
 
   useEffect(() => {
     loadData()
@@ -75,6 +74,7 @@ const CollectionPage = () => {
               is_featured: Boolean(template.is_featured),
               usage_count: template.usage_count || 0,
               designData: designData,
+              html_template: template.html_template, // Add html_template field
               tags: tags
             }
           } catch (err) {
@@ -112,19 +112,8 @@ const CollectionPage = () => {
       return
     }
 
-    // Show name input modal first
+    // Show editor selection modal directly (no name input)
     setSelectedTemplate(template)
-    setShowNameModal(true)
-  }
-
-  const handleNameSubmit = () => {
-    if (!coupleNames.groomName || !coupleNames.brideName) {
-      toast.warning('⚠️ Vui lòng nhập đầy đủ tên chú rể và cô dâu!')
-      return
-    }
-    
-    // Close name modal and show editor selection
-    setShowNameModal(false)
     setShowEditorModal(true)
   }
 
@@ -137,34 +126,100 @@ const CollectionPage = () => {
 
       console.log('🎯 Creating invitation from template:', selectedTemplate.name)
       console.log('📝 Editor type:', editorType)
-      console.log('👰🤵 Couple names:', coupleNames)
 
       toast.info('⏳ Đang tạo thiệp mời từ template...')
 
-      // Create invitation from template via API with couple names
+      // Generate slug from template name
+      const slug = `${selectedTemplate.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`;
+      const title = `${selectedTemplate.name}`;
+
+      console.log('📤 Creating with:', { template_id: selectedTemplate.id, title, slug });
+
+      // Create invitation from template via API
       const response = await invitationService.createFromTemplate(selectedTemplate.id, {
-        title: `${selectedTemplate.name} - ${coupleNames.groomName} & ${coupleNames.brideName}`,
-        groom_name: coupleNames.groomName,
-        bride_name: coupleNames.brideName
+        title,
+        slug
       })
 
-      console.log('✅ Invitation created:', response.data)
+      console.log('✅ Invitation created:', response)
 
-      toast.success('🎉 Tạo thiệp mời thành công! Đang chuyển đến editor...')
+      toast.success('🎉 Tạo thiệp mời thành công! Đang tải...')
 
-      // Reset couple names
-      setCoupleNames({ groomName: '', brideName: '' })
+      // API doesn't return invitation data, need to fetch the latest invitation
+      // Get all invitations and find the one we just created by slug
+      const invitationsResponse = await invitationService.getAll({ limit: 10, sort_by: 'created_at', sort_dir: 'DESC' });
+      
+      console.log('📋 Fetched invitations:', invitationsResponse);
+      
+      // Find invitation by slug (the one we just created)
+      const invitations = invitationsResponse.data || invitationsResponse;
+      const newInvitation = Array.isArray(invitations) 
+        ? invitations.find(inv => inv.slug === slug)
+        : null;
 
-      // Navigate to appropriate editor
+      if (!newInvitation || !newInvitation.uuid) {
+        console.warn('⚠️ Could not find newly created invitation, redirecting to management');
+        setTimeout(() => navigate('/management'), 500);
+        return;
+      }
+
+      console.log('✅ Found new invitation:', newInvitation);
+
+      // Check if invitation has html_content
+      if (!newInvitation.html_content) {
+        console.warn('⚠️ Invitation has no HTML content, need to copy from template');
+        
+        // Get template HTML content from the selectedTemplate we already have
+        let templateHtml = selectedTemplate?.html_template; // Template uses html_template
+        
+        // If selectedTemplate has no html_template, try to get from designData
+        if (!templateHtml && selectedTemplate?.designData?.html) {
+          console.log('📄 Using HTML from template designData...');
+          templateHtml = selectedTemplate.designData.html;
+        }
+        
+        if (templateHtml) {
+          console.log('📄 Copying HTML from template to invitation...');
+          console.log('🔑 Using UUID:', newInvitation.uuid);
+          console.log('📝 HTML length:', templateHtml.length);
+          
+          try {
+            // Update invitation with template HTML - WAIT for completion
+            // Invitation uses html_content (not html_template)
+            const updateData = {
+              html_content: templateHtml, // Invitation uses html_content
+              title: newInvitation.title || title,
+              slug: newInvitation.slug || slug,
+              status: 'draft'
+            };
+            
+            console.log('📤 Sending update data:', Object.keys(updateData));
+            
+            await invitationService.update(newInvitation.uuid, updateData);
+            
+            console.log('✅ HTML content copied successfully');
+            toast.success('✅ Đã sao chép nội dung từ template');
+          } catch (err) {
+            console.error('❌ Failed to copy template HTML:', err);
+            console.error('❌ Error details:', err.message);
+            toast.error('⚠️ Không thể sao chép nội dung template');
+          }
+        } else {
+          console.warn('⚠️ Template has no HTML content to copy');
+          toast.warning('⚠️ Template không có nội dung HTML. Vui lòng liên hệ admin để thêm nội dung cho template này.');
+        }
+      }
+
+      // Navigate to appropriate editor using UUID - wait a bit for update to propagate
       setTimeout(() => {
         if (editorType === 'html') {
-          navigate(`/html-editor?invitationId=${response.data.id}`)
+          navigate(`/html-editor?invitationId=${newInvitation.uuid}`)
         } else if (editorType === 'advanced-html') {
-          navigate(`/ultimate-html-editor?invitationId=${response.data.id}`)
+          navigate(`/ultimate-html-editor?invitationId=${newInvitation.uuid}`)
         } else {
-          navigate(`/editor?invitationId=${response.data.id}`)
+          navigate(`/editor?invitationId=${newInvitation.uuid}`)
         }
-      }, 500)
+      }, 1000)
     } catch (error) {
       console.error('❌ Failed to create invitation:', error)
 
@@ -217,7 +272,7 @@ const CollectionPage = () => {
       {/* Hero Section - Wedding Background */}
       <section className="relative min-h-[50vh] md:min-h-[60vh] flex items-center justify-center overflow-hidden bg-gray-900">
         {/* Wedding Background Image */}
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: "url('https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=2070')",
@@ -232,7 +287,7 @@ const CollectionPage = () => {
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 text-center pt-24 md:pt-32 pb-12 w-full">
 
-          
+
 
           {/* Typography */}
           <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl text-white mb-6 leading-tight drop-shadow-2xl" style={{ fontFamily: "'Playfair Display', serif" }}>
@@ -275,7 +330,7 @@ const CollectionPage = () => {
       </section>
 
       {/* Filters & Controls - Clean & Professional */}
-      <section className="sticky top-[70px] z-40 bg-white/95 dark:bg-black/95 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 transition-all">
+      <section className="sticky top-16 z-40 bg-white/95 dark:bg-black/95 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 transition-all">
         <div className="max-w-[1440px] mx-auto px-4 md:px-12 py-3 md:py-4">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             {/* Categories - Clean pills */}
@@ -414,13 +469,24 @@ const CollectionPage = () => {
                             {template.name}
                           </h3>
                         </div>
-                        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 font-mono">
+                        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 font-mono mb-3">
                           <span>{template.category || 'Wedding'}</span>
                           <span className="flex items-center gap-1">
                             <span className="material-symbols-outlined text-[14px]">visibility</span>
                             {template.views_count || 0}
                           </span>
                         </div>
+                        {/* Preview Button */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setPreviewTemplate(template)
+                          }}
+                          className="w-full py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center justify-center gap-1.5"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">visibility</span>
+                          Xem mẫu
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -453,7 +519,7 @@ const CollectionPage = () => {
                       {/* Content */}
                       <div className="flex-1 p-3 md:p-6 flex flex-col justify-center">
                         <div className="flex justify-between items-start">
-                          <div>
+                          <div className="flex-1">
                             <h3 className="font-bold text-sm md:text-xl text-gray-900 dark:text-white mb-1 group-hover:text-purple-600 transition-colors">
                               {template.name}
                             </h3>
@@ -461,9 +527,21 @@ const CollectionPage = () => {
                               {template.description || 'Mẫu thiệp cưới sang trọng, tinh tế.'}
                             </p>
                           </div>
-                          <button className="hidden md:block px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold uppercase rounded-full">
-                            Sử dụng
-                          </button>
+                          <div className="hidden md:flex gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setPreviewTemplate(template)
+                              }}
+                              className="px-4 py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-xs font-bold uppercase rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">visibility</span>
+                              Xem mẫu
+                            </button>
+                            <button className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold uppercase rounded-full">
+                              Sử dụng
+                            </button>
+                          </div>
                         </div>
 
                         <div className="mt-auto flex items-center gap-4 text-[10px] md:text-xs text-gray-400 font-mono">
@@ -508,86 +586,19 @@ const CollectionPage = () => {
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .mask-gradient-right {
+          mask-image: linear-gradient(to right, black 90%, transparent 100%);
+          -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
+        }
       `}</style>
 
-      {/* Name Input Modal - Show first */}
-      {showNameModal && selectedTemplate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-800 shadow-2xl max-w-md w-full overflow-hidden rounded-xl">
-            {/* Header */}
-            <div className="bg-gray-900 dark:bg-white p-6 text-white dark:text-black">
-              <div className="flex justify-between items-start gap-4">
-                <div className="flex-1">
-                  <h2 className="text-xl md:text-2xl font-bold mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>Thông tin cô dâu chú rể</h2>
-                  <p className="text-white/90 dark:text-black/90 text-sm">Vui lòng nhập tên để tạo thiệp mời</p>
-                </div>
-                <button
-                  onClick={() => {
-                    setShowNameModal(false)
-                    setSelectedTemplate(null)
-                    setCoupleNames({ groomName: '', brideName: '' })
-                  }}
-                  className="text-white/80 hover:text-white dark:text-black/80 dark:hover:text-black flex-shrink-0"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Tên chú rể <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={coupleNames.groomName}
-                  onChange={(e) => setCoupleNames(prev => ({ ...prev, groomName: e.target.value }))}
-                  placeholder="Nhập tên chú rể"
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  autoFocus
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Tên cô dâu <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={coupleNames.brideName}
-                  onChange={(e) => setCoupleNames(prev => ({ ...prev, brideName: e.target.value }))}
-                  placeholder="Nhập tên cô dâu"
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                />
-              </div>
-            </div>
-
-            {/* Footer */}
-            <div className="p-6 bg-gray-50 dark:bg-gray-900 flex justify-end gap-3 border-t border-gray-200 dark:border-gray-700">
-              <button
-                onClick={() => {
-                  setShowNameModal(false)
-                  setSelectedTemplate(null)
-                  setCoupleNames({ groomName: '', brideName: '' })
-                }}
-                className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium rounded-lg"
-              >
-                Hủy
-              </button>
-              <button
-                onClick={handleNameSubmit}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-              >
-                Tiếp tục
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Editor Selection Modal - Clean & Professional */}
       {showEditorModal && selectedTemplate && (
@@ -613,22 +624,22 @@ const CollectionPage = () => {
 
             {/* Content - Scrollable */}
             <div className="p-4 md:p-6 overflow-y-auto flex-1">
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-4">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 max-w-2xl mx-auto">
                 {/* Canvas Editor Option */}
                 <button
                   onClick={() => handleCreateInvitation('canvas')}
                   disabled={creatingInvitation}
-                  className="group relative p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
+                  className="group relative p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
                 >
                   <div className="flex flex-col items-center text-center gap-3">
-                    <div className="w-12 h-12 md:w-14 md:h-14 bg-gray-900 dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black">
-                      <svg className="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-14 h-14 md:w-16 md:h-16 bg-gray-900 dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black">
+                      <svg className="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-1">Canvas Editor</h3>
-                      <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+                      <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">Canvas Editor</h3>
+                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
                         Kéo thả, chỉnh sửa từng element. Dễ dùng.
                       </p>
                     </div>
@@ -639,46 +650,21 @@ const CollectionPage = () => {
                   </div>
                 </button>
 
-                {/* HTML Editor Option */}
-                <button
-                  onClick={() => handleCreateInvitation('html')}
-                  disabled={creatingInvitation}
-                  className="group relative p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
-                >
-                  <div className="flex flex-col items-center text-center gap-3">
-                    <div className="w-12 h-12 md:w-14 md:h-14 bg-gray-700 dark:bg-gray-300 rounded-lg flex items-center justify-center text-white dark:text-black">
-                      <svg className="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-1">HTML Editor</h3>
-                      <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
-                        Điền form đơn giản. Template có sẵn.
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 justify-center">
-                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Đơn giản</span>
-                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Form</span>
-                    </div>
-                  </div>
-                </button>
-
-                {/* Advanced HTML Editor Option */}
+                {/* Ultimate Editor Option */}
                 <button
                   onClick={() => handleCreateInvitation('advanced-html')}
                   disabled={creatingInvitation}
-                  className="group relative p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
+                  className="group relative p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
                 >
                   <div className="flex flex-col items-center text-center gap-3">
-                    <div className="w-12 h-12 md:w-14 md:h-14 bg-black dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black">
-                      <svg className="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-14 h-14 md:w-16 md:h-16 bg-black dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black">
+                      <svg className="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-1">Ultimate Editor</h3>
-                      <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+                      <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">Ultimate Editor</h3>
+                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
                         Form thông minh + Upload ảnh + Real-time preview
                       </p>
                     </div>
@@ -704,6 +690,121 @@ const CollectionPage = () => {
                 Hủy
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Full-Screen Preview Modal with Auto-Scroll */}
+      {previewTemplate && (
+        <div className="fixed inset-0 z-[9999] bg-black">
+          {/* Back Button - Fixed at top */}
+          <button
+            onClick={() => setPreviewTemplate(null)}
+            className="fixed top-4 left-4 z-[10000] flex items-center gap-2 px-4 py-2 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md text-gray-900 dark:text-white rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-900 transition-all group"
+          >
+            <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span className="font-bold">Quay lại</span>
+          </button>
+
+          {/* Template Info - Fixed at top right */}
+          <div className="fixed top-4 right-4 z-[10000] px-4 py-2 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-full shadow-lg">
+            <span className="text-sm font-bold text-gray-900 dark:text-white">{previewTemplate.name}</span>
+          </div>
+
+          {/* Iframe Container with Auto-Scroll Animation */}
+          <div className="w-full h-full overflow-hidden">
+            <iframe
+              srcDoc={
+                previewTemplate.html_template || 
+                previewTemplate.designData?.html || 
+                (previewTemplate.designData?.elements ? 
+                  `<html><body style="margin:0;padding:20px;font-family:sans-serif;">
+                    <h1>Canvas Template Preview</h1>
+                    <p>This is a canvas-based template with ${Object.keys(previewTemplate.designData.elements || {}).length} elements.</p>
+                    <p>Canvas templates need to be opened in the editor to view properly.</p>
+                  </body></html>` 
+                  : '<html><body><div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#666;flex-direction:column;gap:20px;"><svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><div style="text-align:center;"><div style="font-size:18px;font-weight:bold;margin-bottom:8px;">Không có nội dung preview</div><div style="font-size:14px;color:#999;">Template này chưa có HTML để hiển thị</div></div></div></body></html>')
+              }
+              className="w-full h-full border-0 bg-white"
+              title={`Preview ${previewTemplate.name}`}
+              onLoad={(e) => {
+                // Auto-scroll animation from top to bottom
+                const iframe = e.target
+                const iframeWindow = iframe.contentWindow
+                if (iframeWindow) {
+                  let autoScrollActive = true
+                  let animationFrameId = null
+
+                  // Detect user scroll to stop auto-scroll
+                  const handleUserScroll = () => {
+                    if (autoScrollActive) {
+                      autoScrollActive = false
+                      if (animationFrameId) {
+                        cancelAnimationFrame(animationFrameId)
+                      }
+                      console.log('🛑 Auto-scroll stopped by user interaction')
+                    }
+                  }
+
+                  // Listen for user scroll events
+                  iframeWindow.addEventListener('wheel', handleUserScroll, { passive: true })
+                  iframeWindow.addEventListener('touchstart', handleUserScroll, { passive: true })
+                  iframeWindow.addEventListener('keydown', (e) => {
+                    // Stop on arrow keys, page up/down, space
+                    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' '].includes(e.key)) {
+                      handleUserScroll()
+                    }
+                  })
+
+                  // Wait a bit for content to load
+                  setTimeout(() => {
+                    try {
+                      const scrollHeight = iframeWindow.document.documentElement.scrollHeight
+                      const viewportHeight = iframeWindow.innerHeight
+                      const scrollDistance = scrollHeight - viewportHeight
+
+                      if (scrollDistance > 0 && autoScrollActive) {
+                        // Slower scroll: 10 pixels per second (was 3)
+                        const scrollDuration = Math.min(scrollDistance * 10, 30000) // Max 30 seconds (was 15)
+
+                        let startTime = null
+                        const animateScroll = (currentTime) => {
+                          if (!autoScrollActive) return // Stop if user interacted
+
+                          if (!startTime) startTime = currentTime
+                          const elapsed = currentTime - startTime
+                          const progress = Math.min(elapsed / scrollDuration, 1)
+
+                          // Smoother easing function
+                          const easeInOutQuad = progress < 0.5
+                            ? 2 * progress * progress
+                            : 1 - Math.pow(-2 * progress + 2, 2) / 2
+
+                          iframeWindow.scrollTo(0, scrollDistance * easeInOutQuad)
+
+                          if (progress < 1 && autoScrollActive) {
+                            animationFrameId = requestAnimationFrame(animateScroll)
+                          } else if (autoScrollActive) {
+                            // Scroll back to top after reaching bottom
+                            setTimeout(() => {
+                              if (autoScrollActive) {
+                                iframeWindow.scrollTo({ top: 0, behavior: 'smooth' })
+                              }
+                            }, 2000) // Wait 2 seconds at bottom
+                          }
+                        }
+
+                        animationFrameId = requestAnimationFrame(animateScroll)
+                      }
+                    } catch (error) {
+                      console.error('Auto-scroll error:', error)
+                    }
+                  }, 1000) // Wait 1 second before starting
+                }
+              }}
+            />
           </div>
         </div>
       )}
