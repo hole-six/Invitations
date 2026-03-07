@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Thiệp Cưới – Tống Hiền & Thanh Tuyền Airlines</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Dancing+Script:wght@400;600;700&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1a2744;--navy2:#233060;--blue:#2a3f7e;
+  --accent:#c8a84b;--cream:#f5f2ec;--paper:#faf8f3;
+  --text:#1a1a2e;--mid:#4a4a6a;--light:#8a8aaa;--border:#d0cfc0;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:#0d1117;font-family:'Barlow Condensed',sans-serif;color:var(--text);overflow-x:hidden;}
+
+/* ══ PASSPORT GATE ══ */
+#passport-gate{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(160deg,#080c14 0%,#0f1a2e 45%,#1a2744 100%);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  transition:opacity .9s ease,visibility .9s ease;
+}
+#passport-gate.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+#passport-gate::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(200,168,75,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,75,.03) 1px,transparent 1px);
+  background-size:44px 44px;
+}
+#passport-gate::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 15% 15%,rgba(200,168,75,.07) 0%,transparent 50%),radial-gradient(ellipse at 85% 85%,rgba(42,63,126,.14) 0%,transparent 50%);
+}
+.scan-line{
+  position:absolute;left:0;right:0;height:1px;top:0;z-index:10;
+  background:linear-gradient(90deg,transparent,rgba(200,168,75,.45) 30%,rgba(200,168,75,.85) 50%,rgba(200,168,75,.45) 70%,transparent);
+  animation:scan 3s ease-in-out infinite;
+}
+@keyframes scan{0%{top:0;opacity:0;}8%{opacity:1;}92%{opacity:1;}100%{top:100%;opacity:0;}}
+
+.gate-topbar{
+  position:absolute;top:0;left:0;right:0;z-index:20;
+  background:rgba(26,39,68,.75);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(200,168,75,.18);
+  padding:10px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.gate-airline{font-family:'Oswald',sans-serif;font-size:.62rem;letter-spacing:4px;color:rgba(200,168,75,.82);text-transform:uppercase;display:flex;align-items:center;gap:7px;}
+.gate-label{font-size:.46rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.28);}
+.status-dots{display:flex;gap:5px;align-items:center;}
+.status-dot{width:5px;height:5px;border-radius:50%;background:rgba(200,168,75,.4);animation:dotPulse 1.5s ease-in-out infinite;}
+.status-dot:nth-child(2){animation-delay:.2s;}
+.status-dot:nth-child(3){animation-delay:.4s;}
+@keyframes dotPulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+
+.passport-wrap{
+  position:relative;z-index:5;
+  display:flex;flex-direction:column;align-items:center;gap:24px;
+  padding:72px 16px 90px;width:100%;max-width:360px;
+}
+.gate-heading{text-align:center;}
+.gate-heading .gl{font-size:.46rem;letter-spacing:5px;text-transform:uppercase;color:rgba(200,168,75,.5);margin-bottom:5px;}
+.gate-heading .gm{font-family:'Oswald',sans-serif;font-size:.95rem;letter-spacing:3px;color:rgba(255,255,255,.8);text-transform:uppercase;}
+
+/* passport book */
+.passport-book{
+  width:100%;
+  background:linear-gradient(150deg,#1b3a5a 0%,#0d2035 55%,#152840 100%);
+  border-radius:10px;overflow:hidden;
+  box-shadow:0 28px 65px rgba(0,0,0,.65),0 0 0 1px rgba(200,168,75,.16),inset 0 1px 0 rgba(255,255,255,.05);
+  position:relative;
+}
+.passport-book::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(200,168,75,.12),transparent);}
+.pp-cover{padding:22px 18px 0;position:relative;z-index:1;}
+.pp-country{font-size:.42rem;letter-spacing:5px;text-transform:uppercase;color:rgba(200,168,75,.68);text-align:center;margin-bottom:12px;}
+.pp-emblem{text-align:center;margin-bottom:10px;}
+.pp-emblem svg{width:44px;height:44px;}
+.pp-title{font-family:'Oswald',sans-serif;font-size:1.25rem;font-weight:400;letter-spacing:5px;color:rgba(255,255,255,.9);text-align:center;text-transform:uppercase;margin-bottom:2px;}
+.pp-sub{font-size:.4rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.25);text-align:center;margin-bottom:16px;}
+.pp-rule{height:1px;background:linear-gradient(90deg,transparent,rgba(200,168,75,.32),transparent);margin-bottom:16px;}
+.pp-data{background:linear-gradient(180deg,#f8f5ec,#ede9de);padding:16px 14px 0;position:relative;}
+.pp-data::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#1a3a5c,#c8a84b,#1a3a5c);}
+.pp-field{margin-bottom:11px;}
+.pp-fl{font-size:.4rem;letter-spacing:3px;text-transform:uppercase;color:var(--light);margin-bottom:2px;font-family:'Lato',sans-serif;}
+.pp-fv{font-family:'Oswald',sans-serif;font-size:.9rem;font-weight:500;color:var(--navy);letter-spacing:1px;border-bottom:1px solid var(--border);padding-bottom:3px;}
+.pp-name{font-family:'Dancing Script',cursive;font-size:1.3rem;font-weight:700;color:var(--navy2);border-bottom:2px solid var(--accent);padding-bottom:3px;}
+.pp-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px;}
+.pp-grid .pp-field{margin-bottom:0;}
+.mrz{background:#e0dbd0;padding:8px 10px 10px;margin:12px -14px 0;border-top:1px solid #ccc8b5;}
+.mrz-line{font-family:'Courier New',monospace;font-size:.46rem;color:rgba(26,39,68,.45);letter-spacing:1.5px;line-height:1.7;word-break:break-all;}
+.mrz-hl{color:rgba(26,39,68,.72);font-weight:700;}
+
+/* open button */
+.open-btn{
+  width:100%;padding:15px 20px;
+  background:linear-gradient(135deg,var(--navy),var(--blue));
+  border:1px solid rgba(200,168,75,.38);
+  color:rgba(200,168,75,.92);
+  font-family:'Oswald',sans-serif;font-size:.68rem;letter-spacing:5px;text-transform:uppercase;
+  cursor:pointer;transition:all .3s;border-radius:2px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  position:relative;overflow:hidden;
+}
+.open-btn::before{content:'';position:absolute;inset:0;background:rgba(200,168,75,.0);transition:background .3s;}
+.open-btn:hover::before{background:rgba(200,168,75,.08);}
+.open-btn:hover{border-color:var(--accent);}
+.open-btn:disabled{opacity:.5;cursor:not-allowed;}
+.btn-plane{font-size:1.05rem;animation:bfloat 2s ease-in-out infinite;}
+.btn-plane.flip{transform:scaleX(-1);display:inline-block;animation:bfloat 2s ease-in-out infinite .5s;}
+@keyframes bfloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-2px);}}
+
+/* ══ STAMP OVERLAY ══ */
+#stamp-overlay{
+  position:fixed;inset:0;z-index:10000;
+  background:rgba(6,10,20,.88);backdrop-filter:blur(7px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s;
+}
+#stamp-overlay.active{opacity:1;visibility:visible;pointer-events:auto;}
+.stamp-card{
+  width:min(330px,90vw);
+  background:linear-gradient(155deg,#faf8f0,#ede9de);
+  border-radius:5px;padding:26px 22px;
+  box-shadow:0 35px 75px rgba(0,0,0,.6),0 0 0 1px rgba(200,168,75,.18);
+  position:relative;overflow:hidden;transform:rotate(-1.5deg);
+}
+.stamp-card::before{content:'';position:absolute;inset:0;opacity:.02;background:repeating-linear-gradient(0deg,#000 0,#000 1px,transparent 1px,transparent 4px);}
+.si{padding-bottom:14px;border-bottom:1px dashed #c0bba8;margin-bottom:14px;}
+.si-label{font-size:.4rem;letter-spacing:3px;text-transform:uppercase;color:var(--light);font-family:'Lato',sans-serif;margin-bottom:2px;}
+.si-val{font-family:'Oswald',sans-serif;font-size:.88rem;color:var(--navy);letter-spacing:1px;}
+.si-val.big{font-family:'Dancing Script',cursive;font-size:1.35rem;color:var(--navy2);}
+.si-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px;}
+.stamp-ev{text-align:center;}
+.stamp-ev-t{font-family:'Oswald',sans-serif;font-size:.9rem;letter-spacing:3px;color:var(--navy);text-transform:uppercase;}
+.stamp-ev-d{font-size:.52rem;letter-spacing:3px;color:var(--accent);margin-top:2px;}
+.stamp-mark{
+  position:absolute;top:50%;left:50%;
+  width:190px;height:190px;border-radius:50%;
+  border:5px solid transparent;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transform:translate(-50%,-50%) rotate(-18deg) scale(0);z-index:10;
+}
+.stamp-mark.stamped{animation:stampDrop .42s cubic-bezier(.2,1.6,.4,1) forwards;border-color:rgba(26,107,58,.78);}
+@keyframes stampDrop{0%{transform:translate(-50%,-50%) rotate(-18deg) scale(2.4);opacity:0;}55%{opacity:1;}100%{transform:translate(-50%,-50%) rotate(-18deg) scale(1);opacity:1;}}
+.stamp-mark::before{content:'';position:absolute;inset:7px;border:2px dashed rgba(26,107,58,.38);border-radius:50%;}
+.stamp-mark::after{content:'';position:absolute;inset:16px;border:1.5px solid rgba(26,107,58,.22);border-radius:50%;}
+.sm-text{font-family:'Oswald',sans-serif;font-size:2.3rem;font-weight:700;color:rgba(26,107,58,.82);letter-spacing:3px;line-height:1;text-align:center;}
+.sm-sub{font-size:.38rem;letter-spacing:4px;text-transform:uppercase;color:rgba(26,107,58,.62);text-align:center;margin-top:4px;}
+.sm-date{font-size:.42rem;color:rgba(26,107,58,.52);margin-top:5px;font-family:'Courier New',monospace;}
+
+/* ══ MAIN CONTENT ══ */
+#main-content{opacity:0;transition:opacity 1s ease;}
+#main-content.revealed{opacity:1;}
+
+/* ══ NAV ══ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  display:flex;justify-content:center;gap:8px;flex-wrap:wrap;
+  padding:7px 10px;
+  background:rgba(26,39,68,.97);backdrop-filter:blur(8px);
+  border-bottom:2px solid var(--accent);
+}
+nav a{font-size:20px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.62);text-decoration:none;transition:color .3s;font-family:'Barlow Condensed',sans-serif;white-space:nowrap;padding-right: 20px;}
+nav a:hover{color:var(--accent);}
+nav .pi{color:var(--accent);font-size:25px;}
+
+/* ══ REVEAL ══ */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .9s ease,transform .9s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ══ SECTION INNER ══ */
+.si-wrap{max-width:900px;margin:0 auto;padding:0 16px;}
+.sec-label{font-size:.5rem;letter-spacing:5px;text-transform:uppercase;color:var(--blue);text-align:center;margin-bottom:7px;}
+h2.sec-title{font-family:'Oswald',sans-serif;font-size:1.9rem;font-weight:400;color:var(--navy);text-align:center;letter-spacing:3px;text-transform:uppercase;}
+.tline{width:52px;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);margin:11px auto 30px;}
+
+/* ══ HERO BOARDING PASS ══ */
+#hero{
+  min-height:100svh;background:var(--cream);
+  display:flex;align-items:center;justify-content:center;
+  padding:76px 14px 56px;position:relative;overflow:hidden;
+}
+#hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(42,63,126,.1) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(26,39,68,.07) 0%,transparent 50%);}
+.cloud{position:absolute;background:rgba(255,255,255,.5);border-radius:50px;filter:blur(2px);}
+.c1{width:90px;height:30px;top:10%;left:4%;animation:drift 18s ease-in-out infinite;}
+.c2{width:65px;height:22px;top:18%;right:6%;animation:drift 22s ease-in-out infinite reverse;}
+.c3{width:115px;height:38px;bottom:28%;left:3%;animation:drift 25s ease-in-out infinite 3s;}
+.c4{width:70px;height:24px;bottom:38%;right:5%;animation:drift 20s ease-in-out infinite 5s;}
+@keyframes drift{0%,100%{transform:translateX(0);}50%{transform:translateX(14px);}}
+.fp{position:absolute;top:50%;left:3%;right:3%;height:1px;border-top:2px dashed rgba(42,63,126,.1);transform:translateY(-50%);}
+
+/* boarding pass */
+.hero-bp{
+  width:100%;max-width:940px;
+  background:var(--paper);border-radius:14px;overflow:hidden;
+  box-shadow:0 28px 72px rgba(26,39,68,.2),0 0 0 1px rgba(200,168,75,.1);
+  position:relative;z-index:2;
+  animation:bpReveal .9s ease .15s both;
+}
+@keyframes bpReveal{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+
+/* bp header */
+.bp-hd{
+  background:linear-gradient(90deg,var(--navy),#1e3060);
+  padding:13px 22px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  position:relative;overflow:hidden;
+}
+.bp-hd::after{content:'BOARDING PASS';position:absolute;right:-8px;top:50%;transform:translateY(-50%);font-family:'Oswald',sans-serif;font-size:2.6rem;font-weight:700;color:rgba(255,255,255,.04);letter-spacing:5px;pointer-events:none;}
+.bp-airline{font-family:'Oswald',sans-serif;font-size:.82rem;letter-spacing:3px;text-transform:uppercase;color:white;display:flex;align-items:center;gap:7px;}
+.bp-badge{background:rgba(200,168,75,.14);border:1px solid rgba(200,168,75,.38);padding:4px 10px;border-radius:2px;font-size:.48rem;letter-spacing:4px;text-transform:uppercase;color:var(--accent);font-weight:600;white-space:nowrap;}
+
+/* passenger strip */
+.bp-pax{
+  background:linear-gradient(90deg,rgba(200,168,75,.05),transparent);
+  border-bottom:2px dashed var(--border);
+  padding:13px 22px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+}
+.pax-l .lbl{font-size:.42rem;letter-spacing:3px;text-transform:uppercase;color:var(--light);font-family:'Lato',sans-serif;margin-bottom:2px;}
+.pax-name{font-family:'Dancing Script',cursive;font-size:1.5rem;font-weight:700;color:var(--navy2);}
+.pax-r{text-align:right;}
+.pax-r .lbl{font-size:.42rem;letter-spacing:3px;text-transform:uppercase;color:var(--light);font-family:'Lato',sans-serif;margin-bottom:2px;}
+.pax-flight{font-family:'Oswald',sans-serif;font-size:.95rem;letter-spacing:2px;color:var(--navy);}
+
+/* bp body */
+.bp-body{display:grid;grid-template-columns:1fr 200px;}
+
+/* main left */
+.bp-main{padding:20px 22px 18px;border-right:2px dashed var(--border);display:flex;flex-direction:column;gap:14px;}
+
+/* route */
+.bp-route{display:flex;align-items:center;gap:0;}
+.bp-port{flex:1;}
+.bp-port .code{font-family:'Oswald',sans-serif;font-size:2.2rem;font-weight:700;color:var(--navy);letter-spacing:2px;line-height:1;}
+.bp-port .city{font-size:.46rem;letter-spacing:3px;text-transform:uppercase;color:var(--light);margin-top:2px;}
+.bp-route-mid{flex:1.2;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0 8px;}
+.route-line{width:100%;height:1px;background:linear-gradient(90deg,var(--border),var(--accent),var(--border));position:relative;}
+.route-line::after{content:'✈';position:absolute;right:-1px;top:50%;transform:translateY(-50%);font-size:.85rem;color:var(--accent);background:var(--paper);padding:0 2px;}
+.route-lbl{font-size:.4rem;letter-spacing:3px;color:var(--light);text-transform:uppercase;}
+
+/* fields grid */
+.bp-fields{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
+.bp-field{display:flex;flex-direction:column;gap:2px;}
+.bfl{font-size:.4rem;letter-spacing:3px;text-transform:uppercase;color:var(--light);font-family:'Lato',sans-serif;}
+.bfv{font-family:'Oswald',sans-serif;font-size:.92rem;font-weight:600;color:var(--navy);letter-spacing:1px;border-bottom:1px solid var(--border);padding-bottom:2px;}
+.bfv.xl{font-size:1.45rem;font-weight:700;border-bottom:none;}
+.bfv.sm{font-size:.78rem;color:var(--mid);}
+.bfv.script{font-family:'Dancing Script',cursive;font-size:1.05rem;border-bottom:none;}
+
+.bp-notice{border-top:1px dotted var(--border);padding-top:9px;font-size:14px;color:var(--light);line-height:1.65;font-family:'Lato',sans-serif;font-weight:300;}
+
+/* stub */
+.bp-stub{padding:18px 14px;display:flex;flex-direction:column;gap:11px;}
+.st-head{font-family:'Oswald',sans-serif;font-size:.65rem;letter-spacing:2px;color:var(--navy);display:flex;align-items:center;gap:5px;}
+.st-sep{width:100%;height:1px;background:var(--border);}
+.st-row .sl{font-size:.38rem;letter-spacing:3px;text-transform:uppercase;color:var(--light);font-family:'Lato',sans-serif;margin-bottom:1px;}
+.st-row .sv{font-family:'Oswald',sans-serif;font-size:.9rem;color:var(--navy);letter-spacing:1px;}
+.st-row .sv.script{font-family:'Dancing Script',cursive;font-size:1.15rem;color:var(--navy2);}
+.st-verse{font-family:'Dancing Script',cursive;font-size:15px;color:var(--mid);line-height:1.65;font-style:italic;}
+.barcode{display:flex;gap:2px;align-items:flex-end;height:30px;}
+.barcode span{background:var(--navy);width:2px;}
+.qr-box{width:48px;height:48px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.38rem;letter-spacing:1px;text-transform:uppercase;color:var(--light);position:relative;overflow:hidden;flex-shrink:0;}
+.qr-box::before{content:'';position:absolute;inset:3px;background:repeating-linear-gradient(0deg,var(--border) 0,var(--border) 1px,transparent 1px,transparent 3px),repeating-linear-gradient(90deg,var(--border) 0,var(--border) 1px,transparent 1px,transparent 3px);opacity:.4;}
+
+/* bp footer */
+.bp-ft{background:var(--navy);padding:9px 22px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.bp-ft-txt{font-family:'Oswald',sans-serif;font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.68);}
+
+.scroll-cue{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;animation:fadeIn 1.4s ease 1.5s both;}
+.scroll-cue span{font-size:.45rem;letter-spacing:3px;color:var(--mid);}
+.scl{width:1px;height:26px;background:linear-gradient(to bottom,var(--navy),transparent);animation:pulse 2s infinite;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes pulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+
+/* ══ SECTIONS ══ */
+/* 2 loi mo */
+#loi-mo{background:var(--navy);padding:76px 0;}
+#loi-mo .inner{max-width:580px;margin:0 auto;text-align:center;padding:0 16px;}
+#loi-mo .sec-label{color:var(--accent);}
+#loi-mo h2.sec-title{color:white;}
+#loi-mo .tline{background:linear-gradient(90deg,transparent,var(--accent),transparent);}
+.quote{font-family:'Dancing Script',cursive;font-size:1.45rem;font-weight:600;color:var(--accent);line-height:1.8;margin-bottom:18px;}
+.body-txt{font-size:.86rem;font-weight:300;color:rgba(255,255,255,.73);line-height:2;font-family:'Lato',sans-serif;}
+.fdiv{display:flex;align-items:center;gap:12px;margin:18px 0;opacity:.2;}
+.fdiv::before,.fdiv::after{content:'';flex:1;height:1px;background:white;}
+.fdiv span{color:white;}
+
+/* 3 gioi thieu */
+#gioi-thieu{background:var(--cream);padding:76px 0;}
+.pcards{display:grid;grid-template-columns:1fr 46px 1fr;}
+.pcard{background:var(--paper);border:1px solid var(--border);}
+.pcard-hd{background:var(--navy);padding:11px 18px;display:flex;align-items:center;justify-content:space-between;}
+.pcard-hd .role{font-size:.5rem;letter-spacing:4px;text-transform:uppercase;color:var(--accent);}
+.pcard-body{padding:18px;}
+.pcard-name{font-family:'Dancing Script',cursive;font-size:1.9rem;font-weight:700;color:var(--navy);margin-bottom:9px;}
+.pcard-row{display:flex;gap:7px;margin-bottom:8px;align-items:flex-start;}
+.pcfl{font-size:.44rem;letter-spacing:3px;text-transform:uppercase;color:var(--light);min-width:68px;padding-top:2px;font-family:'Lato',sans-serif;}
+.pcfv{font-size:.78rem;color:var(--mid);line-height:1.6;font-family:'Lato',sans-serif;font-weight:300;}
+.pcfv em{font-style:italic;color:var(--blue);}
+.pcard-sep{border-top:1px dashed var(--border);margin:11px 0;}
+.pcard-seat{display:flex;gap:10px;}
+.seat-box{background:var(--navy);color:white;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:.95rem;font-weight:700;}
+.pcard-mid{background:var(--navy);display:flex;align-items:center;justify-content:center;}
+.pcard-mid span{font-family:'Dancing Script',cursive;font-size:1.3rem;color:white;font-weight:600;writing-mode:vertical-rl;letter-spacing:4px;}
+
+/* 4 chuyen tinh */
+#chuyen-tinh{background:var(--navy);padding:76px 0;}
+#chuyen-tinh .sec-label{color:var(--accent);}
+#chuyen-tinh h2.sec-title{color:white;}
+#chuyen-tinh .tline{background:linear-gradient(90deg,transparent,var(--accent),transparent);}
+.fl-route{display:flex;align-items:center;margin-bottom:24px;}
+.fl-ap{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);padding:14px 16px;flex:1;}
+.fl-ap .code{font-family:'Oswald',sans-serif;font-size:1.9rem;font-weight:700;color:white;letter-spacing:2px;margin-bottom:2px;}
+.fl-ap .city{font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);}
+.fl-mid{padding:0 14px;font-size:1.2rem;color:var(--accent);display:flex;flex-direction:column;align-items:center;gap:3px;}
+.fl-mid span{font-size:.42rem;letter-spacing:2px;color:rgba(255,255,255,.32);}
+.fl-items{list-style:none;}
+.fl-item{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.07);}
+.fl-item:last-child{border-bottom:none;}
+.fl-time{font-family:'Oswald',sans-serif;font-size:.88rem;color:var(--accent);min-width:48px;letter-spacing:1px;}
+.fl-content h4{font-family:'Oswald',sans-serif;font-size:.85rem;font-weight:400;color:white;letter-spacing:1px;margin-bottom:4px;text-transform:uppercase;}
+.fl-content p{font-size:.74rem;color:rgba(255,255,255,.55);line-height:1.7;font-family:'Lato',sans-serif;font-weight:300;}
+
+/* 5 thoi gian */
+#thoi-gian{background:var(--cream);padding:76px 0;}
+.dep-board{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);overflow:hidden;}
+.dep-card{background:var(--paper);padding:28px 24px;border-right:2px dashed var(--border);position:relative;}
+.dep-card:last-child{border-right:none;}
+.dep-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--navy),var(--blue),transparent);}
+.dep-type{font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.dep-type::before{content:'✈';}
+.dep-name{font-family:'Oswald',sans-serif;font-size:1.2rem;font-weight:600;color:var(--navy);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;line-height:1.4;}
+.dep-row{display:flex;gap:7px;margin-bottom:9px;align-items:flex-start;}
+.dep-lbl{font-size:.44rem;letter-spacing:3px;text-transform:uppercase;color:var(--light);min-width:68px;padding-top:2px;font-family:'Lato',sans-serif;}
+.dep-val{font-size:.78rem;color:var(--mid);line-height:1.6;font-family:'Barlow Condensed',sans-serif;}
+.dep-val strong{color:var(--navy);}
+.map-btn{display:inline-flex;align-items:center;gap:5px;margin-top:12px;padding:7px 16px;border:1px solid var(--navy);font-size:.52rem;letter-spacing:3px;text-transform:uppercase;color:var(--navy);background:none;text-decoration:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;transition:all .3s;}
+.map-btn:hover{background:var(--navy);color:white;}
+.map-btn::before{content:'✈';font-size:.72rem;}
+
+/* 6 lich trinh */
+#lich-trinh{background:white;padding:76px 0;}
+.itinerary{list-style:none;position:relative;max-width:560px;margin:0 auto;}
+.itinerary::before{content:'';position:absolute;left:56px;top:0;bottom:0;width:1px;background:var(--border);}
+.it-item{display:flex;gap:0;align-items:flex-start;padding:14px 0;}
+.it-time{font-family:'Oswald',sans-serif;font-size:.88rem;color:var(--navy);min-width:56px;letter-spacing:1px;padding-right:16px;text-align:right;}
+.it-dot{width:10px;height:10px;border-radius:50%;background:var(--navy);border:2px solid white;box-shadow:0 0 0 1px var(--navy);flex-shrink:0;margin-top:4px;position:relative;z-index:1;}
+.it-content{padding-left:16px;}
+.it-content h4{font-family:'Oswald',sans-serif;font-size:.85rem;color:var(--navy);font-weight:500;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.it-content p{font-size:.72rem;color:var(--mid);line-height:1.7;font-family:'Lato',sans-serif;font-weight:300;}
+
+/* ══ 7 ALBUM ══ */
+#album{background:var(--navy);padding:76px 0;position:relative;overflow:hidden;}
+#album::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(200,168,75,.05) 0%,transparent 60%),radial-gradient(ellipse at 80% 50%,rgba(42,63,126,.1) 0%,transparent 60%);pointer-events:none;}
+
+.alb-wrap{max-width:960px;margin:0 auto;padding:0 16px;position:relative;z-index:1;}
+
+/* ── MOSAIC GRID ── */
+.mosaic{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-template-rows:300px 220px;
+  gap:4px;
+}
+/* hero cell spans 2 cols × 2 rows */
+.mc{position:relative;overflow:hidden;cursor:pointer;background:#0d1828;}
+.mc img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease,filter .6s ease;filter:brightness(.88) saturate(.9);}
+.mc:hover img{transform:scale(1.07);filter:brightness(1) saturate(1.05);}
+.mc.big{grid-column:1/3;grid-row:1/3;}
+/* gradient fade at bottom */
+.mc::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(10,16,30,.75) 0%,transparent 55%);pointer-events:none;}
+/* caption */
+.mc-cap{position:absolute;bottom:0;left:0;right:0;padding:16px 18px 14px;z-index:2;transform:translateY(6px);transition:transform .35s;}
+.mc:hover .mc-cap{transform:translateY(0);}
+.mc-cap .mc-tag{font-size:.38rem;letter-spacing:4px;text-transform:uppercase;color:var(--accent);font-family:'Barlow Condensed',sans-serif;margin-bottom:3px;}
+.mc-cap .mc-title{font-family:'Dancing Script',cursive;font-size:1rem;color:white;font-weight:600;line-height:1.3;}
+/* small date badge top-right */
+.mc-date{position:absolute;top:10px;right:10px;z-index:3;background:rgba(8,14,26,.7);border:1px solid rgba(200,168,75,.22);padding:3px 8px;font-family:'Oswald',sans-serif;font-size:.4rem;letter-spacing:2px;color:rgba(200,168,75,.7);}
+/* golden border on hover */
+.mc:hover{outline:2px solid rgba(200,168,75,.45);outline-offset:-2px;}
+
+/* ── POLAROID STRIP ── */
+.pol-strip{
+  display:flex;gap:14px;padding:28px 2px 4px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.pol-strip::-webkit-scrollbar{display:none;}
+.pol{
+  flex-shrink:0;background:#f8f5ec;
+  padding:7px 7px 24px;
+  box-shadow:0 6px 22px rgba(0,0,0,.55),0 1px 4px rgba(0,0,0,.3);
+  position:relative;cursor:pointer;
+  transition:transform .38s ease,box-shadow .38s ease;
+  transform:rotate(var(--r));
+}
+.pol:nth-child(odd){--r:-2deg;}
+.pol:nth-child(even){--r:1.8deg;}
+.pol:nth-child(3n){--r:0.5deg;}
+.pol:hover{transform:rotate(0deg) scale(1.1) translateY(-8px)!important;box-shadow:0 18px 44px rgba(0,0,0,.65);z-index:5;}
+.pol img{width:110px;height:90px;object-fit:cover;display:block;filter:saturate(.88);}
+.pol:hover img{filter:saturate(1);}
+.pol .pol-label{position:absolute;bottom:5px;left:0;right:0;text-align:center;font-family:'Dancing Script',cursive;font-size:.72rem;color:#555;line-height:1;}
+.pol::before{content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#e5bb55,#b07e1e);box-shadow:0 2px 5px rgba(0,0,0,.45);}
+
+/* ── LIGHTBOX ── */
+.alb-lb{position:fixed;inset:0;z-index:6000;background:rgba(4,7,14,.96);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;opacity:0;visibility:hidden;transition:opacity .32s,visibility .32s;padding:20px;}
+.alb-lb.open{opacity:1;visibility:visible;}
+.alb-lb-img{max-width:88vw;max-height:76vh;object-fit:contain;box-shadow:0 22px 65px rgba(0,0,0,.7);display:block;}
+.alb-lb-caption{font-family:'Dancing Script',cursive;font-size:1.1rem;color:rgba(200,168,75,.78);text-align:center;}
+.alb-lb-close{position:absolute;top:16px;right:18px;font-family:'Oswald',sans-serif;font-size:.52rem;letter-spacing:4px;color:rgba(200,168,75,.6);cursor:pointer;text-transform:uppercase;background:rgba(26,39,68,.6);padding:6px 14px;border:1px solid rgba(200,168,75,.2);transition:all .25s;}
+.alb-lb-close:hover{color:var(--accent);border-color:var(--accent);}
+.alb-lb-nav{display:flex;gap:10px;}
+.alb-lb-btn{background:rgba(26,39,68,.55);border:1px solid rgba(200,168,75,.22);color:rgba(200,168,75,.65);padding:7px 18px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:.56rem;letter-spacing:3px;transition:all .25s;}
+.alb-lb-btn:hover{background:var(--navy);color:var(--accent);border-color:var(--accent);}
+
+/* mobile album */
+@media(max-width:600px){
+  .mosaic{grid-template-columns:1fr 1fr;grid-template-rows:200px 160px 160px;}
+  .mc.big{grid-column:1/3;grid-row:1/2;}
+  .pol img{width:90px;height:75px;}
+  .pol{padding:6px 6px 22px;}
+}
+
+/* 8 thiep moi */
+#thiep-moi{background:white;padding:76px 0;}
+.ticket-wrap{max-width:640px;margin:0 auto;background:var(--paper);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 10px 36px rgba(26,39,68,.1);}
+.tw-hd{background:var(--navy);padding:13px 22px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;}
+.tw-hd::after{content:'TRAVEL';position:absolute;right:14px;top:50%;transform:translateY(-50%);font-family:'Oswald',sans-serif;font-size:1.9rem;color:rgba(255,255,255,.05);letter-spacing:4px;font-weight:700;}
+.tw-airline{font-family:'Oswald',sans-serif;font-size:.8rem;letter-spacing:3px;color:white;display:flex;align-items:center;gap:7px;}
+.tw-class{font-size:.52rem;letter-spacing:4px;color:var(--accent);font-family:'Barlow Condensed',sans-serif;}
+.tw-body{display:grid;grid-template-columns:1fr 2px 1fr;}
+.tw-l,.tw-r{padding:26px 22px;}
+.tw-sep{background:repeating-linear-gradient(to bottom,var(--border) 0,var(--border) 6px,transparent 6px,transparent 12px);}
+.tw-field{margin-bottom:13px;}
+.tw-fl{font-size:.44rem;letter-spacing:3px;text-transform:uppercase;color:var(--light);font-family:'Lato',sans-serif;margin-bottom:2px;}
+.tw-fv{font-family:'Oswald',sans-serif;font-size:.92rem;color:var(--navy);letter-spacing:1px;font-weight:500;}
+.tw-fv.script{font-family:'Dancing Script',cursive;font-size:1.45rem;font-weight:700;color:var(--navy2);}
+.tw-fv.xl{font-size:1.35rem;font-weight:700;}
+.tw-note{font-size:.65rem;color:var(--mid);line-height:1.7;font-family:'Lato',sans-serif;font-weight:300;border-top:1px dashed var(--border);padding-top:11px;margin-top:3px;}
+.tw-ft{background:var(--navy);padding:9px 22px;display:flex;align-items:center;justify-content:space-between;}
+.tw-ft-txt{font-family:'Oswald',sans-serif;font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.68);}
+
+/* 9 rsvp */
+#rsvp{background:var(--cream);padding:76px 0;}
+.checkin-form{background:var(--paper);border:1px solid var(--border);max-width:480px;margin:0 auto;overflow:hidden;}
+.ci-hd{background:var(--navy);padding:13px 22px;font-family:'Oswald',sans-serif;font-size:.75rem;letter-spacing:3px;color:white;text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;}
+.ci-hd .icon{color:var(--accent);}
+.ci-body{padding:26px 22px;}
+.ff{margin-bottom:15px;}
+.ff label{display:block;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:5px;font-family:'Barlow Condensed',sans-serif;}
+.ff input,.ff select{width:100%;border:none;border-bottom:2px solid var(--border);background:transparent;padding:7px 0;font-family:'Barlow Condensed',sans-serif;font-size:.9rem;color:var(--text);outline:none;transition:border-color .3s;letter-spacing:1px;}
+.ff input:focus,.ff select:focus{border-bottom-color:var(--navy);}
+.radio-g{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;}
+.radio-o{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--mid);cursor:pointer;font-family:'Barlow Condensed',sans-serif;}
+.radio-o input{accent-color:var(--navy);}
+.navy-btn{width:100%;padding:12px;background:var(--navy);color:white;border:none;font-size:.56rem;letter-spacing:5px;text-transform:uppercase;cursor:pointer;font-family:'Barlow Condensed',sans-serif;margin-top:7px;transition:background .3s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.navy-btn:hover{background:var(--blue);}
+.navy-btn::before{content:'✈';}
+
+/* 10 loi chuc */
+#loi-chuc{background:white;padding:76px 0;}
+.guestbook{background:var(--cream);border:1px solid var(--border);padding:24px;max-width:640px;margin:0 auto;}
+.gb-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:9px;}
+.gb-meta input{border:none;border-bottom:2px solid var(--border);background:transparent;padding:7px 0;font-family:'Barlow Condensed',sans-serif;font-size:.85rem;color:var(--text);outline:none;letter-spacing:1px;width:100%;}
+.gb-ta{width:100%;border:2px solid var(--border);background:white;padding:11px;font-family:'Barlow Condensed',sans-serif;font-size:.85rem;color:var(--text);outline:none;resize:none;min-height:70px;}
+.gb-send{display:inline-flex;align-items:center;gap:7px;margin-top:9px;padding:8px 22px;background:transparent;border:2px solid var(--navy);font-size:.54rem;letter-spacing:4px;text-transform:uppercase;color:var(--navy);cursor:pointer;font-family:'Barlow Condensed',sans-serif;transition:all .3s;}
+.gb-send::before{content:'✈';}
+.gb-send:hover{background:var(--navy);color:white;}
+.gb-feed{margin-top:22px;max-height:220px;overflow-y:auto;}
+.gb-item{padding:11px 0;border-bottom:1px solid var(--border);}
+.gb-item:last-child{border-bottom:none;}
+.gb-author{font-size:.5rem;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:3px;font-family:'Barlow Condensed',sans-serif;}
+.gb-txt{font-family:'Dancing Script',cursive;font-size:1rem;color:var(--mid);line-height:1.6;}
+
+/* 11 lien he */
+#lien-he{background:var(--cream);padding:76px 0;}
+.crew-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.crew-card{background:var(--paper);border:1px solid var(--border);overflow:hidden;}
+.crew-hd{background:var(--navy);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;}
+.crew-role{font-size:.48rem;letter-spacing:4px;text-transform:uppercase;color:var(--accent);font-family:'Barlow Condensed',sans-serif;}
+.crew-body{padding:18px 16px;}
+.crew-name{font-family:'Oswald',sans-serif;font-size:1.05rem;font-weight:500;color:var(--navy);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.crew-item{font-size:.76rem;color:var(--mid);margin-bottom:7px;line-height:1.65;font-family:'Lato',sans-serif;font-weight:300;}
+.crew-item strong{display:block;color:var(--navy);font-weight:400;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;margin-bottom:1px;}
+.crew-div{width:100%;height:1px;background:var(--border);margin:10px 0;}
+
+/* 12 cam on */
+#cam-on{background:var(--navy);padding:90px 16px;text-align:center;color:white;position:relative;overflow:hidden;}
+.co-stars{position:absolute;inset:0;background:radial-gradient(1px 1px at 20% 20%,rgba(255,255,255,.4) 0%,transparent 100%),radial-gradient(1px 1px at 65% 12%,rgba(255,255,255,.28) 0%,transparent 100%),radial-gradient(1px 1px at 80% 30%,rgba(255,255,255,.28) 0%,transparent 100%);pointer-events:none;}
+#cam-on .inner{max-width:500px;margin:0 auto;position:relative;z-index:1;}
+.co-icon{font-size:2.2rem;opacity:.16;margin-bottom:16px;letter-spacing:8px;}
+#cam-on h2{font-family:'Oswald',sans-serif;font-size:2rem;font-weight:400;color:white;margin-bottom:9px;letter-spacing:4px;text-transform:uppercase;}
+#cam-on .subtitle{font-size:.8rem;font-weight:300;opacity:.66;line-height:2;margin-bottom:26px;font-family:'Lato',sans-serif;}
+#cam-on .thanks-names{font-family:'Dancing Script',cursive;font-size:2.1rem;color:var(--accent);margin-bottom:20px;}
+#cam-on .c-date{font-family:'Oswald',sans-serif;font-size:.55rem;letter-spacing:5px;opacity:.32;text-transform:uppercase;}
+
+/* wish loading */
+.wish-loading{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;background:rgba(26,39,68,.56);backdrop-filter:blur(3px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .26s ease,visibility .26s ease;}
+.wish-loading.active{opacity:1;visibility:visible;pointer-events:auto;}
+.wl-card{min-width:250px;max-width:86vw;background:rgba(250,248,243,.97);border:1px solid rgba(200,168,75,.72);box-shadow:0 16px 38px rgba(0,0,0,.22);border-radius:10px;padding:17px 20px;text-align:center;}
+.wl-title{font-size:.56rem;letter-spacing:4px;text-transform:uppercase;color:var(--blue);margin-bottom:11px;}
+.wl-track{position:relative;height:24px;margin:0 auto 11px;}
+.wl-track::before{content:'';position:absolute;left:0;right:0;top:50%;border-top:2px dashed rgba(42,63,126,.32);transform:translateY(-50%);}
+.wl-plane{position:absolute;left:0;top:50%;transform:translateY(-50%) rotate(-10deg);font-size:1.15rem;color:var(--navy);animation:wishFly 1.1s cubic-bezier(.4,0,.2,1) infinite;}
+.wl-text{font-family:'Oswald',sans-serif;color:var(--navy);letter-spacing:2px;text-transform:uppercase;font-size:.85rem;}
+@keyframes wishFly{0%{left:0;opacity:.3;transform:translateY(-50%) rotate(-16deg);}18%{opacity:1;}58%{transform:translateY(calc(-50% - 4px)) rotate(5deg);}100%{left:calc(100% - 20px);opacity:.3;transform:translateY(-50%) rotate(11deg);}}
+
+/* ══ MOBILE ══ */
+@media(max-width:600px){
+  nav{padding:5px 7px;gap:5px;}
+  nav a{font-size:.4rem;letter-spacing:1.5px;}
+
+  /* passport gate */
+  .passport-wrap{padding:66px 14px 80px;max-width:100%;}
+  .gate-heading .gm{font-size:.82rem;}
+  .gate-topbar{padding:8px 14px;}
+  .gate-label{display:none;}
+
+  /* hero bp — stack */
+  .bp-hd{padding:11px 14px;flex-wrap:wrap;gap:7px;}
+  .bp-hd::after{display:none;}
+  .bp-pax{padding:11px 14px;flex-direction:column;align-items:flex-start;gap:7px;}
+  .pax-r{text-align:left;}
+  .bp-body{grid-template-columns:1fr;}
+  .bp-main{border-right:none;border-bottom:2px dashed var(--border);padding:16px 14px 14px;}
+  .bp-stub{padding:14px;}
+  .bp-port .code{font-size:1.75rem;}
+  .bp-fields{grid-template-columns:1fr 1fr;gap:11px;}
+  .bfv.xl{font-size:1.2rem;}
+  .bp-ft{padding:9px 14px;flex-wrap:wrap;gap:5px;}
+
+  /* passenger cards */
+  .pcards{grid-template-columns:1fr;}
+  .pcard-mid{display:none;}
+
+  /* dep board */
+  .dep-board{grid-template-columns:1fr;}
+  .dep-card{border-right:none;border-bottom:2px dashed var(--border);padding:22px 18px;}
+  .dep-card:last-child{border-bottom:none;}
+
+  /* ticket */
+  .tw-body{grid-template-columns:1fr;}
+  .tw-sep{display:none;}
+  .tw-l,.tw-r{padding:20px 16px;}
+
+  /* crew */
+  .crew-grid{grid-template-columns:1fr;}
+
+  /* guestbook */
+  .gb-meta{grid-template-columns:1fr;}
+
+  /* album — handled by album CSS block above */
+
+  /* itinerary */
+  .itinerary::before{left:50px;}
+  .it-time{min-width:50px;font-size:.8rem;}
+
+  /* flight log */
+  .fl-route{flex-direction:column;gap:6px;}
+  .fl-mid{flex-direction:row;padding:3px 0;}
+  .fl-ap{width:100%;}
+
+  /* sections */
+  #loi-mo,#gioi-thieu,#chuyen-tinh,#thoi-gian,#lich-trinh,#album,#thiep-moi,#rsvp,#loi-chuc,#lien-he{padding:56px 0;}
+  #cam-on{padding:66px 14px;}
+  #hero{padding:66px 12px 46px;}
+  .si-wrap{padding:0 12px;}
+  h2.sec-title{font-size:1.65rem;}
+  .quote{font-size:1.25rem;}
+  #cam-on h2{font-size:1.75rem;}
+
+  /* stamp */
+  .stamp-mark{width:170px;height:170px;}
+  .sm-text{font-size:2rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- PASSPORT GATE -->
+<div id="passport-gate">
+  <div class="scan-line"></div>
+  <div class="gate-topbar">
+    <div class="gate-airline">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="rgba(200,168,75,.8)"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+      Hiền Tuyền Airlines
+    </div>
+    <div class="status-dots"><div class="status-dot"></div><div class="status-dot"></div><div class="status-dot"></div></div>
+    <div class="gate-label" data-editable="field">Immigration · Passport Control</div>
+  </div>
+
+  <div class="passport-wrap" data-editable="album">
+    <div class="gate-heading" data-editable="album_2">
+      <div class="gl" data-editable="album_3">✈ &nbsp; Cổng Kiểm Soát Xuất Cảnh &nbsp; ✈</div>
+      <div class="gm" data-editable="parents">Xuất trình hộ chiếu để lên máy bay</div>
+    </div>
+
+    <div class="passport-book" data-editable="year">
+      <div class="pp-cover" data-editable="year_2">
+        <div class="pp-country" data-editable="year_3">Cộng Hòa Xã Hội Chủ Nghĩa Việt Nam</div>
+        <div class="pp-emblem">
+          <svg viewBox="0 0 52 52" fill="none">
+            <circle cx="26" cy="26" r="23" stroke="#c8a84b" stroke-width="1.2" opacity=".7"/>
+            <circle cx="26" cy="26" r="18" stroke="#c8a84b" stroke-width=".7" opacity=".38"/>
+            <path d="M26 7 L28.8 18.5 L40.5 15.2 L33 23.5 L41.5 28.5 L30 28.5 L27.8 39.5 L26 29 L24.2 39.5 L22 28.5 L10.5 28.5 L19 23.5 L11.5 15.2 L23.2 18.5 Z" fill="#c8a84b" opacity=".75"/>
+          </svg>
+        </div>
+        <div class="pp-title" data-editable="field_2">Passport</div>
+        <div class="pp-sub" data-editable="wedding">Wedding Travel Document</div>
+        <div class="pp-rule"></div>
+        <div class="pp-data" data-editable="year_4">
+          <div class="pp-field" data-editable="year_5">
+            <div class="pp-fl" data-editable="year_6">Họ và Tên Hành Khách / Passenger Name</div>
+            <div class="pp-name" data-editable="field_3">Nguyễn Văn Khách</div>
+          </div>
+          <div class="pp-grid" data-editable="field_4">
+            <div class="pp-field" data-editable="field_5"><div class="pp-fl" data-editable="field_6">Điểm Đến</div><div class="pp-fv" style="font-size:.8rem;" data-editable="year_7">Hải Hậu · Nam Định</div></div>
+            <div class="pp-field" data-editable="date"><div class="pp-fl" data-editable="date_2">Ngày Bay</div><div class="pp-fv" style="font-size:.8rem;" data-editable="field_7">20 . 09 . 2026</div></div>
+            <div class="pp-field" data-editable="field_8"><div class="pp-fl" data-editable="field_9">Hạng</div><div class="pp-fv" style="font-size:.8rem;" data-editable="field_10">Thương Gia</div></div>
+            <div class="pp-field" data-editable="field_11"><div class="pp-fl" data-editable="field_12">Chuyến Bay</div><div class="pp-fv" style="font-size:.8rem;" data-editable="ceremony">LỄ THÀNH HÔN</div></div>
+          </div>
+          <div class="mrz" data-editable="field_13">
+            <div class="mrz-line" data-editable="field_14">P&lt;VNM<span class="mrz-hl" data-editable="field_15">NGUYEN&lt;&lt;VAN&lt;KHACH&lt;&lt;&lt;&lt;&lt;&lt;</span></div>
+            <div class="mrz-line" data-editable="field_16">HT2026&lt;6&lt;VNM2009200&lt;M2610159&lt;&lt;&lt;&lt;4</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="open-btn" id="open-btn" onclick="handleOpen()">
+      <span class="btn-plane" data-editable="field_17">✈</span>
+      Mở Thiệp Cưới
+      <span class="btn-plane flip" data-editable="field_18">✈</span>
+    </button>
+  </div>
+</div>
+
+<!-- STAMP OVERLAY -->
+<div id="stamp-overlay" data-editable="field_19">
+  <div class="stamp-card" data-editable="field_20">
+    <div class="si" data-editable="field_21">
+      <div class="si-label" data-editable="field_22">Hành Khách / Passenger</div>
+      <div class="si-val big" data-editable="field_23">Nguyễn Văn Khách</div>
+      <div class="si-grid" data-editable="field_24">
+        <div data-editable="field_25"><div class="si-label" data-editable="field_26">Chuyến Bay</div><div class="si-val" data-editable="ceremony_2">LỄ THÀNH HÔN</div></div>
+        <div data-editable="date_3"><div class="si-label" data-editable="date_4">Ngày</div><div class="si-val" data-editable="event_date">20.09.2026</div></div>
+        <div data-editable="field_27"><div class="si-label" data-editable="field_28">Hạng Ghế</div><div class="si-val" data-editable="field_29">Thương Gia</div></div>
+        <div data-editable="field_30"><div class="si-label" data-editable="field_31">Gate</div><div class="si-val" data-editable="field_32">A – 01</div></div>
+      </div>
+    </div>
+    <div class="stamp-ev" data-editable="field_33">
+      <div class="stamp-ev-t" data-editable="field_34">Hiền Tuyền Airlines</div>
+      <div class="stamp-ev-d" data-editable="year_8">✦ Hải Hậu · Nam Định · Việt Nam ✦</div>
+    </div>
+    <div class="stamp-mark" id="stamp-mark" data-editable="field_35">
+      <div class="sm-text" data-editable="field_36">APPROVED</div>
+      <div class="sm-sub" data-editable="parents_2">✈ Được Phép Lên Máy Bay ✈</div>
+      <div class="sm-date" data-editable="field_37">20 SEP 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content" data-editable="groom">
+
+<nav>
+  <span class="pi" data-editable="field_38">✈</span>
+  <a href="#hero" data-editable="field_39">Cover</a>
+  <a href="#loi-mo" data-editable="field_40">Mở Đầu</a>
+  <a href="#gioi-thieu" data-editable="groom_2">Cô Dâu &amp; Chú Rể</a>
+  <a href="#chuyen-tinh" data-editable="field_41">Chuyện Tình</a>
+  <a href="#thoi-gian" data-editable="field_42">Thời Gian</a>
+  <a href="#lich-trinh" data-editable="timeline">Lịch Trình</a>
+  <a href="#album" data-editable="album_4">Album</a>
+  <a href="#thiep-moi" data-editable="field_43">Thiệp Mời</a>
+  <a href="#rsvp" data-editable="rsvp">RSVP</a>
+  <a href="#loi-chuc" data-editable="field_44">Lời Chúc</a>
+  <a href="#lien-he" data-editable="field_45">Liên Hệ</a>
+  <a href="#cam-on" data-editable="field_46">Cảm Ơn</a>
+  <span class="pi" data-editable="field_47">✈</span>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="cloud c1"></div><div class="cloud c2"></div>
+  <div class="cloud c3"></div><div class="cloud c4"></div>
+  <div class="fp"></div>
+
+  <div class="hero-bp reveal">
+    <div class="bp-hd">
+      <div class="bp-airline"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>Hiền Tuyền Airlines</div>
+      <div class="bp-badge" data-editable="field_48">✦ Hạng Thương Gia ✦</div>
+    </div>
+    <div class="bp-pax" data-editable="field_49">
+      <div class="pax-l" data-editable="field_50"><div class="lbl" data-editable="field_51">Hành Khách / Passenger</div><div class="pax-name" id="hero-pax-name" data-editable="field_52">Nguyễn Văn Khách</div></div>
+      <div class="pax-r" data-editable="field_53"><div class="lbl" data-editable="field_54">Chuyến Bay / Flight</div><div class="pax-flight" data-editable="ceremony_3">LỄ THÀNH HÔN</div></div>
+    </div>
+    <div class="bp-body" data-editable="field_55">
+      <div class="bp-main" data-editable="field_56">
+        <div class="bp-route" data-editable="field_57">
+          <div class="bp-port" data-editable="field_58"><div class="code" data-editable="field_59">BPI</div><div class="city" data-editable="field_60">Bỏ Phong Bì</div></div>
+          <div class="bp-route-mid"><div class="route-line"></div><div class="route-lbl" data-editable="love">Hành Trình Tình Yêu</div></div>
+          <div class="bp-port" style="text-align:right;" data-editable="field_61"><div class="code" data-editable="field_62">ANE</div><div class="city" data-editable="field_63">Ăn No Nê</div></div>
+        </div>
+        <div class="bp-fields" data-editable="field_64">
+          <div class="bp-field" data-editable="field_65"><span class="bfl" data-editable="field_66">Cơ Trưởng</span><span class="bfv script" data-editable="field_67">Tống Hiền</span></div>
+          <div class="bp-field" data-editable="groom_3"><span class="bfl" data-editable="field_68">Cơ Phó</span><span class="bfv script" data-editable="groom_4">Thanh Tuyền</span></div>
+          <div class="bp-field" data-editable="field_69"><span class="bfl" data-editable="field_70">Dress Code</span><span class="bfv sm" data-editable="field_71">Lịch sự · Cổ điển</span></div>
+          <div class="bp-field" data-editable="date_5"><span class="bfl" data-editable="date_6">Ngày / Date</span><span class="bfv" data-editable="field_72">20 / 09 / 2026</span></div>
+          <div class="bp-field" data-editable="event_time"><span class="bfl" data-editable="field_73">Boarding</span><span class="bfv xl" data-editable="event_time_2">09:30</span></div>
+          <div class="bp-field" data-editable="event_time_3"><span class="bfl" data-editable="field_74">Take-off</span><span class="bfv xl" data-editable="event_time_4">10:30</span></div>
+        </div>
+        <div class="bp-fields" data-editable="field_75">
+          <div class="bp-field" data-editable="field_76"><span class="bfl" data-editable="field_77">Gate</span><span class="bfv" data-editable="field_78">A – 01</span></div>
+          <div class="bp-field" data-editable="field_79"><span class="bfl" data-editable="field_80">Ghế / Seat</span><span class="bfv" data-editable="field_81">VIP</span></div>
+          <div class="bp-field" data-editable="year_9"><span class="bfl" data-editable="field_82">Sân Bay</span><span class="bfv sm" data-editable="year_10">Hải Hậu · Nam Định</span></div>
+        </div>
+        <div class="bp-notice" data-editable="event_time_5">Vui lòng có mặt trước 30 phút · Đúng 10:30 cơ trưởng sẽ biểu diễn bộ lộc · Xuất trình thẻ đi ăn cưới để các tiếp viên dẫn đến đúng vị trí.</div>
+      </div>
+      <div class="bp-stub">
+        <div class="st-head"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1a2744"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>Hiền Tuyền Airlines</div>
+        <div class="st-sep"></div>
+        <div class="st-row" data-editable="field_83"><span class="sl" data-editable="field_84">Hành Khách</span><span class="sv script" id="stub-pax-name" data-editable="field_85">Nguyễn Văn Khách</span></div>
+        <div class="st-sep"></div>
+        <div class="st-row" data-editable="ceremony_4"><span class="sl" data-editable="field_86">Chuyến Bay</span><span class="sv" data-editable="ceremony_5">LỄ THÀNH HÔN</span></div>
+        <div class="st-row" data-editable="date_7"><span class="sl" data-editable="date_8">Ngày</span><span class="sv" data-editable="field_87">20 . 09 . 2026</span></div>
+        <div class="st-row" data-editable="event_time_6"><span class="sl" data-editable="field_88">Boarding</span><span class="sv" style="font-size:1.15rem;font-weight:700;" data-editable="event_time_7">09:30</span></div>
+        <div class="st-sep"></div>
+        <div class="st-verse" data-editable="groom_5">Ngày vui nhất đời anh<br>Ngày vui nhất đời em<br>trong chiếc thiệp xinh xinh<br>Có tên 2 đứa mình</div>
+        <div class="st-sep"></div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:6px;">
+          <div class="barcode" id="bc"></div>
+          <div class="qr-box" data-editable="field_89"><span style="position:relative;z-index:1;font-size:.38rem;" data-editable="field_90">QR</span></div>
+        </div>
+        <div style="font-size:.4rem;letter-spacing:2px;color:var(--light);font-family:'Lato',sans-serif;" data-editable="wedding_2">WEDDING BOARDING PASS</div>
+      </div>
+    </div>
+    <div class="bp-ft" data-editable="wedding_3">
+      <span class="bp-ft-txt" data-editable="wedding_4">THẺ ĐI ĂN CƯỚI =)) / WEDDING INVITATION</span>
+      <span class="bp-ft-txt" style="color:var(--accent);" data-editable="field_91">20 . 09 . 2026</span>
+    </div>
+  </div>
+
+  <div class="scroll-cue" data-editable="field_92"><span data-editable="field_93">Cuộn xuống</span><div class="scl"></div></div>
+</section>
+
+<!-- 2 LỜI MỞ ĐẦU -->
+<section id="loi-mo">
+  <div class="inner reveal" style="max-width:560px;margin:0 auto;text-align:center;padding:0 16px;" data-editable="groom_6">
+    <p class="sec-label" style="color:var(--accent);" data-editable="groom_7">✈ Thông Báo Chuyến Bay</p>
+    <h2 class="sec-title" style="color:white;" data-editable="field_94">Lời Mở Đầu</h2>
+    <div class="tline" style="background:linear-gradient(90deg,transparent,var(--accent),transparent);"></div>
+    <div class="fdiv" data-editable="field_95"><span data-editable="field_96">✈</span></div>
+    <div class="quote" data-editable="groom_8">"Hành trình đẹp nhất không phải là bay<br>đến chân trời xa, mà là về nhà bên nhau."</div>
+    <p class="body-txt" data-editable="groom_9">Quý hành khách thân mến,<br><br>Chúng tôi — <strong style="color:var(--accent);" data-editable="groom_10">Tống Hiền &amp; Thanh Tuyền</strong> —<br>xin trân trọng thông báo: chuyến bay đặc biệt nhất cuộc đời<br>sẽ khởi hành vào ngày <strong style="color:var(--accent);" data-editable="field_97">20 . 09 . 2026</strong>.<br><br>Kính mời quý vị cùng lên máy bay, chia sẻ khoảnh khắc<br>thiêng liêng và đáng nhớ nhất trong hành trình của chúng tôi.</p>
+    <div class="fdiv" style="margin-top:18px;" data-editable="field_98"><span data-editable="field_99">✈</span></div>
+  </div>
+</section>
+
+<!-- 3 GIỚI THIỆU -->
+<section id="gioi-thieu">
+  <div class="si-wrap reveal" data-editable="groom_11">
+    <p class="sec-label" data-editable="groom_12">✈ Thông Tin Hành Khách</p>
+    <h2 class="sec-title" data-editable="groom_13">Cô Dâu &amp; Chú Rể</h2>
+    <div class="tline"></div>
+    <div class="pcards" data-editable="field_100">
+      <div class="pcard" data-editable="field_101">
+        <div class="pcard-hd" data-editable="field_102"><span class="role" data-editable="field_103">✈ Cơ Trưởng / Captain</span><span style="font-size:.58rem;color:var(--accent);font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;" data-editable="field_104">SEAT 1A</span></div>
+        <div class="pcard-body" data-editable="field_105">
+          <div class="pcard-name" data-editable="field_106">Tống Hiền</div>
+          <div class="pcard-row" data-editable="field_107"><span class="pcfl" data-editable="field_108">Họ tên đầy đủ</span><span class="pcfv" data-editable="field_109">Tống Văn Hiền</span></div>
+          <div class="pcard-row" data-editable="groom_14"><span class="pcfl" data-editable="family">Gia đình</span><span class="pcfv" data-editable="groom_15">Con trai của Ông Tống Văn A<br>&amp; Bà Nguyễn Thị B</span></div>
+          <div class="pcard-row" data-editable="year_11"><span class="pcfl" data-editable="field_110">Quê quán</span><span class="pcfv" data-editable="year_12">Nam Định, Việt Nam</span></div>
+          <div class="pcard-sep"></div>
+          <div class="pcard-row" data-editable="field_111"><span class="pcfl" data-editable="field_112">Đặc điểm</span><span class="pcfv" data-editable="field_113"><em data-editable="field_114">Chân thành, ấm áp và luôn biết cách khiến em cười.</em></span></div>
+          <div class="pcard-seat" data-editable="field_115"><div class="seat-box" data-editable="field_116">1A</div><div style="font-size:.68rem;color:var(--mid);font-family:'Lato',sans-serif;line-height:1.6;padding-top:2px;" data-editable="field_117">Hạng thương gia<br>Cửa sổ – Window</div></div>
+        </div>
+      </div>
+      <div class="pcard-mid" data-editable="field_118"><span data-editable="field_119">và</span></div>
+      <div class="pcard" data-editable="field_120">
+        <div class="pcard-hd" data-editable="field_121"><span class="role" data-editable="field_122">✈ Cơ Phó / Co-Pilot</span><span style="font-size:.58rem;color:var(--accent);font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;" data-editable="field_123">SEAT 1B</span></div>
+        <div class="pcard-body" data-editable="groom_16">
+          <div class="pcard-name" data-editable="groom_17">Thanh Tuyền</div>
+          <div class="pcard-row" data-editable="groom_18"><span class="pcfl" data-editable="field_124">Họ tên đầy đủ</span><span class="pcfv" data-editable="groom_19">Lê Thanh Tuyền</span></div>
+          <div class="pcard-row" data-editable="groom_20"><span class="pcfl" data-editable="family_2">Gia đình</span><span class="pcfv" data-editable="groom_21">Con gái của Ông Lê Văn C<br>&amp; Bà Phạm Thị D</span></div>
+          <div class="pcard-row" data-editable="year_13"><span class="pcfl" data-editable="field_125">Quê quán</span><span class="pcfv" data-editable="year_14">Nam Định, Việt Nam</span></div>
+          <div class="pcard-sep"></div>
+          <div class="pcard-row" data-editable="groom_22"><span class="pcfl" data-editable="field_126">Đặc điểm</span><span class="pcfv" data-editable="groom_23"><em data-editable="groom_24">Dịu dàng, tinh tế và mãi là điểm đến bình yên của anh.</em></span></div>
+          <div class="pcard-seat" data-editable="field_127"><div class="seat-box" data-editable="field_128">1B</div><div style="font-size:.68rem;color:var(--mid);font-family:'Lato',sans-serif;line-height:1.6;padding-top:2px;" data-editable="ceremony_6">Hạng thương gia<br>Lối đi – Aisle</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 CHUYỆN TÌNH -->
+<section id="chuyen-tinh">
+  <div class="si-wrap reveal" data-editable="field_129">
+    <p class="sec-label" style="color:var(--accent);" data-editable="field_130">✈ Nhật Ký Chuyến Bay</p>
+    <h2 class="sec-title" style="color:white;" data-editable="field_131">Chuyện Tình Của Chúng Mình</h2>
+    <div class="tline" style="background:linear-gradient(90deg,transparent,var(--accent),transparent);"></div>
+    <div class="fl-route" data-editable="field_132">
+      <div class="fl-ap" data-editable="field_133"><div class="code" data-editable="field_134">2020</div><div class="city" data-editable="field_135">Lần Đầu Gặp Gỡ</div></div>
+      <div class="fl-mid" data-editable="love_2"><span data-editable="field_136">HÀNH TRÌNH</span>✈<span data-editable="love_3">LOVE FLIGHT</span></div>
+      <div class="fl-ap" style="text-align:right;" data-editable="field_137"><div class="code" data-editable="field_138">2026</div><div class="city" data-editable="field_139">Về Chung Một Nhà</div></div>
+    </div>
+    <ul class="fl-items">
+      <li class="fl-item" data-editable="ceremony_7"><span class="fl-time" data-editable="field_140">2020</span><div class="fl-content" data-editable="ceremony_8"><h4 data-editable="field_141">✈ Cất Cánh – Lần Đầu Gặp Gỡ</h4><p data-editable="ceremony_9">Chuyến bay bắt đầu từ một buổi gặp gỡ tình cờ. Một ánh mắt, một nụ cười — đủ để trái tim bắt đầu "turbulence".</p></div></li>
+      <li class="fl-item" data-editable="groom_25"><span class="fl-time" data-editable="field_142">2021</span><div class="fl-content" data-editable="groom_26"><h4 data-editable="love_4">✈ Tăng Độ Cao – Chính Thức Yêu Nhau</h4><p data-editable="groom_27">Cơ trưởng đã bật tín hiệu "Fasten Seatbelt" — anh nói lời yêu và em gật đầu. Chuyến bay tình yêu chính thức khởi hành!</p></div></li>
+      <li class="fl-item" data-editable="happy"><span class="fl-time" data-editable="field_143">2023</span><div class="fl-content" data-editable="happy_2"><h4 data-editable="field_144">✈ Bay Ổn Định – Những Chuyến Đi Cùng Nhau</h4><p data-editable="happy_3">Những kỳ nghỉ, những chuyến phiêu lưu, những bữa cơm bình thường — hạnh phúc luôn là khi được ở bên nhau.</p></div></li>
+      <li class="fl-item" data-editable="groom_28"><span class="fl-time" data-editable="field_145">2025</span><div class="fl-content" data-editable="groom_29"><h4 data-editable="groom_30">✈ Thông Báo Đặc Biệt – Lời Cầu Hôn</h4><p data-editable="forever">"Xin hãy thắt dây an toàn vì chuyến bay này sẽ thay đổi cuộc đời chúng ta mãi mãi." Và em đã nói... có!</p></div></li>
+      <li class="fl-item" data-editable="family_3"><span class="fl-time" data-editable="field_146">2026</span><div class="fl-content" data-editable="family_4"><h4 data-editable="field_147">✈ Hạ Cánh An Toàn – Về Chung Một Nhà</h4><p data-editable="family_5">Ngày 20.09.2026 — chuyến bay đặc biệt nhất hạ cánh tại "Gia Đình". Điểm đến cuối cùng và hạnh phúc nhất.</p></div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 5 THỜI GIAN -->
+<section id="thoi-gian">
+  <div class="si-wrap reveal" data-editable="groom_31">
+    <p class="sec-label" data-editable="groom_32">✈ Thông Tin Chuyến Bay</p>
+    <h2 class="sec-title" data-editable="venue">Thời Gian &amp; Địa Điểm</h2>
+    <div class="tline"></div>
+    <div class="dep-board" data-editable="ceremony_10">
+      <div class="dep-card" data-editable="ceremony_11">
+        <div class="dep-type" data-editable="ceremony_12">Lễ Gia Tiên</div>
+        <div class="dep-name" data-editable="ceremony_13">Gate A — Lễ Thành Hôn</div>
+        <div class="dep-row" data-editable="date_9"><span class="dep-lbl" data-editable="date_10">Ngày Bay</span><span class="dep-val" data-editable="event_date_2"><strong data-editable="event_date_3">Thứ Bảy, 20.09.2026</strong></span></div>
+        <div class="dep-row" data-editable="event_time_8"><span class="dep-lbl" data-editable="field_148">Boarding</span><span class="dep-val" data-editable="event_time_9">09:30 SA</span></div>
+        <div class="dep-row" data-editable="event_time_10"><span class="dep-lbl" data-editable="field_149">Take-off</span><span class="dep-val" data-editable="event_time_11"><strong data-editable="event_time_12">10:30 SA</strong></span></div>
+        <div class="dep-row" data-editable="groom_33"><span class="dep-lbl" data-editable="field_150">Sân Bay</span><span class="dep-val" data-editable="groom_34">Xóm 2B, Hải Anh, Hải Hậu, Nam Định</span></div>
+        <button class="map-btn">Xem Bản Đồ</button>
+      </div>
+      <div class="dep-card" data-editable="wedding_5">
+        <div class="dep-type" data-editable="wedding_6">Tiệc Cưới</div>
+        <div class="dep-name" data-editable="family_6">Gate B — Tiệc Mừng Gia Đình</div>
+        <div class="dep-row" data-editable="date_11"><span class="dep-lbl" data-editable="date_12">Ngày Bay</span><span class="dep-val" data-editable="event_date_4"><strong data-editable="event_date_5">Thứ Bảy, 20.09.2026</strong></span></div>
+        <div class="dep-row" data-editable="event_time_13"><span class="dep-lbl" data-editable="field_151">Khai Tiệc</span><span class="dep-val" data-editable="event_time_14"><strong data-editable="event_time_15">11:00 SA</strong></span></div>
+        <div class="dep-row" data-editable="event_time_16"><span class="dep-lbl" data-editable="field_152">Landing</span><span class="dep-val" data-editable="event_time_17">13:30 CH</span></div>
+        <div class="dep-row" data-editable="rsvp_2"><span class="dep-lbl" data-editable="rsvp_3">RSVP</span><span class="dep-val" data-editable="event_date_6">Trước 10.09.2026 · <strong data-editable="field_153">09xx.xxx.xxx</strong></span></div>
+        <a class="map-btn" href="https://maps.google.com" target="_blank" data-editable="button">Xem Bản Đồ</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 LỊCH TRÌNH -->
+<section id="lich-trinh">
+  <div class="si-wrap reveal" data-editable="ceremony_14">
+    <p class="sec-label" data-editable="ceremony_15">✈ Flight Schedule</p>
+    <h2 class="sec-title" data-editable="ceremony_16">Lịch Trình Buổi Lễ</h2>
+    <div class="tline"></div>
+    <ul class="itinerary">
+      <li class="it-item" data-editable="album_5"><span class="it-time" data-editable="event_time_18">09:00</span><div class="it-dot"></div><div class="it-content" data-editable="album_6"><h4 data-editable="field_154">Mở Cửa Boarding</h4><p data-editable="album_7">Hai họ và quý khách đến, trà thơm và bánh ngọt phục vụ tại sảnh đón.</p></div></li>
+      <li class="it-item" data-editable="family_7"><span class="it-time" data-editable="event_time_19">09:30</span><div class="it-dot"></div><div class="it-content" data-editable="family_8"><h4 data-editable="field_155">Đón Khách Chính Thức</h4><p data-editable="family_9">Ban nhạc biểu diễn, gia đình hai bên chào đón quý hành khách an tọa.</p></div></li>
+      <li class="it-item" data-editable="ceremony_17"><span class="it-time" data-editable="event_time_20">10:30</span><div class="it-dot"></div><div class="it-content" data-editable="ceremony_18"><h4 data-editable="field_156">✈ Cất Cánh – Nghi Thức Thành Hôn</h4><p data-editable="ceremony_19">Lễ gia tiên, trao nhẫn và nghi thức cưới truyền thống. Hành trình mới bắt đầu!</p></div></li>
+      <li class="it-item" data-editable="family_10"><span class="it-time" data-editable="event_time_21">11:00</span><div class="it-dot"></div><div class="it-content" data-editable="family_11"><h4 data-editable="field_157">Khai Tiệc &amp; Chúc Rượu</h4><p data-editable="family_12">Bữa tiệc ấm cúng cùng gia đình và bạn bè. Cơ trưởng phát biểu và nâng ly.</p></div></li>
+      <li class="it-item" data-editable="groom_35"><span class="it-time" data-editable="event_time_22">13:00</span><div class="it-dot"></div><div class="it-content" data-editable="groom_36"><h4 data-editable="album_8">Chụp Ảnh &amp; Cảm Ơn</h4><p data-editable="groom_37">Cô dâu chú rể đến từng bàn cảm ơn và lưu kỷ niệm.</p></div></li>
+      <li class="it-item" data-editable="event_time_23"><span class="it-time" data-editable="event_time_24">13:30</span><div class="it-dot"></div><div class="it-content" data-editable="field_158"><h4 data-editable="field_159">✈ Hạ Cánh – Kết Thúc Hành Trình</h4><p data-editable="field_160">Cảm ơn quý hành khách đã đồng hành trên chuyến bay đặc biệt này!</p></div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 7 ALBUM -->
+<section id="album">
+  <div class="alb-wrap reveal" data-editable="ceremony_20">
+    <p class="sec-label" style="color:var(--accent);" data-editable="ceremony_21">✈ In-Flight Gallery</p>
+    <h2 class="sec-title" style="color:white;" data-editable="album_9">Album Ảnh Kỷ Niệm</h2>
+    <div class="tline" style="background:linear-gradient(90deg,transparent,var(--accent),transparent);"></div>
+
+    <!-- MOSAIC GRID — 5 ô chính -->
+    <div class="mosaic" data-editable="wedding_7">
+
+      <!-- 1 — Hero lớn, 2 col × 2 row -->
+      <div class="mc big" onclick="albOpen(0)" data-editable="wedding_8">
+        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=80&fit=crop" alt="Cô dâu chú rể" loading="lazy" data-image-editable="couple_photo">
+        <span class="mc-date" data-editable="field_161">2026</span>
+        <div class="mc-cap" data-editable="wedding_9">
+          <div class="mc-tag" data-editable="wedding_10">✈ Pre-Wedding</div>
+          <div class="mc-title" data-editable="field_162">Hành trình bắt đầu từ đây</div>
+        </div>
+      </div>
+
+      <!-- 2 — Top right -->
+      <div class="mc" onclick="albOpen(1)" data-editable="love_5">
+        <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=600&q=80&fit=crop" alt="Lễ cưới" loading="lazy" data-image-editable="couple_photo_2">
+        <span class="mc-date" data-editable="field_163">2025</span>
+        <div class="mc-cap" data-editable="love_6">
+          <div class="mc-tag" data-editable="love_7">✈ Love Story</div>
+          <div class="mc-title" data-editable="field_164">Lời hứa trọn đời</div>
+        </div>
+      </div>
+
+      <!-- 3 — Middle right -->
+      <div class="mc" onclick="albOpen(2)" data-editable="field_165">
+        <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&q=80&fit=crop" alt="Kỷ niệm" loading="lazy" data-image-editable="photo">
+        <span class="mc-date" data-editable="field_166">2024</span>
+        <div class="mc-cap" data-editable="field_167">
+          <div class="mc-tag" data-editable="field_168">✈ Kỷ Niệm</div>
+          <div class="mc-title" data-editable="album_10">Những khoảnh khắc đẹp</div>
+        </div>
+      </div>
+
+      <!-- 4 — Bottom mid -->
+      <div class="mc" onclick="albOpen(3)" data-editable="field_169">
+        <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=600&q=80&fit=crop" alt="Hạnh phúc" loading="lazy" data-image-editable="photo_2">
+        <span class="mc-date" data-editable="field_170">2025</span>
+        <div class="mc-cap" data-editable="field_171">
+          <div class="mc-tag" data-editable="field_172">✈ Together</div>
+          <div class="mc-title" data-editable="forever_2">Bên nhau mãi mãi</div>
+        </div>
+      </div>
+
+      <!-- 5 — Bottom right -->
+      <div class="mc" onclick="albOpen(4)" data-editable="wedding_11">
+        <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=600&q=80&fit=crop" alt="Nhẫn cưới" loading="lazy" data-image-editable="photo_3">
+        <span class="mc-date" data-editable="field_173">2026</span>
+        <div class="mc-cap" data-editable="wedding_12">
+          <div class="mc-tag" data-editable="wedding_13">✈ Wedding</div>
+          <div class="mc-title" data-editable="date_13">Ngày trọng đại</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- POLAROID STRIP — ảnh nhỏ phong cách cổ điển -->
+    <div class="pol-strip" data-editable="field_174">
+      <div class="pol" onclick="albOpen(5)" data-editable="field_175">
+        <img src="https://images.unsplash.com/photo-1518049362265-d5b2a6467637?w=300&q=75&fit=crop" alt="" data-image-editable="photo_4">
+        <span class="pol-label" data-editable="field_176">Nụ cười đầu tiên</span>
+      </div>
+      <div class="pol" onclick="albOpen(6)" data-editable="date_14">
+        <img src="https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=300&q=75&fit=crop" alt="" data-image-editable="photo_5">
+        <span class="pol-label" data-editable="date_15">Ngày hẹn hò</span>
+      </div>
+      <div class="pol" onclick="albOpen(7)" data-editable="field_177">
+        <img src="https://images.unsplash.com/photo-1524863479829-916d8e77f114?w=300&q=75&fit=crop" alt="" data-image-editable="photo_6">
+        <span class="pol-label" data-editable="field_178">Cầu hôn</span>
+      </div>
+      <div class="pol" onclick="albOpen(8)" data-editable="album_11">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&q=75&fit=crop" alt="" data-image-editable="photo_7">
+        <span class="pol-label" data-editable="album_12">Chụp ảnh cưới</span>
+      </div>
+      <div class="pol" onclick="albOpen(9)" data-editable="happy_4">
+        <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=300&q=75&fit=crop" alt="" data-image-editable="photo_8">
+        <span class="pol-label" data-editable="happy_5">Hạnh phúc mãi mãi</span>
+      </div>
+      <div class="pol" onclick="albOpen(10)" data-editable="field_179">
+        <img src="https://images.unsplash.com/photo-1550005809-91ad75fb315f?w=300&q=75&fit=crop" alt="" data-image-editable="photo_9">
+        <span class="pol-label" data-editable="field_180">Về chung một nhà</span>
+      </div>
+    </div>
+
+    <p style="text-align:center;margin-top:18px;font-size:.6rem;color:rgba(255,255,255,.22);font-style:italic;font-family:'Lato',sans-serif;" data-editable="album_13">* Ảnh minh hoạ · Bấm để xem lớn · Ảnh thật sẽ được cập nhật sau buổi chụp chính thức</p>
+  </div>
+</section>
+
+<!-- ALBUM LIGHTBOX -->
+<div class="alb-lb" id="albLb" data-editable="field_181">
+  <div class="alb-lb-close" onclick="albClose()">✕ &nbsp; Đóng</div>
+  <img class="alb-lb-img" id="albLbImg" src="" alt="" data-image-editable="photo_10">
+  <div class="alb-lb-caption" id="albLbCap"></div>
+  <div class="alb-lb-nav" data-editable="field_182">
+    <button class="alb-lb-btn" onclick="albNav(-1)">← Trước</button>
+    <button class="alb-lb-btn" onclick="albNav(1)">Sau →</button>
+  </div>
+</div>
+
+<!-- 8 THIỆP MỜI -->
+<section id="thiep-moi">
+  <div class="si-wrap reveal" style="text-align:center;" data-editable="field_183">
+    <p class="sec-label" data-editable="field_184">✈ Vé Boarding Chính Thức</p>
+    <h2 class="sec-title" data-editable="field_185">Thiệp Mời Chính Thức</h2>
+    <div class="tline"></div>
+    <div class="ticket-wrap">
+      <div class="tw-hd">
+        <div class="tw-airline"><svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>Hiền Tuyền Airlines</div>
+        <div class="tw-class" data-editable="field_186">✦ Hạng Thương Gia ✦</div>
+      </div>
+      <div class="tw-body" data-editable="invite">
+        <div class="tw-l" data-editable="invite_2">
+          <div class="tw-field" data-editable="invite_3"><div class="tw-fl" data-editable="invite_4">Trân Trọng Kính Mời</div><div style="height:1px;background:var(--border);margin:6px 0 11px;"></div></div>
+          <div class="tw-field" data-editable="field_187"><div class="tw-fl" data-editable="field_188">Cơ Trưởng – Cơ Phó</div><div class="tw-fv script" data-editable="groom_38">Tống Hiền &amp; Thanh Tuyền</div></div>
+          <div class="tw-field" data-editable="field_189"><div class="tw-fl" data-editable="field_190">Chuyến Bay</div><div class="tw-fv xl" data-editable="ceremony_22">LỄ THÀNH HÔN</div></div>
+          <div class="tw-field" data-editable="date_16"><div class="tw-fl" data-editable="date_17">Ngày</div><div class="tw-fv" data-editable="field_191">Thứ Bảy — 20 . 09 . 2026</div></div>
+          <div class="tw-note" data-editable="groom_39">Ông Tống Văn A &amp; Bà Nguyễn Thị B (Hải Hậu, Nam Định)<br>Ông Lê Văn C &amp; Bà Phạm Thị D (Nam Định)<br>Trân trọng thông báo lễ thành hôn của con chúng tôi.</div>
+        </div>
+        <div class="tw-sep"></div>
+        <div class="tw-r" data-editable="field_192">
+          <div class="tw-field" data-editable="field_193"><div class="tw-fl" data-editable="field_194">Sân Bay</div><div class="tw-fv" data-editable="groom_40">Xóm 2B, Hải Anh<br>Hải Hậu, Nam Định</div></div>
+          <div class="tw-field" data-editable="field_195"><div class="tw-fl" data-editable="field_196">Boarding</div><div class="tw-fv xl" data-editable="event_time_25">09:30</div></div>
+          <div class="tw-field" data-editable="field_197"><div class="tw-fl" data-editable="field_198">Take-off</div><div class="tw-fv xl" data-editable="event_time_26">10:30</div></div>
+          <div class="tw-field" data-editable="field_199"><div class="tw-fl" data-editable="field_200">Hạng</div><div class="tw-fv" data-editable="field_201">Hạng Thương Gia</div></div>
+          <div class="tw-note" data-editable="rsvp_4"><em data-editable="field_202">Hãy đến trong bộ trang phục cổ điển nhất!</em><br>Xác nhận trước 10.09.2026 · <strong data-editable="field_203">09xx.xxx.xxx</strong></div>
+        </div>
+      </div>
+      <div class="tw-ft" data-editable="field_204">
+        <span class="tw-ft-txt" data-editable="field_205">THẺ ĐI ĂN CƯỚI / BOARDING PASS</span>
+        <span class="tw-ft-txt" style="color:var(--accent);" data-editable="field_206">20 . 09 . 2026</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 RSVP -->
+<section id="rsvp">
+  <div class="si-wrap reveal" data-editable="rsvp_5">
+    <p class="sec-label" data-editable="field_207">✈ Online Check-In</p>
+    <h2 class="sec-title" data-editable="rsvp_6">RSVP — Xác Nhận Tham Dự</h2>
+    <div class="tline"></div>
+    <p style="text-align:center;font-size:13px;color:var(--mid);margin-bottom:26px;font-weight:300;" data-editable="date_18">Check-in trước ngày <strong style="color:var(--navy);font-family:'Barlow Condensed',sans-serif;" data-editable="field_208">10 . 09 . 2026</strong></p>
+    <div class="checkin-form" data-editable="field_209">
+      <div class="ci-hd" data-editable="field_210"><span data-editable="field_211">✈ Online Check-In Form</span><span class="icon">Hiền Tuyền Airlines</span></div>
+      <div class="ci-body" data-editable="field_212">
+        <div class="ff" data-editable="field_213"><label data-editable="field_214">Họ Và Tên</label><input type="text" id="r-name" placeholder="NGUYEN VAN A"></div>
+        <div class="ff" data-editable="field_215"><label data-editable="field_216">Số Điện Thoại</label><input type="tel" placeholder="09xx xxx xxx"></div>
+        <div class="ff" data-editable="field_217"><label data-editable="field_218">Số Hành Khách</label><select><option data-editable="field_219">1 hành khách</option><option data-editable="field_220">2 hành khách</option><option data-editable="field_221">3 hành khách</option><option data-editable="field_222">4+ hành khách</option></select></div>
+        <div class="ff" data-editable="rsvp_7"><label data-editable="rsvp_8">Xác Nhận Bay</label><div class="radio-g" data-editable="field_223"><label class="radio-o" data-editable="field_224"><input type="radio" name="att" value="yes" checked> ✈ Có mặt</label><label class="radio-o" data-editable="field_225"><input type="radio" name="att" value="no"> ✗ Vắng mặt</label></div></div>
+        <div class="ff" data-editable="love_8"><label data-editable="love_9">Yêu Cầu Đặc Biệt</label><input type="text" placeholder="Dị ứng thực phẩm..."></div>
+        <button class="navy-btn" onclick="submitRSVP()">Xác Nhận Check-In</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 LỜI CHÚC -->
+<section id="loi-chuc">
+  <div class="si-wrap reveal" data-editable="button_2">
+    <p class="sec-label" data-editable="field_226">✈ In-Flight Message</p>
+    <h2 class="sec-title" data-editable="button_3">Gửi Lời Chúc Phúc</h2>
+    <div class="tline"></div>
+    <div class="guestbook">
+      <div class="gb-meta">
+        <input type="text" id="w-name" placeholder="Tên hành khách...">
+        <input type="text" id="w-rel" placeholder="Hạng ghế (bạn thân / gia đình...)">
+      </div>
+      <textarea class="gb-ta" id="w-txt" placeholder="Gửi lời chúc đến Tống Hiền &amp; Thanh Tuyền..."></textarea>
+      <button class="gb-send" onclick="addWish()">Gửi Lời Chúc Bay</button>
+      <div class="gb-feed" id="wfeed" data-editable="year_15">
+        <div class="gb-item" data-editable="year_16"><div class="gb-author" data-editable="year_17">✈ Hoa &amp; Nam — Bạn Thân · Hạng VIP</div><div class="gb-txt" data-editable="love_10">Chúc chuyến bay tình yêu mãi êm ái! 💙</div></div>
+        <div class="gb-item" data-editable="bride"><div class="gb-author" data-editable="bride_2">✈ Gia Đình Chị Hằng · Hạng Thương Gia</div><div class="gb-txt" data-editable="family_13">Bay bổng hạnh phúc, hạ cánh an toàn tại mái ấm gia đình!</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 LIÊN HỆ -->
+<section id="lien-he">
+  <div class="si-wrap reveal" data-editable="groom_41">
+    <p class="sec-label" data-editable="field_227">✈ Crew Information</p>
+    <h2 class="sec-title" data-editable="groom_42">Thông Tin Liên Hệ</h2>
+    <div class="tline"></div>
+    <div class="crew-grid" data-editable="groom_43">
+      <div class="crew-card" data-editable="groom_44">
+        <div class="crew-hd" data-editable="groom_45"><span class="crew-role" data-editable="groom_46">✈ Nhà Trai / Groom's Family</span><span style="color:var(--accent);font-size:.58rem;" data-editable="field_228">ĐỘI A</span></div>
+        <div class="crew-body" data-editable="field_229">
+          <div class="crew-name" data-editable="field_230">Họ Tống</div>
+          <div class="crew-item" data-editable="groom_47"><strong data-editable="groom_48">Ông Tống Văn A</strong>📞 09xx xxx xxx</div>
+          <div class="crew-item" data-editable="bride_3"><strong data-editable="bride_4">Bà Nguyễn Thị B</strong>📞 09xx xxx xxx</div>
+          <div class="crew-div"></div>
+          <div class="crew-item" data-editable="field_231"><strong data-editable="field_232">✈ Cơ Trưởng — Tống Hiền</strong>📞 09xx xxx xxx</div>
+        </div>
+      </div>
+      <div class="crew-card" data-editable="bride_5">
+        <div class="crew-hd" data-editable="bride_6"><span class="crew-role" data-editable="bride_7">✈ Nhà Gái / Bride's Family</span><span style="color:var(--accent);font-size:.58rem;" data-editable="field_233">ĐỘI B</span></div>
+        <div class="crew-body" data-editable="field_234">
+          <div class="crew-name" data-editable="field_235">Họ Lê</div>
+          <div class="crew-item" data-editable="groom_49"><strong data-editable="groom_50">Ông Lê Văn C</strong>📞 09xx xxx xxx</div>
+          <div class="crew-item" data-editable="bride_8"><strong data-editable="bride_9">Bà Phạm Thị D</strong>📞 09xx xxx xxx</div>
+          <div class="crew-div"></div>
+          <div class="crew-item" data-editable="groom_51"><strong data-editable="groom_52">✈ Cơ Phó — Thanh Tuyền</strong>📞 09xx xxx xxx</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 CẢM ƠN -->
+<section id="cam-on">
+  <div class="co-stars"></div>
+  <div class="inner reveal" style="max-width:500px;margin:0 auto;position:relative;z-index:1;" data-editable="field_236">
+    <div class="co-icon">✈ ✈ ✈</div>
+    <h2 data-editable="field_237">Cảm Ơn Quý Hành Khách</h2>
+    <p class="subtitle" data-editable="love_11">Cảm ơn quý vị đã đồng hành trên chuyến bay đặc biệt<br>và ý nghĩa nhất trong cuộc đời chúng tôi.<br>Sự hiện diện của quý vị chính là "nhiên liệu"<br>giúp chuyến bay tình yêu bay cao mãi mãi.</p>
+    <div class="thanks-names" data-editable="groom_53">Tống Hiền &amp; Thanh Tuyền</div>
+    <div style="opacity:.16;margin:12px 0;letter-spacing:8px;" data-editable="field_238">✈ &nbsp; ✈ &nbsp; ✈</div>
+    <div class="c-date" data-editable="date_19">Flight Date: 20 . 09 . 2026 · Hải Hậu · Nam Định</div>
+  </div>
+</section>
+
+</div>
+
+<!-- WISH LOADING -->
+<div class="wish-loading" id="wish-loading" data-editable="field_239">
+  <div class="wl-card" data-editable="field_240">
+    <div class="wl-title" data-editable="field_241">In-Flight Message</div>
+    <div class="wl-track" data-editable="field_242"><span class="wl-plane" data-editable="field_243">✈</span></div>
+    <div class="wl-text" data-editable="button_4">Đang Bay Gửi Lời Chúc...</div>
+  </div>
+</div>
+
+<script>
+// ── Config ──
+const GUEST_NAME = 'Nguyễn Văn Khách'; // ← đổi tên thật ở đây
+
+// ── Barcode ──
+const bc = document.getElementById('bc');
+if(bc){
+  [26,14,26,10,20,26,12,26,16,22,26,10,18,26,14,20,26,16].forEach(h=>{
+    const s=document.createElement('span');s.style.height=h+'px';bc.appendChild(s);
+  });
+}
+
+// ── Open ──
+function handleOpen(){
+  const btn=document.getElementById('open-btn');
+  btn.disabled=true;btn.style.opacity='.55';
+  const overlay=document.getElementById('stamp-overlay');
+  overlay.classList.add('active');
+  setTimeout(()=>{
+    document.getElementById('stamp-mark').classList.add('stamped');
+    setTimeout(()=>{
+      overlay.style.transition='opacity .55s ease';overlay.style.opacity='0';
+      const gate=document.getElementById('passport-gate');
+      gate.style.transition='opacity .85s ease';gate.style.opacity='0';
+      setTimeout(()=>{
+        gate.classList.add('hidden');
+        overlay.classList.remove('active');overlay.style.opacity='';
+        const main=document.getElementById('main-content');
+        main.classList.add('revealed');
+        ['hero-pax-name','stub-pax-name'].forEach(id=>{
+          const el=document.getElementById(id);
+          if(el)el.textContent=GUEST_NAME;
+        });
+        setTimeout(initReveal,120);
+      },680);
+    },1500);
+  },580);
+}
+
+// ── Album Lightbox ──
+const ALB_IMGS = [
+  {src:'https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=90&fit=crop',cap:'Hành trình bắt đầu từ đây'},
+  {src:'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=1200&q=90&fit=crop',cap:'Lời hứa trọn đời'},
+  {src:'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1200&q=90&fit=crop',cap:'Những khoảnh khắc đẹp'},
+  {src:'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=1200&q=90&fit=crop',cap:'Bên nhau mãi mãi'},
+  {src:'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=1200&q=90&fit=crop',cap:'Ngày trọng đại'},
+  {src:'https://images.unsplash.com/photo-1518049362265-d5b2a6467637?w=1200&q=90&fit=crop',cap:'Nụ cười đầu tiên'},
+  {src:'https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=1200&q=90&fit=crop',cap:'Ngày hẹn hò'},
+  {src:'https://images.unsplash.com/photo-1524863479829-916d8e77f114?w=1200&q=90&fit=crop',cap:'Cầu hôn'},
+  {src:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=90&fit=crop',cap:'Chụp ảnh cưới'},
+  {src:'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=1200&q=90&fit=crop',cap:'Hạnh phúc mãi mãi'},
+  {src:'https://images.unsplash.com/photo-1550005809-91ad75fb315f?w=1200&q=90&fit=crop',cap:'Về chung một nhà'},
+];
+let albIdx=0;
+function albOpen(i){
+  albIdx=i;
+  const lb=document.getElementById('albLb');
+  document.getElementById('albLbImg').src=ALB_IMGS[i].src;
+  document.getElementById('albLbCap').textContent=ALB_IMGS[i].cap;
+  lb.classList.add('open');
+}
+function albClose(){document.getElementById('albLb').classList.remove('open');}
+function albNav(d){
+  albIdx=(albIdx+d+ALB_IMGS.length)%ALB_IMGS.length;
+  document.getElementById('albLbImg').src=ALB_IMGS[albIdx].src;
+  document.getElementById('albLbCap').textContent=ALB_IMGS[albIdx].cap;
+}
+document.getElementById('albLb').addEventListener('click',function(e){if(e.target===this)albClose();});
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('albLb').classList.contains('open')){
+    if(e.key==='Escape')albClose();
+    if(e.key==='ArrowLeft')albNav(-1);
+    if(e.key==='ArrowRight')albNav(1);
+  }
+});
+
+// ── Reveal ──
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+  },{threshold:0.07});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// ── RSVP ──
+function submitRSVP(){
+  const name=document.getElementById('r-name').value.trim();
+  if(!name){alert('Vui lòng điền tên hành khách!');return;}
+  const yes=document.querySelector('input[name="att"]:checked').value==='yes';
+  alert(yes?`✈ Check-in thành công! Cảm ơn ${name}. Chúng mình rất vui! 🎊`:`Cảm ơn ${name} đã thông báo. Rất tiếc khi bạn không thể tham dự! 💙`);
+}
+
+// ── Wishes ──
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+async function addWish(){
+  const name=document.getElementById('w-name').value.trim();
+  const rel=document.getElementById('w-rel').value.trim();
+  const txt=document.getElementById('w-txt').value.trim();
+  if(!name||!txt){alert('Vui lòng điền tên và lời chúc!');return;}
+  const btn=document.querySelector('.gb-send');
+  if(btn&&btn.disabled)return;
+  if(btn){btn.disabled=true;btn.textContent='✈ Đang Bay...';}
+  document.getElementById('wish-loading').classList.add('active');
+  try{
+    await wait(1100);
+    const feed=document.getElementById('wfeed');
+    const d=document.createElement('div');
+    d.className='gb-item';
+    d.style.cssText='opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s;';
+    d.innerHTML=`<div class="gb-author" data-editable="year_18">✈ ${name}${rel?' · '+rel:''}</div><div class="gb-txt" data-editable="field_244">${txt}</div>`;
+    feed.insertBefore(d,feed.firstChild);
+    requestAnimationFrame(()=>{d.style.opacity='1';d.style.transform='translateY(0)';});
+    document.getElementById('w-name').value='';
+    document.getElementById('w-rel').value='';
+    document.getElementById('w-txt').value='';
+  }finally{
+    document.getElementById('wish-loading').classList.remove('active');
+    if(btn){btn.disabled=false;btn.textContent='Gửi Lời Chúc Bay';}
+  }
+}
+</script>
+</body>
+</html>
