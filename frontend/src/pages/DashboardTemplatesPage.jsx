@@ -25,6 +25,7 @@ const DashboardTemplatesPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [templateToDelete, setTemplateToDelete] = useState(null)
   const [showFilters, setShowFilters] = useState(false) // Collapsed by default
+  const [templatesCount, setTemplatesCount] = useState(0)
   
   // Auto list view on mobile
   const getInitialViewMode = () => {
@@ -57,6 +58,7 @@ const DashboardTemplatesPage = () => {
       setLoading(true)
       const response = await adminService.getAllTemplates({ ...filters, page: currentPage })
       let data = response.data || []
+      let pagination = response.pagination || []
 
       // Map category_id to category string for filtering
       data = data.map(template => {
@@ -76,6 +78,7 @@ const DashboardTemplatesPage = () => {
       })
 
       setTemplates(data)
+      setTemplatesCount(pagination.total || data.length) // Use total from API if available, otherwise fallback to data length
 
       const paginationMeta = response.pagination || response.meta || {}
       const totalPagesFromApi = Number(paginationMeta.total_pages || paginationMeta.last_page || 0)
@@ -181,7 +184,7 @@ const DashboardTemplatesPage = () => {
     )
   }
 
-  const getTemplateIdentifier = (template) => template?.uuid || template?.id
+  const getTemplateIdentifier = (template) => template?.template_id || template?.id || template?.uuid || template?.slug
 
   const getCategoryLabel = (category) => {
     const cat = categories.find(c => c.value === category)
@@ -255,7 +258,7 @@ const DashboardTemplatesPage = () => {
             </div>
             <div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Tổng Templates</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{templates.length}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{templatesCount}</p>
             </div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg p-3 shadow-sm border border-gray-200 dark:border-gray-700">
@@ -529,12 +532,12 @@ const DashboardTemplatesPage = () => {
                           {template.description || 'Không có mô tả'}
                         </p>
                         <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4">
-                          <span>ID: {template.id}</span>
+                          <span>ID: {template.template_id || template.id}</span>
                           <span>{formatDate(template.created_at)}</span>
                         </div>
                         <div className="flex gap-2">
                           <button
-                            onClick={() => navigate(`/dashboard/templates/edit/${getTemplateIdentifier(template)}`)}
+                            onClick={() => navigate(`/dashboard/templates/edit/${encodeURIComponent(getTemplateIdentifier(template))}`)}
                             className="flex-1 px-4 py-2.5 text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded"
                           >
                             Chỉnh sửa
@@ -590,7 +593,7 @@ const DashboardTemplatesPage = () => {
                           </h3>
                           <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
                             <span className="truncate">{getCategoryLabel(template.category)}</span>
-                            <span className="shrink-0">ID: {template.id}</span>
+                            <span className="shrink-0">ID: {template.template_id || template.id}</span>
                           </div>
                         </div>
 
@@ -602,7 +605,7 @@ const DashboardTemplatesPage = () => {
                         {/* Actions - Vertical Stack */}
                         <div className="flex flex-col gap-1 shrink-0 w-16">
                           <button
-                            onClick={() => navigate(`/dashboard/templates/edit/${getTemplateIdentifier(template)}`)}
+                            onClick={() => navigate(`/dashboard/templates/edit/${encodeURIComponent(getTemplateIdentifier(template))}`)}
                             className="w-full px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded"
                           >
                             Sửa
@@ -709,6 +712,8 @@ const DashboardTemplatesPage = () => {
 }
 
 export default DashboardTemplatesPage
+
+
 
 
 
