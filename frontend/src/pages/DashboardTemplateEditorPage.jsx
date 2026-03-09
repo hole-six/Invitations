@@ -7,6 +7,7 @@ import templateService from '../services/template.service'
 const DashboardTemplateEditorPage = () => {
   const navigate = useNavigate()
   const { id } = useParams()
+  const decodedId = id ? decodeURIComponent(id) : ''
   const [searchParams] = useSearchParams()
   const toast = useToast()
 
@@ -32,10 +33,10 @@ const DashboardTemplateEditorPage = () => {
 
   useEffect(() => {
     loadCategories()
-    if (id) {
-      loadTemplate(id)
+    if (decodedId) {
+      loadTemplate(decodedId)
     }
-  }, [id])
+  }, [decodedId])
 
   const loadCategories = async () => {
     try {
@@ -148,9 +149,9 @@ const DashboardTemplateEditorPage = () => {
       console.log('📤 Submitting template data:', submitData)
 
       let response
-      if (id) {
+      if (decodedId) {
         // Use uuid from formData if available, otherwise use id
-        const identifier = formData.uuid || id;
+        const identifier = formData.uuid || decodedId;
         response = await templateService.update(identifier, submitData)
         toast.success('✨ Template đã được cập nhật thành công!')
       } else {
@@ -203,10 +204,10 @@ const DashboardTemplateEditorPage = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
-              {id ? 'Chỉnh sửa Template' : 'Tạo Template Mới'}
+              {decodedId ? 'Chỉnh sửa Template' : 'Tạo Template Mới'}
             </h1>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              {id ? 'Cập nhật thông tin template' : 'Tạo template mới cho hệ thống'}
+              {decodedId ? 'Cập nhật thông tin template' : 'Tạo template mới cho hệ thống'}
             </p>
           </div>
           <button
@@ -551,3 +552,4 @@ const DashboardTemplateEditorPage = () => {
 }
 
 export default DashboardTemplateEditorPage
+

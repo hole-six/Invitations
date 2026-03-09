@@ -8,13 +8,21 @@ class TemplateService {
     return apiService.get(endpoint)
   }
 
+  isTemplateRecord(item) {
+    if (!item || typeof item !== 'object') return false
+    return ['id', 'template_id', 'uuid', 'slug'].some((key) => item[key] !== undefined && item[key] !== null)
+  }
+
   extractTemplateRows(response) {
     if (!response) return []
     if (Array.isArray(response)) return response
     if (Array.isArray(response.data)) return response.data
     if (Array.isArray(response.items)) return response.items
-    if (response.data && typeof response.data === 'object') return [response.data]
-    if (typeof response === 'object') return [response]
+    if (Array.isArray(response.data?.items)) return response.data.items
+    if (Array.isArray(response.data?.data)) return response.data.data
+    if (this.isTemplateRecord(response.data?.template)) return [response.data.template]
+    if (this.isTemplateRecord(response.data)) return [response.data]
+    if (this.isTemplateRecord(response)) return [response]
     return []
   }
 
@@ -35,37 +43,36 @@ class TemplateService {
     const normalized = String(identifier || '').trim()
     if (!normalized) throw new Error('Template id is required')
 
-    const isLikelyUuid = normalized.includes('-')
-    const candidateEndpoints = []
+    const isNumericId = /^\d+$/.test(normalized)
+    const isLikelyUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(normalized)
+
+    const params = new URLSearchParams()
+    params.set('per_page', '200')
+    params.set('limit', '200')
 
     if (isLikelyUuid) {
-      candidateEndpoints.push(`${API_ENDPOINTS.TEMPLATES}?uuid=${encodeURIComponent(normalized)}`)
+      params.set('uuid', normalized)
+    } else if (isNumericId) {
+      // Match page-1 behavior and keep one network call only.
+      params.set('template_id', normalized)
+      params.set('id', normalized)
+    } else {
+      params.set('slug', normalized)
     }
 
-    candidateEndpoints.push(API_ENDPOINTS.TEMPLATE_DETAIL(normalized))
-    candidateEndpoints.push(`${API_ENDPOINTS.TEMPLATES}?id=${encodeURIComponent(normalized)}`)
+    const endpoint = `${API_ENDPOINTS.TEMPLATES}?${params.toString()}`
+    const response = await apiService.get(endpoint)
+    const rows = this.extractTemplateRows(response)
+    const matched = this.findTemplateInRows(rows, normalized)
 
-    let lastError = null
-
-    for (const endpoint of candidateEndpoints) {
-      try {
-        const response = await apiService.get(endpoint)
-        const rows = this.extractTemplateRows(response)
-        const matched = this.findTemplateInRows(rows, normalized)
-
-        if (matched) {
-          return { data: matched }
-        }
-
-        if (rows.length === 1) {
-          return { data: rows[0] }
-        }
-      } catch (error) {
-        lastError = error
-      }
+    if (matched) {
+      return { data: matched }
     }
 
-    if (lastError) throw lastError
+    if (rows.length === 1 && this.isTemplateRecord(rows[0])) {
+      return { data: rows[0] }
+    }
+
     throw new Error('Template not found')
   }
 

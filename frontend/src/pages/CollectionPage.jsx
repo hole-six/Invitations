@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import templateService from '../services/template.service'
 import invitationService from '../services/invitation.service'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
-import allTemplates from '../data/premiumTemplates'
 
 const CollectionPage = () => {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { user } = useAuth()
   const toast = useToast()
 
@@ -29,75 +29,151 @@ const CollectionPage = () => {
   const [showEditorModal, setShowEditorModal] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState(null)
   const [previewTemplate, setPreviewTemplate] = useState(null) // For full-screen preview
+  const initialPage = Math.max(1, Number(searchParams.get('page') || 1))
+  const [currentPage, setCurrentPage] = useState(initialPage)
+  const [pagination, setPagination] = useState({ currentPage: initialPage, totalPages: 1, totalItems: 0 })
 
   useEffect(() => {
     loadData()
-  }, [])
+  }, [currentPage, selectedCategory, sortBy, searchQuery, viewMode])
+
+  useEffect(() => {
+    const pageFromUrl = Math.max(1, Number(searchParams.get('page') || 1))
+    if (pageFromUrl !== currentPage) {
+      setCurrentPage(pageFromUrl)
+    }
+  }, [searchParams, currentPage])
+
+    useEffect(() => {
+      if(pagination){
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    }, [pagination])
+
+  useEffect(() => {
+    if (!searchParams.get('page')) {
+      const nextParams = new URLSearchParams(searchParams)
+      nextParams.set('page', '1')
+      setSearchParams(nextParams, { replace: true })
+    }
+  }, [searchParams, setSearchParams])
 
   const loadData = async () => {
     try {
       setLoading(true)
 
-      // Load from API
-      try {
-        const [templatesRes, categoriesRes] = await Promise.all([
-          templateService.getAll({ is_active: 1 }),
-          templateService.getCategories()
-        ])
-
-        console.log('📦 Templates from API:', templatesRes.data?.length || 0)
-
-        // Parse API templates (design_data is JSON string from database)
-        const apiTemplates = (templatesRes.data || []).map(template => {
-          try {
-            // Parse design_data if it's a string
-            const designData = typeof template.design_data === 'string'
-              ? JSON.parse(template.design_data)
-              : template.design_data
-
-            // Parse tags if it's a string
-            const tags = typeof template.tags === 'string'
-              ? JSON.parse(template.tags)
-              : template.tags
-
-            return {
-              id: template.id,
-              name: template.name,
-              slug: template.slug,
-              category: template.category_name || 'Uncategorized',
-              category_id: template.category_id,
-              description: template.description,
-              thumbnail: template.thumbnail_url,
-              isPremium: Boolean(template.is_premium),
-              isFeatured: Boolean(template.is_featured),
-              is_premium: Boolean(template.is_premium),
-              is_featured: Boolean(template.is_featured),
-              usage_count: template.usage_count || 0,
-              designData: designData,
-              html_template: template.html_template, // Add html_template field
-              tags: tags
-            }
-          } catch (err) {
-            console.error(`Failed to parse template ${template.id}:`, err)
-            return null
-          }
-        }).filter(Boolean) // Remove null entries
-
-        console.log('✅ Parsed templates:', apiTemplates.length)
-
-        // Use ONLY API templates (no local templates)
-        setTemplates(apiTemplates)
-        setCategories(categoriesRes.data || [])
-      } catch (apiError) {
-        console.error('❌ API Error:', apiError)
-        toast.error('Không thể tải danh sách mẫu thiệp')
-        setTemplates([])
-        setCategories([])
+      const sortMap = {
+        popular: 'usage_count',
+        newest: 'id',
+        name: 'name'
       }
-    } catch (error) {
-      console.error('Failed to load templates:', error)
-      // Fallback to premium templates
-      setTemplates(allTemplates)
+
+      const requestFilters = {
+        is_active: 1,
+        page: currentPage,
+        limit: viewMode === 'grid' ? 12 : 10,
+        sort_by: sortMap[sortBy] || 'usage_count',
+        sort_order: sortBy === 'name' ? 'asc' : 'desc'
+      }
+
+      if (selectedCategory) {
+        requestFilters.category_id = selectedCategory
+      }
+
+      if (searchQuery.trim()) {
+        requestFilters.search = searchQuery.trim()
+      }
+
+      const [templatesRes, categoriesRes] = await Promise.all([
+        templateService.getAll(requestFilters),
+        templateService.getCategories()
+      ])
+
+      const templatePayload = templatesRes?.data
+      const templateRows = Array.isArray(templatePayload)
+        ? templatePayload
+        : Array.isArray(templatePayload?.items)
+          ? templatePayload.items
+          : Array.isArray(templatesRes?.items)
+            ? templatesRes.items
+            : []
+
+      const apiTemplates = templateRows.map(template => {
+        try {
+          const designData = typeof template.design_data === 'string'
+            ? JSON.parse(template.design_data)
+            : template.design_data
+
+          const tags = typeof template.tags === 'string'
+            ? JSON.parse(template.tags)
+            : template.tags
+
+          return {
+            id: template.id,
+            name: template.name,
+            slug: template.slug,
+            category: template.category_name || 'Uncategorized',
+            category_id: template.category_id,
+            description: template.description,
+            thumbnail: template.thumbnail_url,
+            isPremium: Boolean(template.is_premium),
+            isFeatured: Boolean(template.is_featured),
+            is_premium: Boolean(template.is_premium),
+            is_featured: Boolean(template.is_featured),
+            usage_count: template.usage_count || 0,
+            designData,
+            html_template: template.html_template,
+            tags
+          }
+        } catch (err) {
+          console.error('Failed to parse template', template?.id, err)
+          return null
+        }
+      }).filter(Boolean)
+
+      setTemplates(apiTemplates)
+      setCategories(categoriesRes?.data || [])
+
+      const paginationMeta = templatesRes?.pagination
+        || templatesRes?.meta
+        || templatePayload?.pagination
+        || templatePayload?.meta
+        || {}
+
+      const totalPagesFromApi = Number(
+        paginationMeta.total_pages
+        || paginationMeta.last_page
+        || paginationMeta.totalPages
+        || paginationMeta.totalPage
+        || 0
+      )
+
+      const currentPageFromApi = Number(
+        paginationMeta.current_page
+        || paginationMeta.page
+        || paginationMeta.currentPage
+        || currentPage
+      )
+
+      const totalItemsFromApi = Number(
+        paginationMeta.total
+        || paginationMeta.total_items
+        || paginationMeta.totalItems
+        || templatePayload?.total
+        || apiTemplates.length
+      )
+
+      setPagination({
+        currentPage: currentPageFromApi > 0 ? currentPageFromApi : currentPage,
+        totalPages: totalPagesFromApi > 0 ? totalPagesFromApi : 1,
+        totalItems: Number.isFinite(totalItemsFromApi) ? totalItemsFromApi : apiTemplates.length
+      })
+    } catch (apiError) {
+      console.error('❌ API Error:', apiError)
+      toast.error('Không thể tải danh sách mẫu thiệp')
+      setTemplates([])
+      setCategories([])
+      setPagination({ currentPage, totalPages: 1, totalItems: 0 })
     } finally {
       setLoading(false)
     }
@@ -265,6 +341,49 @@ const CollectionPage = () => {
     return 0
   })
 
+  const pageSize = viewMode === 'grid' ? 12 : 10
+  const hasServerPagination = Number(pagination.totalPages || 0) > 1 || Number(pagination.totalItems || 0) > filteredTemplates.length
+  const totalPages = hasServerPagination
+    ? Math.max(1, Number(pagination.totalPages) || 1)
+    : Math.max(1, Math.ceil(filteredTemplates.length / pageSize))
+  const normalizedCurrentPage = Math.min(Math.max(1, currentPage), totalPages)
+  const startIndex = (normalizedCurrentPage - 1) * pageSize
+  const paginatedTemplates = hasServerPagination
+    ? filteredTemplates
+    : filteredTemplates.slice(startIndex, startIndex + pageSize)
+  const totalTemplateCount = hasServerPagination
+    ? Math.max(Number(pagination.totalItems || 0), filteredTemplates.length)
+    : filteredTemplates.length
+
+  const setPageAndSyncUrl = (page) => {
+    const safePage = Math.max(1, Number(page) || 1)
+    setCurrentPage(safePage)
+
+    const nextParams = new URLSearchParams(searchParams)
+    nextParams.set('page', String(safePage))
+    setSearchParams(nextParams)
+  }
+
+  const handlePageChange = (nextPage) => {
+    if (loading) return
+    if (nextPage < 1) return
+    if (nextPage > totalPages) return
+    setPageAndSyncUrl(nextPage)
+  }
+
+  const pageNumbers = (() => {
+    const start = Math.max(1, normalizedCurrentPage - 2)
+    const end = Math.min(totalPages, start + 4)
+    const realStart = Math.max(1, end - 4)
+    return Array.from({ length: end - realStart + 1 }, (_, i) => realStart + i)
+  })()
+
+  useEffect(() => {
+    if (normalizedCurrentPage !== currentPage) {
+      setPageAndSyncUrl(normalizedCurrentPage)
+    }
+  }, [normalizedCurrentPage])
+
   return (
     <div className="bg-white dark:bg-black font-sans antialiased min-h-screen">
       <Header />
@@ -313,7 +432,7 @@ const CollectionPage = () => {
                 type="text"
                 id="search"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => { setSearchQuery(e.target.value); setPageAndSyncUrl(1); }}
                 placeholder="Tìm kiếm theo tên hoặc mã số..."
               />
               <button className="h-[calc(100%-8px)] px-6 md:px-8 m-1 rounded-full text-sm font-bold bg-white text-black hover:bg-gray-200 transition-colors shrink-0 uppercase tracking-wider">
@@ -336,7 +455,7 @@ const CollectionPage = () => {
             {/* Categories - Clean pills */}
             <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 flex-1 w-full md:w-auto hide-scrollbar mask-gradient-right">
               <button
-                onClick={() => setSelectedCategory(null)}
+                onClick={() => { setSelectedCategory(null); setPageAndSyncUrl(1); }}
                 className={`shrink-0 px-4 py-2 text-sm font-bold rounded-full transition-all whitespace-nowrap ${!selectedCategory
                   ? 'bg-black dark:bg-white text-white dark:text-black shadow-md'
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700'
@@ -347,7 +466,7 @@ const CollectionPage = () => {
               {categories.map((category) => (
                 <button
                   key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
+                  onClick={() => { setSelectedCategory(category.id); setPageAndSyncUrl(1); }}
                   className={`shrink-0 px-4 py-2 text-sm font-bold rounded-full transition-all whitespace-nowrap ${selectedCategory === category.id
                     ? 'bg-black dark:bg-white text-white dark:text-black shadow-md'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700'
@@ -364,7 +483,7 @@ const CollectionPage = () => {
               <div className="relative group">
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
+                  onChange={(e) => { setSortBy(e.target.value); setPageAndSyncUrl(1); }}
                   className="appearance-none pl-4 pr-10 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg text-sm font-bold text-gray-700 dark:text-gray-200 outline-none cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                 >
                   <option value="popular">Phổ biến nhất</option>
@@ -402,7 +521,7 @@ const CollectionPage = () => {
 
           {/* Results count */}
           <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-            Hiển thị <span className="font-semibold text-gray-900 dark:text-white">{filteredTemplates.length}</span> mẫu thiệp
+            Hiển thị <span className="font-semibold text-gray-900 dark:text-white">{paginatedTemplates.length}</span>/<span className="font-semibold text-gray-900 dark:text-white">{totalTemplateCount}</span> mẫu thiệp
             {selectedCategory && <span> trong danh mục <span className="font-semibold text-gray-900 dark:text-white">{categories.find(c => c.id === selectedCategory)?.name}</span></span>}
           </div>
         </div>
@@ -427,6 +546,7 @@ const CollectionPage = () => {
                 onClick={() => {
                   setSearchQuery('')
                   setSelectedCategory(null)
+                  setPageAndSyncUrl(1)
                 }}
                 className="px-6 py-2 bg-black dark:bg-white text-white dark:text-black font-bold text-sm rounded-full"
               >
@@ -438,7 +558,7 @@ const CollectionPage = () => {
               {/* Grid Layout */}
               {viewMode === 'grid' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {filteredTemplates.map((template) => (
+                  {paginatedTemplates.map((template) => (
                     <div
                       key={template.id}
                       className="group cursor-pointer bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
@@ -496,7 +616,7 @@ const CollectionPage = () => {
               {/* List Layout */}
               {viewMode === 'list' && (
                 <div className="space-y-4">
-                  {filteredTemplates.map((template) => (
+                  {paginatedTemplates.map((template) => (
                     <div
                       key={template.id}
                       onClick={() => handleTemplateClick(template)}
@@ -561,6 +681,39 @@ const CollectionPage = () => {
                       </div>
                     </div>
                   ))}
+                </div>
+              )}
+
+              {totalPages > 1 && (
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+                  <button
+                    onClick={() => handlePageChange(normalizedCurrentPage - 1)}
+                    disabled={normalizedCurrentPage <= 1}
+                    className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-700 dark:text-gray-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
+                    Trước
+                  </button>
+
+                  {pageNumbers.map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`min-w-10 px-3 py-2 rounded-lg text-sm font-bold transition-colors ${page === normalizedCurrentPage
+                        ? 'bg-black dark:bg-white text-white dark:text-black'
+                        : 'border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800'
+                        }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+
+                  <button
+                    onClick={() => handlePageChange(normalizedCurrentPage + 1)}
+                    disabled={normalizedCurrentPage >= totalPages}
+                    className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-700 dark:text-gray-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
+                    Sau
+                  </button>
                 </div>
               )}
             </>
@@ -813,3 +966,17 @@ const CollectionPage = () => {
 }
 
 export default CollectionPage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
