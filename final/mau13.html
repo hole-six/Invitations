@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thiệp Cưới – Thành Trung & Thanh Hằng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Didact+Gothic&family=IM+Fell+DW+Pica:ital@0;1&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1C1714;
+    --parchment: #F2EBE0;
+    --warm: #E8DDD0;
+    --rust: #A05C3B;
+    --rust-light: #C47A57;
+    --sand: #C8A882;
+    --sand-light: #DEC5A3;
+    --fog: #8A8075;
+    --white: #FAF7F3;
+    --deep: #2E1F18;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Didact Gothic', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ══ SCROLL ANIMATIONS ══ */
+  .anim {
+    opacity: 0;
+    transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1),
+                transform 0.85s cubic-bezier(0.22,1,0.36,1);
+  }
+  .anim.from-bottom  { transform: translateY(48px); }
+  .anim.from-left    { transform: translateX(-60px); }
+  .anim.from-right   { transform: translateX(60px); }
+  .anim.scale-in     { transform: scale(0.88); }
+  .anim.fade-only    { transform: none; }
+
+  .anim.visible {
+    opacity: 1;
+    transform: translate(0) scale(1);
+  }
+
+  /* stagger children */
+  .stagger > * {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1),
+                transform 0.7s cubic-bezier(0.22,1,0.36,1);
+  }
+  .stagger.visible > *:nth-child(1) { transition-delay: 0s; }
+  .stagger.visible > *:nth-child(2) { transition-delay: 0.12s; }
+  .stagger.visible > *:nth-child(3) { transition-delay: 0.24s; }
+  .stagger.visible > *:nth-child(4) { transition-delay: 0.36s; }
+  .stagger.visible > *:nth-child(5) { transition-delay: 0.48s; }
+  .stagger.visible > * { opacity: 1; transform: none; }
+
+  /* ══ HERO ══ */
+  #hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    background: var(--deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 60px 48px;
+  }
+
+  .hero-left::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, var(--sand) 30%, var(--sand) 70%, transparent);
+  }
+
+  .hero-photo {
+    position: absolute;
+    inset: 0;
+    opacity: 0.2;
+    mix-blend-mode: luminosity;
+    background-size: cover !important;
+    background-position: center !important;
+    transition: opacity 0.5s;
+  }
+
+  .hero-left-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .hero-year {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 100;
+    font-size: 120px;
+    color: rgba(200,168,130,0.12);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    letter-spacing: -4px;
+    white-space: nowrap;
+    pointer-events: none;
+    animation: heroYearFloat 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes heroYearFloat {
+    from { opacity: 0.08; transform: translate(-50%,-50%) scale(1); }
+    to   { opacity: 0.14; transform: translate(-50%,-50%) scale(1.04); }
+  }
+
+  .hero-tag {
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 7px;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-bottom: 28px;
+    display: block;
+    animation: heroFadeIn 1.4s ease both;
+  }
+
+  .hero-name-main {
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: clamp(42px, 5vw, 72px);
+    color: var(--white);
+    line-height: 1.05;
+    font-weight: 400;
+    letter-spacing: -1px;
+    animation: heroFadeIn 1.4s 0.2s ease both;
+  }
+
+  .hero-amp {
+    font-family: 'IM Fell DW Pica', serif;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--sand);
+    display: block;
+    margin: 12px 0;
+  }
+
+  .hero-date-block {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: heroFadeIn 1.4s 0.4s ease both;
+  }
+
+  .hero-date-item {
+    text-align: center;
+    padding: 0 20px;
+  }
+
+  .hero-date-item:not(:last-child) {
+    border-right: 1px solid rgba(200,168,130,0.3);
+  }
+
+  .hdi-num {
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 36px;
+    color: var(--sand-light);
+    display: block;
+    line-height: 1;
+  }
+
+  .hdi-label {
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--fog);
+    margin-top: 6px;
+    display: block;
+  }
+
+  @keyframes heroFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-right {
+    background: var(--parchment);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+
+  .hero-right-img {
+    position: absolute;
+    inset: 0;
+    filter: saturate(0.7) brightness(0.95);
+    background-size: cover !important;
+    background-position: center !important;
+    transition: transform 8s ease;
+    animation: heroPanRight 14s ease-in-out infinite alternate;
+  }
+
+  @keyframes heroPanRight {
+    from { transform: scale(1.04) translate(0,0); }
+    to   { transform: scale(1.08) translate(-2%,-1%); }
+  }
+
+  .hero-right-fade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--parchment) 0%, transparent 50%);
+  }
+
+  .hero-right-text {
+    position: relative;
+    z-index: 2;
+    padding: 32px;
+    text-align: right;
+  }
+
+  .hero-right-text span {
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--rust);
+    background: var(--parchment);
+    padding: 6px 12px;
+  }
+
+  .hero-scroll-cue {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .hero-scroll-line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(180deg, var(--sand), transparent);
+    animation: scrollLine 2.2s ease-in-out infinite;
+  }
+
+  @keyframes scrollLine {
+    0%   { transform: scaleY(0); transform-origin: top; opacity:1; }
+    49%  { transform: scaleY(1); transform-origin: top; opacity:1; }
+    50%  { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; opacity:0.3; }
+  }
+
+  .hero-scroll-text {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 100;
+    font-size: 8px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--fog);
+    animation: heroFadeIn 2s 1s ease both;
+  }
+
+  /* ══ SHARED ══ */
+  section { padding: 100px 40px; }
+
+  .s-eyebrow {
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 7px;
+    text-transform: uppercase;
+    color: var(--rust);
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .s-title {
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: clamp(30px, 4vw, 52px);
+    color: var(--deep);
+    font-weight: 400;
+    line-height: 1.1;
+  }
+
+  .s-title em { font-style: italic; color: var(--rust); }
+
+  .rule {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 24px 0;
+  }
+  .rule-line { flex: 1; height: 1px; background: var(--sand-light); }
+  .rule-glyph {
+    font-family: 'IM Fell DW Pica', serif;
+    font-style: italic;
+    color: var(--sand);
+    font-size: 18px;
+  }
+
+  /* ══ INTRO ══ */
+  #intro {
+    background: var(--white);
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    gap: 60px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 120px 60px;
+  }
+
+  .intro-deco { text-align: center; }
+
+  .intro-deco-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 1px solid var(--sand-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-family: 'IM Fell DW Pica', serif;
+    font-style: italic;
+    font-size: 40px;
+    color: var(--sand);
+    transition: transform 0.6s cubic-bezier(0.22,1,0.36,1),
+                border-color 0.4s;
+  }
+
+  .intro-deco-circle:hover { transform: rotate(180deg); border-color: var(--rust); }
+
+  .intro-center-text { text-align: center; }
+
+  .intro-body {
+    font-family: 'IM Fell DW Pica', serif;
+    font-style: italic;
+    font-size: clamp(17px, 2vw, 22px);
+    line-height: 2;
+    color: var(--fog);
+  }
+
+  .intro-sig {
+    margin-top: 36px;
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 28px;
+    color: var(--rust);
+    font-style: italic;
+  }
+
+  /* ══ ABOUT ══ */
+  #about { background: var(--parchment); padding: 100px 40px; }
+
+  .about-header { text-align: center; margin-bottom: 80px; }
+
+  .about-layout {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    max-width: 1000px;
+    margin: 0 auto;
+    align-items: start;
+  }
+
+  .about-person { padding: 0 40px; }
+  .about-person.right { text-align: right; }
+
+  .about-img-container {
+    position: relative;
+    margin-bottom: 32px;
+    display: inline-block;
+    overflow: hidden;
+  }
+
+  .about-img-container img {
+    width: 100%;
+    max-width: 280px;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.85);
+    transition: filter 0.5s, transform 0.7s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .about-img-container:hover img { filter: saturate(1); transform: scale(1.04); }
+
+  .about-img-border {
+    position: absolute;
+    inset: -8px;
+    border: 1px solid var(--sand-light);
+    pointer-events: none;
+    transition: border-color 0.3s;
+  }
+
+  .about-img-container:hover .about-img-border { border-color: var(--rust); }
+
+  .about-img-corner {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: var(--rust);
+    border-style: solid;
+  }
+  .about-img-corner.tl { top:-10px; left:-10px; border-width:2px 0 0 2px; }
+  .about-img-corner.tr { top:-10px; right:-10px; border-width:2px 2px 0 0; }
+  .about-img-corner.bl { bottom:-10px; left:-10px; border-width:0 0 2px 2px; }
+  .about-img-corner.br { bottom:-10px; right:-10px; border-width:0 2px 2px 0; }
+
+  .about-role {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 8px;
+  }
+
+  .about-name {
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 32px;
+    color: var(--deep);
+    margin-bottom: 8px;
+  }
+
+  .about-bday {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--fog);
+    margin-bottom: 16px;
+  }
+
+  .about-bio { font-size: 13px; line-height: 1.9; color: var(--fog); }
+
+  .about-sep {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 80px;
+    gap: 16px;
+  }
+
+  .about-sep-line { width: 1px; height: 60px; background: var(--sand-light); }
+
+  .about-sep-heart {
+    font-family: 'IM Fell DW Pica', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--rust-light);
+    animation: heartPulse 2.2s ease-in-out infinite;
+  }
+
+  @keyframes heartPulse {
+    0%, 100% { transform: scale(1); opacity:1; }
+    50% { transform: scale(1.2); opacity:0.7; }
+  }
+
+  /* ══ TIMELINE ══ */
+  #timeline {
+    background: var(--deep);
+    padding: 100px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #timeline::before {
+    content: 'LOVE';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-12deg);
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 280px;
+    color: rgba(200,168,130,0.04);
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: 20px;
+    animation: bgWordFloat 10s ease-in-out infinite alternate;
+  }
+
+  @keyframes bgWordFloat {
+    from { letter-spacing: 20px; opacity: 0.04; }
+    to   { letter-spacing: 30px; opacity: 0.07; }
+  }
+
+  #timeline .s-title { color: var(--sand-light); }
+  #timeline .s-eyebrow { color: var(--rust-light); }
+
+  .tl-header { text-align: center; margin-bottom: 80px; position: relative; }
+
+  .tl-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    position: relative;
+  }
+
+  .tl-spine {
+    background: linear-gradient(180deg, transparent, var(--sand) 10%, var(--sand) 90%, transparent);
+  }
+
+  .tl-item {
+    padding: 0 48px 60px;
+    position: relative;
+  }
+
+  .tl-item.left { text-align: right; }
+  .tl-item.right { text-align: left; }
+
+  .tl-dot-outer {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--sand);
+    top: 6px;
+    transition: transform 0.3s, background 0.3s;
+  }
+
+  .tl-item:hover .tl-dot-outer { transform: scale(1.6); background: var(--rust); }
+  .tl-item.left .tl-dot-outer  { right: -6px; }
+  .tl-item.right .tl-dot-outer { left: -6px; }
+
+  .tl-when {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--rust-light);
+    margin-bottom: 8px;
+  }
+
+  .tl-event {
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 22px;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+
+  .tl-detail { font-size: 13px; line-height: 1.8; color: rgba(200,168,130,0.6); }
+
+  /* ══ EVENT ══ */
+  #event { background: var(--white); }
+  .event-header { text-align: center; margin-bottom: 72px; }
+
+  .event-duo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 960px;
+    margin: 0 auto;
+    border: 1px solid var(--sand-light);
+  }
+
+  .event-panel {
+    padding: 60px 48px;
+    position: relative;
+    transition: background 0.4s;
+  }
+
+  .event-panel:hover { background: var(--warm); }
+  .event-panel:first-child { border-right: 1px solid var(--sand-light); }
+
+  .event-panel-num {
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 100px;
+    color: rgba(160,92,59,0.07);
+    position: absolute;
+    top: 16px; right: 20px;
+    line-height: 1;
+    pointer-events: none;
+    transition: color 0.4s, transform 0.4s;
+  }
+
+  .event-panel:hover .event-panel-num { color: rgba(160,92,59,0.12); transform: scale(1.05); }
+
+  .event-tag {
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .event-ceremony {
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 24px;
+    color: var(--deep);
+    margin-bottom: 32px;
+  }
+
+  .event-time-big {
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 56px;
+    color: var(--rust);
+    line-height: 1;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .event-date-full {
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 22px;
+    color: var(--deep);
+    margin-bottom: 4px;
+  }
+
+  .event-lunar { font-size: 12px; color: var(--fog); font-style: italic; margin-bottom: 28px; }
+
+  .event-venue-name {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 400;
+    letter-spacing: 4px;
+    font-size: 13px;
+    color: var(--deep);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .event-venue-addr { font-size: 13px; line-height: 1.7; color: var(--fog); margin-bottom: 28px; }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border: 1px solid var(--rust);
+    color: var(--rust);
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    transition: all 0.3s;
+  }
+
+  .btn-outline:hover { background: var(--rust); color: var(--white); }
+
+  /* ══ SCHEDULE ══ */
+  #schedule { background: var(--parchment); }
+  .schedule-header { text-align: center; margin-bottom: 72px; }
+
+  .schedule-track {
+    max-width: 640px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .schedule-track::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, var(--sand-light) 5%, var(--sand-light) 95%, transparent);
+  }
+
+  .sch-item {
+    display: flex;
+    gap: 0;
+    margin-bottom: 48px;
+    padding-left: 48px;
+    position: relative;
+    transition: transform 0.3s;
+  }
+
+  .sch-item:hover { transform: translateX(6px); }
+
+  .sch-item::before {
+    content: '';
+    position: absolute;
+    left: -4px; top: 8px;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--rust);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .sch-item:hover::before {
+    transform: scale(1.5);
+    box-shadow: 0 0 0 4px rgba(160,92,59,0.15);
+  }
+
+  .sch-time {
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 24px;
+    color: var(--rust);
+    min-width: 72px;
+    line-height: 1;
+    padding-top: 2px;
+  }
+
+  .sch-body { padding-left: 28px; border-left: 1px solid var(--warm); }
+  .sch-icon { font-size: 20px; margin-bottom: 4px; display: block; }
+
+  .sch-name {
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 20px;
+    color: var(--deep);
+    margin-bottom: 4px;
+  }
+
+  .sch-note { font-size: 12px; color: var(--fog); line-height: 1.7; }
+
+  /* ══ GALLERY ══ */
+  #gallery { background: var(--deep); padding: 0; position: relative; }
+
+  .gallery-header { text-align: center; padding: 80px 40px 60px; }
+  #gallery .s-title { color: var(--sand-light); }
+  #gallery .s-eyebrow { color: var(--rust-light); }
+
+  .gallery-mosaic {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 280px 280px;
+    gap: 2px;
+  }
+
+  .gm-item { overflow: hidden; position: relative; }
+  .gm-item:first-child { grid-row: span 2; }
+
+  .gm-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(0.6) brightness(0.85);
+    transition: filter 0.7s ease, transform 0.7s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .gm-item:hover img { filter: saturate(1) brightness(1); transform: scale(1.07); }
+
+  .gm-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(28,23,20,0);
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gm-item:hover .gm-overlay { background: rgba(28,23,20,0.15); }
+
+  .gm-overlay-icon {
+    color: rgba(255,255,255,0);
+    font-size: 24px;
+    font-family: 'IM Fell DW Pica', serif;
+    font-style: italic;
+    letter-spacing: 3px;
+    transition: color 0.3s, transform 0.3s;
+    transform: scale(0.8);
+  }
+
+  .gm-item:hover .gm-overlay-icon { color: rgba(255,255,255,0.8); transform: scale(1); }
+
+  /* ══ HEART GALLERY ══ */
+  #heart-gallery {
+    background: var(--white);
+    padding: 100px 40px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #heart-gallery::before {
+    content: '♥';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 600px;
+    color: rgba(160,92,59,0.03);
+    pointer-events: none;
+    line-height: 1;
+    animation: heartBgPulse 5s ease-in-out infinite alternate;
+  }
+
+  @keyframes heartBgPulse {
+    from { opacity: 0.03; transform: translate(-50%,-50%) scale(1); }
+    to   { opacity: 0.06; transform: translate(-50%,-50%) scale(1.05); }
+  }
+
+  .heart-gallery-header {
+    text-align: center;
+    margin-bottom: 72px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Heart SVG clip path container */
+  .heart-canvas {
+    position: relative;
+    width: 620px;
+    height: 580px;
+    margin: 0 auto;
+  }
+
+  /* Each photo positioned absolutely in heart shape */
+  .heart-photo-wrap {
+    position: absolute;
+    overflow: hidden;
+    border-radius: 4px;
+    transition: transform 0.5s cubic-bezier(0.22,1,0.36,1),
+                box-shadow 0.5s ease,
+                filter 0.5s ease;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(46,31,24,0.15);
+  }
+
+  .heart-photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.75) brightness(0.92);
+    transition: filter 0.5s, transform 0.6s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .heart-photo-wrap:hover {
+    transform: scale(1.08) translateY(-6px);
+    box-shadow: 0 20px 60px rgba(160,92,59,0.35);
+    z-index: 10;
+  }
+
+  .heart-photo-wrap:hover img {
+    filter: saturate(1.1) brightness(1.05);
+    transform: scale(1.08);
+  }
+
+  /* Heart-shaped big photo in center */
+  .heart-center-photo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -48%);
+    width: 200px;
+    height: 200px;
+    -webkit-clip-path: url(#heartClip);
+    clip-path: url(#heartClip);
+    transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+    z-index: 5;
+    cursor: pointer;
+  }
+
+  .heart-center-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.85);
+    transition: filter 0.5s, transform 0.6s;
+  }
+
+  .heart-center-photo:hover {
+    transform: translate(-50%, -48%) scale(1.08);
+  }
+
+  .heart-center-photo:hover img {
+    filter: saturate(1.15);
+    transform: scale(1.1);
+  }
+
+  /* Floating hearts decoration */
+  .float-hearts {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .fh {
+    position: absolute;
+    font-size: var(--size, 16px);
+    color: var(--color, rgba(160,92,59,0.12));
+    animation: floatUp var(--dur, 8s) var(--delay, 0s) ease-in-out infinite;
+    left: var(--left, 50%);
+    bottom: -30px;
+  }
+
+  @keyframes floatUp {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.3; }
+    100% { transform: translateY(-600px) rotate(20deg); opacity: 0; }
+  }
+
+  /* Heart border outline around canvas */
+  .heart-outline-svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Caption below heart gallery */
+  .heart-caption {
+    text-align: center;
+    margin-top: 56px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .heart-caption-text {
+    font-family: 'IM Fell DW Pica', serif;
+    font-style: italic;
+    font-size: clamp(15px, 2vw, 19px);
+    color: var(--fog);
+    line-height: 2;
+  }
+
+  .heart-caption-names {
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 28px;
+    color: var(--rust);
+    margin-top: 16px;
+    display: block;
+  }
+
+  /* Photo labels on hover */
+  .heart-photo-wrap .photo-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(46,31,24,0.85));
+    padding: 20px 10px 8px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0);
+    text-align: center;
+    transition: color 0.3s;
+  }
+
+  .heart-photo-wrap:hover .photo-label { color: rgba(255,255,255,0.85); }
+
+  /* Responsive */
+  @media (max-width: 680px) {
+    .heart-canvas {
+      width: 340px;
+      height: 320px;
+    }
+    .heart-center-photo {
+      width: 110px;
+      height: 110px;
+    }
+  }
+
+  /* ══ FORMAL INVITE ══ */
+  #formal-invite { background: var(--parchment); }
+  .invite-header { text-align: center; margin-bottom: 64px; }
+
+  .invite-letter {
+    max-width: 580px;
+    margin: 0 auto;
+    background: var(--deep);
+    padding: 72px 56px;
+    position: relative;
+    text-align: center;
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s;
+  }
+
+  .invite-letter:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 32px 80px rgba(46,31,24,0.25);
+  }
+
+  .invite-letter::before,
+  .invite-letter::after {
+    content: '';
+    position: absolute;
+    left: 20px; right: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sand) 30%, var(--sand) 70%, transparent);
+  }
+
+  .invite-letter::before { top: 20px; }
+  .invite-letter::after  { bottom: 20px; }
+
+  .invite-from {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 7px;
+    text-transform: uppercase;
+    color: rgba(200,168,130,0.6);
+    margin-bottom: 32px;
+    line-height: 2;
+  }
+
+  .invite-names {
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: clamp(36px, 5vw, 60px);
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .invite-amp {
+    font-family: 'IM Fell DW Pica', serif;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--sand);
+    display: block;
+    margin: 10px 0;
+  }
+
+  .invite-when {
+    margin: 40px 0 20px;
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 18px;
+    color: var(--sand-light);
+    letter-spacing: 2px;
+  }
+
+  .invite-where {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(200,168,130,0.5);
+    line-height: 2;
+  }
+
+  /* ══ RSVP ══ */
+  #rsvp {
+    background: var(--rust);
+    padding: 100px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #rsvp::before {
+    content: 'RSVP';
+    position: absolute;
+    bottom: -40px; right: -20px;
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 200px;
+    color: rgba(255,255,255,0.05);
+    pointer-events: none;
+    animation: bgWordFloat 12s ease-in-out infinite alternate;
+  }
+
+  .rsvp-inner { max-width: 700px; margin: 0 auto; position: relative; }
+  .rsvp-header { text-align: center; margin-bottom: 56px; }
+  .rsvp-header .s-eyebrow { color: rgba(255,255,255,0.6); }
+  .rsvp-header .s-title { color: var(--white); }
+  .rsvp-header .s-title em { color: rgba(255,255,255,0.6); }
+
+  .rsvp-form { background: var(--white); padding: 52px 48px; }
+
+  label.f-label {
+    display: block;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--fog);
+    margin-bottom: 8px;
+  }
+
+  .f-input {
+    width: 100%;
+    padding: 11px 0;
+    border: none;
+    border-bottom: 1px solid var(--sand-light);
+    background: transparent;
+    font-family: 'Didact Gothic', sans-serif;
+    font-size: 14px;
+    color: var(--deep);
+    outline: none;
+    transition: border-color 0.3s;
+    margin-bottom: 32px;
+  }
+
+  .f-input:focus { border-color: var(--rust); }
+  select.f-input { cursor: pointer; appearance: none; -webkit-appearance: none; }
+  textarea.f-input { resize: vertical; min-height: 80px; }
+
+  .f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+
+  .f-radio-group { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
+
+  .f-radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--deep);
+    cursor: pointer;
+  }
+
+  .f-radio input { accent-color: var(--rust); }
+
+  .btn-submit {
+    width: 100%;
+    padding: 16px;
+    background: var(--deep);
+    color: var(--white);
+    border: none;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  .btn-submit:hover { background: var(--rust); transform: translateY(-2px); }
+  .btn-submit:active { transform: translateY(0); }
+
+  .rsvp-ok {
+    display: none;
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid var(--sand-light);
+    text-align: center;
+    font-family: 'IM Fell DW Pica', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--rust);
+    animation: rsvpReveal 0.6s ease both;
+  }
+
+  @keyframes rsvpReveal {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ══ WISHES ══ */
+  #wishes { background: var(--parchment); }
+  .wishes-header { text-align: center; margin-bottom: 64px; }
+
+  .wishes-layout {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .wish-cards-col { display: flex; flex-direction: column; gap: 20px; }
+
+  .wish-card {
+    background: var(--white);
+    padding: 28px 28px 24px;
+    border-left: 2px solid var(--sand-light);
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .wish-card:hover { border-color: var(--rust); transform: translateX(4px); }
+
+  .wish-card-q {
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 48px;
+    color: var(--sand-light);
+    line-height: 0.8;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .wish-card-text {
+    font-family: 'IM Fell DW Pica', serif;
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--fog);
+    margin-bottom: 12px;
+  }
+
+  .wish-card-name {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--rust);
+  }
+
+  .wishes-form-col h3 {
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 26px;
+    color: var(--deep);
+    margin-bottom: 28px;
+  }
+
+  .wishes-form input,
+  .wishes-form textarea {
+    width: 100%;
+    padding: 10px 0;
+    border: none;
+    border-bottom: 1px solid var(--sand-light);
+    background: transparent;
+    font-family: 'Didact Gothic', sans-serif;
+    font-size: 14px;
+    color: var(--deep);
+    outline: none;
+    margin-bottom: 24px;
+    transition: border-color 0.3s;
+  }
+
+  .wishes-form input:focus,
+  .wishes-form textarea:focus { border-color: var(--rust); }
+  .wishes-form textarea { resize: vertical; min-height: 100px; }
+
+  .btn-wish {
+    padding: 12px 36px;
+    background: var(--deep);
+    color: var(--white);
+    border: none;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  .btn-wish:hover { background: var(--rust); transform: translateY(-2px); }
+
+  /* ══ FAMILY ══ */
+  #family { background: var(--deep); padding: 100px 40px; }
+  #family .s-title { color: var(--sand-light); }
+  #family .s-eyebrow { color: var(--rust-light); }
+  .family-header { text-align: center; margin-bottom: 72px; }
+
+  .family-cols {
+    max-width: 860px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+  }
+
+  .family-divider {
+    background: linear-gradient(180deg, transparent, rgba(200,168,130,0.3) 20%, rgba(200,168,130,0.3) 80%, transparent);
+  }
+
+  .family-col { padding: 0 60px; }
+
+  .family-col-title {
+    font-family: 'IM Fell DW Pica', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--sand);
+    margin-bottom: 36px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(200,168,130,0.2);
+    text-align: center;
+  }
+
+  .fam-member {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(200,168,130,0.1);
+    transition: transform 0.3s;
+  }
+
+  .fam-member:hover { transform: translateX(4px); }
+  .fam-member:last-child { border-bottom: none; margin-bottom: 0; }
+
+  .fam-role {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 100;
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--rust-light);
+    margin-bottom: 4px;
+  }
+
+  .fam-name {
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 20px;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .fam-phone a {
+    font-size: 12px;
+    color: rgba(200,168,130,0.5);
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+  }
+
+  .fam-phone a:hover { color: var(--sand); }
+
+  /* ══ THANK YOU ══ */
+  #thankyou {
+    position: relative;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--deep);
+    overflow: hidden;
+  }
+
+  .ty-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.12;
+    filter: saturate(0);
+    background-size: cover !important;
+    background-position: center !important;
+    animation: heroPanRight 20s ease-in-out infinite alternate;
+  }
+
+  .ty-box {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 80px 40px;
+    max-width: 680px;
+  }
+
+  .ty-eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 100;
+    font-size: 9px;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: var(--rust-light);
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  .ty-main {
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: clamp(56px, 10vw, 110px);
+    color: var(--white);
+    font-weight: 400;
+    line-height: 0.95;
+    margin-bottom: 40px;
+  }
+
+  .ty-quote {
+    font-family: 'IM Fell DW Pica', serif;
+    font-style: italic;
+    font-size: clamp(16px, 2vw, 20px);
+    color: rgba(200,168,130,0.6);
+    line-height: 1.9;
+    margin-bottom: 48px;
+  }
+
+  .ty-date {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 100;
+    font-size: 10px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--fog);
+  }
+
+  /* ══ FOOTER ══ */
+  footer {
+    background: #130D0A;
+    padding: 28px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer span {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 100;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+  }
+
+  /* ══ AUDIO ══ */
+  .audio-btn {
+    position: fixed;
+    bottom: 28px; right: 28px;
+    z-index: 1000;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--deep);
+    border: 1px solid var(--sand);
+    color: var(--sand);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+
+  .audio-btn:hover { background: var(--rust); border-color: var(--rust); color: var(--white); }
+
+  .audio-btn.playing {
+    animation: audioRing 1.8s ease-in-out infinite;
+  }
+
+  @keyframes audioRing {
+    0%, 100% { box-shadow: 0 4px 24px rgba(0,0,0,0.3), 0 0 0 0 rgba(160,92,59,0.4); }
+    50% { box-shadow: 0 4px 24px rgba(0,0,0,0.3), 0 0 0 12px rgba(160,92,59,0); }
+  }
+
+  /* ══ RESPONSIVE ══ */
+  @media (max-width: 768px) {
+    #hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { min-height: 100vh; }
+    #intro { grid-template-columns: 1fr; gap: 32px; padding: 80px 28px; }
+    .intro-deco:last-child { display: none; }
+    .about-layout { grid-template-columns: 1fr; }
+    .about-sep { flex-direction: row; padding: 0; }
+    .about-person { padding: 0 20px; text-align: center !important; }
+    .about-img-container img { max-width: 200px; }
+    .tl-grid { grid-template-columns: 1fr; }
+    .tl-spine { display: none; }
+    .tl-item.left { text-align: left; }
+    .tl-item .tl-dot-outer { display: none; }
+    .tl-item { padding-left: 24px; border-left: 1px solid var(--sand); }
+    .event-duo { grid-template-columns: 1fr; }
+    .event-panel:first-child { border-right: none; border-bottom: 1px solid var(--sand-light); }
+    .gallery-mosaic { grid-template-columns: 1fr 1fr; grid-template-rows: 200px 200px 200px; }
+    .gm-item:first-child { grid-column: span 2; grid-row: span 1; }
+    .invite-letter { padding: 52px 28px; }
+    .rsvp-form { padding: 36px 24px; }
+    .f-row { grid-template-columns: 1fr; gap: 0; }
+    .wishes-layout { grid-template-columns: 1fr; gap: 40px; }
+    .family-cols { grid-template-columns: 1fr; }
+    .family-divider { display: none; }
+    .family-col { padding: 0; }
+    .family-col:first-child { margin-bottom: 48px; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+    section { padding: 72px 24px; }
+    .heart-canvas { width: 340px; height: 320px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SVG defs for clip-path heart -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <clipPath id="heartClip" clipPathUnits="objectBoundingBox">
+      <path d="M0.5,0.9 C0.5,0.9 0,0.55 0,0.3 C0,0.13 0.12,0 0.28,0 C0.37,0 0.45,0.05 0.5,0.12 C0.55,0.05 0.63,0 0.72,0 C0.88,0 1,0.13 1,0.3 C1,0.55 0.5,0.9 0.5,0.9 Z"/>
+    </clipPath>
+  </defs>
+</svg>
+
+<audio id="bgAudio" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/Shane-Filan-Beautiful-In-White-Official-Video.mp3" loop></audio>
+<button class="audio-btn" id="audioBtn">♪</button>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-photo" data-image-editable="hero_background" style="background-image:url('https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img11.jpg')"></div>
+    <div class="hero-year" data-editable="hero_year">2024</div>
+    <div class="hero-left-content">
+      <span class="hero-tag" data-editable="hero_tag">Save the Date</span>
+      <div class="hero-name-main">
+        <span data-editable="groom_name_hero">Thành Trung</span>
+        <span class="hero-amp" data-editable="hero_amp">&</span>
+        <span data-editable="bride_name_hero">Thanh Hằng</span>
+      </div>
+      <div class="hero-date-block">
+        <div class="hero-date-item">
+          <span class="hdi-num" data-editable="hero_day">18</span>
+          <span class="hdi-label" data-editable="hero_day_label">Ngày</span>
+        </div>
+        <div class="hero-date-item">
+          <span class="hdi-num" data-editable="hero_month">08</span>
+          <span class="hdi-label" data-editable="hero_month_label">Tháng</span>
+        </div>
+        <div class="hero-date-item">
+          <span class="hdi-num" data-editable="hero_year_num">2024</span>
+          <span class="hdi-label" data-editable="hero_year_label">Năm</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-right-img" data-image-editable="hero_right_photo" style="background-image:url('https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img6-5.jpg')"></div>
+    <div class="hero-right-fade"></div>
+    <div class="hero-right-text">
+      <span data-editable="hero_subtitle">Hôn Lễ · Tháng Tám</span>
+    </div>
+  </div>
+  <div class="hero-scroll-cue">
+    <div class="hero-scroll-line"></div>
+    <div class="hero-scroll-text" data-editable="hero_scroll_text">Scroll</div>
+  </div>
+</section>
+
+<!-- ══ INTRO ══ -->
+<section id="intro">
+  <div class="intro-deco anim scale-in">
+    <div class="intro-deco-circle">✦</div>
+  </div>
+  <div class="intro-center-text anim from-bottom">
+    <span class="s-eyebrow" data-editable="intro_eyebrow">Lời Mở Đầu</span>
+    <div class="rule"><div class="rule-line"></div><div class="rule-glyph">❧</div><div class="rule-line"></div></div>
+    <p class="intro-body" data-editable="intro_body">
+      Với niềm hạnh phúc vô bờ, chúng tôi xin trân trọng thông báo<br>
+      rằng mình sẽ kết hôn và tổ chức hôn lễ.<br>
+      Sự hiện diện của bạn là món quà ý nghĩa nhất<br>
+      mà chúng tôi mong đợi trong ngày đặc biệt này.
+    </p>
+    <div class="rule"><div class="rule-line"></div><div class="rule-glyph">❧</div><div class="rule-line"></div></div>
+    <div class="intro-sig" data-editable="intro_signature">Thành Trung & Thanh Hằng</div>
+  </div>
+  <div class="intro-deco anim scale-in" style="transition-delay:0.15s">
+    <div class="intro-deco-circle">✦</div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="about-header anim from-bottom">
+    <span class="s-eyebrow" data-editable="about_eyebrow">Bride & Groom</span>
+    <h2 class="s-title" data-editable="about_title">Cô Dâu &amp; <em>Chú Rể</em></h2>
+  </div>
+  <div class="about-layout">
+    <div class="about-person left anim from-left">
+      <div class="about-img-container">
+        <img data-image-editable="groom_photo" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img2-4.jpg" alt="Chú rể">
+        <div class="about-img-border"></div>
+        <div class="about-img-corner tl"></div><div class="about-img-corner tr"></div>
+        <div class="about-img-corner bl"></div><div class="about-img-corner br"></div>
+      </div>
+      <div class="about-role" data-editable="groom_role">Chú Rể</div>
+      <div class="about-name" data-editable="groom_name">Thành Trung</div>
+      <div class="about-bday" data-editable="groom_birthday">06 · 03 · 2024</div>
+      <p class="about-bio" data-editable="groom_bio">Cởi mở, thân thiện, giao tiếp tốt và thuộc tuýp người hướng ngoại — luôn mang lại năng lượng tích cực cho mọi người xung quanh.</p>
+    </div>
+
+    <div class="about-sep anim fade-only">
+      <div class="about-sep-line"></div>
+      <div class="about-sep-heart">♥</div>
+      <div class="about-sep-line"></div>
+    </div>
+
+    <div class="about-person right anim from-right">
+      <div class="about-img-container">
+        <img data-image-editable="bride_photo" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img6-5.jpg" alt="Cô dâu">
+        <div class="about-img-border"></div>
+        <div class="about-img-corner tl"></div><div class="about-img-corner tr"></div>
+        <div class="about-img-corner bl"></div><div class="about-img-corner br"></div>
+      </div>
+      <div class="about-role" data-editable="bride_role">Cô Dâu</div>
+      <div class="about-name" data-editable="bride_name">Thanh Hằng</div>
+      <div class="about-bday" data-editable="bride_birthday">07 · 03 · 2001</div>
+      <p class="about-bio" data-editable="bride_bio">Thuộc tuýp người hướng nội với tâm hồn nhạy cảm. Đam mê nấu nướng và những chuyến du lịch ấm áp cùng gia đình.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TIMELINE ══ -->
+<section id="timeline">
+  <div class="tl-header anim from-bottom">
+    <span class="s-eyebrow" data-editable="timeline_eyebrow">Our Story</span>
+    <h2 class="s-title" data-editable="timeline_title">Chuyện Tình Yêu <em>Của Chúng Mình</em></h2>
+  </div>
+  <div class="tl-grid">
+    <div class="tl-item left anim from-left">
+      <div class="tl-dot-outer"></div>
+      <div class="tl-when" data-editable="tl1_date">08 · 02 · 2023</div>
+      <div class="tl-event" data-editable="tl1_title">Lần Đầu Gặp</div>
+      <p class="tl-detail" data-editable="tl1_desc">Ngày ấy vu vơ đăng một dòng status trên Facebook, rồi vô tình bắt chuyện với một người xa lạ chưa từng quen.</p>
+    </div>
+    <div class="tl-spine"></div>
+    <div class="tl-item right anim from-right" style="padding-top:80px">
+      <div class="tl-dot-outer"></div>
+      <div class="tl-when" data-editable="tl2_date">12 · 03 · 2023</div>
+      <div class="tl-event" data-editable="tl2_title">Ngỏ Lời Yêu</div>
+      <p class="tl-detail" data-editable="tl2_desc">Mỗi chiều cuối tuần chạy xe vòng quanh qua những con phố, len lỏi trong từng dòng người tấp nập.</p>
+    </div>
+    <div class="tl-item left anim from-left" style="padding-top:60px">
+      <div class="tl-dot-outer"></div>
+      <div class="tl-when" data-editable="tl3_date">20 · 10 · 2023</div>
+      <div class="tl-event" data-editable="tl3_title">Cầu Hôn</div>
+      <p class="tl-detail" data-editable="tl3_desc">Từ hai con người xa lạ bước vào cuộc đời nhau. Và giờ đây cùng nhau sang trang mới.</p>
+    </div>
+    <div></div>
+    <div class="tl-item right anim from-right" style="padding-top:60px">
+      <div class="tl-dot-outer"></div>
+      <div class="tl-when" data-editable="tl4_date">18 · 08 · 2024</div>
+      <div class="tl-event" data-editable="tl4_title">Thành Hôn</div>
+      <p class="tl-detail" data-editable="tl4_desc">Em và anh không chỉ là người yêu mà còn là tri kỷ. Hôm nay em sẽ là cô dâu của anh.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ EVENT ══ -->
+<section id="event">
+  <div class="event-header anim from-bottom">
+    <span class="s-eyebrow" data-editable="event_eyebrow">When & Where</span>
+    <h2 class="s-title" data-editable="event_title">Thời Gian &amp; <em>Địa Điểm</em></h2>
+  </div>
+  <div class="event-duo stagger">
+    <div class="event-panel">
+      <div class="event-panel-num">I</div>
+      <span class="event-tag" data-editable="event1_tag">Nhà Gái</span>
+      <div class="event-ceremony" data-editable="event1_ceremony">Thành Hôn Nhà Gái</div>
+      <div class="rule"><div class="rule-line"></div><div class="rule-glyph">✦</div><div class="rule-line"></div></div>
+      <span class="event-time-big" data-editable="event1_time">10:45</span>
+      <div class="event-date-full" data-editable="event1_date">Thứ Bảy · 17 / 08 / 2024</div>
+      <div class="event-lunar" data-editable="event1_lunar">Nhằm ngày 14 tháng 07 Giáp Thìn</div>
+      <div class="event-venue-name" data-editable="event1_venue">Diamond Plaza</div>
+      <div class="event-venue-addr" data-editable="event1_address">171 Nguyễn Thái Sơn, Phường 7,<br>Gò Vấp, TP. Hồ Chí Minh</div>
+      <button class="btn-outline" data-editable="event1_map_btn">📍 Xem Bản Đồ</button>
+    </div>
+    <div class="event-panel">
+      <div class="event-panel-num">II</div>
+      <span class="event-tag" data-editable="event2_tag">Nhà Trai</span>
+      <div class="event-ceremony" data-editable="event2_ceremony">Thành Hôn Nhà Trai</div>
+      <div class="rule"><div class="rule-line"></div><div class="rule-glyph">✦</div><div class="rule-line"></div></div>
+      <span class="event-time-big" data-editable="event2_time">18:00</span>
+      <div class="event-date-full" data-editable="event2_date">Chủ Nhật · 18 / 08 / 2024</div>
+      <div class="event-lunar" data-editable="event2_lunar">Nhằm ngày 15 tháng 07 Giáp Thìn</div>
+      <div class="event-venue-name" data-editable="event2_venue">Luxury Palace</div>
+      <div class="event-venue-addr" data-editable="event2_address">171 Nguyễn Thái Sơn,<br>Gò Vấp, TP. Hồ Chí Minh</div>
+      <button class="btn-outline" data-editable="event2_map_btn">📍 Xem Bản Đồ</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SCHEDULE ══ -->
+<section id="schedule">
+  <div class="schedule-header anim from-bottom">
+    <span class="s-eyebrow" data-editable="schedule_eyebrow">Schedule</span>
+    <h2 class="s-title" data-editable="schedule_title">Lịch Trình <em>Buổi Lễ</em></h2>
+  </div>
+  <div class="schedule-track stagger">
+    <div class="sch-item">
+      <div class="sch-time" data-editable="sch1_time">17:00</div>
+      <div class="sch-body">
+        <span class="sch-icon" data-editable="sch1_icon">🌸</span>
+        <div class="sch-name" data-editable="sch1_name">Đón Khách & Chụp Ảnh</div>
+        <div class="sch-note" data-editable="sch1_note">Quý khách đến và chụp ảnh lưu niệm cùng cô dâu chú rể.</div>
+      </div>
+    </div>
+    <div class="sch-item">
+      <div class="sch-time" data-editable="sch2_time">18:00</div>
+      <div class="sch-body">
+        <span class="sch-icon" data-editable="sch2_icon">💍</span>
+        <div class="sch-name" data-editable="sch2_name">Làm Lễ</div>
+        <div class="sch-note" data-editable="sch2_note">Nghi lễ trao nhẫn và tuyên thệ hôn nhân trang trọng.</div>
+      </div>
+    </div>
+    <div class="sch-item">
+      <div class="sch-time" data-editable="sch3_time">18:30</div>
+      <div class="sch-body">
+        <span class="sch-icon" data-editable="sch3_icon">🥂</span>
+        <div class="sch-name" data-editable="sch3_name">Khai Tiệc</div>
+        <div class="sch-note" data-editable="sch3_note">Tiệc cưới long trọng bắt đầu, cùng chúc mừng hạnh phúc đôi uyên ương.</div>
+      </div>
+    </div>
+    <div class="sch-item">
+      <div class="sch-time" data-editable="sch4_time">19:00</div>
+      <div class="sch-body">
+        <span class="sch-icon" data-editable="sch4_icon">🎵</span>
+        <div class="sch-name" data-editable="sch4_name">Game & Âm Nhạc</div>
+        <div class="sch-note" data-editable="sch4_note">Các tiết mục văn nghệ và trò chơi vui nhộn cùng toàn thể quan khách.</div>
+      </div>
+    </div>
+    <div class="sch-item">
+      <div class="sch-time" data-editable="sch5_time">21:00</div>
+      <div class="sch-body">
+        <span class="sch-icon" data-editable="sch5_icon">💐</span>
+        <div class="sch-name" data-editable="sch5_name">Tung Hoa & Kết Tiệc</div>
+        <div class="sch-note" data-editable="sch5_note">Nghi lễ tung hoa và kết thúc buổi tiệc trong niềm vui trọn vẹn.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ GALLERY ══ -->
+<section id="gallery">
+  <div class="gallery-header anim from-bottom">
+    <span class="s-eyebrow" data-editable="gallery_eyebrow">Gallery</span>
+    <h2 class="s-title" data-editable="gallery_title">Album Ảnh <em>Kỷ Niệm</em></h2>
+  </div>
+  <div class="gallery-mosaic">
+    <div class="gm-item anim from-left">
+      <img data-image-editable="gallery_photo_1" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img11.jpg" alt="">
+      <div class="gm-overlay"><span class="gm-overlay-icon">✦</span></div>
+    </div>
+    <div class="gm-item anim from-bottom" style="transition-delay:0.1s">
+      <img data-image-editable="gallery_photo_2" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img10.jpg" alt="">
+      <div class="gm-overlay"><span class="gm-overlay-icon">✦</span></div>
+    </div>
+    <div class="gm-item anim from-right" style="transition-delay:0.2s">
+      <img data-image-editable="gallery_photo_3" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img9.jpg" alt="">
+      <div class="gm-overlay"><span class="gm-overlay-icon">✦</span></div>
+    </div>
+    <div class="gm-item anim from-bottom" style="transition-delay:0.15s">
+      <img data-image-editable="gallery_photo_4" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img8-2.jpg" alt="">
+      <div class="gm-overlay"><span class="gm-overlay-icon">✦</span></div>
+    </div>
+    <div class="gm-item anim from-right" style="transition-delay:0.25s">
+      <img data-image-editable="gallery_photo_5" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img3-4.jpg" alt="">
+      <div class="gm-overlay"><span class="gm-overlay-icon">✦</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HEART GALLERY ══ -->
+<section id="heart-gallery">
+  <!-- Floating hearts decoration -->
+  <div class="float-hearts" aria-hidden="true" id="floatHeartsContainer"></div>
+
+  <div class="heart-gallery-header anim from-bottom">
+    <span class="s-eyebrow">Love Memories</span>
+    <h2 class="s-title">Kỷ Niệm <em>Trái Tim</em></h2>
+    <div class="rule" style="max-width:300px;margin:20px auto">
+      <div class="rule-line"></div>
+      <div class="rule-glyph">♥</div>
+      <div class="rule-line"></div>
+    </div>
+  </div>
+
+  <div class="heart-canvas anim scale-in" id="heartCanvas">
+    <!-- Photos will be positioned by JS in heart shape -->
+  </div>
+
+  <div class="heart-caption anim from-bottom" style="transition-delay:0.3s">
+    <p class="heart-caption-text">
+      "Mỗi khoảnh khắc bên nhau<br>
+      đều là một mảnh ghép của tình yêu."
+    </p>
+    <span class="heart-caption-names">Thành Trung ♥ Thanh Hằng</span>
+  </div>
+</section>
+
+<!-- ══ FORMAL INVITE ══ -->
+<section id="formal-invite">
+  <div class="invite-header anim from-bottom">
+    <span class="s-eyebrow" data-editable="invite_eyebrow">Formal Invitation</span>
+    <h2 class="s-title" data-editable="invite_section_title">Thiệp Mời <em>Chính Thức</em></h2>
+  </div>
+  <div class="invite-letter anim scale-in">
+    <div class="rule" style="margin-bottom:32px">
+      <div class="rule-line" style="background:rgba(200,168,130,0.3)"></div>
+      <div class="rule-glyph" style="color:var(--sand)">✦</div>
+      <div class="rule-line" style="background:rgba(200,168,130,0.3)"></div>
+    </div>
+    <p class="invite-from" data-editable="invite_intro_text">
+      Với tất cả tình yêu thương và trân trọng<br>
+      chúng tôi trân trọng kính mời quý vị<br>
+      tham dự hôn lễ của
+    </p>
+    <div class="invite-names">
+      <span data-editable="invite_groom_name">Thành Trung</span>
+      <span class="invite-amp" data-editable="invite_amp">&</span>
+      <span data-editable="invite_bride_name">Thanh Hằng</span>
+    </div>
+    <div class="rule" style="margin:24px 0">
+      <div class="rule-line" style="background:rgba(200,168,130,0.2)"></div>
+      <div class="rule-glyph" style="color:rgba(200,168,130,0.4)">❧</div>
+      <div class="rule-line" style="background:rgba(200,168,130,0.2)"></div>
+    </div>
+    <div class="invite-when" data-editable="invite_date">Chủ Nhật · 18 · 08 · 2024</div>
+    <div class="invite-where" data-editable="invite_venue">
+      Luxury Palace<br>
+      171 Nguyễn Thái Sơn, Gò Vấp, TP. HCM<br>
+      Tiệc bắt đầu lúc 18:00
+    </div>
+  </div>
+</section>
+
+<!-- ══ RSVP ══ -->
+<section id="rsvp">
+  <div class="rsvp-inner">
+    <div class="rsvp-header anim from-bottom">
+      <span class="s-eyebrow" data-editable="rsvp_eyebrow">RSVP</span>
+      <h2 class="s-title" data-editable="rsvp_title">Xác Nhận <em>Tham Dự</em></h2>
+    </div>
+    <div class="rsvp-form anim from-bottom" style="transition-delay:0.15s">
+      <div class="f-row">
+        <div>
+          <label class="f-label" data-editable="rsvp_label_name">Họ và Tên</label>
+          <input class="f-input" id="rsvp-name" type="text" placeholder="Nguyễn Văn A">
+        </div>
+        <div>
+          <label class="f-label" data-editable="rsvp_label_phone">Số Điện Thoại</label>
+          <input class="f-input" id="rsvp-phone" type="tel" placeholder="0901 234 567">
+        </div>
+      </div>
+      <div>
+        <label class="f-label" data-editable="rsvp_label_ceremony">Buổi Lễ Tham Dự</label>
+        <div class="f-radio-group">
+          <label class="f-radio"><input type="radio" name="ceremony" value="nha-gai">
+            <span data-editable="rsvp_radio_1">Nhà Gái (17/08)</span></label>
+          <label class="f-radio"><input type="radio" name="ceremony" value="nha-trai">
+            <span data-editable="rsvp_radio_2">Nhà Trai (18/08)</span></label>
+          <label class="f-radio"><input type="radio" name="ceremony" value="ca-hai">
+            <span data-editable="rsvp_radio_3">Cả hai</span></label>
+        </div>
+      </div>
+      <div class="f-row">
+        <div>
+          <label class="f-label" data-editable="rsvp_label_confirm">Xác Nhận</label>
+          <select class="f-input" id="rsvp-attend">
+            <option value="yes">✓ Có, tôi sẽ tham dự</option>
+            <option value="no">✗ Rất tiếc, không tham dự được</option>
+          </select>
+        </div>
+        <div>
+          <label class="f-label" data-editable="rsvp_label_count">Số Người</label>
+          <select class="f-input" id="rsvp-count">
+            <option>1 người</option>
+            <option>2 người</option>
+            <option>3 người</option>
+            <option>4+ người</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="f-label" data-editable="rsvp_label_note">Lời Nhắn</label>
+        <textarea class="f-input" rows="3" placeholder="Ghi chú thêm..."></textarea>
+      </div>
+      <button class="btn-submit" onclick="submitRSVP()" data-editable="rsvp_btn">Xác Nhận</button>
+      <div class="rsvp-ok" id="rsvpOk" data-editable="rsvp_success_msg">
+        ✦ Cảm ơn bạn — Chúng tôi rất vui được đón chào bạn ✦
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WISHES ══ -->
+<section id="wishes">
+  <div class="wishes-header anim from-bottom">
+    <span class="s-eyebrow" data-editable="wishes_eyebrow">Wishes</span>
+    <h2 class="s-title" data-editable="wishes_title">Gửi Lời Chúc <em>Đến Cặp Đôi</em></h2>
+  </div>
+  <div class="wishes-layout">
+    <div class="wish-cards-col anim from-left" id="wishesList"></div>
+    <div class="wishes-form-col anim from-right">
+      <h3 data-editable="wishes_form_title">Viết Lời Chúc ✦</h3>
+      <div class="wishes-form">
+        <input type="text" id="wishName" placeholder="Tên của bạn">
+        <textarea id="wishText" rows="4" placeholder="Lời chúc mừng đến cô dâu và chú rể..."></textarea>
+        <button class="btn-wish" onclick="submitWish()" data-editable="wishes_btn">Gửi Lời Chúc</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAMILY ══ -->
+<section id="family">
+  <div class="family-header anim from-bottom">
+    <span class="s-eyebrow" data-editable="family_eyebrow">Family</span>
+    <h2 class="s-title" data-editable="family_title">Thông Tin <em>Liên Hệ Gia Đình</em></h2>
+  </div>
+  <div class="family-cols">
+    <div class="family-col anim from-left">
+      <div class="family-col-title" data-editable="family_groom_side">✦ Gia Đình Nhà Trai ✦</div>
+      <div class="fam-member">
+        <div class="fam-role" data-editable="groom_father_role">Cha</div>
+        <div class="fam-name" data-editable="groom_father_name">Nguyễn Văn A</div>
+        <div class="fam-phone"><a href="tel:+84901000001" data-editable="groom_father_phone">0901 000 001</a></div>
+      </div>
+      <div class="fam-member">
+        <div class="fam-role" data-editable="groom_mother_role">Mẹ</div>
+        <div class="fam-name" data-editable="groom_mother_name">Trần Thị B</div>
+        <div class="fam-phone"><a href="tel:+84901000002" data-editable="groom_mother_phone">0901 000 002</a></div>
+      </div>
+      <div class="fam-member">
+        <div class="fam-role" data-editable="groom_self_role">Chú Rể</div>
+        <div class="fam-name" data-editable="groom_self_name">Thành Trung</div>
+        <div class="fam-phone"><a href="tel:+84981742365" data-editable="groom_self_phone">0981 742 365</a></div>
+      </div>
+    </div>
+    <div class="family-divider"></div>
+    <div class="family-col anim from-right">
+      <div class="family-col-title" data-editable="family_bride_side">✦ Gia Đình Nhà Gái ✦</div>
+      <div class="fam-member">
+        <div class="fam-role" data-editable="bride_father_role">Cha</div>
+        <div class="fam-name" data-editable="bride_father_name">Lê Văn C</div>
+        <div class="fam-phone"><a href="tel:+84901000003" data-editable="bride_father_phone">0901 000 003</a></div>
+      </div>
+      <div class="fam-member">
+        <div class="fam-role" data-editable="bride_mother_role">Mẹ</div>
+        <div class="fam-name" data-editable="bride_mother_name">Phạm Thị D</div>
+        <div class="fam-phone"><a href="tel:+84901000004" data-editable="bride_mother_phone">0901 000 004</a></div>
+      </div>
+      <div class="fam-member">
+        <div class="fam-role" data-editable="bride_self_role">Cô Dâu</div>
+        <div class="fam-name" data-editable="bride_self_name">Thanh Hằng</div>
+        <div class="fam-phone"><a href="tel:+84981742365" data-editable="bride_self_phone">0981 742 365</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ THANK YOU ══ -->
+<section id="thankyou">
+  <div class="ty-bg" data-image-editable="thankyou_bg" style="background-image:url('https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img8-2.jpg')"></div>
+  <div class="ty-box">
+    <span class="ty-eyebrow anim from-bottom" data-editable="ty_eyebrow">Thank You</span>
+    <div class="ty-main anim from-bottom" style="transition-delay:0.1s" data-editable="ty_main">Trân<br>Trọng</div>
+    <p class="ty-quote anim from-bottom" style="transition-delay:0.2s" data-editable="ty_quote">
+      "Tình yêu không phải là nhìn vào mắt nhau,<br>
+      mà là cùng nhìn về một hướng."
+    </p>
+    <div class="ty-date anim fade-only" style="transition-delay:0.3s" data-editable="ty_date">Thành Trung & Thanh Hằng · 18 · 08 · 2024</div>
+  </div>
+</section>
+
+<footer>
+  <span data-editable="footer_left">© 2024 Thành Trung & Thanh Hằng</span>
+  <span data-editable="footer_right">Thiệp Mời Điện Tử</span>
+</footer>
+
+<script>
+  // ── Audio ──
+  const audio = document.getElementById('bgAudio');
+  const audioBtn = document.getElementById('audioBtn');
+  let playing = false;
+  audioBtn.addEventListener('click', () => {
+    if (playing) {
+      audio.pause();
+      audioBtn.textContent = '♪';
+      audioBtn.classList.remove('playing');
+    } else {
+      audio.play().catch(() => {});
+      audioBtn.textContent = '♬';
+      audioBtn.classList.add('playing');
+    }
+    playing = !playing;
+  });
+
+  // ── Scroll Animations ──
+  const animEls = document.querySelectorAll('.anim, .stagger');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  animEls.forEach(el => observer.observe(el));
+
+  // ── Wishes ──
+  const wishesData = [
+    { name: 'Minh Châu', text: 'Chúc đôi bạn trăm năm hạnh phúc, sống đến đầu bạc răng long nhé!' },
+    { name: 'Gia Đình Bác Toàn', text: 'Mừng hôn lễ! Cầu chúc đôi trẻ mãi yêu thương và gắn bó bền chặt.' },
+  ];
+
+  function renderWishes(list) {
+    const container = document.getElementById('wishesList');
+    container.innerHTML = list.map((w, i) => `
+      <div class="wish-card" style="animation: wishSlideIn 0.5s ${i * 0.1}s ease both">
+        <span class="wish-card-q">"</span>
+        <p class="wish-card-text">${w.text}</p>
+        <div class="wish-card-name">${w.name}</div>
+      </div>
+    `).join('');
+  }
+
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes wishSlideIn {
+      from { opacity:0; transform: translateX(-16px); }
+      to   { opacity:1; transform: none; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  renderWishes(wishesData);
+
+  function submitWish() {
+    const n = document.getElementById('wishName').value.trim();
+    const t = document.getElementById('wishText').value.trim();
+    if (!n || !t) { alert('Vui lòng nhập tên và lời chúc!'); return; }
+    wishesData.unshift({ name: n, text: t });
+    renderWishes(wishesData);
+    document.getElementById('wishName').value = '';
+    document.getElementById('wishText').value = '';
+  }
+
+  // ── RSVP ──
+  function submitRSVP() {
+    const name = document.getElementById('rsvp-name').value.trim();
+    if (!name) { alert('Vui lòng nhập họ và tên!'); return; }
+    const ok = document.getElementById('rsvpOk');
+    ok.style.display = 'block';
+    const btn = document.querySelector('.btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Đã Xác Nhận ✓';
+    btn.style.background = '#7A8C6E';
+  }
+
+  // ══════════════════════════════════════════
+  // ── HEART GALLERY ──
+  // ══════════════════════════════════════════
+
+  const photos = [
+    { src: 'https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img11.jpg', label: 'Ngày Đầu Gặp Nhau' },
+    { src: 'https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img10.jpg', label: 'Kỷ Niệm Đẹp' },
+    { src: 'https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img9.jpg', label: 'Bên Nhau Mãi' },
+    { src: 'https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img8-2.jpg', label: 'Tình Yêu Trọn Vẹn' },
+    { src: 'https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img6-5.jpg', label: 'Hạnh Phúc Mãi Mãi' },
+    { src: 'https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img3-4.jpg', label: 'Ngày Trọng Đại' },
+    { src: 'https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img2-4.jpg', label: 'Cô Dâu Chú Rể' },
+  ];
+
+  // Heart shape parametric coordinates
+  // Heart equation: x = 16sin³(t), y = 13cos(t) - 5cos(2t) - 2cos(3t) - cos(4t)
+  // Returns {x, y} in range approx -16..16, -14..12
+  function heartPoint(t) {
+    const x = 16 * Math.pow(Math.sin(t), 3);
+    const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+    return { x, y };
+  }
+
+  function buildHeartGallery() {
+    const canvas = document.getElementById('heartCanvas');
+    const W = canvas.offsetWidth || 620;
+    const H = canvas.offsetHeight || 580;
+    const cx = W / 2;
+    const cy = H / 2 - 20;
+
+    // Scale factor to fit heart in canvas
+    const scale = Math.min(W, H) / 38;
+
+    // Number of small photos arranged around heart perimeter
+    const perimeterCount = photos.length;
+
+    // Place photos around the heart perimeter
+    photos.forEach((photo, i) => {
+      // Evenly space angles around heart, starting from top
+      const t = (i / perimeterCount) * 2 * Math.PI - Math.PI / 2;
+      const pt = heartPoint(t);
+
+      // Position on heart perimeter
+      const px = cx + pt.x * scale;
+      const py = cy + pt.y * scale;
+
+      const size = 110;
+      const wrap = document.createElement('div');
+      wrap.className = 'heart-photo-wrap';
+      wrap.style.cssText = `
+        width: ${size}px;
+        height: ${size}px;
+        left: ${px - size/2}px;
+        top: ${py - size/2}px;
+        border-radius: 8px;
+        animation: heartPhotoIn 0.7s ${i * 0.1}s cubic-bezier(0.22,1,0.36,1) both;
+      `;
+
+      wrap.innerHTML = `
+        <img src="${photo.src}" alt="${photo.label}" loading="lazy">
+        <div class="photo-label">${photo.label}</div>
+      `;
+      canvas.appendChild(wrap);
+    });
+
+    // Center heart-shaped main photo
+    const centerWrap = document.createElement('div');
+    centerWrap.className = 'heart-center-photo';
+    centerWrap.innerHTML = `
+      <img src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img6-5.jpg" alt="Trái Tim">
+    `;
+    canvas.appendChild(centerWrap);
+
+    // Add heart outline SVG
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('class', 'heart-outline-svg');
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+    // Build heart path points
+    const steps = 200;
+    let pathD = '';
+    for (let i = 0; i <= steps; i++) {
+      const t = (i / steps) * 2 * Math.PI - Math.PI / 2;
+      const pt = heartPoint(t);
+      const px = cx + pt.x * scale;
+      const py = cy + pt.y * scale;
+      pathD += (i === 0 ? `M ${px} ${py}` : ` L ${px} ${py}`);
+    }
+    pathD += ' Z';
+
+    const path = document.createElementNS(svgNS, 'path');
+    path.setAttribute('d', pathD);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', 'rgba(160,92,59,0.2)');
+    path.setAttribute('stroke-width', '1');
+    path.setAttribute('stroke-dasharray', '4 8');
+
+    // Animated dash offset
+    const animEl = document.createElementNS(svgNS, 'animateTransform');
+    const anim2 = document.createElementNS(svgNS, 'animate');
+    anim2.setAttribute('attributeName', 'stroke-dashoffset');
+    anim2.setAttribute('from', '0');
+    anim2.setAttribute('to', '60');
+    anim2.setAttribute('dur', '4s');
+    anim2.setAttribute('repeatCount', 'indefinite');
+    path.appendChild(anim2);
+
+    svg.appendChild(path);
+    canvas.appendChild(svg);
+  }
+
+  // Dynamic style for heart photo animation
+  const heartStyle = document.createElement('style');
+  heartStyle.textContent = `
+    @keyframes heartPhotoIn {
+      from { opacity: 0; transform: scale(0.5) rotate(-10deg); }
+      to   { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+  `;
+  document.head.appendChild(heartStyle);
+
+  // Init heart gallery when visible
+  const heartSection = document.getElementById('heart-gallery');
+  const heartObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        buildHeartGallery();
+        heartObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  heartObserver.observe(heartSection);
+
+  // ── Floating Hearts ──
+  function spawnFloatingHearts() {
+    const container = document.getElementById('floatHeartsContainer');
+    const heartChars = ['♥', '♡', '❤', '💕', '💗'];
+    const colors = [
+      'rgba(160,92,59,0.15)', 'rgba(196,122,87,0.12)',
+      'rgba(200,168,130,0.12)', 'rgba(160,92,59,0.1)'
+    ];
+
+    for (let i = 0; i < 18; i++) {
+      const fh = document.createElement('span');
+      fh.className = 'fh';
+      fh.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+      const size = 10 + Math.random() * 22;
+      fh.style.setProperty('--size', size + 'px');
+      fh.style.setProperty('--color', colors[Math.floor(Math.random() * colors.length)]);
+      fh.style.setProperty('--dur', (6 + Math.random() * 8) + 's');
+      fh.style.setProperty('--delay', (Math.random() * 6) + 's');
+      fh.style.setProperty('--left', (Math.random() * 100) + '%');
+      container.appendChild(fh);
+    }
+  }
+
+  spawnFloatingHearts();
+</script>
+</body>
+</html>

@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thiệp Mời | Hoàng An & Ngọc Diệp</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --olive:#5a6b2a;--olive2:#7a8c3a;--olive3:#c8d08a;
+  --cream:#f5f0e0;--cream2:#ede8d4;--cream3:#faf7ee;
+  --beige:#d4c89a;--beige2:#e8e0c0;
+  --gold:#a08840;--gold2:#c9a84c;--gold3:#e8d5a0;
+  --dark:#2a2416;--muted:#6a5e40;--red:#c0304a;
+  --text:#2a2416;--border:rgba(160,136,64,0.3);
+
+  /* --olive: #5a6b2a;
+    --olive2: #7a8c3a;
+    --olive3: #c8d08a;
+    --beige: #f4f1ea; */
+}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--text);font-family:'Lato',sans-serif;overflow-x:hidden;}
+
+/* ═══ SCROLL REVEAL ═══ */
+.rev{opacity:0;transform:translateY(24px);transition:opacity .85s ease,transform .85s ease;}
+.rev.vis{opacity:1;transform:none;}
+.rev-l{opacity:0;transform:translateX(-24px);transition:opacity .85s ease,transform .85s ease;}
+.rev-l.vis{opacity:1;transform:none;}
+.rev-r{opacity:0;transform:translateX(24px);transition:opacity .85s ease,transform .85s ease;}
+.rev-r.vis{opacity:1;transform:none;}
+
+/* ═══ NAV ═══ */
+.navd{position:fixed;right:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:9px;z-index:200;}
+.nd{width:8px;height:8px;border-radius:50%;background:rgba(90,107,42,.25);cursor:pointer;border:1px solid rgba(90,107,42,.5);transition:all .3s;}
+.nd.on,.nd:hover{background:var(--olive);transform:scale(1.4);}
+
+/* HEART ALBUM */
+/* .heart-gallery{
+  width:100%;
+  max-width:620px;
+  margin:40px auto 0;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  position:relative;
+ clip-path: polygon(
+  50% 5%,
+  68% 0%,
+  88% 8%,
+  100% 25%,
+  100% 45%,
+  85% 65%,
+  65% 85%,
+  50% 100%,
+  35% 85%,
+  15% 65%,
+  0% 45%,
+  0% 25%,
+  12% 8%,
+  32% 0%
+);
+} */
+
+.heart-gallery{
+  width:100%;
+  max-width:1100px;
+  margin:60px auto 0;
+
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  grid-auto-rows:200px;
+  gap:14px;
+}
+
+.heart-gallery img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:0;
+  transition:all .4s ease;
+}
+
+.heart-gallery img:hover{
+  transform:scale(1.04);
+}
+
+.heart-gallery img{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  border-radius:10px;
+  transition:transform .4s ease;
+}
+
+.heart-gallery img:hover{
+  transform:scale(1.08);
+}
+
+.wide{
+  grid-column:span 2;
+}
+
+/* Ảnh cao */
+.tall{
+  grid-row:span 2;
+}
+
+/* Ảnh lớn cả 2 chiều */
+.big{
+  grid-column:span 2;
+  grid-row:span 2;
+}
+
+/* ═══ INTRO ═══ */
+#intro{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--cream);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  transition:opacity 1.2s ease,visibility 1.2s ease;
+}
+#intro.hide{opacity:0;visibility:hidden;pointer-events:none;}
+
+/* Big initials */
+.intro-init{
+  font-family:'Playfair Display',serif;font-weight:900;
+  font-size:clamp(120px,30vw,220px);
+  color:transparent;
+  -webkit-text-stroke:2px var(--beige);
+  line-height:1;
+  letter-spacing:0.01em;
+  position:relative;z-index:2;
+  animation:iIn 1.2s cubic-bezier(0.4,0,0.2,1) both;
+  user-select:none;
+  transition:letter-spacing 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+.intro-init.vis {
+  letter-spacing:0.01em !important;
+}
+@keyframes iIn{from{opacity:0;letter-spacing:24px;}to{opacity:1;letter-spacing:-8px;}}
+/* Sửa lại animation để không bị dính chữ khi kết thúc */
+@keyframes iIn{from{opacity:0;letter-spacing:24px;}50%{letter-spacing:0.01em;}to{opacity:1;letter-spacing:0.01em;}}
+.intro-dot{
+  width:14px;height:14px;border-radius:50%;background:var(--red);
+  position:absolute;top:18%;right:-6px;
+  animation:iIn .6s ease .4s both;
+  box-shadow:0 0 0 3px var(--cream),0 0 0 5px rgba(192,48,74,.3);
+}
+.intro-wrap{position:relative;display:flex;align-items:center;justify-content:center;}
+.intro-strip{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:var(--olive);
+  width:100%;height:40%;
+  z-index:0;opacity:.07;
+}
+.intro-sub{
+  position:absolute;bottom:26%;left:50%;transform:translateX(-50%);
+  white-space:nowrap;z-index:3;text-align:center;
+  animation:iIn .8s ease .8s both;
+}
+.intro-sub h2{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(22px,4vw,34px);
+  font-weight:300;color:var(--muted);letter-spacing:8px;
+  font-style:italic;
+}
+.intro-sub p{
+  font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-top:6px;
+}
+.intro-cta{
+  position:absolute;bottom:12%;left:50%;transform:translateX(-50%);
+  z-index:3;text-align:center;
+  animation:iIn .6s ease 1.2s both;
+  cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  color:var(--muted);font-size:10px;letter-spacing:4px;text-transform:uppercase;
+}
+.icl{width:1px;height:32px;background:linear-gradient(to bottom,var(--gold),transparent);}
+@keyframes iBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
+
+/* Leaf deco in intro */
+.intro-leaf{position:absolute;pointer-events:none;opacity:.55;}
+
+/* ═══ SECTION SHELL ═══ */
+.sw{padding:80px 20px;position:relative;}
+.sw.alt{background:var(--cream3);}
+.sw.olive{background:var(--olive);color:white;}
+.sw.cream2{background:var(--cream2);}
+.inn{max-width:800px;margin:0 auto;}
+.inn.wide{max-width:1040px;}
+
+/* ═══ SECTION HEADER ═══ */
+.sh{text-align:center;margin-bottom:36px;}
+.sh-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--olive);color:white;
+  padding:5px 18px;font-size:9px;letter-spacing:5px;text-transform:uppercase;
+  font-family:'Lato',sans-serif;margin-bottom:14px;
+}
+.sh-badge.inv{background:var(--cream);color:var(--olive);}
+.sh-badge.gold{background:var(--gold);color:white;}
+.sh-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,5vw,44px);font-weight:700;
+  color:var(--dark);line-height:1.1;
+}
+.sh-title.w{color:white;}
+.sh-title em{font-style:italic;color:var(--olive);font-weight:400;}
+.sh-title em.w{color:var(--olive3);}
+.sh-rule{
+  display:flex;align-items:center;gap:12px;justify-content:center;margin-top:14px;
+  color:var(--gold2);font-size:13px;
+}
+.sh-rule::before,.sh-rule::after{content:'';flex:1;max-width:60px;height:1px;background:linear-gradient(to right,transparent,var(--gold2));}
+.sh-rule::after{background:linear-gradient(to left,transparent,var(--gold2));}
+.sh-rule.w{color:var(--olive3);}
+.sh-rule.w::before{background:linear-gradient(to right,transparent,var(--olive3));}
+.sh-rule.w::after{background:linear-gradient(to left,transparent,var(--olive3));}
+
+/* ═══ CARD COMPONENT (shared across all sections) ═══ */
+.card{
+  background:var(--cream2);
+  position:relative;overflow:hidden;
+  border:1px solid var(--beige);
+}
+.card.arch{border-radius:200px 200px 0 0;}
+.card.flat{border-radius:3px;}
+
+/* Card inner left stripe (gold) */
+.card .cstripe{
+  position:absolute;top:0;left:0;width:5px;height:100%;
+  background:var(--olive);
+}
+/* Section horizontal rule inside card */
+.cdiv{height:1px;background:linear-gradient(to right,transparent,var(--beige),transparent);margin:16px 0;}
+
+/* ═══ SECTION 1 — HERO ═══ */
+#hero{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:60px 20px;
+  background:var(--cream);position:relative;overflow:hidden;
+}
+
+/* Main hero layout: split card like thiep goc */
+.hero-outer{
+  width:min(760px,96vw);position:relative;z-index:2;
+}
+.hero-split{
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:460px;
+  box-shadow:0 24px 80px rgba(42,36,22,.18);
+}
+
+/* LEFT panel */
+.hs-l{
+  background:var(--cream2);
+  padding:44px 32px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  border:1px solid var(--beige);border-right:none;
+  position:relative;overflow:hidden;
+}
+.hs-l::before{/* olive strip */
+  content:'';position:absolute;top:0;right:0;width:4px;height:100%;background:var(--olive);
+}
+.hero-thiep{
+  font-family:'Lato',sans-serif;font-size:10px;letter-spacing:5px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;
+}
+.hero-thiep-title{
+  font-family:'Playfair Display',serif;font-size:28px;font-weight:700;
+  color:var(--dark);letter-spacing:2px;margin-bottom:4px;
+}
+.hero-thiep-title span{
+  display:inline-block;width:28px;height:28px;border:2px solid var(--gold2);
+  border-radius:50%;line-height:24px;text-align:center;font-size:14px;
+  color:var(--gold2);vertical-align:middle;margin-right:4px;
+}
+/* Big initials */
+.hero-init{
+  font-family:'Playfair Display',serif;font-weight:900;
+  font-size:72px;color:var(--gold);letter-spacing:-4px;line-height:1;
+  margin:16px 0 8px;
+}
+.hero-date-line{
+  font-family:'Lato',sans-serif;font-size:11px;letter-spacing:3px;color:var(--muted);margin-bottom:4px;
+}
+.hero-names-line{
+  font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;
+  color:var(--dark);letter-spacing:2px;
+}
+.hero-invite-row{
+  margin-top:auto;padding-top:20px;border-top:1px dashed var(--beige);
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);
+}
+.hero-invite-name-input{
+  margin-top:4px;border-bottom:1px dashed var(--beige2);
+  min-height:20px;font-family:'Cormorant Garamond',serif;
+  font-size:15px;font-style:italic;color:var(--gold);
+}
+
+/* RIGHT panel — couple illustration */
+.hs-r{
+  background:linear-gradient(170deg,var(--olive3) 0%,var(--beige2) 60%,var(--cream2) 100%);
+  display:flex;align-items:flex-end;justify-content:center;
+  position:relative;overflow:hidden;
+  border:1px solid var(--beige);
+}
+/* botanical bg */
+.hs-r::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 80% 20%,rgba(90,107,42,.15) 0%,transparent 55%),
+    radial-gradient(ellipse at 20% 80%,rgba(90,107,42,.1) 0%,transparent 45%);
+}
+
+/* Anime couple SVG */
+.couple-svg{width:100%;max-height:420px;object-fit:contain;position:relative;z-index:2;}
+
+/* ═══ ARCH CARD (used in sections) ═══ */
+.arch-card{
+  background:linear-gradient(to bottom,var(--olive) 0%,var(--olive) 53%,var(--cream2) 53%,var(--cream2) 100%);
+  border-radius:220px 220px 0 0;
+  padding:40px 30px 34px;
+  border:1px solid var(--beige);
+  position:relative;overflow:hidden;
+  text-align:center;
+}
+.arch-top{
+  display:none;
+}
+.arch-inner{position:relative;z-index:2;}
+.arch-head{padding:0 4px;}
+.arch-flower{color:white;font-size:30px;line-height:1;margin-bottom:10px;}
+.arch-title{
+  font-family:'Dancing Script',cursive;font-size:32px;
+  color:white;margin-bottom:6px;
+}
+.arch-sub{font-size:11px;letter-spacing:5px;text-transform:uppercase;color:rgba(255,255,255,.74);}
+.arch-rule{height:1px;background:rgba(255,255,255,.22);margin:14px auto;max-width:78%;}
+.arch-guest{
+  font-size:13px;letter-spacing:1px;color:var(--cream);
+  font-style:italic;margin-bottom:8px;font-family:'Cormorant Garamond',serif;
+}
+.arch-message{
+  font-family:'Cormorant Garamond',serif;font-size:15px;
+  color:var(--cream);line-height:1.75;font-style:italic;
+  margin:0 auto;max-width:265px;
+}
+.arch-body{margin-top:30px;}
+.arch-place{
+  font-family:'Playfair Display',serif;
+  font-size:22px;font-weight:700;
+  color:var(--dark);letter-spacing:1px;margin-bottom:8px;
+}
+.arch-detail{
+  font-family:'Cormorant Garamond',serif;
+  font-size:15px;color:var(--muted);
+  font-style:italic;line-height:1.85;
+  max-width:300px;margin:0 auto;
+}
+.arch-time{font-style:normal;color:var(--dark);font-weight:700;}
+.arch-location{display:inline-flex;align-items:center;gap:4px;}
+.arch-location .pin{font-style:normal;line-height:1;}
+.arch-sep{
+  height:1px;background:var(--beige);
+  width:62%;margin:22px auto;
+}
+.arch-note{
+  font-family:'Dancing Script',cursive;
+  font-size:20px;color:var(--olive);
+  line-height:1.6;margin:0 auto;max-width:290px;
+}
+.arch-sign{
+  font-family:'Dancing Script',cursive;
+  font-size:16px;color:var(--muted);margin-top:8px;
+}
+
+/* ═══ CALENDAR CARD ═══ */
+.cal-card{
+  background:var(--cream2);border:1px solid var(--beige);
+  padding:24px;position:relative;overflow:hidden;
+}
+.cal-title{
+  font-size:10px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--muted);text-align:center;margin-bottom:16px;font-family:'Lato',sans-serif;
+}
+.cal-month{
+  font-family:'Playfair Display',serif;font-size:15px;font-weight:700;
+  color:var(--dark);text-align:center;margin-bottom:12px;letter-spacing:3px;
+}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;}
+.cal-hd{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:3px 0;font-family:'Lato',sans-serif;}
+.cal-day{
+  font-family:'Playfair Display',serif;font-size:13px;color:var(--dark);
+  padding:5px 2px;border-radius:2px;
+}
+.cal-day.empty{color:transparent;}
+.cal-day.mark{
+  background:var(--red);color:white;border-radius:50%;width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;margin:0 auto;box-shadow:0 3px 10px rgba(192,48,74,.4);
+  font-size:12px;
+}
+.cal-day.muted{color:var(--beige);}
+
+/* ═══ NAMES VERTICAL ═══ */
+.vname{
+  writing-mode:vertical-rl;text-orientation:mixed;
+  font-family:'Playfair Display',serif;font-size:clamp(18px,3vw,26px);
+  font-weight:700;color:var(--olive);
+  letter-spacing:4px;text-transform:uppercase;
+}
+.vname.right{transform:rotate(180deg);}
+
+/* ═══ EDITORIAL LAYOUT ═══ */
+.edit-grid{
+  display:grid;gap:0;
+}
+.edit-grid.g3{grid-template-columns:auto 1fr auto;}
+.edit-grid.g2{grid-template-columns:1fr 1fr;}
+.edit-grid.g2r{grid-template-columns:1fr 2fr;}
+
+.edit-cell{
+  background:var(--cream2);border:1px solid var(--beige);
+  padding:24px;position:relative;overflow:hidden;
+}
+.edit-cell .cstripe{position:absolute;top:0;left:0;width:4px;height:100%;background:var(--olive);}
+.edit-label{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-family:'Lato',sans-serif;}
+.edit-val{font-family:'Playfair Display',serif;font-size:clamp(15px,2.5vw,20px);color:var(--dark);font-weight:700;}
+.edit-sub{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted);font-style:italic;margin-top:4px;line-height:1.7;}
+
+/* Big number cell */
+.num-cell{
+  background:var(--olive);color:white;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:16px 22px;text-align:center;border:none;
+}
+.num-big{
+  font-family:'Playfair Display',serif;font-size:clamp(36px,6vw,58px);font-weight:900;
+  line-height:1;color:white;
+}
+.num-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--olive3);margin-top:3px;}
+
+/* ═══ TIMELINE ═══ */
+.tl{position:relative;margin-top:36px;}
+.tl::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--olive2),transparent);transform:translateX(-50%);}
+.tli{display:grid;grid-template-columns:1fr 44px 1fr;margin-bottom:32px;align-items:start;}
+.tli:nth-child(odd) .tlc{grid-column:1;text-align:right;}
+.tli:nth-child(odd) .tle{grid-column:3;}
+.tli:nth-child(even) .tlc{grid-column:3;text-align:left;}
+.tli:nth-child(even) .tle{grid-column:1;}
+.tld{grid-column:2;display:flex;align-items:flex-start;justify-content:center;padding-top:4px;}
+.tld-dot{
+  width:14px;height:14px;border:2px solid var(--olive);border-radius:50%;
+  background:var(--cream);display:block;
+}
+.tl-dt{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--olive2);margin-bottom:4px;font-family:'Lato',sans-serif;}
+.tl-tt{font-family:'Playfair Display',serif;font-size:17px;color:var(--dark);font-weight:700;margin-bottom:3px;}
+.tl-dc{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted);line-height:1.75;font-style:italic;}
+
+/* ═══ RSVP FORM ═══ */
+.rf{display:flex;flex-direction:column;gap:15px;margin-top:28px;}
+.ff{display:flex;flex-direction:column;text-align:left;gap:4px;}
+.ff label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--olive2);font-family:'Lato',sans-serif;}
+.ff input,.ff select,.ff textarea{background:transparent;border:none;border-bottom:1px solid var(--beige);padding:9px 0;font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--dark);outline:none;transition:border-color .3s;-webkit-appearance:none;}
+.ff input:focus,.ff select:focus,.ff textarea:focus{border-color:var(--olive);}
+.ff textarea{resize:none;height:60px;}
+.aopts{display:flex;gap:10px;margin-top:6px;}
+.aopt{flex:1;padding:10px;border:1px solid var(--beige);text-align:center;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--muted);transition:all .3s;}
+.aopt.on,.aopt:hover{border-color:var(--olive);color:var(--olive);background:rgba(90,107,42,.06);}
+.btn-sub{margin-top:18px;background:var(--olive);color:white;border:none;padding:13px 42px;font-family:'Lato',sans-serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:background .3s;align-self:center;}
+.btn-sub:hover{background:var(--olive2);}
+.rsuc{display:none;padding:32px;text-align:center;font-family:'Dancing Script',cursive;font-size:26px;color:var(--olive);}
+
+/* ═══ WISHES ═══ */
+.wwall{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:13px;margin-top:28px;max-height:340px;overflow-y:auto;}
+.wcard{background:var(--cream);padding:16px;border-left:3px solid var(--olive2);text-align:left;}
+.wa{font-family:'Dancing Script',cursive;font-size:18px;color:var(--olive);margin-bottom:5px;}
+.wt{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted);font-style:italic;line-height:1.7;}
+.wform{display:flex;flex-direction:column;gap:11px;margin-top:24px;}
+.wform input,.wform textarea{background:var(--cream);border:1px solid var(--beige);padding:11px 13px;font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--dark);outline:none;transition:border-color .3s;}
+.wform input:focus,.wform textarea:focus{border-color:var(--olive);}
+.wform textarea{height:70px;resize:none;}
+.btn-w{background:var(--gold2);color:white;border:none;padding:11px 30px;font-family:'Lato',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;align-self:center;transition:opacity .3s;}
+.btn-w:hover{opacity:.85;}
+
+/* ═══ CONTACT GRID ═══ */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0;}
+.cfb{background:var(--cream2);border:1px solid var(--beige);padding:22px 20px;text-align:left;position:relative;}
+.cfb:hover{background:var(--cream3);}
+.cfbs{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--olive2);margin-bottom:8px;font-family:'Lato',sans-serif;}
+.cfbn{font-family:'Playfair Display',serif;font-size:15px;color:var(--dark);font-weight:700;margin-bottom:6px;}
+.cfbp{font-size:15px;color:var(--olive);text-decoration:none;display:block;font-family:'Cormorant Garamond',serif;}
+.cfbp:hover{text-decoration:underline;}
+.cfbnt{font-size:12px;color:var(--muted);font-style:italic;font-family:'Cormorant Garamond',serif;margin-top:3px;}
+
+/* ═══ ALBUM MOSAIC ═══ */
+.mosaic{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,185px);gap:8px;margin-top:28px;}
+.tile{background:var(--cream2);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;font-size:38px;cursor:pointer;transition:transform .3s;}
+.tile:hover{transform:scale(1.03);z-index:1;}
+.tile:first-child{grid-row:span 2;font-size:58px;}
+.tov{position:absolute;inset:0;background:rgba(42,36,22,0);transition:background .3s;}
+.tile:hover .tov{background:rgba(42,36,22,.15);}
+.tile::after{content:'';position:absolute;inset:5px;border:1px solid rgba(160,136,64,.25);pointer-events:none;transition:border-color .3s;}
+.tile:hover::after{border-color:rgba(90,107,42,.5);}
+
+/* ═══ CLOSING ═══ */
+#closing{
+  background:var(--olive);padding:90px 20px;text-align:center;
+  position:relative;overflow:hidden;color:white;
+}
+#closing::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(200,208,138,.12) 0%,transparent 65%);}
+.cl-inner{max-width:580px;margin:0 auto;position:relative;z-index:2;}
+.cl-init{
+  font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(80px,18vw,140px);
+  color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.2);
+  line-height:1;letter-spacing:-6px;position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;white-space:nowrap;
+}
+.cl-t{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,44px);font-weight:700;color:white;margin-bottom:18px;}
+.cl-p{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2vw,20px);color:rgba(255,255,255,.75);line-height:2;font-style:italic;margin-bottom:30px;}
+.cl-nm{font-family:'Dancing Script',cursive;font-size:30px;color:var(--olive3);}
+.cl-d{font-family:'Lato',sans-serif;font-size:10px;letter-spacing:5px;text-transform:uppercase;color:rgba(200,208,138,.6);margin-top:12px;}
+.cl-rule{display:flex;align-items:center;gap:12px;justify-content:center;margin:18px 0;color:var(--olive3);}
+.cl-rule::before,.cl-rule::after{content:'';flex:1;max-width:60px;height:1px;background:rgba(200,208,138,.4);}
+
+/* ═══ RESP ═══ */
+@media(max-width:640px){
+  .hero-split{grid-template-columns:1fr;}.hs-r{min-height:240px;}
+  .tl::before{left:22px;}.tli{grid-template-columns:44px 1fr;}
+  .tli .tlc{grid-column:2!important;text-align:left!important;}.tli .tle{display:none;}.tli .tld{grid-column:1;}
+  .mosaic{grid-template-columns:1fr 1fr;grid-template-rows:auto;}.tile:first-child{grid-row:span 1;}
+  .navd{display:none;}
+  .edit-grid.g3{grid-template-columns:1fr;}.vname{writing-mode:horizontal-tb;transform:none;}
+  .edit-grid.g2r{grid-template-columns:1fr;}
+  .arch-card{padding:34px 22px 28px;border-radius:180px 180px 0 0;}
+  .arch-title{font-size:30px;}
+  .arch-sub{font-size:10px;letter-spacing:4px;}
+  .arch-message{font-size:14px;}
+  .arch-place{font-size:20px;}
+  .arch-detail{font-size:14px;}
+  .arch-note{font-size:18px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="navd" id="navd"></nav>
+
+<!-- ══════════ INTRO ══════════ -->
+<div id="intro" data-editable="field">
+  <!-- big BG initials -->
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-52%,-52%);font-family:'Playfair Display',serif;font-weight:900;font-size:min(55vw,340px);color:transparent;-webkit-text-stroke:1px rgba(90,107,42,.08);line-height:1;letter-spacing:-10px;pointer-events:none;user-select:none;z-index:0;" data-editable="field_2">A.D</div>
+
+  <!-- leaf decorations -->
+  <div class="intro-leaf" style="top:8%;left:6%;font-size:52px;transform:rotate(-20deg);" data-editable="field_3">🌿</div>
+  <div class="intro-leaf" style="top:12%;right:8%;font-size:42px;transform:rotate(15deg) scaleX(-1);" data-editable="field_4">🌿</div>
+  <div class="intro-leaf" style="bottom:14%;left:8%;font-size:36px;transform:rotate(10deg);" data-editable="field_5">🌿</div>
+  <div class="intro-leaf" style="bottom:10%;right:6%;font-size:46px;transform:rotate(-12deg) scaleX(-1);" data-editable="field_6">🌿</div>
+
+  <div class="intro-wrap" style="position:relative;z-index:2;">
+    <div class="intro-strip"></div>
+    <div style="text-align:center;position:relative;z-index:3;" data-editable="field_7">
+      <div style="font-size:10px;letter-spacing:6px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;animation:iIn .6s ease both;" data-editable="field_8">THIỆP MỜI</div>
+      <div class="intro-init" style="position:relative;" data-editable="field_9">
+        A.D
+        <div class="intro-dot"></div>
+      </div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(18px,3.5vw,26px);font-weight:300;color:var(--muted);letter-spacing:4px;font-style:italic;animation:iIn .8s ease .6s both;margin-top:8px;" data-editable="field_10">Hoàng An &amp; Ngọc Diệp</div>
+      <div style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-top:8px;animation:iIn .6s ease .9s both;" data-editable="field_11">18 · 05 · 2025</div>
+    </div>
+  </div>
+
+  <div class="intro-cta" id="icta" data-editable="field_12">
+    Mở thiệp
+    <div class="icl"></div>
+    <div style="animation:iBounce 1.4s ease-in-out infinite;font-size:14px;" data-editable="field_13">↓</div>
+  </div>
+</div>
+
+<!-- ══════════ S1: HERO ══════════ -->
+<section id="hero">
+  <div class="hero-outer" data-editable="wedding">
+    <!-- top label -->
+    <div class="rev" style="text-align:center;margin-bottom:18px;" data-editable="wedding_2">
+      <span class="sh-badge" data-editable="wedding_3">✦ WEDDING INVITATION ✦</span>
+    </div>
+
+    <div class="hero-split rev" data-editable="field_14">
+      <!-- LEFT -->
+      <div class="hs-l" data-editable="field_15">
+        <div data-editable="field_16">
+          <div class="hero-thiep" data-editable="field_17">Thiệp Mời</div>
+          <div class="hero-thiep-title" data-editable="field_18"><span data-editable="field_19">✦</span>THIỆP MỜI</div>
+          <div class="hero-init" data-editable="field_20">A.D</div>
+          <div class="hero-date-line" data-editable="field_21">18 . 05 . 2025</div>
+          <div class="hero-names-line" data-editable="field_22">Hoàng An &amp; Ngọc Diệp</div>
+        </div>
+        <div class="hero-invite-row" data-editable="invite">
+          <div data-editable="invite_2">Trân trọng kính mời:</div>
+          <div class="hero-invite-name-input" data-editable="field_23">Quý Khách</div>
+        </div>
+      </div>
+
+      <!-- RIGHT — couple illustration -->
+      <div class="hs-r">
+        <!-- Ảnh thật cô dâu chú rể -->
+        <img src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img4-4.jpg" alt="Cô dâu chú rể" style="width:100%;max-width:100%;max-height:100%;object-fit:cover;background:#fff;" data-image-editable="couple_photo">
+      </div>
+    </div>
+
+    <!-- Bottom hint -->
+    <div class="rev" style="text-align:center;margin-top:22px;" data-editable="button">
+      <div style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);" data-editable="button_2">Cuộn để xem thêm ↓</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S2: LỜI MỞ ĐẦU ══════════ -->
+<section class="sw alt" id="lmd">
+  <div class="inn" data-editable="field_24">
+    <div class="sh rev" data-editable="field_25">
+      <div class="sh-badge" data-editable="field_26">— Lời Ngỏ —</div>
+      <h2 class="sh-title" data-editable="field_27">Lời <em data-editable="field_28">Mở Đầu</em></h2>
+      <div class="sh-rule" data-editable="field_29">✦</div>
+    </div>
+
+    <!-- editorial layout for opening -->
+    <div class="edit-grid g3 rev" style="max-width:680px;margin:0 auto;" data-editable="field_30">
+      <div style="background:var(--olive);padding:32px 18px;display:flex;align-items:center;justify-content:center;border:1px solid var(--olive);" data-editable="field_31">
+        <div class="vname" style="color:var(--olive3);font-size:13px;" data-editable="field_32">LỜI MỞ ĐẦU</div>
+      </div>
+      <div class="edit-cell" style="padding:32px 28px;">
+        <div class="cstripe"></div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2.5vw,21px);line-height:2;font-style:italic;color:var(--text);padding-left:14px;" data-editable="family">
+          <span style="font-family:'Playfair Display',serif;font-size:56px;color:var(--gold2);line-height:.4;display:block;margin-bottom:12px;" data-editable="field_33">"</span>
+          Hôn nhân là hành trình của yêu thương và sẻ chia. Từ những khoảnh khắc bình yên đến những tháng ngày rực rỡ, chúng mình đã chọn nhau — và sẽ mãi chọn nhau.<br><br>
+          Trân trọng kính mời quý gia đình, bạn bè đến chung vui trong ngày trọng đại nhất cuộc đời.
+        </div>
+        <div style="margin-top:20px;font-family:'Dancing Script',cursive;font-size:22px;color:var(--olive);padding-left:14px;" data-editable="field_34">Hoàng An &amp; Ngọc Diệp</div>
+      </div>
+      <div style="background:var(--beige2);padding:32px 18px;display:flex;align-items:center;justify-content:center;border:1px solid var(--beige);" data-editable="field_35">
+        <div style="text-align:center;" data-editable="field_36">
+          <div style="font-family:'Playfair Display',serif;font-size:42px;font-weight:900;color:var(--gold);line-height:1;" data-editable="field_37">A.D</div>
+          <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:6px;" data-editable="field_38">2025</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S3: CÔ DÂU & CHÚ RỂ ══════════ -->
+<section class="sw" id="gt">
+  <div class="inn wide" data-editable="field_39">
+    <div class="sh rev" data-editable="field_40">
+      <div class="sh-badge" data-editable="field_41">— Nhân Vật Chính —</div>
+      <h2 class="sh-title" data-editable="groom">Cô Dâu &amp; <em data-editable="groom_2">Chú Rể</em></h2>
+      <div class="sh-rule" data-editable="field_42">✦</div>
+    </div>
+
+    <!-- editorial: NAMES VERTICAL + INFO + NAMES VERTICAL -->
+    <div class="edit-grid g3 rev" data-editable="field_43">
+      <!-- left vertical name -->
+      <div style="background:var(--cream2);border:1px solid var(--beige);padding:24px 16px;display:flex;align-items:center;justify-content:center;min-height:320px;" data-editable="field_44">
+        <div class="vname" style="letter-spacing:6px;font-size:clamp(14px,2vw,20px);" data-editable="field_45">DƯƠNG HOÀNG AN</div>
+      </div>
+
+      <!-- center content -->
+      <div data-editable="field_73">
+        <!-- top row: 2 persons -->
+        <div class="edit-grid g2">
+          <div class="edit-cell" style="padding:28px 20px;text-align:center;">
+            <div class="cstripe"></div>
+            <div class="edit-label" style="text-align:center;" data-editable="bride">Cô Dâu</div>
+            <img src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/426613705_931101458372397_7013843095835742119_n.jpg" alt="Cô dâu Hoàng An" style="width:100%;max-width:160px;border-radius:12px;box-shadow:0 2px 12px 0 rgba(90,107,42,0.10);background:#fff;margin-bottom:10px;" data-image-editable="couple_photo_2">
+            <div style="font-family:'Playfair Display',serif;font-size:clamp(18px,3vw,24px);font-weight:700;color:var(--dark);margin:8px 0 4px;" data-editable="field_46">Hoàng An</div>
+            <p class="edit-sub" style="text-align:center;" data-editable="groom_3">Con gái của<br><em data-editable="groom_4">Ông Nguyễn Văn Bình<br>&amp; Bà Trần Thị Mai</em><br><small data-editable="field_47">Quận Bình Thạnh, TP.HCM</small></p>
+          </div>
+          <div class="edit-cell" style="padding:28px 20px;text-align:center;border-left:none;">
+            <div style="position:absolute;top:0;right:0;width:4px;height:100%;background:var(--olive);"></div>
+            <div class="edit-label" style="text-align:center;" data-editable="groom_5">Chú Rể</div>
+            <img src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/426613705_931101458372397_7013843095835742119_n.jpg" alt="Chú rể Ngọc Diệp" style="width:100%;max-width:160px;border-radius:12px;box-shadow:0 2px 12px 0 rgba(90,107,42,0.10);background:#fff;margin-bottom:10px;" data-image-editable="photo">
+            <div style="font-family:'Playfair Display',serif;font-size:clamp(18px,3vw,24px);font-weight:700;color:var(--dark);margin:8px 0 4px;" data-editable="field_48">Ngọc Diệp</div>
+            <p class="edit-sub" style="text-align:center;" data-editable="groom_6">Con trai của<br><em data-editable="groom_7">Ông Lê Văn Hùng<br>&amp; Bà Phạm Thị Lan</em><br><small data-editable="field_49">Quận Tân Bình, TP.HCM</small></p>
+          </div>
+        </div>
+
+        <!-- bottom: parents info -->
+        <div class="edit-grid g2" style="border-top:none;" data-editable="family_2">
+          <div style="background:var(--olive);color:white;padding:18px 20px;border:1px solid var(--olive);border-top:none;" data-editable="family_3">
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--olive3);margin-bottom:6px;" data-editable="family_4">Nhà Trai</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:14px;color:rgba(255,255,255,.85);line-height:1.9;font-style:italic;" data-editable="field_50">Dương Minh Khải<br>Lê Kiều Nga<br>TP. Hồ Chí Minh</div>
+          </div>
+          <div style="background:var(--beige2);padding:18px 20px;border:1px solid var(--beige);border-top:none;border-left:none;" data-editable="family_5">
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;" data-editable="family_6">Nhà Gái</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted);line-height:1.9;font-style:italic;" data-editable="groom_8">Trần Thanh Tú<br>Hoàng Thị Mỹ<br>TP. Hồ Chí Minh</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- right vertical name -->
+      <div style="background:var(--olive);padding:24px 16px;display:flex;align-items:center;justify-content:center;min-height:320px;border:1px solid var(--olive);" data-editable="field_51">
+        <div class="vname right" style="color:var(--olive3);letter-spacing:6px;font-size:clamp(14px,2vw,20px);" data-editable="field_52">TRẦN NGỌC DIỆP</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S4: CHUYỆN TÌNH ══════════ -->
+<section class="sw alt" id="ct">
+  <div class="inn" data-editable="field_53">
+    <div class="sh rev" data-editable="field_54">
+      <div class="sh-badge" data-editable="field_55">— Hành Trình —</div>
+      <h2 class="sh-title" data-editable="love">Chuyện <em data-editable="love_2">Tình Yêu</em></h2>
+      <div class="sh-rule" data-editable="field_56">✦</div>
+    </div>
+    <div class="tl" data-editable="field_57">
+      <div class="tli rev-l" data-editable="field_58"><div class="tlc" data-editable="field_59"><div class="tl-dt" data-editable="field_60">Mùa Thu 2021</div><div class="tl-tt" data-editable="field_61">Lần Đầu Gặp Gỡ</div><div class="tl-dc" data-editable="field_62">Trong một buổi chiều bình yên, hai ánh mắt chạm nhau và cả thế giới như lặng xuống…</div></div><div class="tld"><span class="tld-dot"></span></div><div class="tle"></div></div>
+      <div class="tli rev-r"><div class="tle"></div><div class="tld"><span class="tld-dot"></span></div><div class="tlc" data-editable="month"><div class="tl-dt" data-editable="month_2">Tháng 3, 2022</div><div class="tl-tt" data-editable="date">Ngày Hẹn Hò Đầu Tiên</div><div class="tl-dc" data-editable="groom_9">Một tách cà phê, muôn câu chuyện — và anh biết, người này sẽ là cả cuộc đời.</div></div></div>
+      <div class="tli rev-l" data-editable="field_63"><div class="tlc" data-editable="field_64"><div class="tl-dt" data-editable="field_65">Mùa Hè 2023</div><div class="tl-tt" data-editable="field_66">Chuyến Đi Đáng Nhớ</div><div class="tl-dc" data-editable="album">Cùng nhau khám phá những vùng đất mới, tìm thấy nhau nhiều hơn qua mỗi khoảnh khắc.</div></div><div class="tld"><span class="tld-dot"></span></div><div class="tle"></div></div>
+      <div class="tli rev-r"><div class="tle"></div><div class="tld"><span class="tld-dot"></span></div><div class="tlc" data-editable="event_date"><div class="tl-dt" data-editable="event_date_2">24.12.2024</div><div class="tl-tt" data-editable="field_67">Lời Cầu Hôn</div><div class="tl-dc" data-editable="groom_10">Dưới ánh đèn lung linh, anh quỳ xuống và nhận được câu trả lời từ trái tim.</div></div></div>
+      <div class="tli rev-l" data-editable="event_date_3"><div class="tlc" data-editable="event_date_4"><div class="tl-dt" data-editable="event_date_5">18.05.2025</div><div class="tl-tt" data-editable="date_2">Ngày Kết Đôi</div><div class="tl-dc" data-editable="family_7">Hành trình tươi đẹp nhất bắt đầu — chúng mình chính thức trở thành một gia đình.</div></div><div class="tld"><span class="tld-dot"></span></div><div class="tle"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S5: THỜI GIAN ══════════ -->
+<section class="sw olive" id="tg">
+  <div class="inn wide" data-editable="field_68">
+    <div class="sh rev" data-editable="field_69">
+      <div class="sh-badge inv" data-editable="field_70">— Hẹn Gặp Nhau Tại —</div>
+      <h2 class="sh-title w" data-editable="venue">Thời Gian &amp; <em style="color:var(--olive3);" data-editable="venue_2">Địa Điểm</em></h2>
+      <div class="sh-rule w" data-editable="field_71">✦</div>
+    </div>
+
+    <!-- editorial date block + info -->
+    <div class="edit-grid rev" style="grid-template-columns:auto 1fr 1fr;max-width:800px;margin:0 auto;" data-editable="field_72">
+      <!-- big date -->
+      <div>
+        <div class="num-cell" style="height:100%;min-height:180px;padding:24px 20px;" data-editable="field_74">
+          <div class="num-big" data-editable="field_75">18</div><div class="num-lbl" data-editable="date_3">Ngày</div>
+          <div style="width:1px;height:12px;background:rgba(200,208,138,.4);margin:8px auto;"></div>
+          <div class="num-big" data-editable="field_76">05</div><div class="num-lbl" data-editable="month_3">Tháng</div>
+          <div style="width:1px;height:12px;background:rgba(200,208,138,.4);margin:8px auto;"></div>
+          <div class="num-big" style="font-size:30px;" data-editable="field_77">2025</div><div class="num-lbl" data-editable="year">Năm</div>
+        </div>
+      </div>
+      <!-- venue info -->
+      <div style="background:rgba(255,255,255,.08);border:1px solid rgba(200,208,138,.2);padding:28px 22px;" data-editable="venue_3">
+        <div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--olive3);margin-bottom:10px;" data-editable="venue_4">Địa Điểm</div>
+        <div style="font-family:'Playfair Display',serif;font-size:clamp(20px,3.5vw,30px);font-weight:700;color:white;margin-bottom:6px;" data-editable="field_78">WHITE PALACE</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.65);margin-bottom:4px;" data-editable="album_2">(Sảnh hồng ngọc)</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:10px;color:rgba(255,255,255,.75);font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;" data-editable="field_79">
+          <span data-editable="field_80">📍</span> 194 Hoàng Văn Thụ, Q.PN, TP.HCM
+        </div>
+        <div style="height:1px;background:rgba(200,208,138,.2);margin:14px 0;"></div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:15px;color:rgba(255,255,255,.7);line-height:1.9;font-style:italic;" data-editable="date_4">
+          Vào lúc <strong style="color:white;font-style:normal;" data-editable="event_time">18:30</strong>, Chủ Nhật<br>
+          (Ngày 21 tháng 04 năm Ất Tỵ)<br>
+          Đón khách: <strong style="color:white;font-style:normal;" data-editable="event_time_2">17:30</strong> — Khai tiệc: <strong style="color:white;font-style:normal;" data-editable="event_time_3">18:30</strong>
+        </div>
+      </div>
+      <!-- calendar -->
+      <div style="background:var(--cream2);border:1px solid var(--beige);padding:24px 20px;" data-editable="month_4">
+        <div class="cal-title" data-editable="month_5">Tháng 05-2025</div>
+        <div class="cal-grid" data-editable="field_81">
+          <div class="cal-hd" data-editable="field_82">M</div><div class="cal-hd" data-editable="field_83">T</div><div class="cal-hd" data-editable="field_84">W</div><div class="cal-hd" data-editable="field_85">T</div><div class="cal-hd" data-editable="field_86">F</div><div class="cal-hd" data-editable="field_87">S</div><div class="cal-hd" data-editable="field_88">S</div>
+          <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day" data-editable="field_89">1</div><div class="cal-day" data-editable="field_90">2</div><div class="cal-day" data-editable="field_91">3</div><div class="cal-day" data-editable="field_92">4</div>
+          <div class="cal-day" data-editable="field_93">5</div><div class="cal-day" data-editable="field_94">6</div><div class="cal-day" data-editable="field_95">7</div><div class="cal-day" data-editable="field_96">8</div><div class="cal-day" data-editable="field_97">9</div><div class="cal-day" data-editable="field_98">10</div><div class="cal-day" data-editable="field_99">11</div>
+          <div class="cal-day" data-editable="field_100">12</div><div class="cal-day" data-editable="field_101">13</div><div class="cal-day" data-editable="field_102">14</div><div class="cal-day" data-editable="field_103">15</div><div class="cal-day" data-editable="field_104">16</div><div class="cal-day" data-editable="field_105">17</div><div class="cal-day mark" data-editable="field_106">18</div>
+          <div class="cal-day" data-editable="field_107">19</div><div class="cal-day" data-editable="field_108">20</div><div class="cal-day" data-editable="field_109">21</div><div class="cal-day" data-editable="field_110">22</div><div class="cal-day" data-editable="field_111">23</div><div class="cal-day" data-editable="field_112">24</div><div class="cal-day" data-editable="field_113">25</div>
+          <div class="cal-day" data-editable="field_114">26</div><div class="cal-day" data-editable="field_115">27</div><div class="cal-day" data-editable="field_116">28</div><div class="cal-day" data-editable="field_117">29</div><div class="cal-day" data-editable="field_118">30</div><div class="cal-day" data-editable="field_119">31</div><div class="cal-day empty"></div>
+        </div>
+        <div style="text-align:center;margin-top:12px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);" data-editable="date_5">Ngày đặc biệt ❤️</div>
+      </div>
+    </div>
+
+    <!-- bottom note -->
+    <div class="rev" style="text-align:center;margin-top:24px;" data-editable="family_8">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:rgba(255,255,255,.7);" data-editable="family_9">Sự hiện diện của Quý Khách là niềm vinh hạnh cho gia đình chúng tôi!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S6: LỊCH TRÌNH ══════════ -->
+<section class="sw cream2" id="lt">
+  <div class="inn" data-editable="date_6">
+    <div class="sh rev" data-editable="date_7">
+      <div class="sh-badge" data-editable="date_8">— Diễn Biến Ngày Vui —</div>
+      <h2 class="sh-title" data-editable="ceremony">Lịch Trình <em data-editable="ceremony_2">Buổi Lễ</em></h2>
+      <div class="sh-rule" data-editable="field_120">✦</div>
+    </div>
+    <!-- schedule as editorial grid -->
+    <div style="max-width:680px;margin:0 auto;" data-editable="time">
+      <div class="edit-grid rev" style="grid-template-columns:auto 1fr;margin-bottom:0;" data-editable="time_2">
+        <div class="num-cell" style="padding:20px 18px;border:1px solid var(--olive);" data-editable="time_3"><div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--olive3);" data-editable="time_4">GIỜ</div></div>
+        <div style="background:var(--olive);color:white;padding:14px 20px;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--olive3);border:1px solid var(--olive);border-left:none;" data-editable="field_121">SỰ KIỆN</div>
+      </div>
+      <div id="schedule-items"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S7: ALBUM ══════════ -->
+<section class="sw alt" id="al">
+  <div class="inn wide" style="text-align:center;" data-editable="album_3">
+    <div class="sh rev" data-editable="album_4">
+      <div class="sh-badge" data-editable="album_5">— Khoảnh Khắc Đẹp —</div>
+      <h2 class="sh-title" data-editable="album_6">Album <em data-editable="album_7">Ảnh Kỷ Niệm</em></h2>
+      <div class="sh-rule" data-editable="field_122">✦</div>
+    </div>
+
+    <!-- Heart collage -->
+    <div class="heart-gallery">
+
+  <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800" class="big" data-image-editable="photo_2">
+  <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800" data-image-editable="photo_3">
+  <img src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img6-4.jpg" class="wide" data-image-editable="photo_4">
+  <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=800" data-image-editable="photo_5">
+
+  <img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?q=80&w=800" class="wide" data-image-editable="photo_6">
+  <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800" data-image-editable="photo_7">
+  <img src="https://images.unsplash.com/photo-1487412912498-0447578fcca8?q=80&w=800" class="big" data-image-editable="photo_8">
+  <img src="https://images.unsplash.com/photo-1492724441997-5dc865305da7?q=80&w=800" data-image-editable="photo_9">
+
+  <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800" class="wide" data-image-editable="photo_10">
+  <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800" class="wide" data-image-editable="photo_11">
+  <img src="https://images.unsplash.com/photo-1478147427282-58a87a120781?q=80&w=800" class="big" data-image-editable="photo_12">
+  <img src="https://images.unsplash.com/photo-1507504031003-b417219a0fde?q=80&w=800" data-image-editable="photo_13">
+
+</div>
+
+    <p class="rev" style="margin-top:24px;font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--muted);font-style:italic;" data-editable="album_8">
+      Những khoảnh khắc yêu thương được lưu giữ bằng cả trái tim ❤️
+    </p>
+  </div>
+</section>
+
+<!-- ══════════ S8: THIỆP MỜI CHÍNH THỨC ══════════ -->
+<section class="sw" id="tm">
+  <div class="inn" style="text-align:center;" data-editable="button_3">
+    <div class="sh rev" data-editable="button_4">
+      <div class="sh-badge" data-editable="button_5">— Kính Gửi —</div>
+      <h2 class="sh-title" data-editable="field_123">Thiệp Mời <em data-editable="field_124">Chính Thức</em></h2>
+      <div class="sh-rule" data-editable="field_125">✦</div>
+    </div>
+
+    <!-- arch card -->
+    <div class="rev" style="max-width:360px;margin:28px auto;">
+      <div class="arch-card">
+        <div class="arch-top"></div>
+        <div class="arch-inner" data-editable="field_126">
+          <div class="arch-head" data-editable="field_127">
+            <div class="arch-flower" data-editable="field_128">🌸</div>
+            <div class="arch-title" data-editable="field_129">Thiệp Mời</div>
+            <div class="arch-sub" data-editable="invite_3">TRÂN TRỌNG KÍNH MỜI</div>
+            <div class="arch-rule"></div>
+            <div class="arch-guest" data-editable="field_130">Quý Khách</div>
+            <p class="arch-message" data-editable="family_10">Vui lòng đến dự buổi tiệc rượu chung vui cùng gia đình chúng tôi.</p>
+          </div>
+
+          <div class="arch-body" data-editable="field_131">
+            <div class="arch-place" data-editable="field_132">WHITE PALACE</div>
+            <div class="arch-detail" data-editable="event_time_4">
+              <span class="arch-location" data-editable="field_133"><span class="pin" data-editable="field_134">📍</span>194 Hoàng Văn Thụ, Q. Phú Nhuận, TP.HCM</span><br>
+              Vào lúc <span class="arch-time" data-editable="event_time_5">18:30</span><br>
+              Đón khách: 17:30 · Khai tiệc: 18:30<br>
+              Chủ Nhật
+            </div>
+            <div class="arch-sep"></div>
+            <p class="arch-note" data-editable="field_135">Sự hiện diện của Quý Khách là niềm vinh hạnh của chúng tôi!</p>
+            <p class="arch-sign" data-editable="invite_4">Trân trọng kính mời</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S9: RSVP ══════════ -->
+<section class="sw cream2" id="rsvp">
+  <div class="inn" style="max-width:520px;text-align:center;" data-editable="rsvp">
+    <div class="sh rev" data-editable="rsvp_2">
+      <div class="sh-badge" data-editable="rsvp_3">— Xác Nhận —</div>
+      <h2 class="sh-title" data-editable="rsvp_4">Xác Nhận <em data-editable="field_136">Tham Dự</em></h2>
+      <div class="sh-rule" data-editable="field_137">✦</div>
+    </div>
+    <p class="rev" style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:16px;margin-top:8px;" data-editable="date_9">Vui lòng xác nhận trước ngày <strong data-editable="event_date_6">10/05/2025</strong> 💛</p>
+    <div class="rf rev" id="rform" data-editable="field_138">
+      <div class="ff" data-editable="field_139"><label data-editable="field_140">Họ &amp; Tên</label><input type="text" id="rname" placeholder="Nguyễn Văn A…"></div>
+      <div class="ff" data-editable="field_141"><label data-editable="field_142">Số Điện Thoại</label><input type="tel" placeholder="0xxx xxx xxx"></div>
+      <div class="ff" data-editable="field_143"><label data-editable="field_144">Số Người</label><select><option value="1" data-editable="field_145">1 người</option><option value="2" selected data-editable="field_146">2 người</option><option value="3" data-editable="field_147">3 người</option><option value="4" data-editable="field_148">4 người trở lên</option></select></div>
+      <div class="ff" data-editable="rsvp_5"><label data-editable="rsvp_6">Xác Nhận</label><div class="aopts" data-editable="field_149"><div class="aopt on" id="ay" onclick="selA('y')" data-editable="field_150">✓ Tham Dự</div><div class="aopt" id="an" onclick="selA('n')" data-editable="groom_11">✕ Không Thể</div></div></div>
+      <div class="ff" data-editable="field_151"><label data-editable="field_152">Lời Nhắn</label><textarea placeholder="Lời nhắn gửi đến đôi uyên ương…"></textarea></div>
+      <button class="btn-sub" onclick="subR()">Xác Nhận Tham Dự</button>
+    </div>
+    <div class="rsuc" id="rsuc" data-editable="rsvp_7">Cảm ơn bạn đã xác nhận! 🌿<br><span style="font-size:15px;font-family:'Lato',sans-serif;letter-spacing:2px;color:var(--muted);" data-editable="field_153">Chúng mình mong chờ gặp bạn!</span></div>
+  </div>
+</section>
+
+<!-- ══════════ S10: LỜI CHÚC ══════════ -->
+<section class="sw alt" id="lc">
+  <div class="inn wide" style="text-align:center;" data-editable="field_154">
+    <div class="sh rev" data-editable="field_155">
+      <div class="sh-badge" data-editable="field_156">— Cùng Chúc Mừng —</div>
+      <h2 class="sh-title" data-editable="button_6">Gửi <em data-editable="field_157">Lời Chúc</em></h2>
+      <div class="sh-rule" data-editable="field_158">✦</div>
+    </div>
+    <div class="wwall rev" id="wwall" data-editable="groom_12">
+      <div class="wcard" data-editable="groom_13"><div class="wa" data-editable="groom_14">Anh Minh &amp; Chị Lan</div><div class="wt" data-editable="year_2">Chúc hai bạn trăm năm hạnh phúc, mãi yêu thương bên nhau 🌿</div></div>
+      <div class="wcard" data-editable="family_11"><div class="wa" data-editable="family_12">Gia Đình Chú Tám</div><div class="wt" data-editable="field_159">Cầu chúc đôi uyên ương vui vẻ và sớm có tin vui!</div></div>
+      <div class="wcard" data-editable="field_160"><div class="wa" data-editable="field_161">Nhóm Bạn Đại Học</div><div class="wt" data-editable="date_10">Cuối cùng cũng đến ngày này! Chúc mừng hai đứa nhé 🎉</div></div>
+    </div>
+    <div class="wform rev" data-editable="button_7">
+      <input type="text" id="wn" placeholder="Tên của bạn…">
+      <textarea id="wt2" placeholder="Viết lời chúc tốt đẹp nhất…"></textarea>
+      <button class="btn-w" onclick="addW()">Gửi Lời Chúc 🌿</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S11: LIÊN HỆ ══════════ -->
+<section class="sw" id="lh">
+  <div class="inn wide" data-editable="field_162">
+    <div class="sh rev" data-editable="field_163">
+      <div class="sh-badge" data-editable="field_164">— Cần Hỗ Trợ —</div>
+      <h2 class="sh-title" data-editable="groom_15">Thông Tin <em data-editable="field_165">Liên Hệ</em></h2>
+      <div class="sh-rule" data-editable="field_166">✦</div>
+    </div>
+    <div class="cgrid rev" data-editable="family_13">
+      <div class="cfb" data-editable="family_14"><div class="cfbs" data-editable="family_15">Nhà Trai</div><div class="cfbn" data-editable="field_167">Dương Minh Khải</div><a href="tel:0900000001" class="cfbp" data-editable="field_168">0900 000 001</a><div class="cfbnt" data-editable="field_169">TP. Hồ Chí Minh</div></div>
+      <div class="cfb" data-editable="family_16"><div class="cfbs" data-editable="family_17">Nhà Trai</div><div class="cfbn" data-editable="field_170">Lê Kiều Nga</div><a href="tel:0900000002" class="cfbp" data-editable="field_171">0900 000 002</a><div class="cfbnt" data-editable="field_172">TP. Hồ Chí Minh</div></div>
+      <div class="cfb" data-editable="family_18"><div class="cfbs" data-editable="family_19">Nhà Gái</div><div class="cfbn" data-editable="groom_16">Trần Thanh Tú</div><a href="tel:0900000003" class="cfbp" data-editable="field_173">0900 000 003</a><div class="cfbnt" data-editable="field_174">TP. Hồ Chí Minh</div></div>
+      <div class="cfb" data-editable="family_20"><div class="cfbs" data-editable="family_21">Nhà Gái</div><div class="cfbn" data-editable="field_175">Hoàng Thị Mỹ</div><a href="tel:0900000004" class="cfbp" data-editable="field_176">0900 000 004</a><div class="cfbnt" data-editable="field_177">TP. Hồ Chí Minh</div></div>
+      <div class="cfb" style="border-left:3px solid var(--olive);" data-editable="bride_2"><div class="cfbs" style="color:var(--olive);" data-editable="bride_3">Cô Dâu</div><div class="cfbn" data-editable="field_178">Hoàng An</div><a href="tel:0900000005" class="cfbp" data-editable="field_179">0900 000 005</a><div class="cfbnt" data-editable="field_180">Liên hệ trực tiếp</div></div>
+      <div class="cfb" style="border-left:3px solid var(--olive);" data-editable="groom_17"><div class="cfbs" style="color:var(--olive);" data-editable="groom_18">Chú Rể</div><div class="cfbn" data-editable="field_181">Ngọc Diệp</div><a href="tel:0900000006" class="cfbp" data-editable="field_182">0900 000 006</a><div class="cfbnt" data-editable="field_183">Liên hệ trực tiếp</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S12: KẾT THÚC ══════════ -->
+<section id="closing">
+  <div class="cl-inner" data-editable="field_184">
+    <div class="cl-init" data-editable="field_185">A.D</div>
+    <div class="cl-t rev" data-editable="field_186">Cảm Ơn Bạn!</div>
+    <p class="cl-p rev" data-editable="date_11">Cảm ơn bạn đã dành thời gian quý báu để cùng chia vui với chúng mình. Mỗi lời chúc, mỗi nụ cười và sự hiện diện của bạn là điều trân quý nhất trong ngày hạnh phúc này.</p>
+    <div class="cl-rule rev" data-editable="field_187">✦</div>
+    <div class="cl-nm rev" data-editable="field_188">Hoàng An &amp; Ngọc Diệp</div>
+    <div class="cl-d rev" data-editable="love_3">18 · 05 · 2025 — Mãi Mãi Yêu Nhau</div>
+    <div class="rev" style="margin-top:30px;font-size:24px;letter-spacing:8px;" data-editable="field_189">🌿 💍 🌿</div>
+  </div>
+</section>
+
+<script>
+/* ── SCHEDULE DATA ── */
+const SCHED=[
+  {t:'07:30',n:'Lễ Gia Tiên Nhà Trai',d:'Nghi thức cưới truyền thống tại gia đình chú rể'},
+  {t:'09:30',n:'Rước Dâu & Lễ Gia Tiên',d:'Chú rể và đoàn rước dâu đến nhà gái làm lễ'},
+  {t:'17:30',n:'Đón Khách — Tiệc Cưới',d:'Đón tiếp quý khách tại White Palace'},
+  {t:'18:30',n:'Nhập Tiệc & Khai Vị',d:'Khai tiệc mừng hạnh phúc đôi uyên ương'},
+  {t:'19:00',n:'Nghi Lễ Trao Nhẫn',d:'Khoảnh khắc thiêng liêng nhất của buổi tiệc'},
+  {t:'20:30',n:'Cắt Bánh & Chụp Ảnh',d:'Ký ức ngọt ngào cùng gia đình & bạn bè'},
+];
+const sg=document.getElementById('schedule-items');
+SCHED.forEach((s,i)=>{
+  const odd=i%2===0;
+  sg.innerHTML+=`<div class="edit-grid rev" style="grid-template-columns:auto 1fr;margin-top:0;" data-editable="field_190">
+    <div class="${odd?'num-cell':'num-cell'}" style="${odd?'background:var(--olive);':'background:var(--cream2);'}padding:14px 18px;min-width:80px;text-align:center;border:1px solid ${odd?'var(--olive)':'var(--beige)'};border-top:none;" data-editable="field_191">
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;font-style:italic;color:${odd?'var(--olive3)':'var(--gold)'};line-height:1;" data-editable="field_192">${s.t}</div>
+    </div>
+    <div class="edit-cell" style="padding:14px 20px;border-top:none;${odd?'background:rgba(90,107,42,.04);':''}">
+      <div class="cstripe"></div>
+      <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--dark);padding-left:12px;" data-editable="field_193">${s.n}</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--muted);font-style:italic;padding-left:12px;margin-top:2px;" data-editable="field_194">${s.d}</div>
+    </div>
+  </div>`;
+});
+
+/* ── INTRO OPEN ── */
+document.getElementById('icta').addEventListener('click',openI);
+setTimeout(()=>{if(!document.getElementById('intro').classList.contains('hide'))openI();},5500);
+function openI(){document.getElementById('intro').classList.add('hide');}
+
+/* ── SCROLL REVEAL ── */
+const revs=document.querySelectorAll('.rev,.rev-l,.rev-r');
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target);}});},{threshold:.1});
+revs.forEach(el=>obs.observe(el));
+
+/* ── NAV DOTS ── */
+const SIDS=['hero','lmd','gt','ct','tg','lt','al','tm','rsvp','lc','lh','closing'];
+const navd=document.getElementById('navd');
+SIDS.forEach(id=>{const d=document.createElement('div');d.className='nd';d.onclick=()=>document.getElementById(id)?.scrollIntoView({behavior:'smooth'});navd.appendChild(d);});
+function upd(){const sy=window.scrollY+window.innerHeight/2;SIDS.forEach((id,i)=>{const el=document.getElementById(id);if(!el)return;const{offsetTop:ot,offsetHeight:oh}=el;navd.children[i].classList.toggle('on',sy>=ot&&sy<ot+oh);});}
+window.addEventListener('scroll',upd);upd();
+
+/* ── RSVP ── */
+function selA(v){document.getElementById('ay').classList.toggle('on',v==='y');document.getElementById('an').classList.toggle('on',v==='n');}
+function subR(){if(!document.getElementById('rname').value.trim()){alert('Vui lòng nhập tên!');return;}document.getElementById('rform').style.display='none';document.getElementById('rsuc').style.display='block';}
+
+/* ── WISHES ── */
+function addW(){const n=document.getElementById('wn').value.trim(),t=document.getElementById('wt2').value.trim();if(!n||!t){alert('Vui lòng nhập tên và lời chúc!');return;}const w=document.getElementById('wwall'),c=document.createElement('div');c.className='wcard';c.innerHTML=`<div class="wa" data-editable="field_195">${n}</div><div class="wt" data-editable="field_196">${t}</div>`;w.prepend(c);document.getElementById('wn').value='';document.getElementById('wt2').value='';}
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
 import adminService from '../services/admin.service'
 import templateService from '../services/template.service'
@@ -7,7 +7,11 @@ import { useToast } from '../context/ToastContext'
 
 const DashboardTemplatesPage = () => {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const toast = useToast()
+  const initialPage = Math.max(1, Number(searchParams.get('page') || 1))
+  const [currentPage, setCurrentPage] = useState(initialPage)
+  const [pagination, setPagination] = useState({ currentPage: initialPage, totalPages: 1 })
   const [templates, setTemplates] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedTemplates, setSelectedTemplates] = useState([])
@@ -39,12 +43,19 @@ const DashboardTemplatesPage = () => {
 
   useEffect(() => {
     loadTemplates()
-  }, [filters])
+  }, [filters, currentPage])
+
+  useEffect(() => {
+    const pageFromUrl = Math.max(1, Number(searchParams.get('page') || 1))
+    if (pageFromUrl !== currentPage) {
+      setCurrentPage(pageFromUrl)
+    }
+  }, [searchParams, currentPage])
 
   const loadTemplates = async () => {
     try {
       setLoading(true)
-      const response = await adminService.getAllTemplates(filters)
+      const response = await adminService.getAllTemplates({ ...filters, page: currentPage })
       let data = response.data || []
 
       // Map category_id to category string for filtering
@@ -65,6 +76,15 @@ const DashboardTemplatesPage = () => {
       })
 
       setTemplates(data)
+
+      const paginationMeta = response.pagination || response.meta || {}
+      const totalPagesFromApi = Number(paginationMeta.total_pages || paginationMeta.last_page || 0)
+      const currentPageFromApi = Number(paginationMeta.current_page || paginationMeta.page || currentPage)
+
+      setPagination({
+        currentPage: currentPageFromApi > 0 ? currentPageFromApi : currentPage,
+        totalPages: totalPagesFromApi > 0 ? totalPagesFromApi : Math.max(1, currentPage)
+      })
     } catch (error) {
       console.error('Failed to load templates:', error)
       toast.error('Không thể tải danh sách templates')
@@ -161,6 +181,8 @@ const DashboardTemplatesPage = () => {
     )
   }
 
+  const getTemplateIdentifier = (template) => template?.uuid || template?.id
+
   const getCategoryLabel = (category) => {
     const cat = categories.find(c => c.value === category)
     return cat ? cat.label : category
@@ -175,6 +197,34 @@ const DashboardTemplatesPage = () => {
       minute: '2-digit'
     })
   }
+  const setPageAndSyncUrl = (page) => {
+    const safePage = Math.max(1, Number(page) || 1)
+    setCurrentPage(safePage)
+
+    const nextParams = new URLSearchParams(searchParams)
+    if (safePage <= 1) {
+      nextParams.delete('page')
+    } else {
+      nextParams.set('page', String(safePage))
+    }
+    setSearchParams(nextParams)
+  }
+
+  const handlePageChange = (nextPage) => {
+    if (loading) return
+    if (nextPage < 1) return
+    if (pagination.totalPages > 0 && nextPage > pagination.totalPages) return
+    setPageAndSyncUrl(nextPage)
+  }
+
+  const pageNumbers = (() => {
+    const total = Math.max(1, pagination.totalPages || 1)
+    const current = Math.max(1, pagination.currentPage || 1)
+    const start = Math.max(1, current - 2)
+    const end = Math.min(total, start + 4)
+    const realStart = Math.max(1, end - 4)
+    return Array.from({ length: end - realStart + 1 }, (_, i) => realStart + i)
+  })()
 
   return (
     <DashboardLayout>
@@ -317,7 +367,7 @@ const DashboardTemplatesPage = () => {
                   </label>
                   <select
                     value={filters.category}
-                    onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+                    onChange={(e) => { setFilters({ ...filters, category: e.target.value }); setPageAndSyncUrl(1); }}
                     className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none rounded-lg"
                   >
                     <option value="all">Tất cả</option>
@@ -332,7 +382,7 @@ const DashboardTemplatesPage = () => {
                   </label>
                   <select
                     value={filters.status}
-                    onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+                    onChange={(e) => { setFilters({ ...filters, status: e.target.value }); setPageAndSyncUrl(1); }}
                     className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none rounded-lg"
                   >
                     <option value="all">Tất cả</option>
@@ -347,7 +397,7 @@ const DashboardTemplatesPage = () => {
                   </label>
                   <select
                     value={filters.sortBy}
-                    onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
+                    onChange={(e) => { setFilters({ ...filters, sortBy: e.target.value }); setPageAndSyncUrl(1); }}
                     className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none rounded-lg"
                   >
                     <option value="created_at">Ngày tạo</option>
@@ -362,7 +412,7 @@ const DashboardTemplatesPage = () => {
                   </label>
                   <select
                     value={filters.sortOrder}
-                    onChange={(e) => setFilters({ ...filters, sortOrder: e.target.value })}
+                    onChange={(e) => { setFilters({ ...filters, sortOrder: e.target.value }); setPageAndSyncUrl(1); }}
                     className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none rounded-lg"
                   >
                     <option value="desc">Mới nhất</option>
@@ -377,7 +427,7 @@ const DashboardTemplatesPage = () => {
                     type="text"
                     placeholder="Tìm..."
                     value={filters.search}
-                    onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                    onChange={(e) => { setFilters({ ...filters, search: e.target.value }); setPageAndSyncUrl(1); }}
                     className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none rounded-lg"
                   />
                 </div>
@@ -386,7 +436,7 @@ const DashboardTemplatesPage = () => {
               {/* Clear filters button */}
               {(filters.category !== 'all' || filters.status !== 'all' || filters.search) && (
                 <button
-                  onClick={() => setFilters({ ...filters, category: 'all', status: 'all', search: '' })}
+                  onClick={() => { setFilters({ ...filters, category: 'all', status: 'all', search: '' }); setPageAndSyncUrl(1); }}
                   className="mt-3 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                 >
                   Xóa bộ lọc
@@ -439,7 +489,7 @@ const DashboardTemplatesPage = () => {
               {viewMode === 'grid' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
                   {templates.map((template) => (
-                    <div key={template.id} className="border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow rounded-lg overflow-hidden">
+                    <div key={getTemplateIdentifier(template)} className="border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow rounded-lg overflow-hidden">
                       <div className="relative">
                         <input
                           type="checkbox"
@@ -484,7 +534,7 @@ const DashboardTemplatesPage = () => {
                         </div>
                         <div className="flex gap-2">
                           <button
-                            onClick={() => navigate(`/dashboard/templates/edit/${template.id}`)}
+                            onClick={() => navigate(`/dashboard/templates/edit/${getTemplateIdentifier(template)}`)}
                             className="flex-1 px-4 py-2.5 text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded"
                           >
                             Chỉnh sửa
@@ -509,7 +559,7 @@ const DashboardTemplatesPage = () => {
               {viewMode === 'list' && (
                 <div className="space-y-2">
                   {templates.map((template) => (
-                    <div key={template.id} className="border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow rounded-lg overflow-hidden flex h-20">
+                    <div key={getTemplateIdentifier(template)} className="border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow rounded-lg overflow-hidden flex h-20">
                       {/* Checkbox & Thumbnail - Compact */}
                       <div className="relative w-20 shrink-0 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
                         <input
@@ -552,7 +602,7 @@ const DashboardTemplatesPage = () => {
                         {/* Actions - Vertical Stack */}
                         <div className="flex flex-col gap-1 shrink-0 w-16">
                           <button
-                            onClick={() => navigate(`/dashboard/templates/edit/${template.id}`)}
+                            onClick={() => navigate(`/dashboard/templates/edit/${getTemplateIdentifier(template)}`)}
                             className="w-full px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded"
                           >
                             Sửa
@@ -573,6 +623,40 @@ const DashboardTemplatesPage = () => {
                 </div>
               )}
 
+
+              {templates.length > 0 && (
+                <div className="mt-6 flex items-center justify-center gap-2">
+                  <button
+                    onClick={() => handlePageChange((pagination.currentPage || currentPage) - 1)}
+                    disabled={loading || (pagination.currentPage || currentPage) <= 1}
+                    className="px-3 py-1.5 text-sm rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 disabled:opacity-40"
+                  >
+                    Trước
+                  </button>
+
+                  {pageNumbers.map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`px-3 py-1.5 text-sm rounded-md border ${
+                        page === (pagination.currentPage || currentPage)
+                          ? 'bg-gray-900 text-white dark:bg-white dark:text-black border-gray-900 dark:border-white'
+                          : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+
+                  <button
+                    onClick={() => handlePageChange((pagination.currentPage || currentPage) + 1)}
+                    disabled={loading || (pagination.totalPages > 0 && (pagination.currentPage || currentPage) >= pagination.totalPages)}
+                    className="px-3 py-1.5 text-sm rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 disabled:opacity-40"
+                  >
+                    Sau
+                  </button>
+                </div>
+              )}
               {templates.length === 0 && (
                 <div className="text-center py-12">
                   <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -625,3 +709,9 @@ const DashboardTemplatesPage = () => {
 }
 
 export default DashboardTemplatesPage
+
+
+
+
+
+

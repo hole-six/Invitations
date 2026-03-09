@@ -8,16 +8,65 @@ class TemplateService {
     return apiService.get(endpoint)
   }
 
-  async getById(id) {
-    // API uses query param and returns array, similar to invitations
-    const response = await apiService.get(`/api/v1/wedding/templates?id=${id}`);
-    
-    // Response.data is array, get first item
-    if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-      return { data: response.data[0] }; // Return first item as single object
+  extractTemplateRows(response) {
+    if (!response) return []
+    if (Array.isArray(response)) return response
+    if (Array.isArray(response.data)) return response.data
+    if (Array.isArray(response.items)) return response.items
+    if (response.data && typeof response.data === 'object') return [response.data]
+    if (typeof response === 'object') return [response]
+    return []
+  }
+
+  findTemplateInRows(rows, identifier) {
+    const normalized = String(identifier || '').trim()
+    if (!normalized) return null
+
+    return rows.find((item) => {
+      if (!item || typeof item !== 'object') return false
+      return [item.id, item.template_id, item.uuid, item.slug]
+        .filter((value) => value !== undefined && value !== null)
+        .map((value) => String(value).trim())
+        .includes(normalized)
+    }) || null
+  }
+
+  async getById(identifier) {
+    const normalized = String(identifier || '').trim()
+    if (!normalized) throw new Error('Template id is required')
+
+    const isLikelyUuid = normalized.includes('-')
+    const candidateEndpoints = []
+
+    if (isLikelyUuid) {
+      candidateEndpoints.push(`${API_ENDPOINTS.TEMPLATES}?uuid=${encodeURIComponent(normalized)}`)
     }
-    
-    throw new Error('Template not found');
+
+    candidateEndpoints.push(API_ENDPOINTS.TEMPLATE_DETAIL(normalized))
+    candidateEndpoints.push(`${API_ENDPOINTS.TEMPLATES}?id=${encodeURIComponent(normalized)}`)
+
+    let lastError = null
+
+    for (const endpoint of candidateEndpoints) {
+      try {
+        const response = await apiService.get(endpoint)
+        const rows = this.extractTemplateRows(response)
+        const matched = this.findTemplateInRows(rows, normalized)
+
+        if (matched) {
+          return { data: matched }
+        }
+
+        if (rows.length === 1) {
+          return { data: rows[0] }
+        }
+      } catch (error) {
+        lastError = error
+      }
+    }
+
+    if (lastError) throw lastError
+    throw new Error('Template not found')
   }
 
   async create(data) {
@@ -25,10 +74,8 @@ class TemplateService {
   }
 
   async update(idOrUuid, data) {
-    // Backend expects uuid, but we might receive id
-    // If data contains uuid, use it; otherwise use the parameter
-    const uuid = data.uuid || idOrUuid;
-    
+    const uuid = data.uuid || idOrUuid
+
     return apiService.put(API_ENDPOINTS.TEMPLATE_UPDATE, {
       uuid,
       ...data,
@@ -36,10 +83,8 @@ class TemplateService {
   }
 
   async delete(idOrUuid) {
-    // Backend might expect uuid instead of id
-    // Try to use uuid if it's a UUID format, otherwise use id
-    const isUuid = typeof idOrUuid === 'string' && idOrUuid.includes('-');
-    
+    const isUuid = typeof idOrUuid === 'string' && idOrUuid.includes('-')
+
     return apiService.request(API_ENDPOINTS.TEMPLATE_DELETE, {
       method: 'DELETE',
       body: JSON.stringify(isUuid ? { uuid: idOrUuid } : { id: idOrUuid }),
@@ -50,7 +95,6 @@ class TemplateService {
     return apiService.get(API_ENDPOINTS.CATEGORIES)
   }
 
-  // NEW: Category Management (Admin)
   async createCategory(data) {
     return apiService.post(API_ENDPOINTS.CATEGORY_CREATE, data)
   }
