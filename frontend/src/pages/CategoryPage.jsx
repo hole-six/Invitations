@@ -61,9 +61,9 @@ const loadCategories = async () => {
         deleted_at: cat.deleted_at
     }))
 
-    const filteredData = categoryData.filter(cat => !cat.deleted_at)
+    // const filteredData = categoryData.filter(cat => !cat.deleted_at)
 
-    setCategories(filteredData)
+    setCategories(categoryData)
     setTemplates(data)
       setTemplatesCount(pagination.total || data.length) // Use total from API if available, otherwise fallback to data length
 
@@ -459,6 +459,10 @@ const handleEditCategory = (category) => {
       <div
         key={category.value}
 className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition flex flex-col h-full"      >
+        {(() => {
+          const isDeleted = Boolean(category.deleted_at)
+          return (
+            <>
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {category.name}
         </h3>
@@ -471,25 +475,48 @@ className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
           mô tả: {category.description}
         </div>
 
-        {/* ACTIONS */}
-       <div className="flex gap-2 mt-auto pt-4">
-          <button
-             onClick={() => {
-    setEditingCategory(category)
-    setOpenModalCategory(true)
-  }}
-            className="flex-1 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
-          >
-            <span className="material-symbols-outlined text-sm">edit</span>
-          </button>
+        <div className="mt-auto pt-3 space-y-2">
+          <span className={`text-[11px] ${isDeleted ? 'text-red-600 dark:text-red-400 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
+            Delete at : {category.deleted_at ? formatDate(category.deleted_at) : 'N/A'}
+          </span>
 
-          <button
-            onClick={() => handleDeleteCategory(category.value)}
-            className="flex-1 px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200"
-          >
-            <span className="material-symbols-outlined text-sm">delete</span>
-          </button>
+          {/* ACTIONS */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                if (isDeleted) return
+                setEditingCategory(category)
+                setOpenModalCategory(true)
+              }}
+              disabled={isDeleted}
+              className={`flex-1 px-2 py-1 text-xs rounded ${
+                isDeleted
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+              }`}
+            >
+              <span className="material-symbols-outlined text-sm">edit</span>
+            </button>
+
+            <button
+              onClick={() => {
+                if (isDeleted) return
+                handleDeleteCategory(category.value)
+              }}
+              disabled={isDeleted}
+              className={`flex-1 px-2 py-1 text-xs rounded ${
+                isDeleted
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-red-100 text-red-700 hover:bg-red-200'
+              }`}
+            >
+              <span className="material-symbols-outlined text-sm">delete</span>
+            </button>
+          </div>
         </div>
+            </>
+          )
+        })()}
       </div>
     ))}
   </div>

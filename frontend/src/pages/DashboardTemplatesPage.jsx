@@ -113,7 +113,7 @@ const DashboardTemplatesPage = () => {
         return {
           ...template,
           category: categoryMap[template.category_id] || 'other',
-          thumbnail: template.thumbnail_url // Map thumbnail_url to thumbnail
+          thumbnail: template.thumbnail_url, // Map thumbnail_url to thumbnail
         }
       })
 
@@ -532,7 +532,7 @@ const DashboardTemplatesPage = () => {
               {viewMode === 'grid' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
                   {templates.map((template) => (
-                    <div key={getTemplateIdentifier(template)} className="border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow rounded-lg overflow-hidden">
+                    <div key={getTemplateIdentifier(template)} className="border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow rounded-lg overflow-hidden flex flex-col">
                       <div className="relative">
                         <input
                           type="checkbox"
@@ -558,7 +558,7 @@ const DashboardTemplatesPage = () => {
                           )}
                         </div>
                       </div>
-                      <div className="p-4">
+                      <div className="p-4 flex flex-col flex-1">
                         <div className="flex items-start justify-between mb-2 gap-2">
                           <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate flex-1">
                             {template.name}
@@ -572,7 +572,11 @@ const DashboardTemplatesPage = () => {
                           {template.description || 'Không có mô tả'}
                         </p>
                         <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4">
-                          <span>ID: {template.template_id || template.id}</span>
+                         {template.deleted_at != null ? (
+                           <span className={template.deleted_at ? 'text-red-600 dark:text-red-400 font-medium' : 'text-gray-500 dark:text-gray-400'}>
+                            Delete at : {template.deleted_at ? formatDate(template.deleted_at) : 'N/A'}
+                          </span>
+                         ) : null}
                           <span>{formatDate(template.created_at)}</span>
                         </div>
                         <div className="flex gap-2 mt-auto pt-4">
@@ -752,7 +756,6 @@ const DashboardTemplatesPage = () => {
 }
 
 export default DashboardTemplatesPage
-
 
 
 
