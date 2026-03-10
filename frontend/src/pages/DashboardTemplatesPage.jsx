@@ -32,19 +32,59 @@ const DashboardTemplatesPage = () => {
     return window.innerWidth < 768 ? 'list' : 'grid'
   }
   const [viewMode, setViewMode] = useState(getInitialViewMode())
+    const [categories, setCategories] = useState([])
 
-  const categories = [
-    { value: 'wedding', label: 'Thiệp cưới' },
-    { value: 'birthday', label: 'Sinh nhật' },
-    { value: 'anniversary', label: 'Kỷ niệm' },
-    { value: 'graduation', label: 'Tốt nghiệp' },
-    { value: 'business', label: 'Doanh nghiệp' },
-    { value: 'other', label: 'Khác' }
-  ]
+  // const categories = [
+  //   { value: 'wedding', label: 'Thiệp cưới' },
+  //   { value: 'birthday', label: 'Sinh nhật' },
+  //   { value: 'anniversary', label: 'Kỷ niệm' },
+  //   { value: 'graduation', label: 'Tốt nghiệp' },
+  //   { value: 'business', label: 'Doanh nghiệp' },
+  //   { value: 'other', label: 'Khác' }
+  // ]
+
+  const loadCategories = async () => {
+  try {
+    const response = await templateService.getCategories()
+
+    const categoryData = (response.data || []).map(cat => ({
+        id: cat.id,
+        name: cat.name,
+        description: cat.description,
+        display_order: cat.display_order,
+        slug: cat.slug,
+        deleted_at: cat.deleted_at
+    }))
+
+    const filteredData = categoryData.filter(cat => !cat.deleted_at)
+
+    setCategories(filteredData)
+    setTemplates(data)
+      setTemplatesCount(pagination.total || data.length) // Use total from API if available, otherwise fallback to data length
+
+      const paginationMeta = response.pagination || response.meta || {}
+      const totalPagesFromApi = Number(paginationMeta.total_pages || paginationMeta.last_page || 0)
+      const currentPageFromApi = Number(paginationMeta.current_page || paginationMeta.page || currentPage)
+
+      setPagination({
+        currentPage: currentPageFromApi > 0 ? currentPageFromApi : currentPage,
+        totalPages: totalPagesFromApi > 0 ? totalPagesFromApi : Math.max(1, currentPage)
+      })
+  } catch (error) {
+    console.error('Failed to load categories:', error)
+  }
+}
 
   useEffect(() => {
     loadTemplates()
   }, [filters, currentPage])
+
+      useEffect(() => {
+      loadCategories()
+      // if (decodedId) {
+      //   loadTemplate(decodedId)
+      // }
+    }, [])
 
   useEffect(() => {
     const pageFromUrl = Math.max(1, Number(searchParams.get('page') || 1))
@@ -375,7 +415,7 @@ const DashboardTemplatesPage = () => {
                   >
                     <option value="all">Tất cả</option>
                     {categories.map(cat => (
-                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                      <option key={cat.value} value={cat.value}>{cat.name}</option>
                     ))}
                   </select>
                 </div>
@@ -535,10 +575,10 @@ const DashboardTemplatesPage = () => {
                           <span>ID: {template.template_id || template.id}</span>
                           <span>{formatDate(template.created_at)}</span>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 mt-auto pt-4">
                           <button
                             onClick={() => navigate(`/dashboard/templates/edit/${encodeURIComponent(getTemplateIdentifier(template))}`)}
-                            className="flex-1 px-4 py-2.5 text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded"
+                            className="flex-1 px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded"
                           >
                             Chỉnh sửa
                           </button>

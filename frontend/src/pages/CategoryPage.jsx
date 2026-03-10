@@ -53,15 +53,18 @@ const loadCategories = async () => {
     const response = await templateService.getCategories()
 
     const categoryData = (response.data || []).map(cat => ({
-      id: cat.id,       // dùng id
-      name: cat.name,
-          description: cat.description,
-          display_order: cat.display_order,
-      slug: cat.slug
+        id: cat.id,
+        name: cat.name,
+        description: cat.description,
+        display_order: cat.display_order,
+        slug: cat.slug,
+        deleted_at: cat.deleted_at
     }))
 
-    setCategories(categoryData)
-      setTemplates(data)
+    const filteredData = categoryData.filter(cat => !cat.deleted_at)
+
+    setCategories(filteredData)
+    setTemplates(data)
       setTemplatesCount(pagination.total || data.length) // Use total from API if available, otherwise fallback to data length
 
       const paginationMeta = response.pagination || response.meta || {}
@@ -76,6 +79,7 @@ const loadCategories = async () => {
     console.error('Failed to load categories:', error)
   }
 }
+
   useEffect(() => {
     loadTemplates()
   }, [filters, currentPage])
