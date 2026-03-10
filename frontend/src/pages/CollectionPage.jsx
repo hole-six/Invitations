@@ -469,7 +469,7 @@ useEffect(() => {
               {categories.map((category) => (
                 <button
                   key={category.id}
-                  onClick={() => { setSelectedCategory(category.id); setPageAndSyncUrl(1); }}
+                  onClick={() => { setSelectedCategory(category.id); }}
                   className={`shrink-0 px-4 py-2 text-sm font-bold rounded-full transition-all whitespace-nowrap ${selectedCategory === category.id
                     ? 'bg-black dark:bg-white text-white dark:text-black shadow-md'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700'
