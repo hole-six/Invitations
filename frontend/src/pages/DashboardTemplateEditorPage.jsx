@@ -459,7 +459,7 @@ const DashboardTemplateEditorPage = () => {
               </div>
 
               {/* Design Data (JSON) */}
-              <div className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl p-4 md:p-6">
+              {/* <div className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl p-4 md:p-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Design Data (JSON) {formData.template_type === 'canvas' && '*'}
@@ -481,7 +481,7 @@ const DashboardTemplateEditorPage = () => {
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none resize-y font-mono text-xs md:text-sm"
                   placeholder='{"canvas": {...}, "elements": [...]}'
                 />
-              </div>
+              </div> */}
             </div>
           )}
 
