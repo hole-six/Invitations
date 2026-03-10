@@ -1,0 +1,1281 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Wedding Invitation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baskervville:ital,wght@0,400..700;1,400..700&family=Dancing+Script:wght@400..700&family=Great+Vibes&family=Just+Another+Hand&family=Patrick+Hand&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=The+Nautigal:wght@400;700&display=swap"
+    rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
+
+  <style>
+    .embla {
+      margin: auto;
+      --slide-spacing: 1rem;
+      --slide-size: 100%;
+    }
+
+    .embla__viewport {
+      overflow: hidden;
+    }
+
+    .embla__container {
+      display: flex;
+      touch-action: pan-y;
+      margin-left: calc(var(--slide-spacing) * -1);
+    }
+
+    .embla__slide {
+      width: 60px;
+      transform: translate3d(0, 0, 0);
+      flex: 0 0 var(--slide-size);
+      min-width: 0;
+      padding-left: var(--slide-spacing);
+    }
+
+    .embla__slide__number {
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f3f4f6;
+      border-radius: 1rem;
+      font-size: 3rem;
+      font-weight: bold;
+      color: #3481f4;
+      box-shadow: inset 0 0 0 1px #e5e7eb;
+    }
+
+    .embla__controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .embla__buttons {
+      display: flex;
+      gap: 5rem;
+    }
+
+    .embla__button {
+      background-color: transparent;
+      touch-action: manipulation;
+      display: inline-flex;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid #ffffff;
+      padding: 0;
+      margin: 0;
+      width: 3rem;
+      height: 3rem;
+      z-index: 1;
+      border-radius: 50%;
+      color: #3481f4;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .embla__button:disabled {
+      color: #d1d5db;
+      border-color: #d1d5db;
+      cursor: not-allowed;
+    }
+
+    .embla__button__svg {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+
+    #GALLERY_POPUP {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    #GALLERY_POPUP.active {
+      display: flex;
+    }
+
+    .embla__slide__number {
+      width: 100%;
+      height: 70vh;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      box-shadow: none;
+    }
+  </style>
+
+  <style>
+    @keyframes snowflakes-fall {
+      0% {
+        top: -10%;
+      }
+
+      100% {
+        top: 100%;
+      }
+    }
+
+    @keyframes snowflakes-shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      50% {
+        transform: translateX(80px);
+      }
+    }
+
+    .snowflake {
+      color: #fff;
+      font-size: 1em;
+      font-family: Arial, sans-serif;
+      text-shadow: 0 0 5px #000;
+      position: fixed;
+      top: -10%;
+      z-index: 9999;
+      user-select: none;
+      cursor: default;
+      animation-name: snowflakes-fall, snowflakes-shake;
+      animation-duration: 10s, 3s;
+      animation-timing-function: linear, ease-in-out;
+      animation-iteration-count: infinite, infinite;
+      animation-play-state: running, running;
+    }
+
+    .snowflake:nth-of-type(0) {
+      left: 1%;
+      animation-delay: 0s, 0s;
+    }
+
+    .snowflake:nth-of-type(1) {
+      left: 10%;
+      animation-delay: 1s, 1s;
+    }
+
+    .snowflake:nth-of-type(2) {
+      left: 20%;
+      animation-delay: 6s, 0.5s;
+    }
+
+    .snowflake:nth-of-type(3) {
+      left: 30%;
+      animation-delay: 4s, 2s;
+    }
+
+    .snowflake:nth-of-type(4) {
+      left: 40%;
+      animation-delay: 2s, 2s;
+    }
+
+    .snowflake:nth-of-type(5) {
+      left: 50%;
+      animation-delay: 8s, 3s;
+    }
+
+    .snowflake:nth-of-type(6) {
+      left: 60%;
+      animation-delay: 6s, 2s;
+    }
+
+    .snowflake:nth-of-type(7) {
+      left: 70%;
+      animation-delay: 2.5s, 1s;
+    }
+
+    .snowflake:nth-of-type(8) {
+      left: 80%;
+      animation-delay: 1s, 0s;
+    }
+
+    .snowflake:nth-of-type(9) {
+      left: 90%;
+      animation-delay: 3s, 1.5s;
+    }
+
+    .snowflake:nth-of-type(10) {
+      left: 25%;
+      animation-delay: 2s, 0s;
+    }
+
+    .snowflake:nth-of-type(11) {
+      left: 65%;
+      animation-delay: 4s, 2.5s;
+    }
+  </style>
+
+  <style>
+    html {
+      font-size: 62.5%;
+    }
+
+    body {
+      margin: 0;
+      color: #212529;
+      transition: background-color 1s ease;
+    }
+
+    main {
+      margin: auto;
+      max-width: 91.6rem;
+      background-color: #8C7C6D;
+    }
+
+    picture {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+    }
+
+    section {
+      max-width: 89rem;
+      margin-block: 5rem;
+      padding-block: 5rem;
+      margin-inline: auto;
+      overflow: hidden;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    p,
+    span {
+      font-family: "Baskervville";
+    }
+
+    span {
+      color: #3E3227;
+      font-size: 1.8rem;
+    }
+
+    p {
+      font-size: 1.5rem;
+      color: #3E3227;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: "The Nautigal";
+      color: #3E3227;
+    }
+
+    h1,
+    .h1 {
+      font-size: 7rem;
+      font-weight: 900;
+    }
+
+    h2,
+    .h2 {
+      font-size: 4rem;
+    }
+
+    h3,
+    .h3 {
+      font-size: 1.8rem;
+    }
+
+    .font-primary {
+      font-family: "The Nautigal", serif;
+    }
+
+    .font-secondary {
+      font-family: "Baskervville", sans-serif;
+    }
+
+    .font-tertiary {
+      font-family: "Dancing Script";
+    }
+
+    .font-quaternary {
+      font-family: "Great Vibes";
+    }
+
+    .font-poppins {
+      font-family: "Poppins";
+    }
+
+    [data-image-editable] {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .wrapper {
+      max-width: 89rem;
+      width: 100%;
+      margin: auto;
+      padding-inline: 3rem;
+    }
+
+    .inverted-corners {
+      position: relative;
+      --cutout-size: 40px;
+
+      -webkit-mask-image:
+        radial-gradient(circle at top left, transparent var(--cutout-size), black calc(var(--cutout-size) + 0.5px)),
+        radial-gradient(circle at top right, transparent var(--cutout-size), black calc(var(--cutout-size) + 0.5px)),
+        radial-gradient(circle at bottom left, transparent var(--cutout-size), black calc(var(--cutout-size) + 0.5px)),
+        radial-gradient(circle at bottom right, transparent var(--cutout-size), black calc(var(--cutout-size) + 0.5px));
+
+      -webkit-mask-size: 51% 51%;
+      -webkit-mask-repeat: no-repeat;
+      -webkit-mask-position: top left, top right, bottom left, bottom right;
+    }
+
+    .inverted-corners::after {
+      content: "";
+      position: absolute;
+      inset: 2rem;
+      pointer-events: none;
+
+      --border-curve: 45px;
+      --border-color: #3E3227;
+      --border-thickness: 2px;
+
+      background-image:
+        radial-gradient(circle at top left, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+        radial-gradient(circle at top right, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+        radial-gradient(circle at bottom left, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+        radial-gradient(circle at bottom right, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+
+        linear-gradient(var(--border-color), var(--border-color)),
+        linear-gradient(var(--border-color), var(--border-color)),
+        linear-gradient(var(--border-color), var(--border-color)),
+        linear-gradient(var(--border-color), var(--border-color));
+
+      background-size:
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+
+        calc(100% - (var(--border-curve) * 2)) var(--border-thickness),
+        calc(100% - (var(--border-curve) * 2)) var(--border-thickness),
+        var(--border-thickness) calc(100% - (var(--border-curve) * 2)),
+        var(--border-thickness) calc(100% - (var(--border-curve) * 2));
+
+      background-position:
+        top left, top right, bottom left, bottom right,
+        top center, bottom center, left center, right center;
+
+      background-repeat: no-repeat;
+    }
+
+    .inverted-corners::before {
+      content: "";
+      position: absolute;
+      inset: 1.3rem;
+      pointer-events: none;
+
+      --border-curve: 65px;
+      --border-color: #3E3227;
+      --border-thickness: 1px;
+
+      background-image:
+        radial-gradient(circle at top left, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+        radial-gradient(circle at top right, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+        radial-gradient(circle at bottom left, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+        radial-gradient(circle at bottom right, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+
+        linear-gradient(var(--border-color), var(--border-color)),
+        linear-gradient(var(--border-color), var(--border-color)),
+        linear-gradient(var(--border-color), var(--border-color)),
+        linear-gradient(var(--border-color), var(--border-color));
+
+      background-size:
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+
+        calc(100% - (var(--border-curve) * 2)) var(--border-thickness),
+        calc(100% - (var(--border-curve) * 2)) var(--border-thickness),
+        var(--border-thickness) calc(100% - (var(--border-curve) * 2)),
+        var(--border-thickness) calc(100% - (var(--border-curve) * 2));
+
+      background-position:
+        top left, top right, bottom left, bottom right,
+        top center, bottom center, left center, right center;
+
+      background-repeat: no-repeat;
+    }
+
+    @media screen and (max-width: 768px) {
+      .wrapper {
+        padding-inline: 2rem;
+      }
+
+      section {
+        margin-block: 3rem;
+        padding-block: 5rem;
+        margin-inline: 1.5rem;
+      }
+
+      h1,
+      .h1 {
+        font-size: 4.8rem;
+        -webkit-text-stroke-width: 1px;
+      }
+
+      .inverted-corners {
+        --cutout-size: 20px;
+      }
+
+      .inverted-corners::after {
+        --border-curve: 25px;
+        inset: 1rem;
+      }
+
+      .inverted-corners::before {
+        --border-curve: 40px;
+        inset: .5rem;
+      }
+    }
+  </style>
+
+  <style>
+    [data-aos] {
+      opacity: 0;
+      transition-property: transform, opacity;
+      transition-timing-function: ease-out;
+    }
+
+    [data-aos="fade-up"] {
+      transform: translateY(30px);
+    }
+
+    [data-aos="fade-down"] {
+      transform: translateY(-30px);
+    }
+
+    [data-aos="fade-left"] {
+      transform: translateX(30px);
+    }
+
+    [data-aos="fade-right"] {
+      transform: translateX(-30px);
+    }
+
+    [data-aos="zoom-in"] {
+      transform: scale(0.7);
+    }
+
+    [data-aos="slide-up"] {
+      transform: translateY(100%);
+    }
+
+    .aos-animate {
+      opacity: 1 !important;
+      transform: translate(0) scale(1) !important;
+    }
+  </style>
+
+  <style>
+    .element_1 {
+      background-image: url("https://img.freepik.com/premium-photo/flower-background_1066938-711.jpg");
+    }
+
+    .element_2 {
+      background-image: url("https://img.freepik.com/free-vector/watercolour-green-background_78370-1882.jpg?semt=ais_user_personalization&w=740&q=80");
+    }
+
+    .element_3 {
+      background-image: url("https://chungdoi.com/images/themes/longphung-v2-red/rong-phuong.png");
+    }
+
+    [data-image-editable="photo_1"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342159_9a35bc8074ac983581f10a243218dee5-20250720112650-xdgti.jpg");
+    }
+
+    [data-image-editable="photo_2"] {
+      background-image: url("https://w.ladicdn.com/s450x400/5c728619c417ab07e5194baa/22-20240427063945-kdhmq.jpg");
+    }
+
+    [data-image-editable="photo_3"] {
+      background-image: url("https://w.ladicdn.com/s700x550/6801c7e1fbbd4d001283dac2/z6823838296252_9dc2a80595ceb2d9916440b01035f73d-20250720112650--nghd.jpg");
+    }
+
+    [data-image-editable="photo_4"] {
+      background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838784242_aee303c8a068cb5fd7b41e7ef4b596d0-20250720112708-siwg1.jpg");
+    }
+
+    [data-image-editable="photo_5"] {
+      background-image: url("https://w.ladicdn.com/s500x550/6801c7e1fbbd4d001283dac2/z6823838739064_5c886c45d1d55977a87b5ca14373809e-20250720112708-1kjld.jpg");
+    }
+
+    [data-image-editable="photo_6"] {
+      background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838562924_339d83292301008cda4f978f91fff475-20250720112700-igibu.jpg");
+    }
+
+    [data-image-editable="photo_7"] {
+      background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_8"] {
+      background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838384689_f9140d1b705d2baa14714ae77179b775-20250720112650-qrpou.jpg");
+    }
+
+    [data-image-editable="photo_9"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838784286_fa9f26bf3167e3a2f668f9b524060a8b-20250720112708--0znq.jpg");
+    }
+
+    [data-image-editable="photo_10"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838474700_ae674803922601c8fe5fd6dc39839a52-20250720112655-abrzg.jpg");
+    }
+
+    [data-image-editable="photo_11"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838831042_069f5c5b3e835e42e996c331e4133d2e-20250720112716-91doe.jpg");
+    }
+
+    [data-image-editable="photo_12"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838384688_fa8a2fb2e4439bdba2eeaabc71b862cf-20250720112650-pwmxi.jpg");
+    }
+
+    [data-image-editable="photo_13"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342158_07f2a515ce97a05d7dac8aa0465ccc85-20250720112650-jtwiv.jpg");
+    }
+
+    [data-image-editable="photo_14"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_15"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_16"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_17"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_18"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_19"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_1"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_2"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838474700_ae674803922601c8fe5fd6dc39839a52-20250720112655-abrzg.jpg");
+    }
+
+    [data-image-editable="photo_gallery_3"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_4"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_5"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838784286_fa9f26bf3167e3a2f668f9b524060a8b-20250720112708--0znq.jpg");
+    }
+
+    [data-image-editable="photo_gallery_6"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="qr_1"] {
+      background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
+    }
+
+    [data-image-editable="qr_2"] {
+      background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
+    }
+  </style>
+
+  <script>
+    (function () {
+      let countdownInterval;
+      function getTargetDate() {
+        const elH = document.querySelector("#js-hour");
+        const elD = document.querySelector("#js-day");
+        const elM = document.querySelector("#js-month");
+        const elY = document.querySelector("#js-year");
+        if (!elH || !elD || !elM || !elY) return null;
+        const timeMatch = elH.innerText.match(/(\d{2}):(\d{2})/);
+        const hour = timeMatch ? parseInt(timeMatch[1]) : 0;
+        const minute = timeMatch ? parseInt(timeMatch[2]) : 0;
+        const day = parseInt(elD.innerText);
+        const month = parseInt(elM.innerText) - 1;
+        const year = parseInt(elY.innerText);
+        const target = new Date(year, month, day, hour, minute, 0).getTime();
+        return isNaN(target) ? null : target;
+      }
+
+      function render(d, h, m, s) {
+        const pad = (n) => (n < 10 ? "0" + n : n);
+        const setVal = (id, val) => {
+          const el = document.querySelector(`${id} span`);
+          if (el) el.innerText = pad(val);
+        };
+        setVal("#TIMER_DAY", d);
+        setVal("#TIMER_HOUR", h);
+        setVal("#TIMER_MIN", m);
+        setVal("#TIMER_SEC", s);
+      }
+
+      function updateCountdown() {
+        const endTime = getTargetDate();
+        if (!endTime) return;
+        if (countdownInterval) clearInterval(countdownInterval);
+
+        const logic = () => {
+          const now = new Date().getTime();
+          const distance = endTime - now;
+          if (distance < 0) {
+            clearInterval(countdownInterval);
+            render(0, 0, 0, 0);
+            return;
+          }
+          const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const h = Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+          );
+          const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((distance % (1000 * 60)) / 1000);
+          render(d, h, m, s);
+        };
+        logic();
+        countdownInterval = setInterval(logic, 1000);
+      }
+
+      window.addEventListener("load", () => {
+        updateCountdown();
+        const observer = new MutationObserver(updateCountdown);
+        const config = {
+          characterData: true,
+          childList: true,
+          subtree: true,
+        };
+        ["#js-hour", "#js-day", "#js-month", "#js-year"].forEach(
+          (selector) => {
+            const el = document.querySelector(selector);
+            if (el) observer.observe(el, config);
+          },
+        );
+      });
+    })();
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const animationObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const target = entry.target;
+              const delay = target.getAttribute("data-aos-delay") || "0";
+              const duration =
+                target.getAttribute("data-aos-duration") || "800";
+              target.style.transitionDelay = `${delay}ms`;
+              target.style.transitionDuration = `${duration}ms`;
+              target.classList.add("aos-animate");
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      document
+        .querySelectorAll("[data-aos]")
+        .forEach((el) => animationObserver.observe(el));
+    });
+  </script>
+
+</head>
+
+<body>
+  <main class="relative">
+    <div class="element_3 opacity-[0.06] absolute inset-0 z-0 "></div>
+    <!-- Banner Begin-->
+    <section id="SECTION_BANNER" class="flex p-0 m-0 max-w-full bg-cover bg-no-repeart">
+      <div class="wrapper z-[10] relative ">
+        <div class="text-white text-center py-[5rem]">
+          <p class="w-fit m-auto relative font-poppins text-[#FFFFFF] font-bold uppercase tracking-[.6rem] mb-[1rem] text-[1.6rem] 
+          before:absolute before:top-1/2 before:-left-[15rem] before:content-[''] before:w-[13rem] before:h-[.2rem] before:bg-[#FFFFFF] before:max-md:hidden 
+          after:absolute after:top-1/2 after:-right-[15rem] after:content-[''] after:w-[13rem] after:h-[.2rem] after:bg-[#FFFFFF] after:max-md:hidden"
+            data-editable="field_1" data-aos="fade-up">The Wedding of</p>
+          <h1 class="h1 font-quaternary mb-[1rem] text-[#FFFFFF]" data-editable="field_222" data-aos="fade-up"
+            data-aos-delay="300">
+            Trần Trung Hiếu
+            <br />& <br />
+            Lê Minh Nguyệt
+          </h1>
+        </div>
+      </div>
+    </section>
+    <!-- Banner End-->
+    <!-- Wedding Details Section Begin -->
+    <section id="SECTION_FAMILY" class="bg-[#FDFBF7] inverted-corners">
+      <div class="wrapper">
+        <div class="flex flex-col gap-[2.4rem] md:gap-[3.2rem] text-center mb-[4.8rem]">
+          <div class="flex justify-center w-full gap-[1.2rem] md:gap-[3.2rem]">
+            <div>
+              <div class="mb-[.4rem]" data-aos="fade-right">
+                <span class="text-[1.6rem] md:text-[1.7rem]" data-editable="field_2">Ông Bà</span>
+              </div>
+              <div class="mb-[.4rem]" data-aos="fade-right" data-aos-delay="100">
+                <span class="text-[1.4rem] md:text-[1.7rem] font-semibold" data-editable="field_3">Nguyễn Văn
+                  Tuấn</span>
+              </div>
+              <div class="mb-[.8rem]" data-aos="fade-right" data-aos-delay="100">
+                <span class="text-[1.4rem] md:text-[1.7rem] font-semibold" data-editable="field_4">Lê Thị Hương</span>
+              </div>
+              <div data-aos="fade-right" data-aos-delay="100">
+                <span class="text-[1.4rem] md:text-[1.5rem] leading-tight" data-editable="field_5">123 Nguyễn Huệ, Quận
+                  1, TP. Hồ Chí Minh</span>
+              </div>
+            </div>
+            <div class="w-[.1rem] h-[6rem] bg-white self-center"></div>
+            <div>
+              <div class="mb-[.4rem]" data-aos="fade-left">
+                <span class="text-[1.6rem] md:text-[1.7rem]" data-editable="field_6">Ông Bà</span>
+              </div>
+              <div class="mb-[.4rem]" data-aos="fade-left" data-aos-delay="100">
+                <span class="text-[1.4rem] md:text-[1.7rem] font-semibold" data-editable="field_7">Trần Văn Khoa</span>
+              </div>
+              <div class="mb-[.8rem]" data-aos="fade-left" data-aos-delay="200">
+                <span class="text-[1.4rem] md:text-[1.7rem] font-semibold" data-editable="field_8">Phạm Thị Kim
+                  Oanh</span>
+              </div>
+              <div data-aos="fade-left" data-aos-delay="300">
+                <span class="text-[1.4rem] md:text-[1.5rem] leading-tight" data-editable="field_9">456 Lê Lợi, Quận 3,
+                  TP. Hồ Chí Minh</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-aos="fade-up">
+            <span class="text-[1.7rem] md:text-[1.8rem]" data-editable="field_10">TRÂN TRỌNG BÁO TIN <br />
+              LỄ THÀNH HÔN CỦA CON CHÚNG TÔI</span>
+          </div>
+
+          <div class="flex flex-col gap-[.8rem]">
+            <h3 class="text-[4.5rem] md:text-[6rem]" data-editable="field_11" data-aos="fade-up">
+              Trần Trung Hiếu
+            </h3>
+            <span class="text-[1.4rem] md:text-[1.5rem] uppercase tracking-[0.2rem]" data-editable="field_12"
+              data-aos="fade-up">Út
+              Nam</span>
+            <span class="text-[3rem] md:text-[5rem]" data-aos="fade-up">&</span>
+            <h3 class="text-[4.5rem] md:text-[6rem]" data-editable="field_13" data-aos="fade-up">
+              Lê Minh Nguyệt
+            </h3>
+            <span class="text-[1.4rem] md:text-[1.5rem] uppercase tracking-[0.2rem]" data-editable="field_14"
+              data-aos="fade-up">Út
+              Nữ</span>
+          </div>
+
+          <div class="flex flex-col gap-[1.2rem]" data-aos="fade-up">
+            <span class="text-[1.6rem] md:text-[1.7rem]" data-editable="field_150">Tiệc cưới sẽ diễn ra vào lúc:</span>
+            <span class="text-[1.6rem] md:text-[1.7rem] uppercase" data-editable="field_160">VÀO LÚC 09:00</span>
+            <div>
+              <span class="text-[1.6rem] md:text-[1.7rem] w-[7.0rem] md:w-[8.5rem] text-right uppercase"
+                data-editable="field_170">THỨ SÁU</span>
+              <span class="text-[1.4rem] opacity-50 mx-2 md:mx-3">|</span>
+              <span class="text-[3.4rem] md:text-[4em]" data-editable="field_180">20</span>
+              <span class="text-[1.4rem] opacity-50 mx-2 md:mx-3">|</span>
+              <span class="text-[1.6rem] md:text-[1.7rem] w-[7.0rem] md:w-[8.5rem] text-left uppercase"
+                data-editable="field_190">THÁNG 02</span>
+            </div>
+            <span class="text-[2.2rem] md:text-[2.4rem]" data-editable="field_200">2026</span>
+            <span class="text-[1.5rem] md:text-[1.6rem]" data-editable="field_210">(Tức ngày 04/01 Bính Ngọ)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Wedding Details Section End -->
+    <!-- Love Story Section Begin -->
+    <section id="SECTION_STORY" class="bg-[#FDFBF7] inverted-corners">
+      <div class="wrapper">
+        <p class="text-center uppercase text-[1.8rem] md:text-[2.5rem] mb-[2.4rem] tracking-[.1rem]"
+          data-editable="field_120" data-aos="fade-up">
+          Về chúng tớ
+        </p>
+        <ul class="relative">
+          <li class="relative mb-[4rem]">
+            <div
+              class="absolute min-[1024px]:right-[30%] top-0 z-10  size-[12rem] after:absolute after:top-[10px] after:left-[10px] after:right-[10px] after:bottom-[10px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:rounded-full"
+              data-aos="fade-up">
+              <picture class="rounded-full shadow-lg" data-image-editable="photo_5"></picture>
+            </div>
+            <div
+              class="relative min-[1024px]:ml-[6rem] max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[4rem] md:p-[5rem] min-[1024px]:text-right shadow-md bg-[#3E3227] before:absolute before:top-[20px] before:left-[20px] before:right-[20px] before:bottom-[20px] before:content-[''] before:border before:border-dashed before:border-[#ffffff80] before:-z-[1] before:rotate-[-1deg] after:absolute after:top-[20px] after:left-[20px] after:right-[20px] after:bottom-[20px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:-z-[1] after:rotate-[1deg]"
+              data-aos="fade-up">
+              <p class="mb-[1rem] text-white text-[1.3rem]" data-editable="field_17">
+                June 10, 2017
+              </p>
+              <h3 class="text-[4rem] mb-[1rem] text-[2.4rem] text-white" data-editable="field_18">
+                17 bẻ gãy sừng trâu
+              </h3>
+              <p class="text-white" data-editable="field_19">
+                17, độ tuổi với những rung động đầu đời, non nớt, trong trẻo như sớm ban mai. Anh bị thu hút bởi một cô
+                gái ngây ngô, vui vẻ và đáng mến. Em bị thu hút bởi chàng trai tóc đầu đinh, quậy quậy nhưng rất đáng
+                yêu. Và chúng mình gặp nhau nơi lòng hăng say phục vụ nhà Chúa.
+              </p>
+            </div>
+          </li>
+          <li class="relative mb-[4rem]">
+            <div
+              class="absolute min-[1024px]:left-[30%] top-0 z-10  size-[12rem] after:absolute after:top-[10px] after:left-[10px] after:right-[10px] after:bottom-[10px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:rounded-full"
+              data-aos="fade-up">
+              <picture class="rounded-full shadow-lg" data-image-editable="photo_6"></picture>
+            </div>
+            <div
+              class="relative min-[1024px]:mr-[6rem] max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[4rem] md:p-[5rem] shadow-md min-[1024px]:ml-auto bg-[#3E3227] before:absolute before:top-[20px] before:left-[20px] before:right-[20px] before:bottom-[20px] before:content-[''] before:border before:border-dashed before:border-[#ffffff80] before:-z-[1] before:rotate-[-1deg] after:absolute after:top-[20px] after:left-[20px] after:right-[20px] after:bottom-[20px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:-z-[1] after:rotate-[1deg]"
+              data-aos="fade-up">
+              <p class="mb-[1rem] text-[1.3rem] text-white" data-editable="field_20">
+                June 10, 2017
+              </p>
+              <h3 class="text-[4rem] mb-[1rem] text-[2.4rem] text-white" data-editable="field_21">
+                Thử thách, chông gai
+              </h3>
+              <p class="text-white" data-editable="field_22">
+                2021 - Thử thách, chông gai Xa mặt cách lòng, hiểu lầm, tổn thương, cãi vã liên tục khiến chúng mình
+                quyết định nói lời chia tay...
+              </p>
+            </div>
+          </li>
+          <li class="relative mb-[4rem]">
+            <div
+              class="absolute min-[1024px]:right-[30%] top-0 z-10  size-[12rem] after:absolute after:top-[10px] after:left-[10px] after:right-[10px] after:bottom-[10px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:rounded-full"
+              data-aos="fade-up">
+              <picture class="rounded-full shadow-lg" data-image-editable="photo_7"></picture>
+            </div>
+            <div
+              class="relative min-[1024px]:ml-[6rem] max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[4rem] md:p-[5rem] min-[1024px]:text-right shadow-md bg-[#3E3227] before:absolute before:top-[20px] before:left-[20px] before:right-[20px] before:bottom-[20px] before:content-[''] before:border before:border-dashed before:border-[#ffffff80] before:-z-[1] before:rotate-[-1deg] after:absolute after:top-[20px] after:left-[20px] after:right-[20px] after:bottom-[20px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:-z-[1] after:rotate-[1deg]"
+              data-aos="fade-up">
+              <p class="mb-[1rem] text-[1.3rem] text-white" data-editable="field_23">
+                June 10, 2017
+              </p>
+              <h3 class="text-[4rem] mb-[1rem] text-[2.4rem] text-white" data-editable="field_24">
+                Gương vỡ lại lành
+              </h3>
+              <p class="text-white" data-editable="field_25">
+                2 năm thử thách để chúng mình trân trọng, thấu hiểu nhau hơn. Chúng mình cầu nguyện với Chúa.Liệu đây có
+                phải người sẽ ở bên con suốt đời, cùng con yêu mến và phụng sự Chúa?
+              </p>
+            </div>
+          </li>
+          <li class="relative mb-[4rem]">
+            <div
+              class="absolute min-[1024px]:left-[30%] top-0 z-10  size-[12rem] after:absolute after:top-[10px] after:left-[10px] after:right-[10px] after:bottom-[10px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:rounded-full"
+              data-aos="fade-up">
+              <picture class="rounded-full shadow-lg" data-image-editable="photo_8"></picture>
+            </div>
+            <div
+              class="relative min-[1024px]:mr-[6rem] max-[1024px]:ml-[8rem] min-[1024px]:max-w-[44rem] p-[4rem] md:p-[5rem] shadow-md min-[1024px]:ml-auto bg-[#3E3227] before:absolute before:top-[20px] before:left-[20px] before:right-[20px] before:bottom-[20px] before:content-[''] before:border before:border-dashed before:border-[#ffffff80] before:-z-[1] before:rotate-[-1deg] after:absolute after:top-[20px] after:left-[20px] after:right-[20px] after:bottom-[20px] after:content-[''] after:border after:border-dashed after:border-[rgba(255,255,255,0.5)] after:-z-[1] after:rotate-[1deg]"
+              data-aos="fade-up">
+              <p class="mb-[1rem] text-[1.3rem] text-white" data-editable="field_26">
+                June 10, 2017
+              </p>
+              <h3 class="text-[4rem] mb-[1rem] text-[2.4rem] text-white" data-editable="field_27">
+                Tiến lên lễ đường
+              </h3>
+              <p class="text-white" data-editable="field_28">
+                khi thịnh vượng cũng như lúc gian nan, khi mạnh khỏe cũng như lúc đau yếu, để yêu thương và tôn trọng.
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+    <!-- Love Story Section End -->
+    <!-- Timer Section Begin -->
+    <section id="SECTION_COUNTDOWN" class="bg-[#FDFBF7] inverted-corners">
+      <div class="wrapper">
+        <div class="flex flex-col items-center gap-[1.6rem] md:gap-[2.4rem] text-center">
+          <span class="text-[1.8rem] md:text-[2.5rem] uppercase" data-editable="field_233" data-aos="fade-up">Tiệc cưới
+            sẽ diễn ra vào lúc:</span>
+          <span class="text-[1.8rem] md:text-[2.0rem] font-semibold" data-editable="field_240" data-aos="fade-up">THỨ
+            SÁU</span>
+          <span id="js-hour" class="text-[1.8rem] md:text-[2.0rem] font-semibold" data-aos="fade-up"
+            data-editable="field_250">18:00</span>
+
+          <p class="text-[3.0rem] md:text-[3.6rem] font-semibold text-center" data-aos="fade-up">
+            <span id="js-day" class="text-[3.0rem] md:text-[3.6rem] font-semibold text-center"
+              data-editable="field_251">20</span>/
+            <span id="js-month" class="text-[3.0rem] md:text-[3.6rem] font-semibold text-center"
+              data-editable="field_260">03</span>/
+            <span id="js-year" class="text-[3.0rem] md:text-[3.6rem] font-semibold text-center"
+              data-editable="field_270">2026</span>
+          </p>
+
+          <span class="text-[1.8rem] md:text-[2.0rem] uppercase" data-editable="field_280" data-aos="fade-up">Cùng đếm
+            ngược</span>
+
+          <div
+            class="flex max-md:items-center justify-center m-auto p-[1rem] gap-[1rem] md:gap-[4rem] text-center text-[#3E3227]">
+            <div id="TIMER_DAY" data-aos="fade-up" data-aos-delay="100">
+              <span class="font-rochester text-[3rem] md:text-[4rem] text-[#3E3227] font-bold">00</span>
+              <p class="text-[#3E3227] text-[1.2rem] uppercase tracking-widest font-bold">
+                Day
+              </p>
+            </div>
+            <div id="TIMER_HOUR" data-aos="fade-up" data-aos-delay="200">
+              <span class="font-rochester text-[3rem] md:text-[4rem] text-[#3E3227] font-bold">00</span>
+              <p class="text-[#3E3227] text-[1.2rem] uppercase tracking-widest font-bold">
+                Giờ
+              </p>
+            </div>
+            <div id="TIMER_MIN" data-aos="fade-up" data-aos-delay="300">
+              <span class="font-rochester text-[3rem] md:text-[4rem] text-[#3E3227] font-bold">00</span>
+              <p class="text-[#3E3227] text-[1.2rem] uppercase tracking-widest font-bold">
+                Phút
+              </p>
+            </div>
+            <div id="TIMER_SEC" data-aos="fade-up" data-aos-delay="400">
+              <span class="font-rochester text-[3rem] md:text-[4rem] text-[#3E3227] font-bold">00</span>
+              <p class="text-[#3E3227] text-[1.2rem] uppercase tracking-widest font-bold">
+                Giây
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center gap-[3.2rem] mt-[.8rem]">
+            <div class="flex flex-col items-center" data-aos="fade-up">
+              <span class="text-[11px] uppercase tracking-wider" data-editable="field_29">Đón khách</span>
+              <span class="text-[18px] md:text-[20px] font-semibold mt-1" data-editable="field_30">17:00</span>
+            </div>
+            <div class="flex flex-col items-center" data-aos="fade-up" data-aos-delay="200">
+              <span class="text-[11px] uppercase tracking-wider" data-editable="field_31">Chụp ảnh</span>
+              <span class="text-[18px] md:text-[20px] font-semibold mt-1" data-editable="field_32">17:30</span>
+            </div>
+            <div class="flex flex-col items-center" data-aos="fade-up" data-aos-delay="400">
+              <span class="text-[11px] uppercase tracking-wider" data-editable="field_33">Vô tiệc</span>
+              <span class="text-[18px] md:text-[20px] font-semibold mt-1" data-editable="field_34">18:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Timer Section End -->
+    <!-- Gallery Section Begin -->
+    <section id="SECTION_ALBUM" class="bg-[#FDFBF7] inverted-corners">
+      <div class="wrapper">
+        <div class="flex flex-col items-center mb-[4.8rem]">
+          <p class="uppercase text-[1.8rem] md:text-[2.5rem] mb-[2.4rem] tracking-[.1rem]" data-editable="field_121"
+            data-aos="fade-up">
+            Album Ảnh Cưới
+          </p>
+          <div class="w-full md:max-w-[55.0rem] h-[70rem]">
+            <div class="grid grid-cols-2 h-full gap-[1.2rem] md:gap-[1.6rem]">
+              <div class="">
+                <div class="shadow-lg rounded-[1rem] h-1/2 mb-[1.2rem] md:mb-[1.6rem]" data-aos="fade-right">
+                  <picture class="rounded-[1rem]" data-image-editable="photo_1"></picture>
+                </div>
+                <div class="shadow-lg rounded-[1rem] h-1/2" data-aos="fade-right" data-aos-delay="200">
+                  <picture class="rounded-[1rem]" data-image-editable="photo_2"></picture>
+                </div>
+              </div>
+              <div class="">
+                <div class="shadow-lg rounded-[1rem] h-1/4 mb-[1.2rem] md:mb-[1.6rem]" data-aos="fade-left">
+                  <picture class="rounded-[1rem]" data-image-editable="photo_3"></picture>
+                </div>
+                <div class="shadow-lg rounded-[1rem] h-1/2 mb-[1.2rem] md:mb-[1.6rem]" data-aos="fade-left"
+                  data-aos-delay="200">
+                  <picture class="rounded-[1rem]" data-image-editable="photo_4"></picture>
+                </div>
+                <div class="shadow-lg rounded-[1rem] h-1/4" data-aos="fade-left" data-aos-delay="400">
+                  <picture class="rounded-[1rem]" data-image-editable="photo_5"></picture>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-[5rem]" data-aos="fade-up">
+            <button onclick="toggleGalleryPopup(true)"
+              class="group flex flex-col items-center mx-auto hover:scale-[1.1] duration-200">
+              <span class="text-[1.7rem] uppercase tracking-widest mb-1">Xem thêm</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="#3E3227" class="size-[2rem] animate-bounce">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Gallery Section End -->
+    <!-- Form Section Begin -->
+    <section id="SECTION_FORM" class="bg-[#FDFBF7] inverted-corners">
+      <div class="w-full wrapper z-[10] relative gap-[2rem]">
+        <div class="md:w-1/2 m-auto max-md:mb-[2rem] text-center" data-aos="fade-left" data-aos-delay="300"
+          style="transition-delay: 300ms; transition-duration: 800ms">
+          <p class="uppercase text-[1.8rem] md:text-[2.5rem] mb-[2.4rem] tracking-[.1rem]" data-editable="form_1">
+            Sổ lưu bút
+          </p>
+          <h2 class="h2 mb-[1.2rem]" data-editable="form_2">
+            Come to attend our marriage ceremony
+          </h2>
+          <p class="mb-[2.4rem] text-[1.6rem] md:text-[1.7rem]" data-editable="form_3">
+            Congratulations on your wedding! Hope it was the most wonderful
+            day ever Now that your wedding is done and dusted, there is only
+            one more thing left to do..Oh yes the thank you cards!
+          </p>
+        </div>
+        <div class="" data-aos="fade-right" style="transition-delay: 0ms; transition-duration: 800ms">
+          <div class="flex-1 p-[3rem] rounded-2xl text-center w-full max-w-[40rem] m-auto">
+            <form action="" class="space-y-4">
+              <div class="relative">
+                <input type="text" placeholder="Tên của bạn"
+                  class="w-full px-4 py-2 rounded-[.6rem] border border-[#3E3227] focus:outline-none text-[1.3rem] bg-transparent" />
+              </div>
+
+              <div class="relative">
+                <input type="text" placeholder="Số điện thoại"
+                  class="w-full px-4 py-2 rounded-[.6rem] border border-[#3E3227] focus:outline-none text-[1.3rem] bg-transparent" />
+              </div>
+
+              <div class="relative">
+                <input type="number" min="1" max="5" placeholder="Số người tham dự"
+                  class="w-full px-4 py-2 rounded-[.6rem] border border-[#3E3227] focus:outline-none text-[1.3rem] bg-transparent" />
+              </div>
+
+              <div class="flex justify-around py-[10px] text-[1.7rem] text-gray-600">
+                <label class="flex items-center space-x-2 cursor-pointer group">
+                  <input type="radio" name="guest_type" id="side_groom" class="accent-black" />
+                  <span class="group-hover:text-black">Nhà trai</span>
+                </label>
+                <label class="flex items-center space-x-2 cursor-pointer group">
+                  <input type="radio" name="guest_type" id="side_bride" class="accent-black" />
+                  <span class="group-hover:text-black">Nhà gái</span>
+                </label>
+              </div>
+
+              <div class="relative">
+                <textarea name="congratulations" rows="3" placeholder="Lời chúc của bạn"
+                  class="w-full px-4 py-2 rounded-[.6rem] border border-[#3E3227] focus:outline-none text-[1.3rem] bg-transparent resize-none"></textarea>
+              </div>
+              <button type="submit"
+                class="rounded-[1rem] px-[2rem] py-[1rem] text-[10px] font-semibold transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60 bg-[#3E3227] text-white">
+                Gửi lời chúc
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Form Section End -->
+    <!-- Wedding Gift Section Begin -->
+    <section id="SECTION_GIFT" class="bg-[#FDFBF7] inverted-corners">
+      <div class="wrapper text-center py-[15px]">
+        <div class="mb-[2rem]" data-aos="fade-up">
+          <h2 class="h2 mb-[1rem] text-[#3E3227]" data-editable="gift_title">
+            Wedding box
+          </h2>
+          <p class="text-[1.6rem] md:text-[1.7rem]" data-editable="gift_des">
+            your presence is our best gift
+          </p>
+        </div>
+        <div class="justify-self-center text-black p-[10px] rounded-[10px]">
+          <div class="flex max-md:flex-col gap-[3rem]">
+            <div class="flex-1 p-[1rem] shadow-md rounded-[1rem]">
+              <h6 class="text-[3rem] mb-[1rem] text-[#3E3227]" data-editable="groom_title" data-aos="fade-right"
+                data-aos-delay="100">
+                Groom
+              </h6>
+              <picture class="size-[300px] aspect-[1/1] m-auto mb-[1rem]" data-image-editable="qr_1"
+                data-aos="fade-right" data-aos-delay="200">
+              </picture>
+              <p data-aos="fade-right" data-aos-delay="300">
+                <span data-editable="groom_name">Nguyễn ABC</span>
+              </p>
+              <p data-aos="fade-right" data-aos-delay="400">
+                <span data-editable="groom_bank">Techcomebank</span>
+              </p>
+              <p data-aos="fade-right" data-aos-delay="500">
+                <span data-editable="groom_bank_nummber">0123456789</span>
+              </p>
+            </div>
+            <div class="flex-1 p-[1rem] shadow-md rounded-[1rem]">
+              <h6 class="text-[3rem] mb-[1rem] text-[#3E3227]" data-editable="bride_title" data-aos="fade-left"
+                data-aos-delay="100">
+                Bride
+              </h6>
+              <picture class="size-[300px] aspect-[1/1] m-auto mb-[1rem]" data-image-editable="qr_2"
+                data-aos="fade-left" data-aos-delay="200">
+              </picture>
+              <p data-aos="fade-left" data-aos-delay="300">
+                <span data-editable="bride_name">Nguyễn ABC</span>
+              </p>
+              <p data-aos="fade-left" data-aos-delay="400">
+                <span data-editable="bride_bank">Techcomebank</span>
+              </p>
+              <p data-aos="fade-left" data-aos-delay="500">
+                <span data-editable="bride_bank_number">0123456789</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Wedding Gift Section End -->
+    <!-- Gallery Popup Section Begin -->
+    <section id="GALLERY_POPUP" class="embla">
+      <button onclick="toggleGalleryPopup(false)" class="absolute top-10 right-10 text-white text-[4rem] z-[10000]">
+        &times;
+      </button>
+
+      <div class="embla__viewport">
+        <div class="embla__container">
+          <div class="embla__slide">
+            <picture class="embla__slide__number" data-image-editable="photo_gallery_1"></picture>
+          </div>
+          <div class="embla__slide">
+            <picture class="embla__slide__number" data-image-editable="photo_gallery_2"></picture>
+          </div>
+          <div class="embla__slide">
+            <picture class="embla__slide__number" data-image-editable="photo_gallery_3"></picture>
+          </div>
+          <div class="embla__slide">
+            <picture class="embla__slide__number" data-image-editable="photo_gallery_4"></picture>
+          </div>
+          <div class="embla__slide">
+            <picture class="embla__slide__number" data-image-editable="photo_gallery_5"></picture>
+          </div>
+          <div class="embla__slide">
+            <picture class="embla__slide__number" data-image-editable="photo_gallery_6"></picture>
+          </div>
+        </div>
+      </div>
+
+      <div class="embla__controls">
+        <div class="embla__buttons">
+          <button class="embla__button embla__button--prev" type="button">
+            <svg class="embla__button__svg" viewBox="0 0 532 532">
+              <path fill="white"
+                d="M355.66 11.354c13.793-13.805 36.208-13.805 50.001 0 13.785 13.804 13.785 36.238 0 50.034L201.22 266l204.442 204.61c13.785 13.805 13.785 36.239 0 50.044-13.793 13.796-36.208 13.796-50.002 0a5994246.277 5994246.277 0 0 0-229.332-229.454 35.065 35.065 0 0 1-10.326-25.126c0-9.2 3.393-18.26 10.326-25.2C172.192 194.973 332.731 34.31 355.66 11.354Z">
+              </path>
+            </svg>
+          </button>
+          <button class="embla__button embla__button--next" type="button">
+            <svg class="embla__button__svg" viewBox="0 0 532 532">
+              <path fill="white"
+                d="M176.34 520.646c-13.793 13.805-36.208 13.805-50.001 0-13.785-13.804-13.785-36.238 0-50.034L330.78 266 126.34 61.391c-13.785-13.805-13.785-36.239 0-50.044 13.793-13.796 36.208-13.796 50.002 0 22.928 22.947 206.395 206.507 229.332 229.454a35.065 35.065 0 0 1 10.326 25.126c0 9.2-3.393 18.26-10.326 25.2-45.865 45.901-206.404 206.564-229.332 229.52Z">
+              </path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+    <!-- Gallery Popup Section End -->
+    <script>
+      const emblaNode = document.querySelector(".embla");
+      if (emblaNode) {
+        const OPTIONS = { loop: true };
+        const viewportNode = emblaNode.querySelector(".embla__viewport");
+        const prevBtnNode = emblaNode.querySelector(".embla__button--prev");
+        const nextBtnNode = emblaNode.querySelector(".embla__button--next");
+        const emblaApi = EmblaCarousel(viewportNode, OPTIONS);
+
+        const addPrevNextButtonClickHandlers = (
+          emblaApi,
+          prevBtn,
+          nextBtn,
+        ) => {
+          const scrollPrev = () => emblaApi.scrollPrev();
+          const scrollNext = () => emblaApi.scrollNext();
+          prevBtn.addEventListener("click", scrollPrev, false);
+          nextBtn.addEventListener("click", scrollNext, false);
+          const togglePrevNextButtonsState = () => {
+            if (emblaApi.canScrollPrev()) prevBtn.removeAttribute("disabled");
+            else prevBtn.setAttribute("disabled", "disabled");
+            if (emblaApi.canScrollNext()) nextBtn.removeAttribute("disabled");
+            else nextBtn.setAttribute("disabled", "disabled");
+          };
+          emblaApi
+            .on("select", togglePrevNextButtonsState)
+            .on("reinit", togglePrevNextButtonsState);
+          togglePrevNextButtonsState();
+        };
+
+        addPrevNextButtonClickHandlers(emblaApi, prevBtnNode, nextBtnNode);
+      }
+
+      let popupEmblaApi;
+      function toggleGalleryPopup(show) {
+        const popup = document.getElementById("GALLERY_POPUP");
+        if (!popup) return;
+        const viewportNode = popup.querySelector(".embla__viewport");
+        const prevBtn = popup.querySelector(".embla__button--prev");
+        const nextBtn = popup.querySelector(".embla__button--next");
+
+        if (show) {
+          popup.classList.add("active");
+          document.body.style.overflow = "hidden";
+          if (!popupEmblaApi && viewportNode) {
+            popupEmblaApi = EmblaCarousel(viewportNode, { loop: true });
+            if (prevBtn)
+              prevBtn.addEventListener("click", () =>
+                popupEmblaApi.scrollPrev(),
+              );
+            if (nextBtn)
+              nextBtn.addEventListener("click", () =>
+                popupEmblaApi.scrollNext(),
+              );
+          } else if (popupEmblaApi) {
+            setTimeout(() => {
+              popupEmblaApi.reInit();
+            }, 10);
+          }
+        } else {
+          popup.classList.remove("active");
+          document.body.style.overflow = "auto";
+        }
+      }
+    </script>
+
+    <footer>
+      <p class="bg-black text-white py-[1rem] text-center" style="font-family: sans-serif; font-size: 1.2rem">
+        Bản quyền thuộc Hiweb
+      </p>
+    </footer>
+
+    <div class="snowflakes" aria-hidden="true">
+      <div class="snowflake" style="font-size: 20px">🌸</div>
+      <div class="snowflake">❅</div>
+      <div class="snowflake" style="font-size: 18px">🤍</div>
+      <div class="snowflake">❅</div>
+      <div class="snowflake" style="font-size: 20px">🌸</div>
+      <div class="snowflake" style="font-size: 22px">❅</div>
+      <div class="snowflake" style="font-size: 14px">🤍</div>
+      <div class="snowflake" style="font-size: 15px">❅</div>
+    </div>
+  </main>
+</body>
+
+</html>
