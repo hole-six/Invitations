@@ -15,15 +15,30 @@ const DashboardInvitationsPage = () => {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedInvitations, setSelectedInvitations] = useState([])
+  // const [filters, setFilters] = useState({
+  //   status: 'all',
+  //   search: '',
+  //   sortBy: 'created_at',
+  //   sortOrder: 'desc',
+  //   userId: 'all' // Add user filter
+  // })
   const [filters, setFilters] = useState({
-    status: 'all',
-    search: '',
-    sortBy: 'created_at',
-    sortOrder: 'desc',
-    userId: 'all' // Add user filter
-  })
+  status: 'all',
+  search: '',
+  sortBy: 'created_at',
+  sortOrder: 'desc',
+  userId: 'all',
+  page: 1
+})
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [invitationToDelete, setInvitationToDelete] = useState(null)
+
+  const [pagination, setPagination] = useState({
+  currentPage: 1,
+  perPage: 10,
+  total: 0,
+  totalPages: 1
+})
 
   useEffect(() => {
     if (isAdmin) {
@@ -54,8 +69,23 @@ const DashboardInvitationsPage = () => {
         response = await invitationService.getAll(filters)
       }
       
-      let data = response.data || []
-      setInvitations(data)
+      // apiService returns raw JSON (not axios), so handle both shapes
+      // Possible shapes:
+      // 1) { code, data: [...], pagination: {...} }
+      // 2) { data: {...} } (axios-like)
+      // 3) [...] (array)
+      const res = response?.data ?? response ?? {}
+      const list = Array.isArray(res) ? res : (res.data || [])
+      setInvitations(list)
+
+      if (res.pagination) {
+        setPagination({
+          currentPage: res.pagination.current_page,
+          perPage: res.pagination.per_page,
+          total: res.pagination.total,
+          totalPages: res.pagination.total_pages
+        })
+      }
     } catch (error) {
       console.error('Failed to load invitations:', error)
       toast.error('Không thể tải danh sách thiệp mời')
@@ -63,6 +93,22 @@ const DashboardInvitationsPage = () => {
       setLoading(false)
     }
   }
+
+  const handlePageChange = (page) => {
+  if (page < 1 || page > pagination.totalPages) return
+
+  setFilters({
+    ...filters,
+    page: page
+  })
+}
+
+const currentPage = pagination.currentPage
+
+const pageNumbers = Array.from(
+  { length: pagination.totalPages },
+  (_, i) => i + 1
+)
 
   const handleSelectAll = (checked) => {
     if (checked) {
@@ -166,7 +212,7 @@ const DashboardInvitationsPage = () => {
     <DashboardLayout>
       <div className="space-y-4">
         {/* Header - Matching Screenshot Logic */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 justify-between md:flex-row md:items-center">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Quản lý thiệp mời</h1>
             <p className="text-gray-500 dark:text-gray-400 mt-1">Quản lý tất cả thiệp mời trong hệ thống</p>
@@ -453,6 +499,40 @@ const DashboardInvitationsPage = () => {
           )}
         </div>
       </div>
+
+    {invitations.length > 0 && (
+  <div className="mt-6 flex items-center justify-center gap-2">
+    <button
+      onClick={() => handlePageChange(pagination.currentPage - 1)}
+      disabled={loading || pagination.currentPage <= 1}
+      className="px-3 py-1.5 text-sm rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 disabled:opacity-40"
+    >
+      Trước
+    </button>
+
+    {pageNumbers.map((page) => (
+      <button
+        key={page}
+        onClick={() => handlePageChange(page)}
+        className={`px-3 py-1.5 text-sm rounded-md border ${
+          page === pagination.currentPage
+            ? 'bg-gray-900 text-white dark:bg-white dark:text-black border-gray-900 dark:border-white'
+            : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300'
+        }`}
+      >
+        {page}
+      </button>
+    ))}
+
+    <button
+      onClick={() => handlePageChange(pagination.currentPage + 1)}
+      disabled={loading || pagination.currentPage >= pagination.totalPages}
+      className="px-3 py-1.5 text-sm rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 disabled:opacity-40"
+    >
+      Sau
+    </button>
+  </div>
+)}
 
       {/* Delete Modal */}
       {showDeleteModal && (

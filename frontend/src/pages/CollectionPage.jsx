@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -32,6 +32,7 @@ const CollectionPage = () => {
   const initialPage = Math.max(1, Number(searchParams.get('page') || 1))
   const [currentPage, setCurrentPage] = useState(initialPage)
   const [pagination, setPagination] = useState({ currentPage: initialPage, totalPages: 1, totalItems: 0 })
+  const shouldScrollOnPageChangeRef = useRef(false)
 
   useEffect(() => {
     loadData()
@@ -44,14 +45,14 @@ const CollectionPage = () => {
     }
   }, [searchParams, currentPage])
 
-useEffect(() => {
-  if (pagination) {
+  useEffect(() => {
+    if (!shouldScrollOnPageChangeRef.current) return
+    shouldScrollOnPageChangeRef.current = false
     window.scrollTo({
       top: 450,
-      behavior: "smooth"
+      behavior: 'smooth'
     })
-  }
-}, [pagination])
+  }, [currentPage])
 
   useEffect(() => {
     if (!searchParams.get('page')) {
@@ -371,6 +372,7 @@ useEffect(() => {
     if (loading) return
     if (nextPage < 1) return
     if (nextPage > totalPages) return
+    shouldScrollOnPageChangeRef.current = true
     setPageAndSyncUrl(nextPage)
   }
 
