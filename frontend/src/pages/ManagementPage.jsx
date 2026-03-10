@@ -38,7 +38,28 @@ const ManagementPage = () => {
     try {
       setLoading(true)
       const response = await invitationService.getAll()
-      setInvitations(response.data || [])
+      const allInvitations = response.data || []
+      
+      // SECURITY FIX: Filter invitations by current user
+      // Backend should do this, but we filter on frontend as temporary fix
+      const userInvitations = allInvitations.filter(invitation => {
+        // Check if invitation belongs to current user
+        // Backend uses 'user_uuid' or 'created_by' field
+        return invitation.user_uuid === user?.uuid || 
+               invitation.created_by === user?.uuid ||
+               invitation.uuid === user?.uuid // Some invitations might use this
+      })
+      
+      console.log('📊 Total invitations from API:', allInvitations.length)
+      console.log('✅ User invitations:', userInvitations.length)
+      console.log('👤 Current user UUID:', user?.uuid)
+      
+      if (userInvitations.length === 0 && allInvitations.length > 0) {
+        console.warn('⚠️ No invitations found for current user. This might be a backend issue.')
+        console.log('Sample invitation:', allInvitations[0])
+      }
+      
+      setInvitations(userInvitations)
     } catch (error) {
       console.error('Failed to load invitations:', error)
     } finally {
@@ -230,18 +251,29 @@ const ManagementPage = () => {
               >
                 {/* 1. THUMBNAIL AREA */}
                 {/* Mobile: Width 32 (128px), Height Full. Desktop: Width Full, Aspect 4/3 */}
-                <div className="relative w-32 md:w-full h-full md:h-auto md:aspect-[4/3] bg-gray-100 dark:bg-gray-800 shrink-0 border-r md:border-r-0 md:border-b border-gray-100 dark:border-gray-800">
+                <div className="relative w-32 md:w-full h-full md:h-auto md:aspect-[4/3] bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 dark:from-pink-900/20 dark:via-purple-900/20 dark:to-blue-900/20 shrink-0 border-r md:border-r-0 md:border-b border-gray-100 dark:border-gray-800">
                   {invitation.template_thumbnail ? (
                     <img
                       src={invitation.template_thumbnail}
                       className="w-full h-full object-cover"
                       alt={invitation.title}
+                      onError={(e) => {
+                        e.target.style.display = 'none'
+                        e.target.nextElementSibling.style.display = 'flex'
+                      }}
                     />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
-                      <span className="material-symbols-outlined text-2xl md:text-4xl text-gray-300">image</span>
+                  ) : null}
+                  
+                  {/* Fallback placeholder - always render but hide if image loads */}
+                  <div 
+                    className="w-full h-full flex flex-col items-center justify-center"
+                    style={{ display: invitation.template_thumbnail ? 'none' : 'flex' }}
+                  >
+                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/50 dark:bg-black/30 backdrop-blur flex items-center justify-center mb-2">
+                      <span className="material-symbols-outlined text-2xl md:text-4xl text-purple-600 dark:text-purple-400">favorite</span>
                     </div>
-                  )}
+                    <p className="text-xs font-semibold text-purple-700 dark:text-purple-300">Thiệp Cưới</p>
+                  </div>
 
                   {/* Status Badge - Desktop Only (On Image) */}
                   <div className="hidden md:block absolute top-3 left-3">

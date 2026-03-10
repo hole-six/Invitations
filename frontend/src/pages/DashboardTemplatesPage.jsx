@@ -180,11 +180,14 @@ const DashboardTemplatesPage = () => {
               templateService.delete(template.uuid || template.id)
             ))
             toast.success(`Đã xóa ${selectedTemplates.length} templates`)
+          } else {
+            // User cancelled, don't refresh
+            return;
           }
           break
       }
       setSelectedTemplates([])
-      loadTemplates()
+      await loadTemplates() // Await the refresh to ensure UI updates
     } catch (error) {
       console.error('Bulk action failed:', error)
       toast.error('Có lỗi xảy ra khi thực hiện hành động')
@@ -205,7 +208,7 @@ const DashboardTemplatesPage = () => {
       toast.success('Đã xóa template thành công')
       setShowDeleteModal(false)
       setTemplateToDelete(null)
-      loadTemplates()
+      await loadTemplates() // Await the refresh to ensure UI updates
     } catch (error) {
       console.error('Failed to delete template:', error)
       toast.error('Không thể xóa template')

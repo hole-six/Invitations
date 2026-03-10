@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
 import { useToast } from '../context/ToastContext'
+import { useAuth } from '../context/AuthContext'
 import templateService from '../services/template.service'
 
 const DashboardTemplateEditorPage = () => {
@@ -10,12 +11,14 @@ const DashboardTemplateEditorPage = () => {
   const decodedId = id ? decodeURIComponent(id) : ''
   const [searchParams] = useSearchParams()
   const toast = useToast()
+  const { user } = useAuth() // Get current user for UUID
 
   const [loading, setLoading] = useState(false)
   const [previewMode, setPreviewMode] = useState(false)
   const [activeTab, setActiveTab] = useState('basic') // basic | html | preview
 
   const [formData, setFormData] = useState({
+    id: null, // Add id field
     uuid: '', // Add uuid field
     name: '',
     slug: '',
@@ -56,6 +59,7 @@ const DashboardTemplateEditorPage = () => {
       const template = response.data
 
       console.log('📦 Loaded template:', template);
+      console.log('🆔 Template ID:', template.id, 'UUID:', template.uuid);
       console.log('📄 html_template length:', template.html_template?.length || 0);
 
       // Get html_template with fallback to design_data.html
@@ -80,7 +84,8 @@ const DashboardTemplateEditorPage = () => {
       console.log('✅ Final htmlContent length:', htmlContent.length);
 
       setFormData({
-        uuid: template.uuid || '', // Store uuid
+        id: template.id, // Store id as well
+        uuid: template.uuid || '', // Store uuid - CRITICAL for update
         name: template.name || '',
         slug: template.slug || '',
         description: template.description || '',
@@ -157,6 +162,27 @@ const DashboardTemplateEditorPage = () => {
         response = await templateService.update(identifier, submitData)
         toast.success('✨ Template đã được cập nhật thành công!')
       } else {
+        // Create: Add current user's UUID (creator)
+        if (!user?.uuid) {
+          toast.error('❌ Không tìm thấy thông tin user. Vui lòng đăng nhập lại.');
+          setLoading(false);
+          return;
+        }
+        
+        // Set uuid to current user's uuid (creator)
+        submitData.uuid = user.uuid;
+        
+        // Remove id (backend will auto-generate)
+        delete submitData.id;
+        
+        // Validate required fields for CREATE
+        if (!submitData.html_template && submitData.template_type === 'html') {
+          toast.error('❌ Vui lòng nhập HTML content cho template');
+          setLoading(false);
+          return;
+        }
+        
+        console.log('➕ Creating new template with creator UUID:', user.uuid);
         response = await templateService.create(submitData)
         toast.success('✨ Template đã được tạo thành công!')
       }

@@ -49,7 +49,8 @@ export const API_ENDPOINTS = {
 
   // Admin - NEW API v1
   ADMIN_INVITATIONS: '/api/admin/invitations',
-  ADMIN_STATS: '/api/admin/stats',
+  ADMIN_STATS: '/api/admin/dashboard/stats', // Fix: Use correct endpoint
+
 
   // Guests & RSVP (giữ nguyên nếu backend có)
   INVITATION_GUESTS: (id) => `/invitations/${id}/guests`,
