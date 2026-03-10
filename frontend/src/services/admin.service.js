@@ -17,6 +17,7 @@ const adminService = {
     if (filters.search) params.append('search', filters.search)
     if (filters.sortBy) params.append('sort_by', filters.sortBy)
     if (filters.sortOrder) params.append('sort_order', filters.sortOrder)
+    if (filters.page) params.append('page', String(filters.page))
 
     const query = params.toString()
     return apiService.get(`/admin/users${query ? '?' + query : ''}`)
@@ -42,6 +43,7 @@ const adminService = {
     if (filters.search) params.append('search', filters.search)
     if (filters.sortBy) params.append('sort_by', filters.sortBy)
     if (filters.sortOrder) params.append('sort_order', filters.sortOrder)
+    if (filters.page) params.append('page', String(filters.page))
 
     const query = params.toString()
     return apiService.get(`${API_ENDPOINTS.ADMIN_INVITATIONS}${query ? '?' + query : ''}`)
@@ -97,6 +99,7 @@ const adminService = {
     if (filters.search) params.append('search', filters.search)
     if (filters.sortBy) params.append('sort_by', filters.sortBy)
     if (filters.sortOrder) params.append('sort_order', filters.sortOrder)
+    if (filters.page) params.append('page', String(filters.page))
 
     const query = params.toString()
     return apiService.get(`${API_ENDPOINTS.TEMPLATES}${query ? '?' + query : ''}`)
@@ -109,3 +112,4 @@ const adminService = {
 }
 
 export default adminService
+

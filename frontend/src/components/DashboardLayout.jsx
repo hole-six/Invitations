@@ -30,12 +30,14 @@ const DashboardLayout = ({ children }) => {
       icon: (
         <span className="material-symbols-outlined">mail</span>
       ),
-      children: [
-        { title: 'Tất cả thiệp mời', path: '/dashboard/invitations' },
-        { title: 'Thiệp nháp', path: '/dashboard/invitations/drafts' },
-        { title: 'Thiệp đã xuất bản', path: '/dashboard/invitations/published' },
-        { title: 'Thiệp đã lưu trữ', path: '/dashboard/invitations/archived' }
-      ]
+      path : '/dashboard/invitations',
+      active: location.pathname === '/dashboard/invitations'
+      // children: [
+      //   { title: 'Tất cả thiệp mời', path: '/dashboard/invitations' },
+      //   { title: 'Thiệp nháp', path: '/dashboard/invitations/drafts' },
+      //   { title: 'Thiệp đã xuất bản', path: '/dashboard/invitations/published' },
+      //   { title: 'Thiệp đã lưu trữ', path: '/dashboard/invitations/archived' }
+      // ]
     },
     {
       id: 'templates',
@@ -49,29 +51,31 @@ const DashboardLayout = ({ children }) => {
         { title: 'Categories', path: '/dashboard/templates/categories' }
       ]
     },
-    {
-      id: 'users',
-      title: 'Quản lý người dùng',
-      icon: (
-        <span className="material-symbols-outlined">group</span>
-      ),
-      children: [
-        { title: 'Tất cả người dùng', path: '/dashboard/users' },
-        { title: 'Người dùng hoạt động', path: '/dashboard/users/active' },
-        { title: 'Quyền & Vai trò', path: '/dashboard/users/roles' }
-      ]
-    },
+    // {
+    //   id: 'users',
+    //   title: 'Quản lý người dùng',
+    //   icon: (
+    //     <span className="material-symbols-outlined">group</span>
+    //   ),
+    //   children: [
+    //     { title: 'Tất cả người dùng', path: '/dashboard/users' },
+    //     { title: 'Người dùng hoạt động', path: '/dashboard/users/active' },
+    //     { title: 'Quyền & Vai trò', path: '/dashboard/users/roles' }
+    //   ]
+    // },
     {
       id: 'analytics',
       title: 'Thống kê & Báo cáo',
       icon: (
         <span className="material-symbols-outlined">analytics</span>
       ),
-      children: [
-        { title: 'Tổng quan', path: '/dashboard/analytics' },
-        { title: 'Báo cáo sử dụng', path: '/dashboard/analytics/usage' },
-        { title: 'Báo cáo doanh thu', path: '/dashboard/analytics/revenue' }
-      ]
+      path: '/dashboard/analytics',
+      active: location.pathname === '/dashboard/analytics'
+      // children: [
+      //   { title: 'Tổng quan', path: '/dashboard/analytics' },
+      //   { title: 'Báo cáo sử dụng', path: '/dashboard/analytics/usage' },
+      //   { title: 'Báo cáo doanh thu', path: '/dashboard/analytics/revenue' }
+      // ]
     },
     {
       id: 'settings',
@@ -79,11 +83,13 @@ const DashboardLayout = ({ children }) => {
       icon: (
         <span className="material-symbols-outlined">settings</span>
       ),
-      children: [
-        { title: 'Cài đặt chung', path: '/dashboard/settings' },
-        { title: 'Email Templates', path: '/dashboard/settings/email' },
-        { title: 'Backup & Restore', path: '/dashboard/settings/backup' }
-      ]
+      path : '/dashboard/settings',
+      active: location.pathname === '/dashboard/settings'
+      // children: [
+      //   { title: 'Cài đặt chung', path: '/dashboard/settings' },
+      //   { title: 'Email Templates', path: '/dashboard/settings/email' },
+      //   { title: 'Backup & Restore', path: '/dashboard/settings/backup' }
+      // ]
     }
   ]
 
@@ -128,6 +134,25 @@ const DashboardLayout = ({ children }) => {
             )}
           </Link>
 
+        {/* {!sidebarCollapsed && (
+  <div className="w-full">
+    <div className="bg-gray-900 dark:bg-white rounded-xl p-4 flex items-center gap-3 shadow-lg w-full">
+      <div className="w-10 h-10 rounded-full bg-white/20 dark:bg-black/10 flex items-center justify-center text-white dark:text-black font-bold">
+        {user?.full_name?.charAt(0)}
+      </div>
+
+      <div className="overflow-hidden flex-1">
+        <p className="text-sm font-bold text-white dark:text-black truncate">
+          {user?.full_name}
+        </p>
+        <p className="text-xs text-gray-400 dark:text-gray-600">
+          Administrator
+        </p>
+      </div>
+    </div>
+  </div>
+)} */}
+
           {/* Mobile Close Button */}
           <button
             className="md:hidden text-gray-500"
@@ -136,21 +161,6 @@ const DashboardLayout = ({ children }) => {
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>
-
-        {/* User Info (Collapsed Mode) */}
-        {!sidebarCollapsed && (
-          <div className="px-6 py-4">
-            <div className="bg-gray-900 dark:bg-white rounded-xl p-4 flex items-center gap-3 shadow-lg">
-              <div className="w-10 h-10 rounded-full bg-white/20 dark:bg-black/10 flex items-center justify-center text-white dark:text-black font-bold">
-                {user?.full_name?.charAt(0)}
-              </div>
-              <div className="overflow-hidden">
-                <p className="text-sm font-bold text-white dark:text-black truncate">{user?.full_name}</p>
-                <p className="text-xs text-gray-400 dark:text-gray-600">Administrator</p>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Navigation Menu */}
         <nav className="flex-1 px-4 py-2 space-y-1 overflow-y-auto custom-scrollbar">

@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect, useRef } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import templateService from '../services/template.service'
 import invitationService from '../services/invitation.service'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
-import allTemplates from '../data/premiumTemplates'
 
 const CollectionPage = () => {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { user } = useAuth()
   const toast = useToast()
 
@@ -29,116 +29,155 @@ const CollectionPage = () => {
   const [showEditorModal, setShowEditorModal] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState(null)
   const [previewTemplate, setPreviewTemplate] = useState(null) // For full-screen preview
+  const initialPage = Math.max(1, Number(searchParams.get('page') || 1))
+  const [currentPage, setCurrentPage] = useState(initialPage)
+  const [pagination, setPagination] = useState({ currentPage: initialPage, totalPages: 1, totalItems: 0 })
+  const shouldScrollOnPageChangeRef = useRef(false)
 
   useEffect(() => {
     loadData()
-  }, [])
+  }, [currentPage, selectedCategory, sortBy, searchQuery, viewMode])
+
+  useEffect(() => {
+    const pageFromUrl = Math.max(1, Number(searchParams.get('page') || 1))
+    if (pageFromUrl !== currentPage) {
+      setCurrentPage(pageFromUrl)
+    }
+  }, [searchParams, currentPage])
+
+  useEffect(() => {
+    if (!shouldScrollOnPageChangeRef.current) return
+    shouldScrollOnPageChangeRef.current = false
+    window.scrollTo({
+      top: 450,
+      behavior: 'smooth'
+    })
+  }, [currentPage])
+
+  useEffect(() => {
+    if (!searchParams.get('page')) {
+      const nextParams = new URLSearchParams(searchParams)
+      nextParams.set('page', '1')
+      setSearchParams(nextParams, { replace: true })
+    }
+  }, [searchParams, setSearchParams])
 
   const loadData = async () => {
     try {
       setLoading(true)
 
-      // Load from API
-      try {
-        const [templatesRes, categoriesRes] = await Promise.all([
-          templateService.getAll({ is_active: 1 }),
-          templateService.getCategories()
-        ])
-
-        console.log('📦 Templates from API:', templatesRes.data?.length || 0)
-
-        // Parse API templates (design_data is JSON string from database)
-        const apiTemplates = (templatesRes.data || []).map(template => {
-          try {
-            // Parse design_data if it's a string
-            let designData = null;
-            if (template.design_data) {
-              try {
-                designData = typeof template.design_data === 'string'
-                  ? JSON.parse(template.design_data)
-                  : template.design_data;
-              } catch (parseErr) {
-                console.warn(`⚠️ Failed to parse design_data for template ${template.id}:`, parseErr.message);
-                designData = null; // Set to null if parse fails
-              }
-            }
-
-            // Parse tags if it's a string
-            let tags = [];
-            if (template.tags) {
-              try {
-                tags = typeof template.tags === 'string'
-                  ? JSON.parse(template.tags)
-                  : template.tags;
-              } catch (parseErr) {
-                console.warn(`⚠️ Failed to parse tags for template ${template.id}:`, parseErr.message);
-                tags = []; // Set to empty array if parse fails
-              }
-            }
-
-            return {
-              id: template.id,
-              name: template.name,
-              slug: template.slug,
-              category: template.category_name || 'Uncategorized',
-              category_id: template.category_id,
-              description: template.description,
-              thumbnail: template.thumbnail_url,
-              isPremium: Boolean(template.is_premium),
-              isFeatured: Boolean(template.is_featured),
-              is_premium: Boolean(template.is_premium),
-              is_featured: Boolean(template.is_featured),
-              usage_count: template.usage_count || 0,
-              designData: designData,
-              html_template: template.html_template, // Add html_template field
-              tags: tags
-            }
-          } catch (err) {
-            console.error(`❌ Failed to parse template ${template.id}:`, err);
-            // Return template anyway with safe defaults instead of null
-            return {
-              id: template.id,
-              name: template.name || 'Untitled Template',
-              slug: template.slug || `template-${template.id}`,
-              category: template.category_name || 'Uncategorized',
-              category_id: template.category_id,
-              description: template.description || '',
-              thumbnail: template.thumbnail_url || 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
-              isPremium: Boolean(template.is_premium),
-              isFeatured: Boolean(template.is_featured),
-              is_premium: Boolean(template.is_premium),
-              is_featured: Boolean(template.is_featured),
-              usage_count: template.usage_count || 0,
-              designData: null,
-              html_template: template.html_template || '',
-              tags: []
-            }
-          }
-        }) // Don't filter - keep all templates even if parse fails
-
-        console.log('✅ Parsed templates:', apiTemplates.length)
-        console.log('📊 Total from API:', templatesRes.data?.length || 0)
-        
-        // Debug: Check which templates might be missing
-        if (apiTemplates.length !== (templatesRes.data?.length || 0)) {
-          console.warn('⚠️ Some templates were lost during parsing!');
-          console.log('API data:', templatesRes.data);
-          console.log('Parsed data:', apiTemplates);
-        }
-
-        // Use ONLY API templates (no local templates)
-        setTemplates(apiTemplates)
-        setCategories(categoriesRes.data || [])
-      } catch (apiError) {
-        console.error('❌ API Error:', apiError)
-        toast.error('Không thể tải danh sách mẫu thiệp')
-        setTemplates([])
-        setCategories([])
+      const sortMap = {
+        popular: 'usage_count',
+        newest: 'id',
+        name: 'name'
       }
-    } catch (error) {
-      console.error('Failed to load templates:', error)
-      // Fallback to premium templates
-      setTemplates(allTemplates)
+
+      const requestFilters = {
+        is_active: 1,
+        page: currentPage,
+        limit: viewMode === 'grid' ? 12 : 10,
+        sort_by: sortMap[sortBy] || 'usage_count',
+        sort_order: sortBy === 'name' ? 'asc' : 'desc'
+      }
+
+      if (selectedCategory) {
+        requestFilters.category_id = selectedCategory
+      }
+
+      if (searchQuery.trim()) {
+        requestFilters.search = searchQuery.trim()
+      }
+
+      const [templatesRes, categoriesRes] = await Promise.all([
+        templateService.getAll(requestFilters),
+        templateService.getCategories()
+      ])
+
+      const templatePayload = templatesRes?.data
+      const templateRows = Array.isArray(templatePayload)
+        ? templatePayload
+        : Array.isArray(templatePayload?.items)
+          ? templatePayload.items
+          : Array.isArray(templatesRes?.items)
+            ? templatesRes.items
+            : []
+
+      const apiTemplates = templateRows.map(template => {
+        try {
+          const designData = typeof template.design_data === 'string'
+            ? JSON.parse(template.design_data)
+            : template.design_data
+
+          const tags = typeof template.tags === 'string'
+            ? JSON.parse(template.tags)
+            : template.tags
+
+          return {
+            id: template.id,
+            name: template.name,
+            slug: template.slug,
+            category: template.category_name || 'Uncategorized',
+            category_id: template.category_id,
+            description: template.description,
+            thumbnail: template.thumbnail_url,
+            isPremium: Boolean(template.is_premium),
+            isFeatured: Boolean(template.is_featured),
+            is_premium: Boolean(template.is_premium),
+            is_featured: Boolean(template.is_featured),
+            usage_count: template.usage_count || 0,
+            designData,
+            html_template: template.html_template,
+            tags
+          }
+        } catch (err) {
+          console.error('Failed to parse template', template?.id, err)
+          return null
+        }
+      }).filter(Boolean)
+
+      setTemplates(apiTemplates)
+      setCategories(categoriesRes?.data || [])
+
+      const paginationMeta = templatesRes?.pagination
+        || templatesRes?.meta
+        || templatePayload?.pagination
+        || templatePayload?.meta
+        || {}
+
+      const totalPagesFromApi = Number(
+        paginationMeta.total_pages
+        || paginationMeta.last_page
+        || paginationMeta.totalPages
+        || paginationMeta.totalPage
+        || 0
+      )
+
+      const currentPageFromApi = Number(
+        paginationMeta.current_page
+        || paginationMeta.page
+        || paginationMeta.currentPage
+        || currentPage
+      )
+
+      const totalItemsFromApi = Number(
+        paginationMeta.total
+        || paginationMeta.total_items
+        || paginationMeta.totalItems
+        || templatePayload?.total
+        || apiTemplates.length
+      )
+
+      setPagination({
+        currentPage: currentPageFromApi > 0 ? currentPageFromApi : currentPage,
+        totalPages: totalPagesFromApi > 0 ? totalPagesFromApi : 1,
+        totalItems: Number.isFinite(totalItemsFromApi) ? totalItemsFromApi : apiTemplates.length
+      })
+    } catch (apiError) {
+      console.error('❌ API Error:', apiError)
+      toast.error('Không thể tải danh sách mẫu thiệp')
+      setTemplates([])
+      setCategories([])
+      setPagination({ currentPage, totalPages: 1, totalItems: 0 })
     } finally {
       setLoading(false)
     }
@@ -278,18 +317,18 @@ const CollectionPage = () => {
   // Filter and sort templates
   let filteredTemplates = templates
 
-  if (selectedCategory) {
-    filteredTemplates = filteredTemplates.filter(t => {
-      // Handle both API format (category_id) and premium format (category name)
-      if (t.category_id) {
-        return t.category_id === selectedCategory
-      } else if (t.category) {
-        const categoryObj = categories.find(c => c.name === t.category)
-        return categoryObj && categoryObj.id === selectedCategory
-      }
-      return false
-    })
-  }
+  // if (selectedCategory) {
+  //   filteredTemplates = filteredTemplates.filter(t => {
+  //     // Handle both API format (category_id) and premium format (category name)
+  //     if (t.category_id) {
+  //       return t.category_id === selectedCategory
+  //     } else if (t.category) {
+  //       const categoryObj = categories.find(c => c.name === t.category)
+  //       return categoryObj && categoryObj.id === selectedCategory
+  //     }
+  //     return false
+  //   })
+  // }
 
   if (searchQuery) {
     filteredTemplates = filteredTemplates.filter(t =>
@@ -299,12 +338,56 @@ const CollectionPage = () => {
   }
 
   // Sort
-  filteredTemplates = [...filteredTemplates].sort((a, b) => {
-    if (sortBy === 'popular') return (b.usage_count || 0) - (a.usage_count || 0)
-    if (sortBy === 'newest') return (b.id || 0) - (a.id || 0)
-    if (sortBy === 'name') return a.name.localeCompare(b.name)
-    return 0
-  })
+  // filteredTemplates = [...filteredTemplates].sort((a, b) => {
+  //   if (sortBy === 'popular') return (b.usage_count || 0) - (a.usage_count || 0)
+  //   if (sortBy === 'newest') return (b.id || 0) - (a.id || 0)
+  //   if (sortBy === 'name') return a.name.localeCompare(b.name)
+  //   return 0
+  // })
+
+  const pageSize = viewMode === 'grid' ? 12 : 10
+  const hasServerPagination = Number(pagination.totalPages || 0) > 1 || Number(pagination.totalItems || 0) > filteredTemplates.length
+  const totalPages = hasServerPagination
+    ? Math.max(1, Number(pagination.totalPages) || 1)
+    : Math.max(1, Math.ceil(filteredTemplates.length / pageSize))
+  const normalizedCurrentPage = Math.min(Math.max(1, currentPage), totalPages)
+  const startIndex = (normalizedCurrentPage - 1) * pageSize
+  const paginatedTemplates = hasServerPagination
+    ? filteredTemplates
+    : filteredTemplates.slice(startIndex, startIndex + pageSize)
+  const totalTemplateCount = hasServerPagination
+    ? Math.max(Number(pagination.totalItems || 0), filteredTemplates.length)
+    : filteredTemplates.length
+
+  const setPageAndSyncUrl = (page) => {
+    const safePage = Math.max(1, Number(page) || 1)
+    setCurrentPage(safePage)
+
+    const nextParams = new URLSearchParams(searchParams)
+    nextParams.set('page', String(safePage))
+    setSearchParams(nextParams)
+  }
+
+  const handlePageChange = (nextPage) => {
+    if (loading) return
+    if (nextPage < 1) return
+    if (nextPage > totalPages) return
+    shouldScrollOnPageChangeRef.current = true
+    setPageAndSyncUrl(nextPage)
+  }
+
+  const pageNumbers = (() => {
+    const start = Math.max(1, normalizedCurrentPage - 2)
+    const end = Math.min(totalPages, start + 4)
+    const realStart = Math.max(1, end - 4)
+    return Array.from({ length: end - realStart + 1 }, (_, i) => realStart + i)
+  })()
+
+  useEffect(() => {
+    if (normalizedCurrentPage !== currentPage) {
+      setPageAndSyncUrl(normalizedCurrentPage)
+    }
+  }, [normalizedCurrentPage])
 
   return (
     <div className="bg-white dark:bg-black font-sans antialiased min-h-screen">
@@ -354,7 +437,7 @@ const CollectionPage = () => {
                 type="text"
                 id="search"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => { setSearchQuery(e.target.value); setPageAndSyncUrl(1); }}
                 placeholder="Tìm kiếm theo tên hoặc mã số..."
               />
               <button className="h-[calc(100%-8px)] px-6 md:px-8 m-1 rounded-full text-sm font-bold bg-white text-black hover:bg-gray-200 transition-colors shrink-0 uppercase tracking-wider">
@@ -377,7 +460,7 @@ const CollectionPage = () => {
             {/* Categories - Clean pills */}
             <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 flex-1 w-full md:w-auto hide-scrollbar mask-gradient-right">
               <button
-                onClick={() => setSelectedCategory(null)}
+                onClick={() => { setSelectedCategory(null); setPageAndSyncUrl(1); }}
                 className={`shrink-0 px-4 py-2 text-sm font-bold rounded-full transition-all whitespace-nowrap ${!selectedCategory
                   ? 'bg-black dark:bg-white text-white dark:text-black shadow-md'
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700'
@@ -388,7 +471,7 @@ const CollectionPage = () => {
               {categories.map((category) => (
                 <button
                   key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
+                  onClick={() => { setSelectedCategory(category.id); }}
                   className={`shrink-0 px-4 py-2 text-sm font-bold rounded-full transition-all whitespace-nowrap ${selectedCategory === category.id
                     ? 'bg-black dark:bg-white text-white dark:text-black shadow-md'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700'
@@ -405,7 +488,7 @@ const CollectionPage = () => {
               <div className="relative group">
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
+                  onChange={(e) => { setSortBy(e.target.value); setPageAndSyncUrl(1); }}
                   className="appearance-none pl-4 pr-10 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg text-sm font-bold text-gray-700 dark:text-gray-200 outline-none cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                 >
                   <option value="popular">Phổ biến nhất</option>
@@ -443,7 +526,7 @@ const CollectionPage = () => {
 
           {/* Results count */}
           <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-            Hiển thị <span className="font-semibold text-gray-900 dark:text-white">{filteredTemplates.length}</span> mẫu thiệp
+            Hiển thị <span className="font-semibold text-gray-900 dark:text-white">{paginatedTemplates.length}</span>/<span className="font-semibold text-gray-900 dark:text-white">{totalTemplateCount}</span> mẫu thiệp
             {selectedCategory && <span> trong danh mục <span className="font-semibold text-gray-900 dark:text-white">{categories.find(c => c.id === selectedCategory)?.name}</span></span>}
           </div>
         </div>
@@ -468,6 +551,7 @@ const CollectionPage = () => {
                 onClick={() => {
                   setSearchQuery('')
                   setSelectedCategory(null)
+                  setPageAndSyncUrl(1)
                 }}
                 className="px-6 py-2 bg-black dark:bg-white text-white dark:text-black font-bold text-sm rounded-full"
               >
@@ -479,7 +563,7 @@ const CollectionPage = () => {
               {/* Grid Layout */}
               {viewMode === 'grid' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {filteredTemplates.map((template) => (
+                  {paginatedTemplates.map((template) => (
                     <div
                       key={template.id}
                       className="group cursor-pointer bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
@@ -537,7 +621,7 @@ const CollectionPage = () => {
               {/* List Layout */}
               {viewMode === 'list' && (
                 <div className="space-y-4">
-                  {filteredTemplates.map((template) => (
+                  {paginatedTemplates.map((template) => (
                     <div
                       key={template.id}
                       onClick={() => handleTemplateClick(template)}
@@ -604,6 +688,39 @@ const CollectionPage = () => {
                   ))}
                 </div>
               )}
+
+              {totalPages > 1 && (
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+                  <button
+                    onClick={() => handlePageChange(normalizedCurrentPage - 1)}
+                    disabled={normalizedCurrentPage <= 1}
+                    className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-700 dark:text-gray-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
+                    Trước
+                  </button>
+
+                  {pageNumbers.map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`min-w-10 px-3 py-2 rounded-lg text-sm font-bold transition-colors ${page === normalizedCurrentPage
+                        ? 'bg-black dark:bg-white text-white dark:text-black'
+                        : 'border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800'
+                        }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+
+                  <button
+                    onClick={() => handlePageChange(normalizedCurrentPage + 1)}
+                    disabled={normalizedCurrentPage >= totalPages}
+                    className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-700 dark:text-gray-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
+                    Sau
+                  </button>
+                </div>
+              )}
             </>
           )}
         </div>
@@ -663,89 +780,70 @@ const CollectionPage = () => {
               </div>
             </div>
 
-            {/* Content - Scrollable with white background */}
-            <div className="p-3 md:p-6 overflow-y-auto flex-1 bg-white dark:bg-gray-900">
-              <div className="grid grid-cols-1 gap-3 md:gap-4 max-w-2xl mx-auto">
-                {/* Canvas Editor Option - DISABLED */}
+            {/* Content - Scrollable */}
+            <div className="p-4 md:p-6 overflow-y-auto flex-1">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 max-w-2xl mx-auto">
+                {/* Canvas Editor Option */}
                 <button
-                  disabled={true}
-                  className="group relative p-3 md:p-4 border-2 border-gray-200 dark:border-gray-700 transition-all duration-300 text-left opacity-50 cursor-not-allowed rounded-xl bg-gray-50 dark:bg-gray-800"
+                  onClick={() => handleCreateInvitation('canvas')}
+                  disabled={creatingInvitation}
+                  className="group relative p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
                 >
-                  <div className="flex items-center gap-3 md:gap-4">
-                    <div className="w-10 h-10 md:w-12 md:h-12 bg-gray-300 dark:bg-gray-600 rounded-lg flex items-center justify-center text-gray-500 shrink-0">
-                      <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="flex flex-col items-center text-center gap-3">
+                    <div className="w-14 h-14 md:w-16 md:h-16 bg-gray-900 dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black">
+                      <svg className="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-sm md:text-base font-bold text-gray-400 dark:text-gray-500 mb-0.5 truncate">Canvas Editor</h3>
-                      <p className="text-xs md:text-sm text-gray-400 dark:text-gray-500 line-clamp-1">
-                        Kéo thả elements - Đang phát triển
+                    <div>
+                      <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">Canvas Editor</h3>
+                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
+                        Kéo thả, chỉnh sửa từng element. Dễ dùng.
                       </p>
-                      <div className="flex flex-wrap gap-1 mt-1.5">
-                        <span className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-[9px] md:text-[10px] font-medium rounded">Sắp ra mắt</span>
-                      </div>
                     </div>
-                    <div className="shrink-0">
-                      <svg className="w-5 h-5 md:w-6 md:h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
+                    <div className="flex flex-wrap gap-1.5 justify-center">
+                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Dễ dùng</span>
+                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Drag & Drop</span>
                     </div>
                   </div>
                 </button>
 
-                {/* Ultimate Editor Option - ACTIVE with blue theme */}
+                {/* Ultimate Editor Option */}
                 <button
                   onClick={() => handleCreateInvitation('advanced-html')}
                   disabled={creatingInvitation}
-                  className="group relative p-3 md:p-4 border-2 border-blue-500 dark:border-blue-400 hover:border-blue-600 dark:hover:border-blue-300 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20"
+                  className="group relative p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
                 >
-                  <div className="flex items-center gap-3 md:gap-4">
-                    <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center text-white shrink-0 shadow-lg">
-                      <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="flex flex-col items-center text-center gap-3">
+                    <div className="w-14 h-14 md:w-16 md:h-16 bg-black dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black">
+                      <svg className="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                       </svg>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5 md:gap-2 mb-0.5 flex-wrap">
-                        <h3 className="text-sm md:text-base font-bold text-gray-900 dark:text-white">Ultimate Editor</h3>
-                        <span className="px-1.5 py-0.5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-[9px] md:text-[10px] font-bold uppercase rounded whitespace-nowrap">Khuyên dùng</span>
-                      </div>
-                      <p className="text-xs md:text-sm text-gray-700 dark:text-gray-300 mb-1.5 line-clamp-2">
+                    <div>
+                      <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">Ultimate Editor</h3>
+                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
                         Form thông minh + Upload ảnh + Real-time preview
                       </p>
-                      <div className="flex flex-wrap gap-1">
-                        <span className="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-300 text-[9px] md:text-[10px] font-medium rounded">Đỉnh cao</span>
-                        <span className="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-300 text-[9px] md:text-[10px] font-medium rounded">Real-time</span>
-                        <span className="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-300 text-[9px] md:text-[10px] font-medium rounded">Dễ dùng</span>
-                      </div>
                     </div>
-                    <div className="shrink-0 hidden sm:block">
-                      <svg className="w-5 h-5 md:w-6 md:h-6 text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                      </svg>
+                    <div className="flex flex-wrap gap-1.5 justify-center">
+                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Đỉnh cao</span>
+                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Real-time</span>
                     </div>
                   </div>
                 </button>
-              </div>
-
-              {/* Info text */}
-              <div className="mt-4 md:mt-6 text-center px-2">
-                <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-                  💡 Ultimate Editor cung cấp trải nghiệm chỉnh sửa tốt nhất với form thông minh và preview real-time
-                </p>
               </div>
             </div>
 
             {/* Footer */}
-            <div className="p-3 md:p-6 bg-gray-50 dark:bg-gray-900 flex justify-end gap-2 md:gap-3 flex-shrink-0 border-t border-gray-200 dark:border-gray-700">
+            <div className="p-4 md:p-6 bg-gray-50 dark:bg-gray-900 flex justify-end gap-3 flex-shrink-0 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={() => {
                   setShowEditorModal(false)
                   setSelectedTemplate(null)
                 }}
                 disabled={creatingInvitation}
-                className="px-3 py-2 md:px-6 md:py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 font-medium rounded-lg text-xs md:text-base"
+                className="px-4 py-2 md:px-6 md:py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 font-medium rounded-lg text-sm md:text-base"
               >
                 Hủy
               </button>
@@ -873,3 +971,17 @@ const CollectionPage = () => {
 }
 
 export default CollectionPage
+
+
+
+
+
+
+
+
+
+
+
+
+
+

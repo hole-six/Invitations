@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>An & Bình — 10.10.2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;500&family=Great+Vibes&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════
+   RESET & ROOT
+══════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --burg:    #5c1e28;
+  --burg-md: #7b2e3a;
+  --burg-lt: #a95a67;
+  --blush:   #e8c4cc;
+  --cream:   #faf7f2;
+  --warm:    #f4efe6;
+  --parchm:  #ede6d8;
+  --gold:    #b8956a;
+  --gold-lt: #d4b484;
+  --text:    #2a1c1c;
+  --muted:   #7a6060;
+  --line:    rgba(92,30,40,.15);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════════════
+   GRAIN OVERLAY
+══════════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: .028;
+  mix-blend-mode: multiply;
+}
+
+/* ══════════════════════════════════════
+   NAV — STICKY MINIMAL
+══════════════════════════════════════ */
+#navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+  column-gap: 28px;
+  padding: 18px clamp(20px, 4vw, 52px);
+  background: rgba(250,247,242,.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+  transition: padding .4s;
+}
+#navbar.compact { padding: 12px clamp(20px, 4vw, 52px); }
+.nav-monogram {
+  font-family: 'Cinzel', serif;
+  font-size: 15px; letter-spacing: .18em;
+  color: #141414; text-decoration: none;
+}
+#navbar .nav-links {
+  display: flex; justify-content: center; align-items: center;
+  gap: 28px; list-style: none; flex-wrap: nowrap;
+}
+.nav-links a {
+  white-space: nowrap;
+  font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  color: #141414; text-decoration: none;
+  font-weight: 500; transition: color .2s;
+}
+.nav-links a:hover { color: #000; }
+.nav-date {
+  font-family: 'Cinzel', serif; font-size: 12px;
+  letter-spacing: .14em; color: #141414;
+}
+
+/* ══════════════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════════════ */
+.sr { opacity: 0; transform: translateY(32px); transition: opacity .9s cubic-bezier(.16,.84,.44,1), transform .9s cubic-bezier(.16,.84,.44,1); }
+.sr.up { opacity: 1; transform: none; }
+.sr-l { opacity: 0; transform: translateX(-40px); transition: opacity .9s cubic-bezier(.16,.84,.44,1), transform .9s cubic-bezier(.16,.84,.44,1); }
+.sr-l.up { opacity: 1; transform: none; }
+.sr-r { opacity: 0; transform: translateX(40px); transition: opacity .9s cubic-bezier(.16,.84,.44,1), transform .9s cubic-bezier(.16,.84,.44,1); }
+.sr-r.up { opacity: 1; transform: none; }
+.d1 { transition-delay: .1s; }
+.d2 { transition-delay: .2s; }
+.d3 { transition-delay: .3s; }
+.d4 { transition-delay: .4s; }
+.d5 { transition-delay: .5s; }
+
+/* ══════════════════════════════════════
+   SECTION WRAPPERS
+══════════════════════════════════════ */
+.section-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--burg-lt); margin-bottom: 16px;
+  display: block;
+}
+.display-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(38px, 6vw, 72px);
+  font-weight: 300; line-height: 1.05;
+  letter-spacing: -.01em;
+  color: var(--burg);
+}
+.display-title em { font-style: italic; color: var(--burg-md); }
+.body-text {
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(15px, 1.5vw, 18px);
+  line-height: 1.85; color: var(--muted);
+}
+.rule {
+  width: 48px; height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin: 20px 0;
+}
+.rule-center { margin: 20px auto; background: linear-gradient(90deg, transparent, var(--gold), transparent); width: 80px; }
+
+/* ══════════════════════════════════════
+   1. HERO — FULL BLEED EDITORIAL
+══════════════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Left: dark burgundy panel */
+.hero-left {
+  background: var(--burg);
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: flex-start;
+  padding: 120px clamp(26px, 5vw, 72px) 80px;
+  position: relative; overflow: hidden;
+}
+.hero-left::before {
+  content: '';
+  position: absolute; top: -100px; left: -100px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(169,90,103,.35) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-left::after {
+  content: '';
+  position: absolute; bottom: -80px; right: -80px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(184,149,106,.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: .45em; text-transform: uppercase;
+  color: rgba(232,196,204,.55); margin-bottom: 28px;
+  position: relative; z-index: 2;
+  animation: fadeUp .9s .3s cubic-bezier(.16,.84,.44,1) both;
+}
+.hero-names-stack {
+  position: relative; z-index: 2;
+  animation: fadeUp 1s .45s cubic-bezier(.16,.84,.44,1) both;
+}
+.hero-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(52px, 8vw, 110px);
+  font-weight: 300; line-height: .9;
+  color: #fff; letter-spacing: -.02em;
+  display: block;
+}
+.hero-name.italic { font-style: italic; color: var(--blush); }
+.hero-amp {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(44px, 6.5vw, 80px);
+  color: var(--gold-lt); display: block;
+  line-height: 1; margin: 8px 0;
+  animation: fadeUp 1s .6s cubic-bezier(.16,.84,.44,1) both;
+  position: relative; z-index: 2;
+}
+
+.hero-meta {
+  position: relative; z-index: 2;
+  margin-top: 44px;
+  animation: fadeUp 1s .75s cubic-bezier(.16,.84,.44,1) both;
+}
+.hero-meta-line {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 10px;
+}
+.hero-meta-line::before {
+  content: ''; width: 30px; height: 1px;
+  background: rgba(184,149,106,.5); flex-shrink: 0;
+}
+.hero-meta-text {
+  font-family: 'Cinzel', serif;
+  font-size: 11px; letter-spacing: .2em;
+  color: rgba(255,255,255,.55);
+}
+.hero-date-big {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px, 3vw, 36px);
+  font-style: italic; color: var(--gold-lt);
+  letter-spacing: .05em; margin-top: 6px;
+}
+
+/* Countdown */
+.hero-countdown {
+  display: flex; gap: clamp(12px, 1.8vw, 20px); margin-top: 44px;
+  position: relative; z-index: 2;
+  animation: fadeUp 1s .9s cubic-bezier(.16,.84,.44,1) both;
+}
+.cd-box { text-align: center; }
+.cd-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 300; color: #fff;
+  display: block; min-width: 52px;
+  border-bottom: 1px solid rgba(184,149,106,.4);
+  padding-bottom: 6px;
+}
+.cd-lbl {
+  font-size: 8px; letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(232,196,204,.5); margin-top: 7px; display: block;
+}
+
+/* Right: photo */
+.hero-right {
+  position: relative; overflow: hidden;
+  animation: heroImgReveal 1.4s .2s cubic-bezier(.16,.84,.44,1) both;
+}
+@keyframes heroImgReveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0% 0 0); }
+}
+.hero-right img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  filter: saturate(.85) brightness(.95);
+  animation: slowKen 20s ease-in-out infinite alternate;
+}
+@keyframes slowKen {
+  from { transform: scale(1); }
+  to   { transform: scale(1.06); }
+}
+.hero-right-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, rgba(92,30,40,.3) 0%, transparent 40%);
+}
+/* Floating date badge */
+.hero-badge {
+  position: absolute; bottom: 48px; left: -24px;
+  background: var(--cream);
+  padding: 20px 28px;
+  box-shadow: 0 20px 60px rgba(92,30,40,.2);
+  z-index: 2;
+  animation: badgeSlide 1s 1s cubic-bezier(.16,.84,.44,1) both;
+}
+@keyframes badgeSlide {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: none; }
+}
+.hero-badge-label {
+  font-family: 'Cinzel', serif;
+  font-size: 8px; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 8px;
+}
+.hero-badge-venue {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; font-style: italic;
+  color: var(--burg); font-weight: 600;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ══════════════════════════════════════
+   2. INTRO — CENTERED EDITORIAL
+══════════════════════════════════════ */
+#intro {
+  padding: 130px 60px;
+  background: var(--warm);
+  position: relative; overflow: hidden;
+}
+.intro-number {
+  position: absolute; right: 8vw; top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(140px, 22vw, 280px);
+  font-weight: 300; color: rgba(92,30,40,.04);
+  line-height: 1; pointer-events: none;
+  user-select: none;
+}
+.intro-inner {
+  max-width: 640px; margin: 0 auto;
+  text-align: center; position: relative; z-index: 2;
+}
+.intro-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(20px, 2.5vw, 30px);
+  font-style: italic; font-weight: 300;
+  line-height: 1.7; color: var(--burg-md);
+  margin: 24px 0;
+}
+.intro-rule {
+  width: 1px; height: 60px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  margin: 0 auto 24px;
+}
+
+/* ══════════════════════════════════════
+   3. COUPLE — ASYMMETRIC SPLIT
+══════════════════════════════════════ */
+#couple {
+  display: grid; grid-template-columns: 1fr 1fr;
+  background: var(--cream);
+}
+.couple-half {
+  position: relative; overflow: hidden;
+  min-height: 70vh;
+}
+.couple-half:first-child { background: var(--burg); }
+.couple-half:last-child  { background: var(--warm); }
+
+.couple-photo {
+  position: absolute; inset: 0;
+}
+.couple-photo img {
+  width: 100%; height: 100%; object-fit: cover;
+  display: block; transition: transform .6s ease;
+}
+.couple-half:hover .couple-photo img { transform: scale(1.04); }
+.couple-photo-overlay {
+  position: absolute; inset: 0;
+}
+.couple-half:first-child .couple-photo-overlay {
+  background: linear-gradient(to top, rgba(92,30,40,.82) 0%, rgba(92,30,40,.2) 55%, transparent 100%);
+}
+.couple-half:last-child .couple-photo-overlay {
+  background: linear-gradient(to top, rgba(244,239,230,.95) 0%, rgba(244,239,230,.4) 55%, transparent 100%);
+}
+
+.couple-text {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 44px 48px;
+}
+.couple-role {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: .3em; text-transform: uppercase;
+  margin-bottom: 10px; display: block;
+}
+.couple-half:first-child .couple-role { color: rgba(232,196,204,.7); }
+.couple-half:last-child .couple-role  { color: var(--burg-lt); }
+
+.couple-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 300; line-height: 1.1;
+}
+.couple-half:first-child .couple-name { color: #fff; }
+.couple-half:last-child .couple-name  { color: var(--burg); }
+
+.couple-desc {
+  font-family: 'EB Garamond', serif;
+  font-size: 13.5px; line-height: 1.8;
+  margin-top: 12px;
+}
+.couple-half:first-child .couple-desc { color: rgba(232,196,204,.7); }
+.couple-half:last-child .couple-desc  { color: var(--muted); }
+
+/* ══════════════════════════════════════
+   4. LOVE STORY — TIMELINE MAGAZINE
+══════════════════════════════════════ */
+#lovestory {
+  padding: 130px 60px;
+  background: var(--burg);
+  position: relative; overflow: hidden;
+}
+.ls-bg-text {
+  position: absolute; left: -20px; top: 50%;
+  transform: translateY(-50%) rotate(-90deg) translateX(-50%);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(80px,14vw,180px); font-weight: 300;
+  color: rgba(255,255,255,.03); white-space: nowrap;
+  pointer-events: none; user-select: none;
+  transform-origin: left center;
+}
+.ls-header { text-align: center; margin-bottom: 80px; position: relative; z-index: 2; }
+.ls-header .display-title { color: #fff; }
+.ls-header .display-title em { color: var(--blush); }
+.ls-header .section-label { color: rgba(232,196,204,.6); }
+
+.tl-grid {
+  display: grid;
+  grid-template-columns: 1fr 2px 1fr;
+  gap: 0 0; max-width: 900px; margin: 0 auto;
+  position: relative; z-index: 2;
+}
+.tl-line { background: linear-gradient(to bottom, transparent, rgba(184,149,106,.4) 10%, rgba(184,149,106,.4) 90%, transparent); }
+.tl-item {
+  padding: 0 48px 64px;
+}
+.tl-item.right { padding-left: 48px; padding-right: 0; }
+.tl-item.left  { padding-right: 48px; padding-left: 0; text-align: right; }
+.tl-dot-wrap {
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-bottom: 64px;
+}
+.tl-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--gold); border: 2px solid var(--burg);
+  outline: 2px solid rgba(184,149,106,.4);
+  transition: transform .3s, background .3s;
+  margin-top: 8px;
+}
+.tl-item:hover ~ .tl-dot-wrap .tl-dot,
+.tl-item:hover + * + * .tl-dot { transform: scale(1.6); background: var(--blush); }
+
+.tl-year {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: .28em; text-transform: uppercase;
+  color: rgba(184,149,106,.8); margin-bottom: 8px;
+}
+.tl-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-style: italic; color: #fff;
+  margin-bottom: 10px; font-weight: 400;
+}
+.tl-text {
+  font-family: 'EB Garamond', serif;
+  font-size: 14px; line-height: 1.85;
+  color: rgba(232,196,204,.65);
+}
+.tl-emoji { font-size: 20px; display: block; margin-bottom: 10px; }
+
+/* ══════════════════════════════════════
+   5. VENUE — BOLD GRID
+══════════════════════════════════════ */
+#venue {
+  background: var(--cream);
+  display: grid; grid-template-columns: 1fr 1fr;
+  min-height: 60vh;
+}
+.venue-image-side { position: relative; overflow: hidden; min-height: 480px; }
+.venue-image-side img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: saturate(.8);
+  transition: transform .6s ease;
+}
+.venue-image-side:hover img { transform: scale(1.04); }
+.venue-image-side::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to right, transparent 60%, rgba(250,247,242,.9) 100%);
+}
+.venue-info-side {
+  padding: 80px 64px;
+  display: flex; flex-direction: column; justify-content: center;
+  background: var(--cream);
+}
+.venue-cards { display: flex; flex-direction: column; gap: 28px; margin-top: 36px; }
+.venue-card {
+  padding: 24px 28px;
+  border-left: 3px solid var(--burg);
+  background: var(--warm);
+  transition: border-color .3s, transform .3s;
+  cursor: default;
+}
+.venue-card:hover { border-color: var(--gold); transform: translateX(4px); }
+.vc-type {
+  font-family: 'Cinzel', serif;
+  font-size: 8.5px; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--burg-lt); margin-bottom: 8px;
+}
+.vc-time {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30px; font-weight: 300; color: var(--burg);
+  line-height: 1; margin-bottom: 6px;
+}
+.vc-date {
+  font-family: 'EB Garamond', serif;
+  font-size: 14px; font-style: italic; color: var(--muted); margin-bottom: 6px;
+}
+.vc-place { font-size: 12px; font-weight: 500; color: var(--text); letter-spacing: .04em; }
+.vc-address { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+
+/* ══════════════════════════════════════
+   6. SCHEDULE — EDITORIAL LIST
+══════════════════════════════════════ */
+#schedule {
+  padding: 130px 60px;
+  background: var(--parchm);
+  position: relative;
+}
+.sch-bg-num {
+  position: absolute; right: 5vw; top: 50%; transform: translateY(-50%);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(160px, 26vw, 320px);
+  font-weight: 300; color: rgba(92,30,40,.04);
+  pointer-events: none; user-select: none;
+}
+.schedule-inner {
+  max-width: 900px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+  position: relative; z-index: 2;
+}
+.sch-col-head {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--burg-lt); margin-bottom: 28px;
+}
+.sch-header { grid-column: 1/-1; margin-bottom: 8px; }
+.sch-item {
+  display: flex; gap: 20px; align-items: flex-start;
+  padding: 20px 0; border-top: 1px solid var(--line);
+  transition: transform .3s;
+}
+.sch-item:hover { transform: translateX(4px); }
+.sch-time {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 300; color: var(--burg);
+  min-width: 68px; padding-top: 2px; flex-shrink: 0;
+}
+.sch-event { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+.sch-note { font-family: 'EB Garamond', serif; font-size: 13.5px; color: var(--muted); line-height: 1.65; }
+
+/* ══════════════════════════════════════
+   7. ALBUM — ASYMMETRIC MOSAIC
+══════════════════════════════════════ */
+#album {
+  background: var(--burg);
+  padding: 100px 0 0;
+  overflow: hidden;
+}
+.album-header {
+  text-align: center; padding: 0 60px 64px;
+}
+.album-header .display-title { color: #fff; }
+.album-header .display-title em { color: var(--blush); }
+.album-header .section-label { color: rgba(232,196,204,.6); }
+
+.mosaic {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 280px 220px;
+  gap: 3px;
+}
+.mosaic-item { overflow: hidden; cursor: zoom-in; }
+.mosaic-item img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: saturate(.82) brightness(.9);
+  transition: transform .6s ease, filter .4s;
+}
+.mosaic-item:hover img { transform: scale(1.07); filter: saturate(1.05) brightness(1); }
+.m1 { grid-column: 1 / 6; }
+.m2 { grid-column: 6 / 9; }
+.m3 { grid-column: 9 / 13; grid-row: 1 / 3; }
+.m4 { grid-column: 1 / 5; }
+.m5 { grid-column: 5 / 9; }
+.album-footer {
+  text-align: center; padding: 28px 60px;
+  font-family: 'Cinzel', serif; font-size: 9px;
+  letter-spacing: .24em; text-transform: uppercase;
+  color: rgba(232,196,204,.35);
+}
+
+/* ══════════════════════════════════════
+   8. INVITATION CARD
+══════════════════════════════════════ */
+#invitation {
+  padding: 130px 60px;
+  background: var(--warm);
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.inv-bg-pattern {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(92,30,40,.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(184,149,106,.06) 0%, transparent 50%);
+}
+.inv-card {
+  max-width: 580px; margin: 0 auto;
+  background: var(--cream);
+  padding: 72px 80px;
+  position: relative; z-index: 2;
+  box-shadow: 0 32px 100px rgba(92,30,40,.1), 0 1px 0 var(--line);
+}
+.inv-card::before {
+  content: ''; position: absolute;
+  top: 12px; left: 12px; right: 12px; bottom: 12px;
+  border: 1px solid rgba(184,149,106,.25);
+  pointer-events: none;
+}
+.inv-card::after {
+  content: ''; position: absolute;
+  top: 20px; left: 20px; right: 20px; bottom: 20px;
+  border: 1px solid rgba(184,149,106,.1);
+  pointer-events: none;
+}
+.inv-inner { position: relative; z-index: 2; }
+.inv-top {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: .32em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 24px;
+}
+.inv-families {
+  font-family: 'EB Garamond', serif;
+  font-size: 15px; line-height: 2.1; color: var(--muted);
+  margin-bottom: 28px;
+}
+.inv-families strong { color: var(--text); font-weight: 500; }
+.inv-honor {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; font-style: italic; color: var(--muted); margin-bottom: 14px;
+}
+.inv-names-script {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(42px, 5vw, 62px);
+  color: var(--burg); line-height: 1; display: block; margin-bottom: 4px;
+}
+.inv-amp-script {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(48px, 5.5vw, 68px);
+  color: var(--gold); display: block; line-height: .85; margin-bottom: 4px;
+}
+.inv-rule { width: 60px; height: 1px; background: rgba(184,149,106,.4); margin: 28px auto; }
+.inv-details {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; line-height: 2.1; color: var(--text);
+}
+
+/* ══════════════════════════════════════
+   9. RSVP — CLEAN FORM
+══════════════════════════════════════ */
+#rsvp {
+  padding: 130px 60px;
+  background: var(--cream);
+  position: relative;
+}
+.rsvp-inner { max-width: 680px; margin: 0 auto; }
+.rsvp-header { margin-bottom: 60px; }
+.rsvp-attend-row { display: flex; gap: 12px; margin-bottom: 28px; }
+.attend-btn {
+  flex: 1; padding: 18px 14px; text-align: center;
+  border: 1px solid var(--line); background: transparent;
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--muted); cursor: pointer; transition: all .25s;
+}
+.attend-btn:hover, .attend-btn.active {
+  border-color: var(--burg); color: var(--burg);
+  background: rgba(92,30,40,.03);
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 24px; }
+.form-field { display: flex; flex-direction: column; }
+.form-field.full { grid-column: 1/-1; }
+.form-field label {
+  font-family: 'Cinzel', serif;
+  font-size: 8.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 9px;
+}
+.form-field input,
+.form-field select,
+.form-field textarea {
+  border: none; border-bottom: 1px solid rgba(92,30,40,.2);
+  padding: 10px 0; background: transparent;
+  font-family: 'EB Garamond', serif; font-size: 15px;
+  color: var(--text); outline: none;
+  transition: border-color .2s; width: 100%;
+  resize: none;
+}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus { border-color: var(--burg-md); }
+.form-field textarea { min-height: 80px; }
+.rsvp-cta { margin-top: 36px; text-align: center; }
+.btn-burg {
+  display: inline-block; background: var(--burg); color: var(--cream);
+  padding: 15px 44px; border: none; cursor: pointer;
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .22em;
+  text-transform: uppercase; transition: background .3s, transform .2s;
+}
+.btn-burg:hover { background: var(--burg-md); transform: translateY(-2px); }
+.rsvp-footnote {
+  text-align: center; font-family: 'EB Garamond', serif;
+  font-size: 13px; color: var(--muted); margin-top: 18px;
+}
+
+/* ══════════════════════════════════════
+   10. WISHES
+══════════════════════════════════════ */
+#wishes {
+  padding: 130px 60px;
+  background: var(--parchm);
+  position: relative;
+}
+.wishes-inner { max-width: 1000px; margin: 0 auto; }
+.wishes-wall {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px; margin: 48px 0 56px;
+}
+.wish-card {
+  background: var(--cream); padding: 28px 26px;
+  position: relative; overflow: hidden;
+  transition: transform .35s, box-shadow .35s;
+}
+.wish-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(92,30,40,.09); }
+.wish-quote-mark {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 64px; line-height: .6;
+  color: rgba(92,30,40,.08); position: absolute;
+  top: 16px; left: 16px; pointer-events: none;
+}
+.wish-text {
+  font-family: 'EB Garamond', serif;
+  font-size: 15px; font-style: italic; line-height: 1.75;
+  color: var(--burg-md); padding-top: 20px; margin-bottom: 14px;
+}
+.wish-from {
+  font-family: 'Cinzel', serif;
+  font-size: 8.5px; letter-spacing: .16em; color: var(--muted);
+  text-transform: uppercase;
+}
+.wish-form-box {
+  background: var(--cream); padding: 50px 56px;
+  position: relative;
+}
+.wish-form-box::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--burg);
+}
+.wish-form-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-style: italic; color: var(--burg);
+  margin-bottom: 28px;
+}
+
+/* ══════════════════════════════════════
+   11. FAMILY CONTACT
+══════════════════════════════════════ */
+#family {
+  padding: 130px 60px;
+  background: var(--cream);
+  position: relative;
+}
+.family-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 3px; max-width: 900px; margin: 48px auto 0;
+  background: var(--line);
+}
+.family-card {
+  background: var(--cream); padding: 44px 40px;
+  position: relative; overflow: hidden;
+  transition: background .3s;
+}
+.family-card:hover { background: var(--warm); }
+.family-side {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--burg-lt); margin-bottom: 20px;
+}
+.family-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-weight: 300; color: var(--burg);
+  margin-bottom: 24px;
+}
+.person-entry { margin-bottom: 18px; }
+.person-name { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+.person-role {
+  font-family: 'Cinzel', serif;
+  font-size: 8px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 4px;
+}
+.person-phone { font-size: 13px; color: var(--burg-md); }
+.person-phone a { color: inherit; text-decoration: none; }
+.person-phone a:hover { text-decoration: underline; }
+
+/* Decorative top accent */
+.family-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--burg), var(--gold));
+}
+
+/* ══════════════════════════════════════
+   12. CLOSING
+══════════════════════════════════════ */
+#closing {
+  min-height: 60vh;
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--burg);
+}
+.closing-bg {
+  position: absolute; inset: 0; z-index: 0;
+}
+.closing-bg img {
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: .12; filter: saturate(.5);
+}
+/* Diagonal split overlay */
+.closing-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(135deg, rgba(92,30,40,.97) 0%, rgba(92,30,40,.88) 50%, rgba(92,30,40,.95) 100%);
+}
+.closing-inner {
+  position: relative; z-index: 2;
+  text-align: center; padding: 120px 60px;
+  max-width: 700px;
+}
+.closing-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: .38em; text-transform: uppercase;
+  color: rgba(184,149,106,.6); margin-bottom: 28px;
+}
+.closing-script {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(48px, 7vw, 86px);
+  color: #fff; display: block; line-height: 1.1;
+  margin-bottom: 20px;
+}
+.closing-rule {
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, transparent, rgba(184,149,106,.5), transparent);
+  margin: 0 auto 28px;
+}
+.closing-message {
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(16px, 1.6vw, 19px); font-style: italic;
+  line-height: 1.85; color: rgba(232,196,204,.7);
+  max-width: 520px; margin: 0 auto 28px;
+}
+.closing-sig {
+  font-family: 'Great Vibes', cursive;
+  font-size: 32px; color: var(--gold-lt); margin-bottom: 32px;
+}
+.closing-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(255,255,255,.2);
+}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer {
+  background: #200d10; color: rgba(232,196,204,.5);
+  padding: 52px 60px 36px;
+  display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 40px;
+}
+.footer-brand .fn { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: .16em; color: rgba(232,196,204,.7); margin-bottom: 4px; }
+.footer-brand .fs { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: rgba(184,149,106,.4); }
+.footer-desc { font-family: 'EB Garamond', serif; font-size: 13px; line-height: 1.85; color: rgba(184,149,106,.35); }
+.footer-nav { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+.footer-nav a { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: rgba(232,196,204,.6); text-decoration: none; transition: color .2s; }
+.footer-nav a:hover { color: rgba(184,149,106,.7); }
+.footer-copy { grid-column: 1/-1; border-top: 1px solid rgba(232,196,204,.06); padding-top: 22px; font-size: 10px; letter-spacing: .06em; color: rgba(184,149,106,.22); }
+
+/* ══════════════════════════════════════
+   LIGHTBOX
+══════════════════════════════════════ */
+.lb { display:none; position:fixed; inset:0; background:rgba(20,5,8,.94); z-index:1000; align-items:center; justify-content:center; }
+.lb.open { display:flex; }
+.lb img { max-width:90vw; max-height:90vh; object-fit:contain; }
+.lb-x { position:absolute; top:22px; right:28px; font-size:28px; color:rgba(232,196,204,.6); cursor:pointer; line-height:1; font-family:'Cormorant Garamond',serif; }
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media (min-width: 1500px) {
+  #intro, #lovestory, #schedule, #invitation, #rsvp, #wishes, #family, #closing {
+    padding-left: clamp(76px, 7vw, 140px);
+    padding-right: clamp(76px, 7vw, 140px);
+  }
+}
+
+@media (max-width: 1100px) {
+  #navbar { column-gap: 18px; }
+  .nav-links { gap: 18px; }
+  .nav-links a { font-size: 11px; letter-spacing: .1em; }
+  .nav-monogram { font-size: 14px; }
+  .nav-date { font-size: 11px; }
+  .hero-badge { left: 16px; bottom: 26px; }
+  .hero-left { padding-top: 108px; }
+  .mosaic { grid-template-rows: 240px 200px; }
+  #intro, #lovestory, #schedule, #invitation, #rsvp, #wishes, #family, #closing { padding: 104px 38px; }
+  .inv-card { padding: 60px 52px; }
+  footer { padding: 48px 38px 34px; }
+}
+
+@media (max-width: 860px) {
+  #navbar {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 10px;
+    padding: 12px 16px;
+  }
+  #navbar.compact { padding: 10px 16px; }
+  .nav-date { display: none; }
+  .nav-links {
+    order: 3;
+    width: 100%;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links a {
+    white-space: nowrap;
+    font-size: 8.5px;
+    letter-spacing: .16em;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 7px 10px 6px;
+    background: rgba(255,255,255,.4);
+  }
+  #hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .hero-right {
+    order: 1;
+    min-height: 52vh;
+  }
+  .hero-left {
+    order: 2;
+    padding: 58px 24px 64px;
+  }
+  .hero-eyebrow { margin-bottom: 20px; }
+  .hero-meta { margin-top: 28px; }
+  .hero-countdown {
+    margin-top: 30px;
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+  .hero-badge {
+    left: 16px;
+    bottom: 16px;
+    padding: 14px 16px;
+    max-width: calc(100% - 32px);
+  }
+  .hero-badge-venue { font-size: 14px; }
+  #couple { grid-template-columns: 1fr; }
+  .couple-half { min-height: 74vw; }
+  .couple-text { padding: 34px 24px; }
+  #venue { grid-template-columns: 1fr; }
+  .venue-image-side { min-height: 300px; }
+  .venue-info-side { padding: 52px 24px; }
+  .tl-grid {
+    grid-template-columns: 24px 1fr;
+    gap: 0 8px;
+  }
+  .tl-item.left,
+  .tl-item.right {
+    grid-column: 2;
+    text-align: left;
+    padding: 0 0 40px 10px;
+  }
+  .tl-line,
+  .tl-dot-wrap { grid-column: 1; }
+  .tl-dot-wrap {
+    justify-content: flex-start;
+    padding: 0 0 40px 6px;
+  }
+  .schedule-inner { grid-template-columns: 1fr; gap: 40px; }
+  .wishes-wall { grid-template-columns: 1fr; gap: 14px; }
+  .family-grid { grid-template-columns: 1fr; }
+  footer { grid-template-columns: 1fr; }
+  .footer-nav { align-items: flex-start; }
+  .inv-card { padding: 46px 26px; }
+  .wish-form-box { padding: 34px 24px; }
+  #intro, #lovestory, #schedule, #invitation, #rsvp, #wishes, #family, #closing { padding: 82px 24px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .mosaic {
+    grid-template-rows: auto;
+    gap: 2px;
+  }
+  .m1, .m2, .m3, .m4, .m5 { grid-column: span 6; grid-row: auto; }
+}
+
+@media (max-width: 520px) {
+  .hero-name { font-size: clamp(44px, 13vw, 66px); }
+  .hero-amp { font-size: clamp(40px, 12vw, 58px); margin: 2px 0; }
+  .hero-meta-text { font-size: 9px; letter-spacing: .16em; }
+  .hero-date-big { font-size: clamp(20px, 7vw, 30px); }
+  .cd-num { min-width: 42px; font-size: 24px; }
+  .cd-lbl { font-size: 7px; letter-spacing: .16em; }
+  .section-label { font-size: 8px; letter-spacing: .24em; }
+  .display-title { font-size: clamp(32px, 11vw, 52px); }
+  .body-text { font-size: 16px; line-height: 1.75; }
+  .intro-number,
+  .sch-bg-num,
+  .ls-bg-text { display: none; }
+  .venue-card { padding: 20px 18px; }
+  .vc-time { font-size: 24px; }
+  .sch-item { gap: 14px; }
+  .sch-time { min-width: 58px; font-size: 16px; }
+  .wish-card { padding: 22px 18px; }
+  .family-card { padding: 34px 22px; }
+  .closing-inner { padding: 86px 22px; }
+  footer { padding: 38px 20px 30px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lb">
+  <span class="lb-x" id="lbX">×</span>
+  <img id="lbImg" src="" alt="">
+</div>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav id="navbar">
+  <a class="nav-monogram" href="#hero">A &amp; B</a>
+  <ul class="nav-links">
+    <li><a href="#couple">Cô Dâu & Chú Rể</a></li>
+    <li><a href="#venue">Địa Điểm</a></li>
+    <li><a href="#rsvp">RSVP</a></li>
+    <li><a href="#wishes">Lời Chúc</a></li>
+    <li><a href="#family">Liên Hệ</a></li>
+  </ul>
+  <span class="nav-date">10 · 10 · 2026</span>
+</nav>
+
+<!-- ═══════════════ 1. HERO ═══════════════ -->
+<section id="hero">
+  <!-- Left panel -->
+  <div class="hero-left">
+    <p class="hero-eyebrow">✦ Save The Date · 10.10.2026</p>
+    <div class="hero-names-stack">
+      <span class="hero-name">Hoài</span>
+      <span class="hero-name italic">An</span>
+    </div>
+    <span class="hero-amp">&</span>
+    <div class="hero-names-stack" style="animation:fadeUp 1s .65s cubic-bezier(.16,.84,.44,1) both">
+      <span class="hero-name">Minh</span>
+      <span class="hero-name italic">Bình</span>
+    </div>
+    <div class="hero-meta">
+      <div class="hero-meta-line">
+        <span class="hero-meta-text">Lễ Thành Hôn</span>
+      </div>
+      <span class="hero-date-big">10 tháng 10 năm 2026</span>
+    </div>
+    <div class="hero-countdown">
+      <div class="cd-box"><span class="cd-num" id="cd-d">--</span><span class="cd-lbl">Ngày</span></div>
+      <div class="cd-box"><span class="cd-num" id="cd-h">--</span><span class="cd-lbl">Giờ</span></div>
+      <div class="cd-box"><span class="cd-num" id="cd-m">--</span><span class="cd-lbl">Phút</span></div>
+      <div class="cd-box"><span class="cd-num" id="cd-s">--</span><span class="cd-lbl">Giây</span></div>
+    </div>
+  </div>
+  <!-- Right: full photo -->
+  <div class="hero-right">
+    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&auto=format&fit=crop&q=90" alt="An & Bình">
+    <div class="hero-right-overlay"></div>
+    <div class="hero-badge">
+      <p class="hero-badge-label">Địa Điểm Tổ Chức</p>
+      <p class="hero-badge-venue">White Palace, TP. HCM</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 2. INTRO ═══════════════ -->
+<section id="intro">
+  <span class="intro-number" aria-hidden="true">I</span>
+  <div class="intro-inner">
+    <div class="sr">
+      <span class="section-label">✦ Lời Mở Đầu</span>
+      <div class="intro-rule"></div>
+      <blockquote class="intro-quote">
+        "Tình yêu là khi hai trái tim cùng chung nhịp đập — không cần lý do, chỉ cần có nhau."
+      </blockquote>
+      <div class="rule-center"></div>
+      <p class="body-text" style="max-width:540px;margin:0 auto;text-align:center">
+        Với trái tim tràn đầy hạnh phúc, chúng tôi — Hoài An và Minh Bình — trân trọng kính mời bạn đến chung vui trong ngày trọng đại nhất cuộc đời. Sự hiện diện của bạn là món quà quý giá nhất.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 3. COUPLE ═══════════════ -->
+<section id="couple">
+  <!-- Bride -->
+  <div class="couple-half sr-l">
+    <div class="couple-photo">
+      <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&auto=format&fit=crop&q=80" alt="Cô Dâu">
+    </div>
+    <div class="couple-photo-overlay"></div>
+    <div class="couple-text">
+      <span class="couple-role">✦ Cô Dâu</span>
+      <h2 class="couple-name">Nguyễn<br><em style="font-style:italic">Hoài An</em></h2>
+      <p class="couple-desc">Nhà thiết kế yêu nghệ thuật, yêu thiên nhiên và những buổi chiều tà bên tách trà. Với Bình, mỗi ngày là một trang thơ mới.</p>
+    </div>
+  </div>
+  <!-- Groom -->
+  <div class="couple-half sr-r">
+    <div class="couple-photo">
+      <img src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=800&auto=format&fit=crop&q=80" alt="Chú Rể">
+    </div>
+    <div class="couple-photo-overlay"></div>
+    <div class="couple-text">
+      <span class="couple-role" style="color:var(--burg-lt)">✦ Chú Rể</span>
+      <h2 class="couple-name" style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,48px);font-weight:300;color:var(--burg)">Trần<br><em style="font-style:italic">Minh Bình</em></h2>
+      <p class="couple-desc" style="color:var(--muted)">Kỹ sư yêu âm nhạc, đam mê du lịch và tìm kiếm vẻ đẹp trong từng góc khuất của cuộc sống. Với An, anh tìm thấy ngôi nhà.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 4. LOVE STORY ═══════════════ -->
+<section id="lovestory">
+  <span class="ls-bg-text" aria-hidden="true">CHUYỆN TÌNH YÊU</span>
+  <div class="ls-header sr">
+    <span class="section-label">✦ Hành Trình Của Chúng Mình</span>
+    <h2 class="display-title" style="color:#fff">Từ Ánh Nhìn<br><em>Đến Mãi Mãi</em></h2>
+  </div>
+  <div class="tl-grid">
+    <!-- Item 1: left -->
+    <div class="tl-item left sr">
+      <span class="tl-emoji">🌸</span>
+      <div class="tl-year">Tháng 3 · 2021</div>
+      <div class="tl-title">Lần Đầu Gặp Gỡ</div>
+      <p class="tl-text">Một buổi triển lãm nghệ thuật, một ánh nhìn tình cờ. Cả hai không ngờ rằng đó là khởi đầu của tất cả.</p>
+    </div>
+    <div class="tl-line"></div>
+    <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+    <div></div>
+    <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+    <!-- Item 2: right -->
+    <div class="tl-item right sr d2">
+      <span class="tl-emoji">🌿</span>
+      <div class="tl-year">Tháng 8 · 2021</div>
+      <div class="tl-title">Chuyến Đi Đà Lạt</div>
+      <p class="tl-text">Trong sương sớm mờ ảo của thành phố mộng mơ, Bình lần đầu nắm tay An — và hiểu rằng đây là người anh muốn đồng hành mãi mãi.</p>
+    </div>
+    <!-- Item 3: left -->
+    <div class="tl-item left sr d3">
+      <span class="tl-emoji">💍</span>
+      <div class="tl-year">Tháng 2 · 2024</div>
+      <div class="tl-title">Lời Cầu Hôn</div>
+      <p class="tl-text">Dưới bầu trời Hội An đêm rực rỡ đèn lồng, Bình quỳ xuống với chiếc nhẫn nhỏ và câu hỏi làm An bật khóc vì hạnh phúc.</p>
+    </div>
+    <div class="tl-line"></div>
+    <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+    <div></div>
+    <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+    <!-- Item 4: right -->
+    <div class="tl-item right sr d4">
+      <span class="tl-emoji">✨</span>
+      <div class="tl-year">Tháng 10 · 2026</div>
+      <div class="tl-title">Ngày Trọng Đại</div>
+      <p class="tl-text">Chương đẹp nhất của câu chuyện tình yêu bắt đầu từ đây. Và chúng tôi muốn bạn là một phần của khoảnh khắc ấy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 5. VENUE ═══════════════ -->
+<section id="venue">
+  <div class="venue-image-side">
+    <img src="https://images.unsplash.com/photo-1526656892012-7b336603ed46?w=900&auto=format&fit=crop&q=80" alt="Địa điểm">
+  </div>
+  <div class="venue-info-side">
+    <div class="sr">
+      <span class="section-label">✦ Thời Gian & Địa Điểm</span>
+      <h2 class="display-title">Hẹn Gặp<br><em>Tại Đây</em></h2>
+    </div>
+    <div class="venue-cards">
+      <div class="venue-card sr d1">
+        <p class="vc-type">Lễ Vu Quy</p>
+        <p class="vc-time">09:00</p>
+        <p class="vc-date">Thứ Bảy, ngày 10 tháng 10 năm 2026</p>
+        <p class="vc-place">Nhà Hàng Hoa Sứ</p>
+        <p class="vc-address">123 Đường Nguyễn Trãi, Quận 1, TP. HCM</p>
+      </div>
+      <div class="venue-card sr d2">
+        <p class="vc-type">Tiệc Cưới</p>
+        <p class="vc-time">11:30</p>
+        <p class="vc-date">Thứ Bảy, ngày 10 tháng 10 năm 2026</p>
+        <p class="vc-place">White Palace Convention Center</p>
+        <p class="vc-address">194 Hoàng Văn Thụ, Phú Nhuận, TP. HCM</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 6. SCHEDULE ═══════════════ -->
+<section id="schedule">
+  <span class="sch-bg-num" aria-hidden="true">VI</span>
+  <div class="schedule-inner">
+    <div class="sch-header sr">
+      <span class="section-label">✦ Lịch Trình Ngày Cưới</span>
+      <h2 class="display-title">Chương<br><em>Trình</em></h2>
+    </div>
+    <div>
+      <p class="sch-col-head">🌸 Buổi Sáng — Lễ Vu Quy</p>
+      <div class="sch-item sr d1">
+        <span class="sch-time">08:30</span>
+        <div><p class="sch-event">Đón tiếp khách mời</p><p class="sch-note">Cocktail, âm nhạc và chụp ảnh tại sảnh đón.</p></div>
+      </div>
+      <div class="sch-item sr d2">
+        <span class="sch-time">09:00</span>
+        <div><p class="sch-event">Nghi lễ vu quy</p><p class="sch-note">Lễ trao nhẫn, rước dâu trước sự chứng kiến của hai gia đình.</p></div>
+      </div>
+      <div class="sch-item sr d3">
+        <span class="sch-time">10:30</span>
+        <div><p class="sch-event">Chụp ảnh gia đình</p><p class="sch-note">Kỷ niệm cùng hai gia đình và người thân yêu.</p></div>
+      </div>
+    </div>
+    <div>
+      <p class="sch-col-head">🥂 Buổi Trưa — Tiệc Cưới</p>
+      <div class="sch-item sr d1">
+        <span class="sch-time">11:30</span>
+        <div><p class="sch-event">Khai tiệc & chào đón khách</p><p class="sch-note">Cocktail, live music và photo booth.</p></div>
+      </div>
+      <div class="sch-item sr d2">
+        <span class="sch-time">12:00</span>
+        <div><p class="sch-event">Cô dâu & Chú rể ra mắt</p><p class="sch-note">Cắt bánh, trao nhẫn lần hai và nâng ly chúc mừng.</p></div>
+      </div>
+      <div class="sch-item sr d3">
+        <span class="sch-time">14:00</span>
+        <div><p class="sch-event">Tiệc kết thúc</p><p class="sch-note">Tặng quà lưu niệm và tiễn khách thân yêu.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 7. ALBUM ═══════════════ -->
+<section id="album">
+  <div class="album-header sr">
+    <span class="section-label">✦ Album Kỷ Niệm</span>
+    <h2 class="display-title" style="color:#fff">Những Khoảnh<br><em>Khắc Đẹp</em></h2>
+  </div>
+  <div class="mosaic">
+    <div class="mosaic-item m1"><img src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800&auto=format&fit=crop&q=80" alt=""></div>
+    <div class="mosaic-item m2"><img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=500&auto=format&fit=crop&q=80" alt=""></div>
+    <div class="mosaic-item m3"><img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=500&auto=format&fit=crop&q=80" alt=""></div>
+    <div class="mosaic-item m4"><img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=700&auto=format&fit=crop&q=80" alt=""></div>
+    <div class="mosaic-item m5"><img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=600&auto=format&fit=crop&q=80" alt=""></div>
+  </div>
+  <p class="album-footer">Nhấn vào ảnh để phóng to · ESC để đóng</p>
+</section>
+
+<!-- ═══════════════ 8. INVITATION ═══════════════ -->
+<section id="invitation">
+  <div class="inv-bg-pattern"></div>
+  <div class="inv-card sr-l">
+    <div class="inv-inner">
+      <p class="inv-top">✦ Thiệp Mời Chính Thức ✦</p>
+      <p class="inv-families">
+        <strong>Ông Nguyễn Văn A & Bà Trần Thị B</strong><br>
+        Cùng với<br>
+        <strong>Ông Trần Văn C & Bà Lê Thị D</strong>
+      </p>
+      <p class="inv-honor">Trân trọng kính mời quý vị đến tham dự lễ thành hôn của</p>
+      <span class="inv-names-script">Hoài An</span>
+      <span class="inv-amp-script">&</span>
+      <span class="inv-names-script">Minh Bình</span>
+      <div class="inv-rule"></div>
+      <div class="inv-details">
+        <p><strong>Lễ Vu Quy:</strong> 09:00 SA · Thứ Bảy, 10.10.2026</p>
+        <p>Nhà Hàng Hoa Sứ, 123 Nguyễn Trãi, Q.1, TP.HCM</p>
+        <br>
+        <p><strong>Tiệc Cưới:</strong> 11:30 SA · Thứ Bảy, 10.10.2026</p>
+        <p>White Palace, 194 Hoàng Văn Thụ, Phú Nhuận, TP.HCM</p>
+      </div>
+      <div class="inv-rule"></div>
+      <p style="font-family:'EB Garamond',serif;font-size:14px;font-style:italic;color:var(--muted)">Kính mong quý vị xác nhận trước ngày 01.10.2026</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 9. RSVP ═══════════════ -->
+<section id="rsvp">
+  <div class="rsvp-inner">
+    <div class="rsvp-header sr">
+      <span class="section-label">✦ Xác Nhận Tham Dự</span>
+      <h2 class="display-title">RSVP</h2>
+      <div class="rule" style="margin-top:18px"></div>
+      <p class="body-text" style="margin-top:14px">Vui lòng xác nhận trước ngày <strong style="color:var(--burg)">01 tháng 10 năm 2026</strong></p>
+    </div>
+    <div class="sr d2">
+      <p style="font-family:'Cinzel',serif;font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Bạn có tham dự không?</p>
+      <div class="rsvp-attend-row">
+        <button class="attend-btn active" onclick="setAttend(this)">✓ Tôi sẽ tham dự</button>
+        <button class="attend-btn" onclick="setAttend(this)">— Tôi không đến được</button>
+      </div>
+      <div class="form-grid">
+        <div class="form-field"><label>Họ và Tên</label><input type="text" placeholder="Nguyễn Văn A"></div>
+        <div class="form-field"><label>Số Điện Thoại</label><input type="tel" placeholder="0912 345 678"></div>
+        <div class="form-field"><label>Số Người Đi Cùng</label>
+          <select><option>Chỉ mình tôi</option><option>1 người</option><option>2 người</option><option>3+ người</option></select>
+        </div>
+        <div class="form-field"><label>Chế Độ Ăn Đặc Biệt</label><input type="text" placeholder="Chay, dị ứng..."></div>
+        <div class="form-field full"><label>Lời Nhắn</label><textarea placeholder="Gửi lời chúc hoặc ghi chú..."></textarea></div>
+      </div>
+      <div class="rsvp-cta">
+        <button class="btn-burg" id="rsvpBtn">Xác Nhận Tham Dự</button>
+      </div>
+      <p class="rsvp-footnote">Chúng tôi sẽ liên hệ lại qua số điện thoại đã cung cấp.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 10. WISHES ═══════════════ -->
+<section id="wishes">
+  <div class="wishes-inner">
+    <div class="sr" style="text-align:center;margin-bottom:16px">
+      <span class="section-label">✦ Gửi Lời Chúc</span>
+      <h2 class="display-title" style="text-align:center">Những Lời<br><em>Từ Trái Tim</em></h2>
+    </div>
+    <div class="wishes-wall">
+      <div class="wish-card sr d1">
+        <span class="wish-quote-mark">"</span>
+        <p class="wish-text">"Chúc An và Bình trăm năm hạnh phúc! Mãi yêu thương và chăm sóc nhau. Tình yêu của hai bạn thật đẹp!"</p>
+        <p class="wish-from">— Gia đình Bác Tuấn</p>
+      </div>
+      <div class="wish-card sr d2">
+        <span class="wish-quote-mark">"</span>
+        <p class="wish-text">"An và Bình — đôi đũa vừa đôi! Mong hai bạn luôn giữ được ngọn lửa yêu thương và cùng nhau xây tổ ấm."</p>
+        <p class="wish-from">— Nhóm bạn thân 2017</p>
+      </div>
+      <div class="wish-card sr d3">
+        <span class="wish-quote-mark">"</span>
+        <p class="wish-text">"Hôm nay hai đứa bắt đầu hành trình mới. Bên nhau vượt mọi thử thách — đó là hạnh phúc thật sự!"</p>
+        <p class="wish-from">— Cô Hồng & Chú Nam</p>
+      </div>
+    </div>
+    <div class="wish-form-box sr">
+      <h3 class="wish-form-title">Gửi Lời Chúc Của Bạn</h3>
+      <div class="form-grid">
+        <div class="form-field"><label>Tên Bạn</label><input type="text" placeholder="Nguyễn Thị B"></div>
+        <div class="form-field"><label>Mối Quan Hệ</label><input type="text" placeholder="Bạn bè, gia đình..."></div>
+        <div class="form-field full"><label>Lời Chúc</label><textarea style="min-height:100px" placeholder="Nhập lời chúc của bạn..."></textarea></div>
+      </div>
+      <div style="margin-top:24px;text-align:center">
+        <button class="btn-burg" id="wishBtn">Gửi Lời Chúc →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 11. FAMILY ═══════════════ -->
+<section id="family">
+  <div style="max-width:900px;margin:0 auto">
+    <div class="sr" style="text-align:center;margin-bottom:0">
+      <span class="section-label">✦ Thông Tin Liên Hệ Gia Đình</span>
+      <h2 class="display-title" style="text-align:center">Liên<br><em>Hệ</em></h2>
+      <div class="rule-center" style="margin-top:18px"></div>
+      <p class="body-text" style="text-align:center;margin:14px auto 0;max-width:440px">Mọi thắc mắc về lễ cưới, xin vui lòng liên hệ qua thông tin dưới đây.</p>
+    </div>
+    <div class="family-grid sr d2">
+      <div class="family-card">
+        <p class="family-side">Nhà Gái</p>
+        <h3 class="family-name">Gia Đình Nhà Nguyễn</h3>
+        <div class="person-entry"><p class="person-name">Ông Nguyễn Văn A</p><p class="person-role">Cha Cô Dâu</p><p class="person-phone"><a href="tel:+84901000001">0901 000 001</a></p></div>
+        <div class="person-entry"><p class="person-name">Bà Trần Thị B</p><p class="person-role">Mẹ Cô Dâu</p><p class="person-phone"><a href="tel:+84902000002">0902 000 002</a></p></div>
+        <div class="person-entry"><p class="person-name">Nguyễn Hoài An</p><p class="person-role">Cô Dâu</p><p class="person-phone"><a href="tel:+84903000003">0903 000 003</a></p></div>
+      </div>
+      <div class="family-card">
+        <p class="family-side">Nhà Trai</p>
+        <h3 class="family-name">Gia Đình Nhà Trần</h3>
+        <div class="person-entry"><p class="person-name">Ông Trần Văn C</p><p class="person-role">Cha Chú Rể</p><p class="person-phone"><a href="tel:+84904000004">0904 000 004</a></p></div>
+        <div class="person-entry"><p class="person-name">Bà Lê Thị D</p><p class="person-role">Mẹ Chú Rể</p><p class="person-phone"><a href="tel:+84905000005">0905 000 005</a></p></div>
+        <div class="person-entry"><p class="person-name">Trần Minh Bình</p><p class="person-role">Chú Rể</p><p class="person-phone"><a href="tel:+84906000006">0906 000 006</a></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 12. CLOSING ═══════════════ -->
+<section id="closing">
+  <div class="closing-bg">
+    <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=1400&auto=format&fit=crop&q=80" alt="">
+  </div>
+  <div class="closing-overlay"></div>
+  <div class="closing-inner sr">
+    <p class="closing-eyebrow">✦ Lời Cảm Ơn ✦</p>
+    <span class="closing-script">Cảm Ơn Bạn</span>
+    <div class="closing-rule"></div>
+    <p class="closing-message">Sự hiện diện của bạn là món quà vô giá nhất trong ngày trọng đại này. Mỗi nụ cười, mỗi lời chúc — chúng tôi sẽ mãi trân trọng và ghi nhớ.</p>
+    <p class="closing-sig">An & Bình 💕</p>
+    <p class="closing-tag">#AnBinhWedding · #10102026</p>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <div class="footer-brand">
+    <p class="fn">An & Bình</p>
+    <p class="fs">Wedding · 10.10.2026</p>
+  </div>
+  <div class="footer-desc">
+    <p>Cảm ơn bạn đã ghé thăm trang thiệp cưới của chúng tôi. Mỗi chi tiết được chuẩn bị với tất cả tình yêu và sự trân trọng dành cho những người thân yêu.</p>
+  </div>
+  <nav class="footer-nav">
+    <a href="#couple">Cô Dâu & Chú Rể</a>
+    <a href="#lovestory">Chuyện Tình</a>
+    <a href="#venue">Địa Điểm</a>
+    <a href="#rsvp">RSVP</a>
+    <a href="#wishes">Lời Chúc</a>
+    <a href="#family">Liên Hệ</a>
+  </nav>
+  <p class="footer-copy">© 2026 Hoài An & Minh Bình · Made with 💕</p>
+</footer>
+
+<script>
+/* ─ COUNTDOWN ─ */
+const wd = new Date('2026-10-10T09:00:00');
+function tick() {
+  const diff = wd - Date.now();
+  if (diff <= 0) return;
+  const p = n => String(Math.floor(n)).padStart(2,'0');
+  document.getElementById('cd-d').textContent = p(diff/86400000);
+  document.getElementById('cd-h').textContent = p((diff%86400000)/3600000);
+  document.getElementById('cd-m').textContent = p((diff%3600000)/60000);
+  document.getElementById('cd-s').textContent = p((diff%60000)/1000);
+}
+tick(); setInterval(tick, 1000);
+
+/* ─ SCROLL REVEAL ─ */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('up'); io.unobserve(e.target); } });
+}, { threshold: .1, rootMargin: '0px 0px -48px 0px' });
+document.querySelectorAll('.sr, .sr-l, .sr-r').forEach(el => io.observe(el));
+
+/* ─ NAV COMPACT ─ */
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('compact', scrollY > 60);
+});
+
+/* ─ RSVP ATTEND ─ */
+function setAttend(btn) {
+  document.querySelectorAll('.attend-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ─ BUTTONS FEEDBACK ─ */
+['rsvpBtn','wishBtn'].forEach(id => {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.addEventListener('click', function() {
+    const orig = this.textContent;
+    this.textContent = '✓ Đã gửi thành công!';
+    this.style.background = '#3a6438';
+    setTimeout(() => { this.textContent = orig; this.style.background = ''; }, 3000);
+  });
+});
+
+/* ─ LIGHTBOX ─ */
+const lb = document.getElementById('lb');
+const lbImg = document.getElementById('lbImg');
+document.querySelectorAll('.mosaic-item img').forEach(img => {
+  img.addEventListener('click', () => { lbImg.src = img.src; lb.classList.add('open'); });
+});
+document.getElementById('lbX').addEventListener('click', () => lb.classList.remove('open'));
+lb.addEventListener('click', e => { if (e.target === lb) lb.classList.remove('open'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.classList.remove('open'); });
+</script>
+</body>
+</html>

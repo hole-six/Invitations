@@ -31,6 +31,7 @@ import DashboardCategoriesPage from './pages/DashboardCategoriesPage.jsx'
 import DashboardUsersPage from './pages/DashboardUsersPage.jsx'
 import DashboardAnalyticsPage from './pages/DashboardAnalyticsPage.jsx'
 import DashboardSettingsPage from './pages/DashboardSettingsPage.jsx'
+import CategoryPage from './pages/CategoryPage.jsx'
 
 function App() {
   return (

@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thiệp Cưới | Nhã An & Duy Khánh</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Cinzel:wght@400;500;600&family=Jost:wght@200;300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --snow-white: #ffffff;
+  --ice-bg: #f2f6fb;
+  --frost: #e4ecf5;
+  --silver-light: #c2cdd9;
+  --silver: #96a6b5;
+  --silver-deep: #6e7f90;
+  --ink: #2e3a48;
+  --ink-light: #4a5a6a;
+  --ice-blue: #d4e5f5;
+  --crystal: #aac2d8;
+  --accent: #8faec7;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--ice-bg);
+  font-family: 'Jost', sans-serif;
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* ══ SNOW CANVAS ══ */
+.snow-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 998;
+  opacity: 0; transition: opacity 2s ease;
+}
+.snow-canvas.visible { opacity: 1; }
+
+/* ══ ICE CRACK CANVAS — realistic shattering ══ */
+#iceCrackCanvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 997;
+}
+
+/* ══ INTRO GATE ══ */
+#intro-screen {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(150deg, #f5f9ff 0%, #eaf2fb 50%, #e0ecf7 100%);
+  transition: opacity 1s ease, visibility 1s;
+}
+#intro-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+/* Floating snowflakes in intro */
+.intro-bg-flakes { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.ibf { position: absolute; animation: ibfDrift 14s ease-in-out infinite; }
+.ibf:nth-child(1){top:4%;left:6%;animation-delay:0s;}
+.ibf:nth-child(2){top:6%;right:8%;animation-delay:-4s;}
+.ibf:nth-child(3){bottom:8%;left:4%;animation-delay:-8s;}
+.ibf:nth-child(4){bottom:6%;right:6%;animation-delay:-11s;}
+.ibf:nth-child(5){top:42%;left:1%;animation-delay:-3s;}
+.ibf:nth-child(6){top:38%;right:2%;animation-delay:-7s;}
+@keyframes ibfDrift {
+  0%,100%{transform:translateY(0)rotate(0deg);}
+  30%{transform:translateY(-14px)rotate(18deg);}
+  70%{transform:translateY(9px)rotate(-12deg);}
+}
+
+.gate-wrapper {
+  width: min(480px, 94vw);
+  height: min(680px, 94vh);
+  position: relative;
+  display: flex; align-items: stretch;
+  perspective: 1400px;
+}
+.gate-panel {
+  flex: 1; position: relative; overflow: hidden;
+  background: linear-gradient(160deg, #f7fbff 0%, #ecf4fb 100%);
+  border: 1px solid var(--silver-light);
+  box-shadow: 0 24px 70px rgba(80,110,145,0.18);
+  transition: transform 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.gate-panel.left  { transform-origin: left center; }
+.gate-panel.right { transform-origin: right center; }
+.gate-wrapper.open .gate-panel.left  { transform: perspective(1000px) rotateY(-118deg); }
+.gate-wrapper.open .gate-panel.right { transform: perspective(1000px) rotateY(118deg); }
+
+.gate-flake { position: absolute; opacity: 0.22; animation: ibfDrift 10s ease-in-out infinite; }
+
+.intro-band {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10; text-align: center; pointer-events: none;
+  width: 248px;
+  background: rgba(255,255,255,0.97);
+  border: 1px solid var(--silver-light);
+  padding: 22px 26px;
+  box-shadow: 0 10px 40px rgba(80,110,145,0.14);
+}
+.intro-band .tag {
+  font-family: 'Cinzel', serif; font-size: 8px;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--silver-deep); margin-bottom: 10px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.intro-band .names {
+  font-family: 'Pinyon Script', cursive;
+  font-size: 34px; color: var(--ink); line-height: 1.2;
+}
+.intro-band .date {
+  font-family: 'Cinzel', serif; font-size: 8px;
+  letter-spacing: 3px; color: var(--silver); margin-top: 8px;
+}
+
+.open-btn {
+  position: absolute; bottom: 11%; left: 50%;
+  transform: translateX(-50%);
+  width: 72px; height: 72px; border-radius: 50%;
+  border: 1.5px solid rgba(160,185,215,0.8);
+  background: linear-gradient(150deg, #ffffff 0%, #ddeaf7 100%);
+  color: var(--silver-deep);
+  font-family: 'Cinzel', serif; font-size: 7px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  cursor: pointer; z-index: 20;
+  box-shadow: 0 6px 24px rgba(100,130,165,0.2), inset 0 1px 3px rgba(255,255,255,0.9);
+  transition: all 0.3s;
+  animation: gatePulse 2.8s ease-in-out infinite;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 3px;
+}
+@keyframes gatePulse {
+  0%,100%{box-shadow:0 6px 24px rgba(100,130,165,0.2),inset 0 1px 3px rgba(255,255,255,0.9),0 0 0 0 rgba(160,200,240,0.5);}
+  50%{box-shadow:0 6px 24px rgba(100,130,165,0.2),inset 0 1px 3px rgba(255,255,255,0.9),0 0 0 16px rgba(160,200,240,0);}
+}
+.open-btn:hover { transform: translateX(-50%) scale(1.1); }
+.open-btn span { display: block; }
+
+/* ══ MAIN ══ */
+#main { opacity: 0; transition: opacity 1.2s ease; }
+#main.visible { opacity: 1; }
+
+/* HEADER */
+.site-header {
+  position: relative;
+  background: linear-gradient(160deg, #ffffff 0%, #eef5fb 45%, #e5eff8 100%);
+  min-height: 380px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--frost);
+}
+.header-snow-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.hbg-fl { position: absolute; animation: ibfDrift 11s ease-in-out infinite; }
+.hbg-fl:nth-child(1){top:-25px;left:-25px;animation-delay:0s;}
+.hbg-fl:nth-child(2){top:-20px;right:-20px;animation-delay:-3s;transform:scaleX(-1);}
+.hbg-fl:nth-child(3){bottom:-20px;left:10%;animation-delay:-6s;}
+.hbg-fl:nth-child(4){bottom:-15px;right:15%;animation-delay:-9s;transform:scaleX(-1);}
+.hbg-fl:nth-child(5){top:35%;left:5%;animation-delay:-2s;}
+.hbg-fl:nth-child(6){top:30%;right:6%;animation-delay:-8s;}
+
+.header-content { position: relative; z-index: 2; text-align: center; padding: 48px 20px; }
+.header-tag {
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 6px;
+  text-transform: uppercase; color: var(--silver); margin-bottom: 18px;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+}
+.header-names {
+  font-family: 'Pinyon Script', cursive;
+  font-size: clamp(58px, 11vw, 92px);
+  color: var(--ink); line-height: 1.1;
+}
+.header-amp {
+  display: block;
+  font-family: 'Cinzel', serif; font-size: 0.25em;
+  font-weight: 400; color: var(--silver);
+  letter-spacing: 8px; text-transform: uppercase; margin: 6px 0;
+}
+.header-date {
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 5px;
+  color: var(--silver-deep); margin-top: 16px; text-transform: uppercase;
+}
+
+/* NAV */
+.sticky-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(12px);
+  display: flex; justify-content: center;
+  border-bottom: 1px solid var(--frost);
+  box-shadow: 0 1px 14px rgba(80,110,145,0.07);
+}
+.nav-link {
+  padding: 15px 13px;
+  font-family: 'Cinzel', serif; font-size: 7px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--silver); cursor: pointer;
+  transition: color 0.3s;
+  border-bottom: 1.5px solid transparent;
+  white-space: nowrap;
+}
+.nav-link:hover, .nav-link.active { color: var(--ink); border-bottom-color: var(--accent); }
+
+/* REVEAL ANIMATIONS */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.9s ease, transform 0.9s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.anim-fade-up    { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.anim-fade-left  { opacity: 0; transform: translateX(-40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.anim-fade-right { opacity: 0; transform: translateX(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.anim-zoom       { opacity: 0; transform: scale(0.88); transition: opacity 0.8s ease, transform 0.8s ease; }
+.anim-in { opacity: 1 !important; transform: none !important; }
+
+/* SECTION */
+.section { padding: 80px 20px; max-width: 700px; margin: 0 auto; }
+.sec-label {
+  font-family: 'Cinzel', serif; font-size: 8px;
+  letter-spacing: 5px; text-transform: uppercase;
+  color: var(--silver); text-align: center; margin-bottom: 10px;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+}
+.sec-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(30px, 5vw, 46px); font-weight: 400;
+  font-style: italic; text-align: center; color: var(--ink); margin-bottom: 8px;
+}
+.silver-rule {
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; margin: 20px 0;
+}
+.silver-rule::before, .silver-rule::after {
+  content: ''; flex: 1; max-width: 90px; height: 1px;
+  background: linear-gradient(to right, transparent, var(--silver-light));
+}
+.silver-rule::after { background: linear-gradient(to left, transparent, var(--silver-light)); }
+
+/* FORMAL CARD */
+.formal-card {
+  background: #ffffff; border: 1px solid var(--silver-light);
+  max-width: 460px; margin: 36px auto; padding: 58px 50px;
+  text-align: center; position: relative; overflow: visible;
+  box-shadow: 0 22px 64px rgba(70,95,130,0.09), 0 2px 8px rgba(70,95,130,0.05);
+}
+.formal-card::before {
+  content: ''; position: absolute; inset: 12px;
+  border: 0.5px solid var(--silver-light); pointer-events: none; opacity: 0.5;
+}
+.corner-deco { position: absolute; opacity: 0.55; }
+.corner-deco.tl { top: -18px; left: -18px; }
+.corner-deco.tr { top: -18px; right: -18px; transform: scaleX(-1); }
+.corner-deco.bl { bottom: -18px; left: -10px; transform: scaleY(-1); }
+.corner-deco.br { bottom: -18px; right: -10px; transform: scale(-1,-1); }
+
+.fc-families {
+  font-family: 'Jost', sans-serif; font-size: 9px;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--silver); margin-bottom: 5px; line-height: 2.2;
+}
+.fc-together {
+  font-family: 'Playfair Display', serif; font-size: 14px;
+  font-style: italic; color: var(--silver-deep); margin-bottom: 18px;
+}
+.fc-name {
+  font-family: 'Pinyon Script', cursive;
+  font-size: clamp(50px, 9vw, 72px); color: var(--ink); line-height: 1;
+}
+.fc-and { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 5px; color: var(--silver); margin: 14px 0; }
+.fc-request { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--silver); line-height: 2.6; margin: 18px 0; }
+.fc-date-row { display: flex; align-items: stretch; justify-content: center; border: 1px solid var(--silver-light); margin: 22px auto; max-width: 300px; }
+.fc-date-col { padding: 13px 18px; border-right: 1px solid var(--silver-light); }
+.fc-date-col:last-child { border-right: none; }
+.fc-date-num { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--ink); line-height: 1; }
+.fc-date-lbl { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 2px; text-transform: uppercase; color: var(--silver); margin-top: 4px; }
+.fc-venue { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-light); line-height: 2.5; margin-top: 18px; }
+.fc-reception { font-family: 'Playfair Display', serif; font-size: 15px; font-style: italic; color: var(--silver-deep); margin-top: 14px; }
+
+/* SECTION DIVIDER */
+.section-divider {
+  height: 60px;
+  background: var(--frost);
+  display: flex; align-items: center; justify-content: center;
+  overflow: visible; position: relative; z-index: 5;
+}
+.shard-svg {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scaleX(0);
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  width: min(800px, 100vw);
+}
+.shard-svg.cracked { transform: translate(-50%, -50%) scaleX(1); }
+
+/* COUPLE */
+.couple-photo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 40px; }
+.couple-photo-card { height: 380px; position: relative; overflow: hidden; }
+.flip-card { perspective: 1000px; cursor: pointer; }
+.flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.75s cubic-bezier(0.4,0.2,0.2,1); transform-style: preserve-3d; }
+.flip-card:hover .flip-card-inner, .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+.flip-front, .flip-back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
+.flip-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(150deg, #eef5fb 0%, #e1edf7 100%);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; padding: 24px; text-align: center;
+  border: 1px solid var(--silver-light);
+}
+.flip-back-name { font-family: 'Pinyon Script', cursive; font-size: 44px; color: var(--ink); margin: 10px 0 4px; }
+.flip-back-desc { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 4px; text-transform: uppercase; color: var(--silver); }
+.photo-frame { width: 100%; height: 100%; object-fit: cover; display: block; }
+.flip-hint {
+  position: absolute; bottom: 8px; right: 8px;
+  background: rgba(255,255,255,0.88); color: var(--silver-deep);
+  font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 2px;
+  padding: 4px 8px; z-index: 5; pointer-events: none;
+  border: 1px solid var(--silver-light);
+  display: flex; align-items: center; gap: 5px;
+}
+
+/* TIMELINE */
+.timeline { margin-top: 40px; position: relative; }
+.timeline::before {
+  content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--silver-light) 10%, var(--silver-light) 90%, transparent);
+  transform: translateX(-50%);
+}
+.tl-item { display: grid; grid-template-columns: 1fr 28px 1fr; margin-bottom: 38px; align-items: start; }
+.tl-dot { display: flex; align-items: flex-start; justify-content: center; padding-top: 6px; }
+.tl-dot-inner { width: 10px; height: 10px; border: 1.5px solid var(--silver); background: white; transform: rotate(45deg); }
+.tl-content { padding: 0 22px; }
+.tl-item:nth-child(odd) .tl-content { text-align: right; }
+.tl-item:nth-child(even) .tl-content { grid-column: 3; text-align: left; }
+.tl-item:nth-child(even) .tl-empty { grid-column: 1; }
+.tl-date { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 3px; color: var(--silver); margin-bottom: 4px; text-transform: uppercase; }
+.tl-title { font-family: 'Playfair Display', serif; font-size: 20px; font-style: italic; color: var(--ink); }
+.tl-desc { font-size: 12px; color: var(--silver-deep); line-height: 1.9; margin-top: 5px; font-weight: 300; }
+
+/* ALBUM */
+.album-section { background: white; padding: 80px 20px; }
+.album-inner { max-width: 800px; margin: 0 auto; }
+.album-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 40px; }
+.album-cell { position: relative; overflow: hidden; }
+.album-cell:nth-child(1) { grid-row: span 2; height: 420px; }
+.album-cell-h1 { height: 200px; }
+
+/* DARK EVENT SECTION */
+.dark-section {
+  background: linear-gradient(150deg, #eef4fa 0%, #e3eef6 50%, #d8e9f4 100%);
+  color: var(--ink); padding: 80px 20px;
+  position: relative; overflow: hidden;
+}
+.dark-section::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 15% 20%, rgba(160,190,220,0.28) 0%, transparent 42%),
+              radial-gradient(circle at 85% 80%, rgba(140,175,210,0.18) 0%, transparent 42%);
+}
+.dark-section .inner { max-width: 700px; margin: 0 auto; position: relative; }
+.dark-fl { position: absolute; pointer-events: none; animation: ibfDrift 14s ease-in-out infinite; }
+.dark-fl:nth-child(1){top:4%;right:2%;animation-delay:-1s;}
+.dark-fl:nth-child(2){bottom:4%;left:2%;animation-delay:-6s;}
+
+.event-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 36px; }
+.event-card {
+  background: white; border: 1px solid var(--silver-light);
+  padding: 28px 22px; position: relative;
+  box-shadow: 0 4px 20px rgba(70,100,135,0.06);
+}
+.event-card::after {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+  background: linear-gradient(to right, transparent, var(--crystal), transparent);
+}
+.ec-type { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 4px; text-transform: uppercase; color: var(--silver); margin-bottom: 8px; }
+.ec-name { font-family: 'Playfair Display', serif; font-size: 20px; font-style: italic; color: var(--ink); margin-bottom: 10px; }
+.ec-detail { font-family: 'Jost', sans-serif; font-size: 11px; color: var(--silver-deep); line-height: 2.3; font-weight: 300; }
+.ec-detail strong { color: var(--ink-light); font-weight: 400; }
+
+.schedule-items { margin-top: 36px; }
+.sch-item { display: flex; align-items: flex-start; gap: 20px; padding: 16px 0; border-bottom: 1px solid rgba(200,215,230,0.5); }
+.sch-item:last-child { border-bottom: none; }
+.sch-time { font-family: 'Playfair Display', serif; font-size: 22px; font-style: italic; color: var(--silver); min-width: 76px; }
+.sch-info-name { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 1.5px; color: var(--ink); margin-bottom: 3px; text-transform: uppercase; }
+.sch-info-desc { font-family: 'Jost', sans-serif; font-size: 11px; color: var(--silver-deep); font-weight: 300; }
+
+/* RSVP */
+.rsvp-section { background: white; }
+.rsvp-form { margin-top: 36px; display: flex; flex-direction: column; gap: 22px; }
+.f-row { display: flex; flex-direction: column; gap: 6px; }
+.f-label { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 4px; text-transform: uppercase; color: var(--silver); }
+.f-input { background: transparent; border: none; border-bottom: 1px solid var(--silver-light); padding: 10px 0; font-family: 'Playfair Display', serif; font-size: 17px; font-style: italic; color: var(--ink); outline: none; transition: border-color 0.3s; }
+.f-input:focus { border-color: var(--silver-deep); }
+.attend-row { display: flex; gap: 12px; margin-top: 4px; }
+.att-btn { flex: 1; padding: 13px; border: 1px solid var(--silver-light); background: transparent; font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 3px; text-transform: uppercase; color: var(--silver); cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.att-btn.active, .att-btn:hover { border-color: var(--silver-deep); color: var(--ink); background: var(--frost); }
+.submit-btn { background: var(--ink); color: white; border: none; padding: 17px; font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 5px; text-transform: uppercase; cursor: pointer; transition: opacity 0.3s; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.submit-btn:hover { opacity: 0.8; }
+.rsvp-success { display: none; font-family: 'Pinyon Script', cursive; font-size: 36px; color: var(--ink); text-align: center; padding: 40px; }
+
+/* WISHES */
+.wish-wall { margin-top: 32px; max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+.wish-item { border-left: 2px solid var(--silver-light); padding: 12px 16px; background: rgba(255,255,255,0.6); }
+.wish-name { font-family: 'Playfair Display', serif; font-size: 19px; font-style: italic; color: var(--ink); margin-bottom: 4px; }
+.wish-text { font-family: 'Jost', sans-serif; font-size: 11px; color: var(--silver-deep); line-height: 1.9; font-weight: 300; }
+.wish-inputs { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
+.w-input { background: white; border: 1px solid var(--silver-light); padding: 12px 16px; font-family: 'Playfair Display', serif; font-size: 16px; font-style: italic; color: var(--ink); outline: none; transition: border-color 0.3s; }
+.w-input:focus { border-color: var(--silver-deep); }
+.w-btn { background: transparent; border: 1px solid var(--ink); color: var(--ink); padding: 14px; font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 4px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.w-btn:hover { background: var(--ink); color: white; }
+
+/* CONTACT */
+.contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 36px; }
+.contact-block { border: 1px solid var(--silver-light); padding: 22px 18px; text-align: center; background: white; }
+.cb-role { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 4px; color: var(--silver); margin-bottom: 8px; text-transform: uppercase; }
+.cb-name { font-family: 'Playfair Display', serif; font-size: 16px; font-style: italic; color: var(--ink); margin-bottom: 6px; }
+.cb-phone { font-family: 'Jost', sans-serif; font-size: 11px; color: var(--silver); text-decoration: none; display: block; font-weight: 300; transition: color 0.3s; }
+.cb-phone:hover { color: var(--ink); }
+
+/* HERO STRIP */
+.hero-photo-strip { display: flex; gap: 14px; align-items: flex-end; justify-content: center; padding: 28px 20px; background: white; border-bottom: 1px solid var(--frost); overflow: hidden; }
+.strip-photo { width: 120px; height: 170px; flex-shrink: 0; position: relative; box-shadow: 0 6px 24px rgba(70,100,135,0.12); overflow: hidden; animation: stripEnt 0.8s ease both; border: 1px solid var(--frost); }
+.strip-photo:nth-child(2), .strip-photo:nth-child(5) { width: 150px; height: 210px; }
+.strip-photo:nth-child(1){transform:rotate(-3deg);animation-delay:0.1s;}
+.strip-photo:nth-child(2){animation-delay:0.2s;}
+.strip-photo:nth-child(3){transform:rotate(2.5deg);animation-delay:0.3s;}
+.strip-photo:nth-child(4){transform:rotate(-1.5deg);animation-delay:0.15s;}
+.strip-photo:nth-child(5){transform:rotate(1.5deg);animation-delay:0.25s;}
+@keyframes stripEnt { from{opacity:0;transform:translateY(40px)scale(0.92);}to{opacity:1;} }
+
+/* STORY LAYOUT */
+.story-with-photos { display: grid; grid-template-columns: 1fr 190px; gap: 32px; align-items: start; }
+.story-photos-col { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 100px; }
+.story-photo-item { height: 155px; position: relative; overflow: hidden; box-shadow: 0 4px 16px rgba(70,100,135,0.12); animation: floatPh 5s ease-in-out infinite; }
+.story-photo-item:nth-child(2) { animation-delay: -2.5s; }
+@keyframes floatPh { 0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);} }
+
+/* CLOSING */
+.closing-section { background: linear-gradient(150deg, #ffffff 0%, #eef4fb 40%, #e5eff8 100%); padding: 100px 20px 80px; text-align: center; position: relative; overflow: hidden; }
+.closing-snow-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.csbg { position: absolute; animation: ibfDrift 12s ease-in-out infinite; }
+.csbg:nth-child(1){top:-20px;left:-20px;animation-delay:0s;}
+.csbg:nth-child(2){top:-20px;right:-20px;animation-delay:-4s;transform:scaleX(-1);}
+.csbg:nth-child(3){bottom:-20px;left:20%;animation-delay:-7s;transform:scaleY(-1);}
+.csbg:nth-child(4){bottom:-20px;right:18%;animation-delay:-10s;transform:scale(-1,-1);}
+.closing-inner { position: relative; z-index: 1; }
+.closing-names { font-family: 'Pinyon Script', cursive; font-size: clamp(52px, 10vw, 84px); color: var(--ink); }
+.closing-date { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 5px; color: var(--silver); margin-top: 14px; text-transform: uppercase; }
+.closing-msg { font-family: 'Playfair Display', serif; font-size: 16px; font-style: italic; color: var(--silver-deep); margin-top: 24px; line-height: 2.2; }
+.wax-seal {
+  width: 76px; height: 76px;
+  background: linear-gradient(150deg, var(--crystal), var(--silver));
+  border-radius: 50%; margin: 32px auto 0;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 22px rgba(90,120,155,0.22); position: relative;
+}
+.wax-seal::before { content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 1px solid var(--silver-light); }
+
+@media (max-width: 600px) {
+  .couple-photo-row, .story-with-photos { grid-template-columns: 1fr; }
+  .story-photos-col { flex-direction: row; position: static; }
+  .story-photo-item { flex: 1; height: 120px; }
+  .timeline::before { left: 16px; }
+  .tl-item { grid-template-columns: 28px 1fr; }
+  .tl-item .tl-content { grid-column: 2 !important; text-align: left !important; padding-left: 14px; }
+  .tl-item .tl-empty { display: none; }
+  .nav-link { padding: 12px 7px; font-size: 6px; }
+  .formal-card { padding: 36px 22px; }
+}
+</style>
+</head>
+<body>
+
+<canvas class="snow-canvas" id="snowCanvas"></canvas>
+<canvas id="iceCrackCanvas"></canvas>
+
+<!-- ══════════ SVG SYMBOL DEFS ══════════ -->
+<svg width="0" height="0" style="position:absolute;">
+  <defs>
+    <!-- Snowflake 6-arm -->
+    <symbol id="sf-6" viewBox="0 0 100 100">
+      <g stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round">
+        <line x1="50" y1="4" x2="50" y2="96"/>
+        <line x1="4" y1="50" x2="96" y2="50"/>
+        <line x1="13.3" y1="13.3" x2="86.7" y2="86.7"/>
+        <line x1="86.7" y1="13.3" x2="13.3" y2="86.7"/>
+        <!-- arm barbs -->
+        <line x1="50" y1="22" x2="41" y2="13"/><line x1="50" y1="22" x2="59" y2="13"/>
+        <line x1="50" y1="36" x2="39" y2="25"/><line x1="50" y1="36" x2="61" y2="25"/>
+        <line x1="78" y1="50" x2="87" y2="41"/><line x1="78" y1="50" x2="87" y2="59"/>
+        <line x1="64" y1="50" x2="75" y2="39"/><line x1="64" y1="50" x2="75" y2="61"/>
+        <line x1="27.7" y1="27.7" x2="19" y2="19"/><line x1="27.7" y1="27.7" x2="19" y2="36.3"/>
+        <line x1="38.4" y1="38.4" x2="27" y2="27"/><line x1="38.4" y1="38.4" x2="27" y2="49.7"/>
+        <line x1="72.3" y1="27.7" x2="81" y2="19"/><line x1="72.3" y1="27.7" x2="81" y2="36.3"/>
+        <line x1="61.6" y1="38.4" x2="73" y2="27"/><line x1="61.6" y1="38.4" x2="73" y2="49.7"/>
+        <circle cx="50" cy="50" r="5"/>
+      </g>
+    </symbol>
+    <!-- Snowflake small -->
+    <symbol id="sf-sm" viewBox="0 0 100 100">
+      <g stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round">
+        <line x1="50" y1="8" x2="50" y2="92"/>
+        <line x1="8" y1="50" x2="92" y2="50"/>
+        <line x1="16" y1="16" x2="84" y2="84"/>
+        <line x1="84" y1="16" x2="16" y2="84"/>
+        <line x1="50" y1="24" x2="42" y2="16"/><line x1="50" y1="24" x2="58" y2="16"/>
+        <line x1="76" y1="50" x2="84" y2="42"/><line x1="76" y1="50" x2="84" y2="58"/>
+        <line x1="29.3" y1="29.3" x2="21" y2="21"/><line x1="29.3" y1="29.3" x2="21" y2="37.5"/>
+        <line x1="70.7" y1="29.3" x2="79" y2="21"/><line x1="70.7" y1="29.3" x2="79" y2="37.5"/>
+        <circle cx="50" cy="50" r="4.5"/>
+      </g>
+    </symbol>
+    <!-- Ring SVG -->
+    <symbol id="ico-ring" viewBox="0 0 100 100">
+      <g stroke="currentColor" stroke-width="3" fill="none">
+        <ellipse cx="32" cy="50" rx="22" ry="16" transform="rotate(-20,32,50)"/>
+        <ellipse cx="68" cy="50" rx="22" ry="16" transform="rotate(20,68,50)"/>
+        <path d="M42 38 Q50 28 58 38" stroke-width="2"/>
+        <circle cx="50" cy="30" r="4" fill="currentColor" opacity="0.6"/>
+      </g>
+    </symbol>
+    <!-- Heart SVG -->
+    <symbol id="ico-heart" viewBox="0 0 100 100">
+      <path d="M50 80 C10 55 10 20 35 15 C42 13 48 18 50 22 C52 18 58 13 65 15 C90 20 90 55 50 80Z" stroke="currentColor" stroke-width="2.5" fill="none"/>
+    </symbol>
+    <!-- Calendar/date icon -->
+    <symbol id="ico-calendar" viewBox="0 0 100 100">
+      <rect x="10" y="20" width="80" height="70" rx="4" stroke="currentColor" stroke-width="2.5" fill="none"/>
+      <line x1="10" y1="38" x2="90" y2="38" stroke="currentColor" stroke-width="2.5"/>
+      <line x1="30" y1="10" x2="30" y2="28" stroke="currentColor" stroke-width="3"/>
+      <line x1="70" y1="10" x2="70" y2="28" stroke="currentColor" stroke-width="3"/>
+      <circle cx="35" cy="55" r="3" fill="currentColor"/>
+      <circle cx="50" cy="55" r="3" fill="currentColor"/>
+      <circle cx="65" cy="55" r="3" fill="currentColor"/>
+      <circle cx="35" cy="70" r="3" fill="currentColor"/>
+      <circle cx="50" cy="70" r="3" fill="currentColor"/>
+    </symbol>
+    <!-- Location pin -->
+    <symbol id="ico-pin" viewBox="0 0 100 100">
+      <path d="M50 10 C30 10 15 25 15 44 C15 65 50 95 50 95 C50 95 85 65 85 44 C85 25 70 10 50 10Z" stroke="currentColor" stroke-width="2.5" fill="none"/>
+      <circle cx="50" cy="44" r="12" stroke="currentColor" stroke-width="2.5" fill="none"/>
+    </symbol>
+    <!-- Clock -->
+    <symbol id="ico-clock" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="38" stroke="currentColor" stroke-width="2.5" fill="none"/>
+      <line x1="50" y1="50" x2="50" y2="22" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <line x1="50" y1="50" x2="68" y2="62" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="50" cy="50" r="3" fill="currentColor"/>
+    </symbol>
+    <!-- Check mark -->
+    <symbol id="ico-check" viewBox="0 0 100 100">
+      <polyline points="20,50 42,72 80,28" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <!-- X mark -->
+    <symbol id="ico-x" viewBox="0 0 100 100">
+      <line x1="25" y1="25" x2="75" y2="75" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+      <line x1="75" y1="25" x2="25" y2="75" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    </symbol>
+    <!-- Send arrow -->
+    <symbol id="ico-send" viewBox="0 0 100 100">
+      <path d="M10 50 L90 50 M60 25 L90 50 L60 75" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <!-- Star/sparkle -->
+    <symbol id="ico-star" viewBox="0 0 100 100">
+      <path d="M50 10 L54 44 L88 40 L62 62 L74 94 L50 74 L26 94 L38 62 L12 40 L46 44 Z" stroke="currentColor" stroke-width="2" fill="none"/>
+    </symbol>
+    <!-- Forever/infinity -->
+    <symbol id="ico-infinity" viewBox="0 0 100 100">
+      <path d="M20 50 C20 35 30 25 42 25 C54 25 62 40 50 50 C38 60 46 75 58 75 C70 75 80 65 80 50 C80 35 70 25 58 25 C46 25 38 40 50 50 C62 60 54 75 42 75 C30 75 20 65 20 50Z" stroke="currentColor" stroke-width="3" fill="none"/>
+    </symbol>
+    <!-- Coffee cup -->
+    <symbol id="ico-coffee" viewBox="0 0 100 100">
+      <path d="M20 35 L20 72 C20 80 28 86 38 86 L62 86 C72 86 80 80 80 72 L80 35Z" stroke="currentColor" stroke-width="2.5" fill="none"/>
+      <path d="M80 42 C90 42 90 58 80 58" stroke="currentColor" stroke-width="2.5" fill="none"/>
+      <path d="M35 20 C35 20 33 26 37 28 C41 30 39 36 39 36" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M50 18 C50 18 48 26 52 29 C56 32 54 38 54 38" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <!-- Mountain/travel -->
+    <symbol id="ico-mountain" viewBox="0 0 100 100">
+      <polyline points="10,88 40,35 55,58 68,42 90,88" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+      <path d="M62 28 L68 42 L74 28Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+    </symbol>
+    <!-- Flower/close icon small -->
+    <symbol id="ico-flower" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
+      <ellipse cx="50" cy="30" rx="7" ry="12" stroke="currentColor" stroke-width="2" fill="none"/>
+      <ellipse cx="50" cy="70" rx="7" ry="12" stroke="currentColor" stroke-width="2" fill="none"/>
+      <ellipse cx="30" cy="50" rx="12" ry="7" stroke="currentColor" stroke-width="2" fill="none"/>
+      <ellipse cx="70" cy="50" rx="12" ry="7" stroke="currentColor" stroke-width="2" fill="none"/>
+      <ellipse cx="34.6" cy="34.6" rx="7" ry="12" stroke="currentColor" stroke-width="1.5" fill="none" transform="rotate(-45,34.6,34.6)"/>
+      <ellipse cx="65.4" cy="65.4" rx="7" ry="12" stroke="currentColor" stroke-width="1.5" fill="none" transform="rotate(-45,65.4,65.4)"/>
+      <ellipse cx="65.4" cy="34.6" rx="7" ry="12" stroke="currentColor" stroke-width="1.5" fill="none" transform="rotate(45,65.4,34.6)"/>
+      <ellipse cx="34.6" cy="65.4" rx="7" ry="12" stroke="currentColor" stroke-width="1.5" fill="none" transform="rotate(45,34.6,65.4)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ══════════ INTRO SCREEN ══════════ -->
+<div id="intro-screen">
+  <div class="intro-bg-flakes">
+    <svg class="ibf" width="130" height="130" color="#8aa0b5"><use href="#sf-6"/></svg>
+    <svg class="ibf" width="105" height="105" color="#8aa0b5"><use href="#sf-6"/></svg>
+    <svg class="ibf" width="118" height="118" color="#8aa0b5"><use href="#sf-sm"/></svg>
+    <svg class="ibf" width="100" height="100" color="#8aa0b5"><use href="#sf-sm"/></svg>
+    <svg class="ibf" width="68" height="68" color="#8aa0b5"><use href="#sf-sm"/></svg>
+    <svg class="ibf" width="65" height="65" color="#8aa0b5"><use href="#sf-sm"/></svg>
+  </div>
+
+  <div style="position:relative;display:flex;flex-direction:column;align-items:center;">
+    <div class="gate-wrapper" id="gateWrapper">
+      <div class="gate-panel left">
+        <svg class="gate-flake" style="width:90px;top:8%;left:10%;" color="rgba(90,115,145,0.9)"><use href="#sf-6"/></svg>
+        <svg class="gate-flake" style="width:58px;top:37%;left:28%;animation-delay:-4s;" color="rgba(90,115,145,0.6)"><use href="#sf-sm"/></svg>
+        <svg class="gate-flake" style="width:105px;bottom:12%;left:5%;animation-delay:-7s;" color="rgba(90,115,145,0.8)"><use href="#sf-6"/></svg>
+        <div style="position:absolute;top:0;right:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(170,190,215,0.4) 20%,rgba(170,190,215,0.4) 80%,transparent);"></div>
+      </div>
+      <div class="gate-panel right">
+        <svg class="gate-flake" style="width:88px;top:8%;right:10%;" color="rgba(90,115,145,0.9)"><use href="#sf-6"/></svg>
+        <svg class="gate-flake" style="width:55px;top:37%;right:28%;animation-delay:-5s;" color="rgba(90,115,145,0.6)"><use href="#sf-sm"/></svg>
+        <svg class="gate-flake" style="width:100px;bottom:12%;right:5%;animation-delay:-8s;" color="rgba(90,115,145,0.8)"><use href="#sf-6"/></svg>
+        <div style="position:absolute;top:0;left:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(170,190,215,0.4) 20%,rgba(170,190,215,0.4) 80%,transparent);"></div>
+      </div>
+      <div class="intro-band">
+        <div class="tag">
+          <svg width="14" height="14" color="var(--silver-deep)"><use href="#sf-sm"/></svg>
+          Save The Date
+          <svg width="14" height="14" color="var(--silver-deep)"><use href="#sf-sm"/></svg>
+        </div>
+        <div class="names">Nhã An &amp; Duy Khánh</div>
+        <div class="date">28 · 02 · 2021</div>
+      </div>
+      <button class="open-btn" id="openBtn" onclick="openGate()">
+        <svg width="24" height="24" color="var(--silver-deep)" style="margin:0 auto 2px;"><use href="#sf-sm"/></svg>
+        <span style="font-size:6.5px;letter-spacing:1px;">Mở</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MAIN ══════════ -->
+<div id="main">
+
+  <header class="site-header">
+    <div class="header-snow-bg">
+      <svg class="hbg-fl" style="width:260px;top:-30px;left:-30px;opacity:0.12;" color="#8090aa"><use href="#sf-6"/></svg>
+      <svg class="hbg-fl" style="width:210px;top:-20px;right:-20px;opacity:0.10;transform:scaleX(-1);" color="#8090aa"><use href="#sf-6"/></svg>
+      <svg class="hbg-fl" style="width:180px;bottom:-20px;left:10%;opacity:0.08;" color="#8090aa"><use href="#sf-sm"/></svg>
+      <svg class="hbg-fl" style="width:195px;bottom:-15px;right:16%;opacity:0.09;" color="#8090aa"><use href="#sf-6"/></svg>
+      <svg class="hbg-fl" style="width:92px;top:35%;left:5%;opacity:0.07;" color="#8090aa"><use href="#sf-sm"/></svg>
+      <svg class="hbg-fl" style="width:100px;top:30%;right:6%;opacity:0.07;" color="#8090aa"><use href="#sf-sm"/></svg>
+    </div>
+    <div class="header-content">
+      <div class="header-tag reveal">
+        <svg width="16" height="16" color="var(--silver)"><use href="#sf-sm"/></svg>
+        Save The Date
+        <svg width="16" height="16" color="var(--silver)"><use href="#sf-sm"/></svg>
+      </div>
+      <div class="header-names reveal">
+        Nhã An<span class="header-amp">and</span>Duy Khánh
+      </div>
+      <div class="header-date reveal">28 · 02 · 2021 — Capella Gallery Hall</div>
+    </div>
+  </header>
+
+  <div class="hero-photo-strip">
+    <div class="strip-photo flip-card"><div class="flip-card-inner"><div class="flip-front"><img class="photo-frame" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img6-5.jpg" alt="Nhã An" loading="lazy"><div class="flip-hint"><svg width="10" height="10" color="var(--silver-deep)"><use href="#sf-sm"/></svg></div></div><div class="flip-back"><svg width="36" height="36" color="var(--silver)"><use href="#sf-6"/></svg><div class="flip-back-name">Nhã An</div><div class="flip-back-desc">Cô Dâu</div></div></div></div>
+    <div class="strip-photo flip-card"><div class="flip-card-inner"><div class="flip-front"><img class="photo-frame" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img2-4.jpg" alt="Ảnh đôi" loading="lazy"><div class="flip-hint"><svg width="10" height="10" color="var(--silver-deep)"><use href="#ico-heart"/></svg></div></div><div class="flip-back"><svg width="38" height="38" color="var(--silver)"><use href="#ico-ring"/></svg><div class="flip-back-name">Đôi Uyên Ương</div><div class="flip-back-desc">28 · 02 · 2021</div></div></div></div>
+    <div class="strip-photo flip-card"><div class="flip-card-inner"><div class="flip-front"><img class="photo-frame" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img6-5.jpg" alt="Ảnh cưới" loading="lazy"><div class="flip-hint"><svg width="10" height="10" color="var(--silver-deep)"><use href="#sf-sm"/></svg></div></div><div class="flip-back"><svg width="38" height="38" color="var(--silver)"><use href="#ico-infinity"/></svg><div class="flip-back-name">Mãi Mãi</div><div class="flip-back-desc">Forever &amp; Always</div></div></div></div>
+    <div class="strip-photo flip-card"><div class="flip-card-inner"><div class="flip-front"><img class="photo-frame" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img2-4.jpg" alt="Ảnh đôi 2" loading="lazy"><div class="flip-hint"><svg width="10" height="10" color="var(--silver-deep)"><use href="#sf-sm"/></svg></div></div><div class="flip-back"><svg width="38" height="38" color="var(--silver)"><use href="#ico-star"/></svg><div class="flip-back-name">Duy Khánh</div><div class="flip-back-desc">Chú Rể</div></div></div></div>
+    <div class="strip-photo flip-card"><div class="flip-card-inner"><div class="flip-front"><img class="photo-frame" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img6-5.jpg" alt="Ảnh cưới 2" loading="lazy"><div class="flip-hint"><svg width="10" height="10" color="var(--silver-deep)"><use href="#ico-heart"/></svg></div></div><div class="flip-back"><svg width="38" height="38" color="var(--silver)"><use href="#sf-6"/></svg><div class="flip-back-name">Kỷ Niệm</div><div class="flip-back-desc">Chuyện Tình Yêu</div></div></div></div>
+  </div>
+  <p style="text-align:center;font-family:'Cinzel',serif;font-size:7px;letter-spacing:3px;color:var(--silver);padding:10px 0 0;background:white;text-transform:uppercase;">Nhấn vào ảnh để lật</p>
+
+  <nav class="sticky-nav">
+    <div class="nav-link active" onclick="goTo('s-invite')">Thiệp Mời</div>
+    <div class="nav-link" onclick="goTo('s-couple')">Đôi Uyên Ương</div>
+    <div class="nav-link" onclick="goTo('s-story')">Chuyện Tình</div>
+    <div class="nav-link" onclick="goTo('s-album')">Album</div>
+    <div class="nav-link" onclick="goTo('s-event')">Sự Kiện</div>
+    <div class="nav-link" onclick="goTo('s-rsvp')">RSVP</div>
+    <div class="nav-link" onclick="goTo('s-wishes')">Lời Chúc</div>
+  </nav>
+
+  <!-- S1: THIỆP MỜI -->
+  <div id="s-invite" style="background:linear-gradient(160deg,#f8fbff 0%,#f0f6fb 100%);padding:60px 20px;">
+    <div class="section" style="padding:0;">
+      <div class="sec-label reveal">
+        <svg width="14" height="14" color="var(--silver)"><use href="#sf-sm"/></svg>
+        Kính Mời
+        <svg width="14" height="14" color="var(--silver)"><use href="#sf-sm"/></svg>
+      </div>
+      <h2 class="sec-title reveal">Thiệp Mời Chính Thức</h2>
+      <div class="silver-rule reveal"><svg width="16" height="16" color="var(--silver-light)"><use href="#sf-sm"/></svg></div>
+      <div class="formal-card reveal">
+        <!-- Corner snowflakes -->
+        <svg class="corner-deco tl" width="100" height="100" color="rgba(140,170,200,0.6)"><use href="#sf-6"/></svg>
+        <svg class="corner-deco tr" width="80" height="80" color="rgba(140,170,200,0.55)"><use href="#sf-6"/></svg>
+        <svg class="corner-deco bl" width="82" height="82" color="rgba(140,170,200,0.5)"><use href="#sf-sm"/></svg>
+        <svg class="corner-deco br" width="90" height="90" color="rgba(140,170,200,0.55)"><use href="#sf-6"/></svg>
+
+        <p class="fc-families">Mr. và Mrs. Trịnh Văn Nôn &amp; Lê Thị Minh Hiếu<br>Mr. và Mrs. Ngô Văn Phước &amp; Giang Thị Tuyết</p>
+        <p class="fc-together">Invite you to share in the ceremony uniting their children</p>
+        <div class="silver-rule" style="margin:14px auto;max-width:200px;"><svg width="16" height="16" color="var(--silver-light)"><use href="#sf-sm"/></svg></div>
+        <p class="fc-name">Nhã An</p>
+        <p class="fc-and">AND</p>
+        <p class="fc-name">Duy Khánh</p>
+        <p class="fc-request">Request the honor of your presence<br>at their wedding celebration</p>
+        <div class="fc-date-row">
+          <div class="fc-date-col"><div class="fc-date-num">CN</div><div class="fc-date-lbl">Thứ</div></div>
+          <div class="fc-date-col"><div class="fc-date-num">28</div><div class="fc-date-lbl">Ngày</div></div>
+          <div class="fc-date-col"><div class="fc-date-num" style="font-size:17px;">Feb</div><div class="fc-date-lbl">Tháng</div></div>
+          <div class="fc-date-col"><div class="fc-date-num" style="font-size:21px;">2021</div><div class="fc-date-lbl">Năm</div></div>
+        </div>
+        <p class="fc-venue">
+          <svg width="14" height="14" color="var(--silver)" style="vertical-align:middle;margin-right:4px;"><use href="#ico-clock"/></svg>
+          3 O'CLOCK IN THE AFTERNOON<br>
+          <svg width="14" height="14" color="var(--silver)" style="vertical-align:middle;margin-right:4px;"><use href="#ico-pin"/></svg>
+          CAPELLA GALLERY HALL<br>
+          24 ĐƯỜNG 3, PHƯỜNG 12, QUẬN 13, TP. HỒ CHÍ MINH
+        </p>
+        <p class="fc-reception">Reception to follow</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVIDER 1 -->
+  <div class="section-divider" style="background:var(--frost);">
+    <svg class="shard-svg" viewBox="0 0 800 60" preserveAspectRatio="none" data-crack-svg>
+      <g fill="none" stroke="rgba(148,178,210,0.6)" stroke-width="1">
+        <path d="M0 30 L80 28 L120 32 L180 26 L240 34 L310 28 L380 30 L440 26 L500 33 L580 28 L640 32 L700 27 L800 30" stroke-width="1.5"/>
+        <path d="M120 32 L108 14 L115 8 M120 32 L132 18"/>
+        <path d="M240 34 L228 12 M240 34 L255 20 L262 6"/>
+        <path d="M380 30 L370 10 L376 2 M380 30 L392 16 L385 4"/>
+        <path d="M500 33 L490 15 M500 33 L514 18 L520 4"/>
+        <path d="M640 32 L630 12 L638 2 M640 32 L654 20"/>
+        <path d="M80 28 L70 46 L74 56 M80 28 L92 44"/>
+        <path d="M180 26 L170 44 M180 26 L194 42 L188 58"/>
+        <path d="M310 28 L300 46 L308 58 M310 28 L322 44 L316 56"/>
+        <path d="M440 26 L428 46 M440 26 L452 42 L446 56"/>
+        <path d="M580 28 L570 46 L576 58 M580 28 L594 44"/>
+        <path d="M700 27 L688 46 M700 27 L714 42 L708 56"/>
+      </g>
+      <g fill="rgba(200,225,248,0.15)">
+        <polygon points="108,14 120,32 132,18 120,8"/>
+        <polygon points="228,12 240,34 255,20 245,6"/>
+        <polygon points="370,10 380,30 392,16 382,4"/>
+        <polygon points="490,15 500,33 514,18 504,4"/>
+        <polygon points="630,12 640,32 654,20 642,4"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- S2: CÔ DÂU & CHÚ RỂ -->
+  <div id="s-couple" style="background:#ffffff;">
+    <div class="section">
+      <div class="sec-label reveal">
+        <svg width="14" height="14" color="var(--silver)"><use href="#ico-heart"/></svg>
+        Nhân Vật Chính
+        <svg width="14" height="14" color="var(--silver)"><use href="#ico-heart"/></svg>
+      </div>
+      <h2 class="sec-title reveal">Cô Dâu &amp; Chú Rể</h2>
+      <div class="silver-rule reveal"><svg width="16" height="16" color="var(--silver-light)"><use href="#sf-sm"/></svg></div>
+      <div class="couple-photo-row">
+        <div class="couple-photo-card flip-card anim-fade-left">
+          <div class="flip-card-inner">
+            <div class="flip-front"><img class="photo-frame" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img6-5.jpg" alt="Nhã An"><div class="flip-hint"><svg width="10" height="10" color="var(--silver-deep)"><use href="#sf-sm"/></svg></div></div>
+            <div class="flip-back">
+              <svg width="42" height="42" color="var(--silver)"><use href="#sf-6"/></svg>
+              <div class="flip-back-name" style="font-size:46px;">Nhã An</div>
+              <div class="flip-back-desc">CÔ DÂU</div>
+              <div style="width:40px;height:1px;background:var(--silver-light);margin:16px auto;"></div>
+              <p style="font-family:'Playfair Display',serif;font-size:13px;font-style:italic;color:var(--silver-deep);line-height:2;">Con gái của<br><span style="color:var(--ink);">Ông Trịnh Văn Nôn<br>&amp; Bà Lê Thị Minh Hiếu</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="couple-photo-card flip-card anim-fade-right">
+          <div class="flip-card-inner">
+            <div class="flip-front"><img class="photo-frame" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img2-4.jpg" alt="Duy Khánh"><div class="flip-hint"><svg width="10" height="10" color="var(--silver-deep)"><use href="#sf-sm"/></svg></div></div>
+            <div class="flip-back">
+              <svg width="42" height="42" color="var(--silver)"><use href="#sf-6"/></svg>
+              <div class="flip-back-name" style="font-size:40px;">Duy Khánh</div>
+              <div class="flip-back-desc">CHÚ RỂ</div>
+              <div style="width:40px;height:1px;background:var(--silver-light);margin:16px auto;"></div>
+              <p style="font-family:'Playfair Display',serif;font-size:13px;font-style:italic;color:var(--silver-deep);line-height:2;">Con trai của<br><span style="color:var(--ink);">Ông Ngô Văn Phước<br>&amp; Bà Giang Thị Tuyết</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVIDER 2 -->
+  <div class="section-divider" style="background:var(--frost);">
+    <svg class="shard-svg" viewBox="0 0 800 60" preserveAspectRatio="none" data-crack-svg>
+      <g fill="none" stroke="rgba(140,172,206,0.55)" stroke-width="1">
+        <path d="M0 32 L60 28 L140 34 L200 26 L280 32 L360 28 L420 34 L500 26 L560 32 L640 28 L720 34 L800 28" stroke-width="1.5"/>
+        <path d="M140 34 L128 14 L136 4 M140 34 L154 18 L148 6"/>
+        <path d="M280 32 L268 10 M280 32 L296 16 L290 4"/>
+        <path d="M420 34 L408 12 L416 2 M420 34 L436 20"/>
+        <path d="M560 32 L548 10 M560 32 L576 18 L570 4"/>
+        <path d="M720 34 L708 12 L716 2 M720 34 L734 20"/>
+        <path d="M60 28 L48 46 M60 28 L74 44 L68 56"/>
+        <path d="M200 26 L188 44 L194 56 M200 26 L214 42"/>
+        <path d="M360 28 L348 46 M360 28 L374 44 L368 58"/>
+        <path d="M500 26 L488 44 L494 56 M500 26 L514 44"/>
+        <path d="M640 28 L628 46 M640 28 L654 44 L648 56"/>
+      </g>
+      <g fill="rgba(200,225,248,0.12)">
+        <polygon points="128,14 140,34 154,18 140,6"/>
+        <polygon points="268,10 280,32 296,16 282,2"/>
+        <polygon points="408,12 420,34 436,20 422,4"/>
+        <polygon points="548,10 560,32 576,18 562,2"/>
+        <polygon points="708,12 720,34 734,20 718,4"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- S3: CHUYỆN TÌNH -->
+  <div id="s-story" style="background:linear-gradient(160deg,#f8fbff 0%,#f0f6fb 100%);">
+    <div class="section">
+      <div class="sec-label reveal">
+        <svg width="14" height="14" color="var(--silver)"><use href="#ico-heart"/></svg>
+        Hành Trình
+        <svg width="14" height="14" color="var(--silver)"><use href="#ico-heart"/></svg>
+      </div>
+      <h2 class="sec-title reveal">Chuyện Tình Yêu</h2>
+      <div class="silver-rule reveal"><svg width="16" height="16" color="var(--silver-light)"><use href="#sf-sm"/></svg></div>
+      <div class="story-with-photos">
+        <div class="timeline">
+          <div class="tl-item reveal">
+            <div class="tl-content"><div class="tl-date">Mùa Thu 2018</div><div class="tl-title">Lần Đầu Gặp Gỡ</div><div class="tl-desc">Một buổi chiều tình cờ, hai ánh mắt chạm nhau và cả thế giới như dừng lại…</div></div>
+            <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+            <div class="tl-empty"></div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-empty"></div>
+            <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+            <div class="tl-content"><div class="tl-date">Tháng 2, 2019</div><div class="tl-title">Ngày Hẹn Hò Đầu</div><div class="tl-desc">Một tách cà phê, muôn câu chuyện — và anh biết đây là người của mãi mãi.</div></div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-content"><div class="tl-date">Mùa Hè 2020</div><div class="tl-title">Chuyến Đi Đáng Nhớ</div><div class="tl-desc">Cùng nhau lạc lối trong những con đường nhỏ, và tìm thấy nhau nhiều hơn.</div></div>
+            <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+            <div class="tl-empty"></div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-empty"></div>
+            <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+            <div class="tl-content"><div class="tl-date">24.12.2020</div><div class="tl-title">Lời Cầu Hôn</div><div class="tl-desc">Dưới ánh đèn lung linh Giáng Sinh, anh quỳ xuống và hỏi điều trái tim đã biết từ lâu.</div></div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-content">
+              <div class="tl-date">28.02.2021</div>
+              <div class="tl-title" style="display:flex;align-items:center;gap:8px;justify-content:flex-end;">
+                <svg width="18" height="18" color="var(--silver)"><use href="#sf-sm"/></svg>
+                Ngày Kết Đôi
+              </div>
+              <div class="tl-desc">Hành trình tươi đẹp nhất bắt đầu — chúng mình chính thức trở thành một gia đình.</div>
+            </div>
+            <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+            <div class="tl-empty"></div>
+          </div>
+        </div>
+        <div class="story-photos-col">
+          <div class="story-photo-item flip-card anim-zoom"><div class="flip-card-inner"><div class="flip-front"><img class="photo-frame" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img6-5.jpg" alt="2018"></div><div class="flip-back"><svg width="28" height="28" color="var(--silver)"><use href="#sf-sm"/></svg><div class="flip-back-name" style="font-size:20px;">Gặp Gỡ</div><div class="flip-back-desc">2018</div></div></div></div>
+          <div class="story-photo-item flip-card anim-zoom"><div class="flip-card-inner"><div class="flip-front"><img class="photo-frame" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img2-4.jpg" alt="2019"></div><div class="flip-back"><svg width="28" height="28" color="var(--silver)"><use href="#ico-coffee"/></svg><div class="flip-back-name" style="font-size:20px;">Hẹn Hò</div><div class="flip-back-desc">2019</div></div></div></div>
+          <div class="story-photo-item flip-card anim-zoom"><div class="flip-card-inner"><div class="flip-front"><img class="photo-frame" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img6-5.jpg" alt="2020"></div><div class="flip-back"><svg width="28" height="28" color="var(--silver)"><use href="#ico-ring"/></svg><div class="flip-back-name" style="font-size:20px;">Cầu Hôn</div><div class="flip-back-desc">2020</div></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVIDER 3 -->
+  <div class="section-divider" style="background:var(--frost);">
+    <svg class="shard-svg" viewBox="0 0 800 60" preserveAspectRatio="none" data-crack-svg>
+      <g fill="none" stroke="rgba(143,174,208,0.55)" stroke-width="1">
+        <path d="M0 28 L100 32 L180 26 L260 34 L340 28 L440 32 L520 26 L600 34 L680 28 L800 32" stroke-width="1.5"/>
+        <path d="M100 32 L88 12 L96 2 M100 32 L114 16"/>
+        <path d="M260 34 L248 14 M260 34 L274 18 L268 4"/>
+        <path d="M440 32 L428 10 L436 2 M440 32 L456 18"/>
+        <path d="M600 34 L588 12 M600 34 L616 18 L610 4"/>
+        <path d="M180 26 L168 44 L174 56 M180 26 L194 42"/>
+        <path d="M340 28 L328 46 M340 28 L354 44 L348 58"/>
+        <path d="M520 26 L508 46 L514 58 M520 26 L534 42"/>
+        <path d="M680 28 L668 46 M680 28 L694 44 L688 58"/>
+      </g>
+      <g fill="rgba(200,225,248,0.12)">
+        <polygon points="88,12 100,32 114,16 100,4"/>
+        <polygon points="248,14 260,34 274,18 262,2"/>
+        <polygon points="428,10 440,32 456,18 442,2"/>
+        <polygon points="588,12 600,34 616,18 602,4"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- S4: ALBUM -->
+  <div class="album-section" id="s-album">
+    <div class="album-inner">
+      <div class="sec-label reveal">
+        <svg width="14" height="14" color="var(--silver)"><use href="#ico-star"/></svg>
+        Khoảnh Khắc
+        <svg width="14" height="14" color="var(--silver)"><use href="#ico-star"/></svg>
+      </div>
+      <h2 class="sec-title reveal">Album Ảnh Kỷ Niệm</h2>
+      <div class="silver-rule reveal"><svg width="16" height="16" color="var(--silver-light)"><use href="#sf-sm"/></svg></div>
+      <div class="album-grid reveal">
+        <div class="album-cell flip-card" style="height:420px;grid-row:span 2;"><div class="flip-card-inner"><div class="flip-front"><img class="photo-frame" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img6-5.jpg" alt="Ảnh cưới"><div class="flip-hint"><svg width="10" height="10" color="var(--silver-deep)"><use href="#sf-sm"/></svg></div></div><div class="flip-back"><svg width="44" height="44" color="var(--silver)"><use href="#sf-6"/></svg><div class="flip-back-name">Nhã An &amp; Duy Khánh</div><div class="flip-back-desc">Ảnh Cưới Chính Thức</div></div></div></div>
+        <div class="album-cell album-cell-h1 flip-card"><div class="flip-card-inner"><div class="flip-front"><img class="photo-frame" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img6-5.jpg" alt="Cô dâu"><div class="flip-hint"><svg width="10" height="10" color="var(--silver-deep)"><use href="#sf-sm"/></svg></div></div><div class="flip-back"><svg width="32" height="32" color="var(--silver)"><use href="#ico-flower"/></svg><div class="flip-back-name" style="font-size:22px;">Nhã An</div><div class="flip-back-desc">Cô Dâu Xinh Đẹp</div></div></div></div>
+        <div class="album-cell album-cell-h1 flip-card"><div class="flip-card-inner"><div class="flip-front"><img class="photo-frame" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img2-4.jpg" alt="Chú rể"><div class="flip-hint"><svg width="10" height="10" color="var(--silver-deep)"><use href="#sf-sm"/></svg></div></div><div class="flip-back"><svg width="32" height="32" color="var(--silver)"><use href="#ico-star"/></svg><div class="flip-back-name" style="font-size:22px;">Duy Khánh</div><div class="flip-back-desc">Chú Rể Lịch Lãm</div></div></div></div>
+        <div class="album-cell flip-card" style="height:200px;grid-column:span 2;"><div class="flip-card-inner"><div class="flip-front"><img class="photo-frame" src="https://www.thiepmoidientu.com/wp-content/uploads/2024/03/img2-4.jpg" alt="Toàn cảnh"><div class="flip-hint"><svg width="10" height="10" color="var(--silver-deep)"><use href="#ico-heart"/></svg></div></div><div class="flip-back" style="flex-direction:row;gap:28px;padding:28px 32px;"><svg width="52" height="52" color="var(--silver)"><use href="#ico-infinity"/></svg><div style="text-align:left;"><div class="flip-back-name" style="font-size:28px;">Khoảnh Khắc Đẹp Nhất</div><div class="flip-back-desc" style="margin-top:6px;">28.02.2021</div></div></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVIDER 4 -->
+  <div class="section-divider" style="background:var(--frost);">
+    <svg class="shard-svg" viewBox="0 0 800 60" preserveAspectRatio="none" data-crack-svg>
+      <g fill="none" stroke="rgba(133,168,204,0.55)" stroke-width="1">
+        <path d="M0 30 L120 26 L200 34 L300 28 L380 32 L480 26 L560 34 L660 28 L800 32" stroke-width="1.5"/>
+        <path d="M120 26 L106 6 M120 26 L136 10 L128 2"/>
+        <path d="M300 28 L286 8 L294 0 M300 28 L316 12"/>
+        <path d="M480 26 L466 4 M480 26 L496 10 L490 2"/>
+        <path d="M660 28 L646 6 L654 0 M660 28 L676 12"/>
+        <path d="M200 34 L186 52 L192 58 M200 34 L216 50"/>
+        <path d="M380 32 L366 50 M380 32 L396 48 L390 58"/>
+        <path d="M560 34 L546 52 L552 58 M560 34 L576 50"/>
+      </g>
+      <g fill="rgba(200,225,248,0.14)">
+        <polygon points="106,6 120,26 136,10 120,0"/>
+        <polygon points="286,8 300,28 316,12 300,0"/>
+        <polygon points="466,4 480,26 496,10 482,0"/>
+        <polygon points="646,6 660,28 676,12 662,0"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- S5: SỰ KIỆN -->
+  <div id="s-event">
+    <div class="dark-section">
+      <svg class="dark-fl" style="width:155px;top:4%;right:2%;opacity:0.14;" color="#7a90a8"><use href="#sf-6"/></svg>
+      <svg class="dark-fl" style="width:135px;bottom:4%;left:2%;opacity:0.13;" color="#7a90a8"><use href="#sf-sm"/></svg>
+      <div class="inner">
+        <div class="sec-label reveal">
+          <svg width="14" height="14" color="var(--silver)"><use href="#ico-calendar"/></svg>
+          Thời Gian &amp; Địa Điểm
+          <svg width="14" height="14" color="var(--silver)"><use href="#ico-calendar"/></svg>
+        </div>
+        <h2 class="sec-title reveal">Sự Kiện</h2>
+        <div class="silver-rule reveal"><svg width="16" height="16" color="var(--silver-light)"><use href="#sf-sm"/></svg></div>
+        <div class="event-cards reveal">
+          <div class="event-card">
+            <div class="ec-type">
+              <svg width="12" height="12" color="var(--silver)" style="vertical-align:middle;margin-right:4px;"><use href="#ico-clock"/></svg>
+              Lễ Gia Tiên
+            </div>
+            <div class="ec-name">Nghi Lễ Sáng</div>
+            <div class="ec-detail"><strong>09:00 AM</strong> — Thứ Chủ Nhật<br>Ngày 28/02/2021<br>Tại nhà cô dâu, Đồng Nai</div>
+          </div>
+          <div class="event-card">
+            <div class="ec-type">
+              <svg width="12" height="12" color="var(--silver)" style="vertical-align:middle;margin-right:4px;"><use href="#ico-star"/></svg>
+              Tiệc Cưới
+            </div>
+            <div class="ec-name">Buổi Tối Trọng Đại</div>
+            <div class="ec-detail"><strong>17:00 PM</strong> — Đón khách<br><strong>17:30 PM</strong> — Nhập tiệc<br>Capella Gallery Hall</div>
+          </div>
+          <div class="event-card">
+            <div class="ec-type">
+              <svg width="12" height="12" color="var(--silver)" style="vertical-align:middle;margin-right:4px;"><use href="#ico-pin"/></svg>
+              Địa Điểm
+            </div>
+            <div class="ec-name">Capella Hall</div>
+            <div class="ec-detail">24 Đường 3<br>Phường 12, Quận 13<br>TP. Hồ Chí Minh</div>
+          </div>
+        </div>
+        <div class="sec-label reveal" style="margin-top:60px;">
+          <svg width="14" height="14" color="var(--silver)"><use href="#ico-clock"/></svg>
+          Diễn Biến
+          <svg width="14" height="14" color="var(--silver)"><use href="#ico-clock"/></svg>
+        </div>
+        <h3 class="sec-title reveal" style="font-size:30px;">Lịch Trình</h3>
+        <div class="silver-rule reveal"><svg width="16" height="16" color="var(--silver-light)"><use href="#sf-sm"/></svg></div>
+        <div class="schedule-items reveal">
+          <div class="sch-item"><div class="sch-time">09:00</div><div><div class="sch-info-name">Lễ Gia Tiên Nhà Gái</div><div class="sch-info-desc">Nghi thức truyền thống tại nhà cô dâu</div></div></div>
+          <div class="sch-item"><div class="sch-time">11:00</div><div><div class="sch-info-name">Đón Tiếp Nhà Trai</div><div class="sch-info-desc">Trao nhẫn cưới và nhận lễ vật</div></div></div>
+          <div class="sch-item"><div class="sch-time">17:00</div><div><div class="sch-info-name">Đón Khách Tiệc Cưới</div><div class="sch-info-desc">Tại Capella Gallery Hall, Quận 13</div></div></div>
+          <div class="sch-item"><div class="sch-time">17:30</div><div><div class="sch-info-name">Khai Tiệc Mừng</div><div class="sch-info-desc">Nhập tiệc và dùng bữa cùng hai gia đình</div></div></div>
+          <div class="sch-item">
+            <div class="sch-time">18:00</div>
+            <div>
+              <div class="sch-info-name" style="display:flex;align-items:center;gap:6px;">
+                <svg width="14" height="14" color="var(--silver)"><use href="#ico-ring"/></svg>
+                Lễ Trao Nhẫn &amp; Cắt Bánh
+              </div>
+              <div class="sch-info-desc">Khoảnh khắc thiêng liêng nhất của buổi tiệc</div>
+            </div>
+          </div>
+          <div class="sch-item"><div class="sch-time">19:30</div><div><div class="sch-info-name">Chụp Ảnh Lưu Niệm</div><div class="sch-info-desc">Cùng ghi lại những khoảnh khắc đáng nhớ</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S6: RSVP -->
+  <div id="s-rsvp" class="rsvp-section">
+    <div class="section" style="max-width:520px;">
+      <div class="sec-label reveal">
+        <svg width="14" height="14" color="var(--silver)"><use href="#ico-check"/></svg>
+        Xác Nhận
+        <svg width="14" height="14" color="var(--silver)"><use href="#ico-check"/></svg>
+      </div>
+      <h2 class="sec-title reveal">R.S.V.P</h2>
+      <p class="reveal" style="text-align:center;font-family:'Playfair Display',serif;font-size:16px;font-style:italic;color:var(--silver-deep);margin-top:4px;">Vui lòng xác nhận trước ngày <span style="color:var(--ink);">20/02/2021</span></p>
+      <div class="silver-rule reveal"><svg width="16" height="16" color="var(--silver-light)"><use href="#sf-sm"/></svg></div>
+      <div class="rsvp-form reveal" id="rsvpForm">
+        <div class="f-row"><label class="f-label">Họ &amp; Tên</label><input class="f-input" id="rsvpName" type="text" placeholder="Nguyễn Văn A…"></div>
+        <div class="f-row"><label class="f-label">Số Điện Thoại</label><input class="f-input" id="rsvpPhone" type="tel" placeholder="0xxx xxx xxx"></div>
+        <div class="f-row"><label class="f-label">Số Người</label><input class="f-input" id="rsvpNum" type="text" placeholder="2 người…"></div>
+        <div class="f-row">
+          <label class="f-label">Xác Nhận Tham Dự</label>
+          <div class="attend-row">
+            <button class="att-btn active" id="attY" onclick="setAtt('yes')">
+              <svg width="14" height="14" color="currentColor"><use href="#ico-check"/></svg>
+              Tham Dự
+            </button>
+            <button class="att-btn" id="attN" onclick="setAtt('no')">
+              <svg width="14" height="14" color="currentColor"><use href="#ico-x"/></svg>
+              Không Thể
+            </button>
+          </div>
+        </div>
+        <button class="submit-btn" onclick="submitRsvp()">
+          Gửi Xác Nhận
+          <svg width="14" height="14" color="white"><use href="#ico-send"/></svg>
+        </button>
+      </div>
+      <div class="rsvp-success" id="rsvpOk">
+        <svg width="44" height="44" color="var(--silver)" style="display:block;margin:0 auto 16px;"><use href="#sf-6"/></svg>
+        Cảm ơn bạn!<br>
+        <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--silver);">Chúng mình trân trọng sự hiện diện của bạn</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- S7: LỜI CHÚC -->
+  <div id="s-wishes">
+    <div class="dark-section">
+      <div class="inner">
+        <div class="sec-label reveal">
+          <svg width="14" height="14" color="var(--silver)"><use href="#ico-heart"/></svg>
+          Lời Chúc Mừng
+          <svg width="14" height="14" color="var(--silver)"><use href="#ico-heart"/></svg>
+        </div>
+        <h2 class="sec-title reveal">Gửi Lời Chúc</h2>
+        <div class="silver-rule reveal"><svg width="16" height="16" color="var(--silver-light)"><use href="#sf-sm"/></svg></div>
+        <div class="wish-wall reveal" id="wishWall">
+          <div class="wish-item"><div class="wish-name">Anh Minh &amp; Chị Lan</div><div class="wish-text">Chúc hai bạn trăm năm hạnh phúc, mãi yêu thương và đồng hành bên nhau</div></div>
+          <div class="wish-item"><div class="wish-name">Gia Đình Chú Tám</div><div class="wish-text">Cầu chúc đôi uyên ương luôn vui vẻ, hạnh phúc và sớm có tin vui!</div></div>
+          <div class="wish-item"><div class="wish-name">Nhóm Bạn Đại Học</div><div class="wish-text">Cuối cùng cũng đến ngày này rồi! Chúc mừng hai đứa nhé!</div></div>
+        </div>
+        <div class="silver-rule reveal" style="margin:24px 0;"><svg width="16" height="16" color="var(--silver-light)"><use href="#sf-sm"/></svg></div>
+        <div class="wish-inputs reveal">
+          <input class="w-input" id="wishName" placeholder="Tên của bạn…">
+          <textarea class="w-input" id="wishText" placeholder="Lời chúc tốt đẹp nhất…" style="height:80px;resize:none;"></textarea>
+          <button class="w-btn" onclick="addWish()">
+            Gửi Lời Chúc
+            <svg width="14" height="14" color="currentColor"><use href="#ico-send"/></svg>
+          </button>
+        </div>
+        <div class="sec-label reveal" style="margin-top:60px;">
+          <svg width="14" height="14" color="var(--silver)"><use href="#ico-pin"/></svg>
+          Liên Hệ Gia Đình
+          <svg width="14" height="14" color="var(--silver)"><use href="#ico-pin"/></svg>
+        </div>
+        <div class="contact-grid reveal">
+          <div class="contact-block"><div class="cb-role">Nhà Gái</div><div class="cb-name">Ông Trịnh Văn Nôn</div><a class="cb-phone" href="tel:0900000001">0900 000 001</a></div>
+          <div class="contact-block"><div class="cb-role">Nhà Gái</div><div class="cb-name">Bà Lê Thị Minh Hiếu</div><a class="cb-phone" href="tel:0900000002">0900 000 002</a></div>
+          <div class="contact-block"><div class="cb-role">Nhà Trai</div><div class="cb-name">Ông Ngô Văn Phước</div><a class="cb-phone" href="tel:0900000003">0900 000 003</a></div>
+          <div class="contact-block"><div class="cb-role">Nhà Trai</div><div class="cb-name">Bà Giang Thị Tuyết</div><a class="cb-phone" href="tel:0900000004">0900 000 004</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLOSING -->
+  <div class="closing-section">
+    <div class="closing-snow-bg">
+      <svg class="csbg" style="width:230px;top:-25px;left:-25px;opacity:0.10;" color="#8090aa"><use href="#sf-6"/></svg>
+      <svg class="csbg" style="width:205px;top:-20px;right:-20px;opacity:0.09;transform:scaleX(-1);" color="#8090aa"><use href="#sf-6"/></svg>
+      <svg class="csbg" style="width:165px;bottom:-20px;left:18%;opacity:0.07;transform:scaleY(-1);" color="#8090aa"><use href="#sf-sm"/></svg>
+      <svg class="csbg" style="width:145px;bottom:-20px;right:16%;opacity:0.07;transform:scale(-1,-1);" color="#8090aa"><use href="#sf-sm"/></svg>
+    </div>
+    <div class="closing-inner reveal">
+      <div class="closing-names">Nhã An &amp; Duy Khánh</div>
+      <div class="closing-date">
+        <svg width="14" height="14" color="var(--silver)" style="vertical-align:middle;"><use href="#sf-sm"/></svg>
+        28 · 02 · 2021 — Mãi Mãi Yêu Nhau
+        <svg width="14" height="14" color="var(--silver)" style="vertical-align:middle;"><use href="#sf-sm"/></svg>
+      </div>
+      <p class="closing-msg">Cảm ơn bạn đã dành thời gian quý báu đến chung vui cùng chúng mình.<br>Sự hiện diện của bạn là điều trân quý nhất trong ngày trọng đại này.</p>
+      <div class="wax-seal">
+        <svg width="34" height="34" color="rgba(255,255,255,0.95)"><use href="#sf-6"/></svg>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end #main -->
+
+<script>
+/* ══════════════════════════════════════════════
+   ❄ SNOW — streaks + dots
+══════════════════════════════════════════════ */
+(function initSnow() {
+  const canvas = document.getElementById('snowCanvas');
+  const ctx    = canvas.getContext('2d');
+  let W = 0, H = 0;
+  const flakes = [];
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  function newFlake() {
+    const streak = Math.random() < 0.6;
+    const speed  = streak ? Math.random()*7+5 : Math.random()*3+1.5;
+    return { x: Math.random()*(W+60)-30, y: Math.random()*H*-0.5, speed, streak,
+      r: streak ? Math.random()*0.8+0.35 : Math.random()*1.8+0.5,
+      len: streak ? speed*(Math.random()*6+4) : 0,
+      drift: (Math.random()-0.5)*0.28,
+      opacity: streak ? Math.random()*0.38+0.1 : Math.random()*0.5+0.18 };
+  }
+  for (let i=0;i<240;i++){const f=newFlake();f.y=Math.random()*H;flakes.push(f);}
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    flakes.forEach(f=>{
+      f.y+=f.speed; f.x+=f.drift;
+      ctx.globalAlpha=f.opacity;
+      if (f.streak) {
+        const g=ctx.createLinearGradient(f.x,f.y-f.len,f.x,f.y);
+        g.addColorStop(0,'rgba(210,240,255,0)'); g.addColorStop(0.3,'rgba(220,244,255,0.55)');
+        g.addColorStop(0.75,'rgba(232,248,255,0.95)'); g.addColorStop(1,'rgba(240,252,255,0.4)');
+        ctx.beginPath(); ctx.moveTo(f.x,f.y-f.len); ctx.lineTo(f.x,f.y);
+        ctx.strokeStyle=g; ctx.lineWidth=f.r; ctx.lineCap='round'; ctx.stroke();
+      } else {
+        ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
+        ctx.fillStyle='rgba(215,242,255,1)'; ctx.fill();
+        if (f.r>1.3) {
+          ctx.beginPath(); ctx.arc(f.x-f.r*0.3,f.y-f.r*0.3,f.r*0.28,0,Math.PI*2);
+          ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.fill();
+        }
+      }
+      if (f.y>H+f.len+10){const nf=newFlake();nf.y=-nf.len-5;Object.assign(f,nf);}
+      if (f.x<-40)f.x=W+20; if(f.x>W+40)f.x=-20;
+    });
+    ctx.globalAlpha=1; requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════════════
+   🧊 REALISTIC ICE CRACK SYSTEM
+   Uses Voronoi-like shatter approach:
+   cracks radiate from impact points and follow
+   grain lines with tension physics simulation
+══════════════════════════════════════════════ */
+const IceCrack = (function() {
+  const canvas = document.getElementById('iceCrackCanvas');
+  const ctx    = canvas.getContext('2d');
+  let W = window.innerWidth, H = window.innerHeight;
+
+  /* Each crack is a tree: root origin, angle, segments with child branches */
+  let allSegs = [];   // flat list of {pts, width, depth, opacity}
+  let shards  = [];   // triangular shard fills
+  let prog    = 0, targetProg = 0, rafId;
+
+  function setSize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  setSize(); window.addEventListener('resize', () => { setSize(); build(); });
+
+  /* Realistic jagged path — uses "stress direction" + random micro-deflection */
+  function buildPath(x0, y0, angle, totalLen, jitter) {
+    const pts = [{x:x0, y:y0}];
+    let x=x0, y=y0, a=angle;
+    const steps = Math.max(5, Math.floor(totalLen / 8));
+    const segLen = totalLen / steps;
+    for (let i=0;i<steps;i++) {
+      // Realistic: crack deflects more at grain boundaries
+      const grainHit = Math.random() < 0.18;
+      a += (Math.random()-0.5) * (grainHit ? jitter*2.5 : jitter*0.7);
+      const sl = segLen * (0.6 + Math.random()*0.8);
+      // Sub-pixel micro-roughness
+      x += Math.cos(a)*sl + (Math.random()-0.5)*3;
+      y += Math.sin(a)*sl + (Math.random()-0.5)*3;
+      pts.push({x,y});
+    }
+    return {pts, endX:x, endY:y, endAngle:a};
+  }
+
+  /* Recursive crack tree — simulates stress propagation */
+  function crackTree(x, y, angle, length, depth, jitter, list) {
+    if (depth<=0 || length<10) return;
+    const path = buildPath(x, y, angle, length, jitter * (1 + depth*0.1));
+    const segWidth = Math.max(0.3, depth * 0.55);
+    list.push({ pts: path.pts, width: segWidth, depth, drawn: false });
+
+    // Primary branch (continues with slight angle change)
+    if (Math.random() > 0.15) {
+      const branchAt = Math.floor(path.pts.length * (0.35 + Math.random()*0.4));
+      const bp = path.pts[branchAt];
+      const ba = angle + (Math.PI/5 + Math.random()*Math.PI/3.5) * (Math.random()>0.5?1:-1);
+      crackTree(bp.x, bp.y, ba, length*(0.35+Math.random()*0.38), depth-1, jitter*0.9, list);
+    }
+    // Secondary branch
+    if (depth > 1 && Math.random() > 0.3) {
+      const branchAt = Math.floor(path.pts.length * (0.55+Math.random()*0.4));
+      const bp = path.pts[branchAt];
+      const ba = angle - (Math.PI/4.5 + Math.random()*Math.PI/4) * (Math.random()>0.5?1:-1);
+      crackTree(bp.x, bp.y, ba, length*(0.22+Math.random()*0.3), depth-2, jitter*0.85, list);
+    }
+    // Tip hairline
+    if (depth>=3 && Math.random()>0.5) {
+      crackTree(path.endX, path.endY, path.endAngle+(Math.random()-0.5)*0.8,
+        length*0.18, 1, jitter*0.7, list);
+    }
+  }
+
+  /* Build shard polygons between cracks for icy panel feel */
+  function buildShards(segs) {
+    const out = [];
+    // Sample random triangles between nearby crack endpoints
+    const pts = [];
+    segs.forEach(s => {
+      if (s.depth>=3) {
+        for (let i=0;i<s.pts.length;i+=3) pts.push(s.pts[i]);
+      }
+    });
+    // Create Delaunay-ish triangles by connecting nearby pts
+    for (let i=0;i<pts.length;i++) {
+      const a=pts[i];
+      // find 2 nearest pts
+      let dists=pts.map((p,j)=>({j,d:Math.hypot(p.x-a.x,p.y-a.y)}))
+        .filter(({j,d})=>j!==i&&d>20&&d<W*0.18)
+        .sort((x,y)=>x.d-y.d);
+      if (dists.length>=2) {
+        const b=pts[dists[0].j], c=pts[dists[1].j];
+        // calc area — skip degenerate
+        const area=Math.abs((b.x-a.x)*(c.y-a.y)-(c.x-a.x)*(b.y-a.y))*0.5;
+        if (area>200 && area<W*H*0.003) out.push({a,b,c});
+      }
+    }
+    return out.slice(0, 160);
+  }
+
+  function build() {
+    allSegs = []; shards = [];
+
+    // ── A. Impact points — simulate multiple strike points ──
+    const impacts = [
+      // Corners — always shatter
+      {x:0,     y:0,     a:Math.PI*0.2,  l:W*0.55, d:6},
+      {x:0,     y:0,     a:Math.PI*0.6,  l:W*0.48, d:5},
+      {x:W,     y:0,     a:Math.PI*0.85, l:W*0.52, d:6},
+      {x:W,     y:0,     a:Math.PI*0.42, l:W*0.46, d:5},
+      {x:0,     y:H,     a:-Math.PI*0.2, l:W*0.5,  d:5},
+      {x:0,     y:H,     a:-Math.PI*0.55,l:W*0.44, d:5},
+      {x:W,     y:H,     a:-Math.PI*0.8, l:W*0.52, d:6},
+      {x:W,     y:H,     a:-Math.PI*0.38,l:W*0.45, d:5},
+      // Edge midpoints
+      {x:W*.5,  y:0,     a:Math.PI*0.48+Math.random()*0.3, l:W*0.6, d:5},
+      {x:W*.5,  y:H,     a:-Math.PI*0.52+Math.random()*0.3,l:W*0.55,d:5},
+      {x:0,     y:H*.5,  a:Math.random()*0.4-0.2,           l:W*0.58,d:5},
+      {x:W,     y:H*.5,  a:Math.PI+Math.random()*0.4-0.2,   l:W*0.56,d:5},
+      // Interior cracks — random impact sites
+      {x:W*0.25,y:H*0.3, a:Math.random()*Math.PI*2, l:W*0.35, d:4},
+      {x:W*0.75,y:H*0.3, a:Math.random()*Math.PI*2, l:W*0.32, d:4},
+      {x:W*0.35,y:H*0.65,a:Math.random()*Math.PI*2, l:W*0.38, d:4},
+      {x:W*0.65,y:H*0.65,a:Math.random()*Math.PI*2, l:W*0.34, d:4},
+      {x:W*0.5, y:H*0.45,a:Math.random()*Math.PI*2, l:W*0.28, d:3},
+      {x:W*0.15,y:H*0.7, a:Math.random()*Math.PI*2, l:W*0.25, d:3},
+      {x:W*0.82,y:H*0.72,a:Math.random()*Math.PI*2, l:W*0.27, d:3},
+    ];
+    impacts.forEach(({x,y,a,l,d}) => {
+      // Each impact spawns 3-5 primary cracks
+      const nRays = 3 + Math.floor(Math.random()*3);
+      for (let k=0;k<nRays;k++) {
+        const ra = a + (k/nRays)*Math.PI*2 + (Math.random()-0.5)*0.6;
+        crackTree(x, y, ra, l*(0.5+Math.random()*0.6), d, 0.9, allSegs);
+      }
+    });
+
+    // ── B. Dense grid of micro-cracks for icy texture ──
+    const cols=11, rows=13;
+    for (let c=0;c<cols;c++) for (let r=0;r<rows;r++) {
+      const ox=(c+0.15+Math.random()*0.7)*W/cols;
+      const oy=(r+0.15+Math.random()*0.7)*H/rows;
+      const n=1+Math.floor(Math.random()*2);
+      for (let k=0;k<n;k++) {
+        crackTree(ox, oy, Math.random()*Math.PI*2,
+          W*(0.04+Math.random()*0.12), 1+(Math.random()>0.6?1:0), 0.8, allSegs);
+      }
+    }
+
+    // Sort by depth so deep cracks draw on top
+    allSegs.sort((a,b)=>a.depth-b.depth);
+
+    // Build shards after segs are ready
+    shards = buildShards(allSegs);
+    console.log(`Ice: ${allSegs.length} segs, ${shards.length} shards`);
+  }
+
+  function render(p) {
+    ctx.clearRect(0,0,W,H);
+    if (p < 0.005) return;
+
+    const total = allSegs.length;
+
+    // ── 1. Shard fills (icy panels between cracks) ──
+    if (p > 0.12) {
+      const sa = Math.min(0.18, (p-0.12)*0.25);
+      shards.forEach(({a,b,c}) => {
+        ctx.beginPath();
+        ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.lineTo(c.x,c.y);
+        ctx.closePath();
+        // Ice shard: gradient from center
+        const cx=(a.x+b.x+c.x)/3, cy=(a.y+b.y+c.y)/3;
+        const maxD=Math.max(Math.hypot(a.x-cx,a.y-cy),Math.hypot(b.x-cx,b.y-cy),Math.hypot(c.x-cx,c.y-cy));
+        const g=ctx.createRadialGradient(cx,cy,0,cx,cy,maxD);
+        g.addColorStop(0,`rgba(230,246,255,${sa*1.4})`);
+        g.addColorStop(0.5,`rgba(210,236,252,${sa*0.8})`);
+        g.addColorStop(1,`rgba(190,225,250,${sa*0.3})`);
+        ctx.fillStyle=g; ctx.fill();
+      });
+    }
+
+    // ── 2. Crack lines ──
+    allSegs.forEach((seg, si) => {
+      const startFrac = (si/total)*0.52;
+      const cp = Math.max(0, Math.min(1, (p - startFrac)/Math.max(0.04, 0.48-startFrac*0.25)));
+      if (cp<=0) return;
+
+      const pts = seg.pts;
+      const nPts = Math.max(2, Math.floor(pts.length*cp));
+      const df = seg.depth/6;
+
+      // Glow halo — bigger for deeper cracks
+      if (seg.depth >= 2) {
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x,pts[0].y);
+        for (let i=1;i<nPts;i++) ctx.lineTo(pts[i].x,pts[i].y);
+        const glowAlpha = Math.min(0.35, (0.05+df*0.5)*Math.min(1,p*3));
+        const glowW = seg.depth*2.5+2;
+        ctx.strokeStyle=`rgba(170,218,255,${glowAlpha})`;
+        ctx.lineWidth=glowW; ctx.lineCap='round'; ctx.lineJoin='round';
+        ctx.stroke();
+        // Outer soft halo
+        if (seg.depth>=4) {
+          ctx.strokeStyle=`rgba(190,230,255,${glowAlpha*0.4})`;
+          ctx.lineWidth=glowW*2.5; ctx.stroke();
+        }
+      }
+
+      // Core crack line
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x,pts[0].y);
+      for (let i=1;i<nPts;i++) ctx.lineTo(pts[i].x,pts[i].y);
+      // Color: deeper = more blue-white, shallower = faint blue
+      const brightness = Math.round(120+df*120);
+      const coreAlpha = Math.min(0.85, (0.06+df*0.7)*Math.min(1,p*2.5));
+      ctx.strokeStyle=`rgba(${brightness},${Math.round(200+df*50)},255,${coreAlpha})`;
+      ctx.lineWidth=seg.width; ctx.lineCap='round'; ctx.lineJoin='round';
+      ctx.stroke();
+
+      // Bright highlight on core (specular)
+      if (seg.depth>=3) {
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x,pts[0].y);
+        for (let i=1;i<nPts;i++) ctx.lineTo(pts[i].x,pts[i].y);
+        ctx.strokeStyle=`rgba(240,252,255,${coreAlpha*0.65})`;
+        ctx.lineWidth=0.4; ctx.stroke();
+      }
+
+      // Frost crystallization at ends of deep cracks
+      if (seg.depth>=4 && cp>0.85 && p>0.25) {
+        const last = pts[nPts-1];
+        const frostAlpha = Math.min(0.55, (p-0.25)*0.8);
+        for (let k=0;k<4;k++) {
+          const fa = Math.random()*Math.PI*2;
+          const fr = 4+Math.random()*10;
+          ctx.beginPath();
+          ctx.moveTo(last.x,last.y);
+          ctx.lineTo(last.x+Math.cos(fa)*fr, last.y+Math.sin(fa)*fr);
+          ctx.strokeStyle=`rgba(200,238,255,${frostAlpha*(0.3+Math.random()*0.7)})`;
+          ctx.lineWidth=0.5; ctx.stroke();
+        }
+      }
+    });
+
+    // ── 3. Corner refraction vignette ──
+    if (p > 0.06) {
+      const va = Math.min(0.28, (p-0.06)*0.36);
+      [[0,0],[W,0],[0,H],[W,H]].forEach(([cx,cy]) => {
+        const gr=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*0.55);
+        gr.addColorStop(0,`rgba(185,224,255,${va*0.7})`);
+        gr.addColorStop(0.45,`rgba(200,232,255,${va*0.2})`);
+        gr.addColorStop(1,'rgba(210,236,255,0)');
+        ctx.fillStyle=gr; ctx.fillRect(0,0,W,H);
+      });
+    }
+
+    // ── 4. Frost breath overlay at high progress ──
+    if (p > 0.6) {
+      const fa = Math.min(0.08, (p-0.6)*0.2);
+      const gf = ctx.createLinearGradient(0,0,W,H);
+      gf.addColorStop(0,`rgba(220,242,255,${fa})`);
+      gf.addColorStop(0.5,'rgba(210,238,255,0)');
+      gf.addColorStop(1,`rgba(215,240,255,${fa*0.7})`);
+      ctx.fillStyle=gf; ctx.fillRect(0,0,W,H);
+    }
+  }
+
+  function smoothTo(target) {
+    targetProg = Math.max(0, Math.min(0.97, target));
+    cancelAnimationFrame(rafId);
+    (function step() {
+      prog += (targetProg - prog)*0.065;
+      render(prog);
+      if (Math.abs(prog-targetProg)>0.0012) rafId=requestAnimationFrame(step);
+      else { prog=targetProg; render(prog); }
+    })();
+  }
+
+  return { init() { build(); smoothTo(0.04); }, animateTo: smoothTo };
+})();
+
+/* ── Scroll → ice crack progress ── */
+let iceActive=false, lastSY=0, crackTid;
+window.addEventListener('scroll', function() {
+  if (!iceActive) return;
+  const sy   = window.scrollY;
+  const maxS = Math.max(1, document.documentElement.scrollHeight-window.innerHeight);
+  const frac = sy/maxS;
+  const vel  = Math.abs(sy-lastSY);
+  lastSY=sy;
+  const base  = 0.04+frac*0.78;
+  const burst = Math.min(0.22, vel*0.013);
+  IceCrack.animateTo(Math.min(0.97, base+burst));
+  clearTimeout(crackTid);
+  crackTid=setTimeout(()=>IceCrack.animateTo(Math.max(0.04,base*0.55)),1100);
+},{passive:true});
+
+/* ── Gate Open ── */
+function openGate() {
+  if (openGate.done) return; openGate.done=true;
+  document.getElementById('gateWrapper').classList.add('open');
+  document.getElementById('openBtn').style.opacity='0';
+  document.getElementById('snowCanvas').classList.add('visible');
+  setTimeout(()=>{
+    document.getElementById('intro-screen').classList.add('hidden');
+    document.getElementById('main').classList.add('visible');
+    IceCrack.init(); iceActive=true;
+    checkReveal(); checkShards();
+    setTimeout(autoFlipStrip, 800);
+  }, 1700);
+}
+document.querySelectorAll('#gateWrapper .gate-panel,#openBtn').forEach(p=>p.addEventListener('click',openGate));
+
+/* ── Shard dividers pop in on scroll ── */
+function checkShards() {
+  document.querySelectorAll('[data-crack-svg]').forEach(svg=>{
+    const r=svg.getBoundingClientRect();
+    if (r.top < window.innerHeight*0.9 && !svg.classList.contains('cracked')) svg.classList.add('cracked');
+  });
+}
+
+/* ── Scroll reveal ── */
+function checkReveal() {
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el=>{
+    if (el.getBoundingClientRect().top<window.innerHeight*0.92) el.classList.add('visible');
+  });
+  document.querySelectorAll('[class*="anim-"]:not(.anim-in)').forEach(el=>{
+    if (el.getBoundingClientRect().top<window.innerHeight*0.88) {
+      el.parentElement.querySelectorAll('[class*="anim-"]:not(.anim-in)')
+        .forEach((s,i)=>setTimeout(()=>s.classList.add('anim-in'),i*120));
+    }
+  });
+  checkShards();
+}
+window.addEventListener('scroll', checkReveal);
+
+/* ── Flip cards ── */
+document.addEventListener('click', e=>{
+  const c=e.target.closest('.flip-card');
+  if (c) c.classList.toggle('flipped');
+});
+
+function autoFlipStrip() {
+  const cards=document.querySelectorAll('#main .hero-photo-strip .flip-card');
+  let i=0;
+  const iv=setInterval(()=>{
+    if(i>0)cards[i-1]?.classList.remove('flipped');
+    if(i<cards.length){cards[i].classList.add('flipped');i++;}
+    else{clearInterval(iv);setTimeout(()=>cards.forEach(c=>c.classList.remove('flipped')),1200);}
+  },650);
+}
+
+const albumObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.flip-card').forEach((c,i)=>{
+        setTimeout(()=>{c.classList.add('flipped');setTimeout(()=>c.classList.remove('flipped'),900);},i*180);
+      });
+      albumObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+const ag=document.querySelector('.album-grid');
+if(ag) albumObs.observe(ag);
+
+/* ── Nav ── */
+function goTo(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth'});}
+window.addEventListener('scroll',()=>{
+  const ids=['s-invite','s-couple','s-story','s-album','s-event','s-rsvp','s-wishes'];
+  const links=document.querySelectorAll('.nav-link');
+  const mid=window.scrollY+window.innerHeight*0.35;
+  ids.forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(el)links[i]?.classList.toggle('active',mid>=el.offsetTop&&mid<el.offsetTop+el.offsetHeight);
+  });
+});
+
+/* ── RSVP ── */
+let attChoice='yes';
+function setAtt(v){
+  attChoice=v;
+  document.getElementById('attY').classList.toggle('active',v==='yes');
+  document.getElementById('attN').classList.toggle('active',v==='no');
+}
+function submitRsvp(){
+  if(!document.getElementById('rsvpName').value.trim()){alert('Vui lòng nhập tên!');return;}
+  document.getElementById('rsvpForm').style.display='none';
+  document.getElementById('rsvpOk').style.display='block';
+}
+
+/* ── Wishes ── */
+function addWish(){
+  const name=document.getElementById('wishName').value.trim();
+  const text=document.getElementById('wishText').value.trim();
+  if(!name||!text){alert('Vui lòng nhập tên và lời chúc!');return;}
+  const el=document.createElement('div');
+  el.className='wish-item';
+  el.innerHTML=`<div class="wish-name">${name}</div><div class="wish-text">${text}</div>`;
+  document.getElementById('wishWall').prepend(el);
+  document.getElementById('wishName').value='';
+  document.getElementById('wishText').value='';
+}
+</script>
+</body>
+</html>

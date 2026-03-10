@@ -8,6 +8,7 @@ import templateService from '../services/template.service'
 const DashboardTemplateEditorPage = () => {
   const navigate = useNavigate()
   const { id } = useParams()
+  const decodedId = id ? decodeURIComponent(id) : ''
   const [searchParams] = useSearchParams()
   const toast = useToast()
   const { user } = useAuth() // Get current user for UUID
@@ -35,19 +36,21 @@ const DashboardTemplateEditorPage = () => {
 
   useEffect(() => {
     loadCategories()
-    if (id) {
-      loadTemplate(id)
+    if (decodedId) {
+      loadTemplate(decodedId)
     }
-  }, [id])
+  }, [decodedId])
 
-  const loadCategories = async () => {
+  const loadCategories = async () => { 
     try {
       const response = await templateService.getCategories()
-      setCategories(response.data || [])
+      const filtered = (response.data || []).filter(cat => !cat.deleted_at)
+
+      setCategories(filtered)
     } catch (error) {
       console.error('Failed to load categories:', error)
     }
-  }
+}
 
   const loadTemplate = async (templateId) => {
     try {
@@ -153,15 +156,10 @@ const DashboardTemplateEditorPage = () => {
       console.log('📤 Submitting template data:', submitData)
 
       let response
-      if (id) {
-        // Update: ensure we pass both id and uuid
-        if (!submitData.uuid) {
-          toast.error('❌ Thiếu UUID, không thể cập nhật template');
-          setLoading(false);
-          return;
-        }
-        console.log('🔄 Updating template with ID:', submitData.id, 'UUID:', submitData.uuid);
-        response = await templateService.update(id, submitData)
+      if (decodedId) {
+        // Use uuid from formData if available, otherwise use id
+        const identifier = formData.uuid || decodedId;
+        response = await templateService.update(identifier, submitData)
         toast.success('✨ Template đã được cập nhật thành công!')
       } else {
         // Create: Add current user's UUID (creator)
@@ -234,10 +232,10 @@ const DashboardTemplateEditorPage = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
-              {id ? 'Chỉnh sửa Template' : 'Tạo Template Mới'}
+              {decodedId ? 'Chỉnh sửa Template' : 'Tạo Template Mới'}
             </h1>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              {id ? 'Cập nhật thông tin template' : 'Tạo template mới cho hệ thống'}
+              {decodedId ? 'Cập nhật thông tin template' : 'Tạo template mới cho hệ thống'}
             </p>
           </div>
           <button
@@ -489,7 +487,7 @@ const DashboardTemplateEditorPage = () => {
               </div>
 
               {/* Design Data (JSON) */}
-              <div className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl p-4 md:p-6">
+              {/* <div className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl p-4 md:p-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Design Data (JSON) {formData.template_type === 'canvas' && '*'}
@@ -511,7 +509,7 @@ const DashboardTemplateEditorPage = () => {
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none resize-y font-mono text-xs md:text-sm"
                   placeholder='{"canvas": {...}, "elements": [...]}'
                 />
-              </div>
+              </div> */}
             </div>
           )}
 
@@ -582,3 +580,4 @@ const DashboardTemplateEditorPage = () => {
 }
 
 export default DashboardTemplateEditorPage
+
