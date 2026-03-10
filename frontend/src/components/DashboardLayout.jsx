@@ -119,14 +119,33 @@ const DashboardLayout = ({ children }) => {
       >
         {/* Header Logo Area */}
         <div className="h-[72px] flex items-center justify-between px-6 border-b border-gray-100 dark:border-gray-800">
-          <Link to="/dashboard" className={`flex items-center gap-3 ${sidebarCollapsed ? 'justify-center w-full' : ''}`}>
+          {/* <Link to="/dashboard" className={`flex items-center gap-3 ${sidebarCollapsed ? 'justify-center w-full' : ''}`}>
             <div className="relative w-8 h-8">
               <img src="/assets/images/logo-small.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
             {!sidebarCollapsed && (
               <span className="font-bold text-gray-900 dark:text-white text-lg tracking-tight">Dashboard</span>
             )}
-          </Link>
+          </Link> */}
+
+        {!sidebarCollapsed && (
+  <div className="w-full">
+    <div className="bg-gray-900 dark:bg-white rounded-xl p-4 flex items-center gap-3 shadow-lg w-full">
+      <div className="w-10 h-10 rounded-full bg-white/20 dark:bg-black/10 flex items-center justify-center text-white dark:text-black font-bold">
+        {user?.full_name?.charAt(0)}
+      </div>
+
+      <div className="overflow-hidden flex-1">
+        <p className="text-sm font-bold text-white dark:text-black truncate">
+          {user?.full_name}
+        </p>
+        <p className="text-xs text-gray-400 dark:text-gray-600">
+          Administrator
+        </p>
+      </div>
+    </div>
+  </div>
+)}
 
           {/* Mobile Close Button */}
           <button
@@ -136,21 +155,6 @@ const DashboardLayout = ({ children }) => {
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>
-
-        {/* User Info (Collapsed Mode) */}
-        {!sidebarCollapsed && (
-          <div className="px-6 py-4">
-            <div className="bg-gray-900 dark:bg-white rounded-xl p-4 flex items-center gap-3 shadow-lg">
-              <div className="w-10 h-10 rounded-full bg-white/20 dark:bg-black/10 flex items-center justify-center text-white dark:text-black font-bold">
-                {user?.full_name?.charAt(0)}
-              </div>
-              <div className="overflow-hidden">
-                <p className="text-sm font-bold text-white dark:text-black truncate">{user?.full_name}</p>
-                <p className="text-xs text-gray-400 dark:text-gray-600">Administrator</p>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Navigation Menu */}
         <nav className="flex-1 px-4 py-2 space-y-1 overflow-y-auto custom-scrollbar">

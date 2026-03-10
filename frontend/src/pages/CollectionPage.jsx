@@ -44,11 +44,14 @@ const CollectionPage = () => {
     }
   }, [searchParams, currentPage])
 
-    useEffect(() => {
-      if(pagination){
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      }
-    }, [pagination])
+useEffect(() => {
+  if (pagination) {
+    window.scrollTo({
+      top: 450,
+      behavior: "smooth"
+    })
+  }
+}, [pagination])
 
   useEffect(() => {
     if (!searchParams.get('page')) {
@@ -313,18 +316,18 @@ const CollectionPage = () => {
   // Filter and sort templates
   let filteredTemplates = templates
 
-  if (selectedCategory) {
-    filteredTemplates = filteredTemplates.filter(t => {
-      // Handle both API format (category_id) and premium format (category name)
-      if (t.category_id) {
-        return t.category_id === selectedCategory
-      } else if (t.category) {
-        const categoryObj = categories.find(c => c.name === t.category)
-        return categoryObj && categoryObj.id === selectedCategory
-      }
-      return false
-    })
-  }
+  // if (selectedCategory) {
+  //   filteredTemplates = filteredTemplates.filter(t => {
+  //     // Handle both API format (category_id) and premium format (category name)
+  //     if (t.category_id) {
+  //       return t.category_id === selectedCategory
+  //     } else if (t.category) {
+  //       const categoryObj = categories.find(c => c.name === t.category)
+  //       return categoryObj && categoryObj.id === selectedCategory
+  //     }
+  //     return false
+  //   })
+  // }
 
   if (searchQuery) {
     filteredTemplates = filteredTemplates.filter(t =>
@@ -334,12 +337,12 @@ const CollectionPage = () => {
   }
 
   // Sort
-  filteredTemplates = [...filteredTemplates].sort((a, b) => {
-    if (sortBy === 'popular') return (b.usage_count || 0) - (a.usage_count || 0)
-    if (sortBy === 'newest') return (b.id || 0) - (a.id || 0)
-    if (sortBy === 'name') return a.name.localeCompare(b.name)
-    return 0
-  })
+  // filteredTemplates = [...filteredTemplates].sort((a, b) => {
+  //   if (sortBy === 'popular') return (b.usage_count || 0) - (a.usage_count || 0)
+  //   if (sortBy === 'newest') return (b.id || 0) - (a.id || 0)
+  //   if (sortBy === 'name') return a.name.localeCompare(b.name)
+  //   return 0
+  // })
 
   const pageSize = viewMode === 'grid' ? 12 : 10
   const hasServerPagination = Number(pagination.totalPages || 0) > 1 || Number(pagination.totalItems || 0) > filteredTemplates.length
