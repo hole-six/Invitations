@@ -1,0 +1,1357 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Lora:ital,wght@0,400..700;1,400..700&family=Oswald:wght@200..700&family=Petit+Formal+Script&display=swap"
+    rel="stylesheet">
+  <!-- CDN -->
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Embla Carousel -->
+  <script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
+
+  <!-- style -->
+  <!-- Embla Carousel -->
+  <style>
+    .embla {
+      /* max-width: 420px; */
+      /* Độ rộng tương đương mobile */
+      margin: auto;
+      --slide-spacing: 1rem;
+      --slide-size: 100%;
+    }
+
+    .embla__viewport {
+      overflow: hidden;
+    }
+
+    .embla__container {
+      display: flex;
+      touch-action: pan-y;
+      margin-left: calc(var(--slide-spacing) * -1);
+    }
+
+    .embla__slide {
+      width: 60px;
+      transform: translate3d(0, 0, 0);
+      flex: 0 0 var(--slide-size);
+      min-width: 0;
+      padding-left: var(--slide-spacing);
+    }
+
+    .embla__slide__number {
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f3f4f6;
+      border-radius: 1rem;
+      font-size: 3rem;
+      font-weight: bold;
+      color: #3481f4;
+      box-shadow: inset 0 0 0 1px #e5e7eb;
+    }
+
+    .embla__controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .embla__buttons {
+      display: flex;
+      gap: 5rem;
+    }
+
+    .embla__button {
+      background-color: transparent;
+      touch-action: manipulation;
+      display: inline-flex;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid #ffffff;
+      padding: 0;
+      margin: 0;
+      width: 3rem;
+      height: 3rem;
+      z-index: 1;
+      border-radius: 50%;
+      color: #3481f4;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .embla__button:disabled {
+      color: #d1d5db;
+      border-color: #d1d5db;
+      cursor: not-allowed;
+    }
+
+    .embla__button__svg {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+
+    #GALLERY_POPUP {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    #GALLERY_POPUP.active {
+      display: flex;
+    }
+
+    .embla__slide__number {
+      width: 100%;
+      height: 70vh;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      box-shadow: none;
+    }
+  </style>
+  <!-- Snowflake -->
+  <style>
+    @-webkit-keyframes snowflakes-fall {
+      0% {
+        top: -10%;
+      }
+
+      100% {
+        top: 100%;
+      }
+    }
+
+    @-webkit-keyframes snowflakes-shake {
+
+      0%,
+      100% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+      }
+
+      50% {
+        -webkit-transform: translateX(80px);
+        transform: translateX(80px);
+      }
+    }
+
+    @keyframes snowflakes-fall {
+      0% {
+        top: -10%;
+      }
+
+      100% {
+        top: 100%;
+      }
+    }
+
+    @keyframes snowflakes-shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      50% {
+        transform: translateX(80px);
+      }
+    }
+
+    .snowflake {
+      color: #fff;
+      font-size: 1em;
+      font-family: Arial, sans-serif;
+      text-shadow: 0 0 5px #000;
+      position: fixed;
+      top: -10%;
+      z-index: 9999;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      cursor: default;
+      -webkit-animation-name: snowflakes-fall, snowflakes-shake;
+      -webkit-animation-duration: 10s, 3s;
+      -webkit-animation-timing-function: linear, ease-in-out;
+      -webkit-animation-iteration-count: infinite, infinite;
+      -webkit-animation-play-state: running, running;
+      animation-name: snowflakes-fall, snowflakes-shake;
+      animation-duration: 10s, 3s;
+      animation-timing-function: linear, ease-in-out;
+      animation-iteration-count: infinite, infinite;
+      animation-play-state: running, running;
+    }
+
+    .snowflake:nth-of-type(0) {
+      left: 1%;
+      -webkit-animation-delay: 0s, 0s;
+      animation-delay: 0s, 0s;
+    }
+
+    .snowflake:nth-of-type(1) {
+      left: 10%;
+      -webkit-animation-delay: 1s, 1s;
+      animation-delay: 1s, 1s;
+    }
+
+    .snowflake:nth-of-type(2) {
+      left: 20%;
+      -webkit-animation-delay: 6s, 0.5s;
+      animation-delay: 6s, 0.5s;
+    }
+
+    .snowflake:nth-of-type(3) {
+      left: 30%;
+      -webkit-animation-delay: 4s, 2s;
+      animation-delay: 4s, 2s;
+    }
+
+    .snowflake:nth-of-type(4) {
+      left: 40%;
+      -webkit-animation-delay: 2s, 2s;
+      animation-delay: 2s, 2s;
+    }
+
+    .snowflake:nth-of-type(5) {
+      left: 50%;
+      -webkit-animation-delay: 8s, 3s;
+      animation-delay: 8s, 3s;
+    }
+
+    .snowflake:nth-of-type(6) {
+      left: 60%;
+      -webkit-animation-delay: 6s, 2s;
+      animation-delay: 6s, 2s;
+    }
+
+    .snowflake:nth-of-type(7) {
+      left: 70%;
+      -webkit-animation-delay: 2.5s, 1s;
+      animation-delay: 2.5s, 1s;
+    }
+
+    .snowflake:nth-of-type(8) {
+      left: 80%;
+      -webkit-animation-delay: 1s, 0s;
+      animation-delay: 1s, 0s;
+    }
+
+    .snowflake:nth-of-type(9) {
+      left: 90%;
+      -webkit-animation-delay: 3s, 1.5s;
+      animation-delay: 3s, 1.5s;
+    }
+
+    .snowflake:nth-of-type(10) {
+      left: 25%;
+      -webkit-animation-delay: 2s, 0s;
+      animation-delay: 2s, 0s;
+    }
+
+    .snowflake:nth-of-type(11) {
+      left: 65%;
+      -webkit-animation-delay: 4s, 2.5s;
+      animation-delay: 4s, 2.5s;
+    }
+  </style>
+  <!-- Animation CSS -->
+  <style>
+    /* Animation Base States */
+    [data-aos] {
+      opacity: 0;
+      transition-property: transform, opacity;
+      transition-timing-function: ease-out;
+    }
+
+    /* Fade Animations */
+    [data-aos="fade-up"] {
+      transform: translateY(30px);
+    }
+
+    [data-aos="fade-down"] {
+      transform: translateY(-30px);
+    }
+
+    [data-aos="fade-left"] {
+      transform: translateX(30px);
+    }
+
+    [data-aos="fade-right"] {
+      transform: translateX(-30px);
+    }
+
+    /* Zoom Animations */
+    [data-aos="zoom-in"] {
+      transform: scale(0.7);
+    }
+
+    [data-aos="zoom-out"] {
+      transform: scale(1.2);
+    }
+
+    /* Slide Animations */
+    [data-aos="slide-up"] {
+      transform: translateY(100%);
+    }
+
+    /* The Active State (Triggered by JS) */
+    .aos-animate {
+      opacity: 1 !important;
+      transform: translate(0) scale(1) !important;
+    }
+  </style>
+  <!-- data image -->
+  <style>
+    .element_1 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Fblossom-love%2FbgTexture.webp&w=3840&q=80");
+    }
+
+    .element_2 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Fblossom-love%2FbgName.webp&w=3840&q=80");
+    }
+
+    .element_3 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Fblossom-love%2FbgWatercolor.webp&w=3840&q=80");
+    }
+
+    .element_4 {
+      background-image: url("https://w.ladicdn.com/s500x500/6801c7e1fbbd4d001283dac2/97ec7733-ae00-4b36-b6ec-98b6a0a41091_png-20250814030204-y9gci.png");
+    }
+
+    .element_5 {
+      background-image: url("https://w.ladicdn.com/s500x500/6801c7e1fbbd4d001283dac2/d3683d0f-921a-4702-9037-1eb3cef51422_png-20250814030207-uudjz.png");
+    }
+
+    .element_6 {
+      background-image: url("https://w.ladicdn.com/s500x500/6801c7e1fbbd4d001283dac2/d75fbd4f-b985-45e2-816f-a5912155ea94_png-20250814030205-asqvc.png");
+    }
+
+    .element_7 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Fheart-beats%2Fmask.png&w=2048&q=75");
+    }
+
+    .element_8 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Fheart-beats%2FheartFrame.png&w=2048&q=75");
+    }
+
+    [data-image-editable="photo_1"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342159_9a35bc8074ac983581f10a243218dee5-20250720112650-xdgti.jpg");
+    }
+
+    [data-image-editable="photo_2"] {
+      background-image: url("https://w.ladicdn.com/s450x400/5c728619c417ab07e5194baa/22-20240427063945-kdhmq.jpg");
+    }
+
+    [data-image-editable="photo_3"] {
+      background-image: url("https://w.ladicdn.com/s700x550/6801c7e1fbbd4d001283dac2/z6823838296252_9dc2a80595ceb2d9916440b01035f73d-20250720112650--nghd.jpg");
+    }
+
+    [data-image-editable="photo_4"] {
+      background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838784242_aee303c8a068cb5fd7b41e7ef4b596d0-20250720112708-siwg1.jpg");
+    }
+
+    [data-image-editable="photo_5"] {
+      background-image: url("https://w.ladicdn.com/s500x550/6801c7e1fbbd4d001283dac2/z6823838739064_5c886c45d1d55977a87b5ca14373809e-20250720112708-1kjld.jpg");
+    }
+
+    [data-image-editable="photo_6"] {
+      background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838562924_339d83292301008cda4f978f91fff475-20250720112700-igibu.jpg");
+    }
+
+    [data-image-editable="photo_7"] {
+      background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_8"] {
+      background-image: url("https://w.ladicdn.com/s500x600/6801c7e1fbbd4d001283dac2/z6823838384689_f9140d1b705d2baa14714ae77179b775-20250720112650-qrpou.jpg");
+    }
+
+    [data-image-editable="photo_9"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838784286_fa9f26bf3167e3a2f668f9b524060a8b-20250720112708--0znq.jpg");
+    }
+
+    [data-image-editable="photo_10"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838474700_ae674803922601c8fe5fd6dc39839a52-20250720112655-abrzg.jpg");
+    }
+
+    [data-image-editable="photo_11"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838831042_069f5c5b3e835e42e996c331e4133d2e-20250720112716-91doe.jpg");
+    }
+
+    [data-image-editable="photo_12"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838384688_fa8a2fb2e4439bdba2eeaabc71b862cf-20250720112650-pwmxi.jpg");
+    }
+
+    [data-image-editable="photo_13"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342158_07f2a515ce97a05d7dac8aa0465ccc85-20250720112650-jtwiv.jpg");
+    }
+
+    [data-image-editable="photo_14"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_15"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_16"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_17"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_18"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_19"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_1"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_2"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838474700_ae674803922601c8fe5fd6dc39839a52-20250720112655-abrzg.jpg");
+    }
+
+    [data-image-editable="photo_gallery_3"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_4"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_5"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838784286_fa9f26bf3167e3a2f668f9b524060a8b-20250720112708--0znq.jpg");
+    }
+
+    [data-image-editable="photo_gallery_6"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="qr_1"] {
+      background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
+    }
+
+    [data-image-editable="qr_2"] {
+      background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
+    }
+  </style>
+  <!-- Main CSS -->
+  <style>
+    /* global css */
+
+    html {
+      font-size: 62.5%;
+    }
+
+    body {
+      margin: 0;
+      color: #212529;
+    }
+
+    main {
+      font-family: Arial, sans-serif;
+      margin: auto;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* p,
+    span {
+      line-height: 2.4rem;
+    } */
+
+    /* span {
+      color: #656565;
+      font-size: 1.8rem;
+    }
+
+    p {
+      font-size: 1.5rem;
+      color: #808080;
+    } */
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      /* font-family: "Raleway"; */
+      color: #4a3e5a;
+    }
+
+    /* h1,
+      .h1 {
+        font-size: 8.7rem;
+        font-weight: 300;
+        letter-spacing: 0.6rem;
+        line-height: 1.1;
+      } */
+
+    /* h2,
+    .h2 {
+      font-size: 4rem;
+    }
+
+    h3,
+    .h3 {
+      font-size: 1.8rem;
+    } */
+
+    /* h4,
+        .h4 {
+            font-size: 3.5rem;
+        } */
+
+    picture {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+    }
+
+    section {
+      /* background-repeat: no-repeat; */
+      /* background-size: cover; */
+      padding-block: 100px;
+      margin: auto;
+      overflow: hidden;
+    }
+
+    /* font familly */
+    .font-josefin {
+      font-family: "Josefin Sans", sans-serif;
+    }
+
+    .font-petit {
+      font-family: "Petit Formal Script", cursive;
+    }
+
+    .font-oswald {
+      font-family: "Oswald", sans-serif;
+    }
+
+    .font-gilda {
+      font-family: "Gilda Display", serif;
+    }
+
+    .font-lora {
+      font-family: "Lora", serif;
+    }
+
+    [data-image-editable] {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .wrapper {
+      max-width: 1140px;
+      width: 100%;
+      margin: auto;
+      padding-inline: 30px;
+    }
+
+    @media screen and (max-width: 768px) {
+      .wrapper {
+        padding-inline: 15px;
+      }
+
+      section {
+        /* background-repeat: no-repeat; */
+        /* background-size: cover; */
+        padding-block: 50px;
+        margin: auto;
+      }
+
+      /* 
+        h1,
+        .h1 {
+          font-size: 3rem;
+        }
+
+        h2,
+        .h2 {
+          font-size: 2.5rem;
+        } */
+
+      /* h3,
+            .h3 {
+                font-size: 2.4rem;
+            }
+
+            p {
+                font-size: 1.6rem;
+            } */
+    }
+  </style>
+
+
+  <!-- Script -->
+  <!-- Timer script -->
+  <script>
+    (function () {
+      let countdownInterval;
+
+      function getTargetDate() {
+        const elH = document.querySelector("#js-hour");
+        const elD = document.querySelector("#js-day");
+        const elM = document.querySelector("#js-month");
+        const elY = document.querySelector("#js-year");
+
+        // Make elH (hour) optional by removing it from this strict check
+        if (!elD || !elM || !elY) return null;
+
+        // Default to midnight (00:00) if no hour element is provided
+        let hour = 0;
+        let minute = 0;
+
+        // If the hour element DOES exist, extract the time
+        if (elH) {
+          const timeMatch = elH.innerText.match(/(\d{2}):(\d{2})/);
+          if (timeMatch) {
+            hour = parseInt(timeMatch[1], 10);
+            minute = parseInt(timeMatch[2], 10);
+          }
+        }
+
+        // Extract day, month, year. 
+        // Using replace(/\D/g, '') safely removes the &nbsp; or hidden spaces around the numbers
+        const day = parseInt(elD.innerText.replace(/\D/g, ''), 10);
+        const month = parseInt(elM.innerText.replace(/\D/g, ''), 10) - 1; // Month in JS is 0-11
+        const year = parseInt(elY.innerText.replace(/\D/g, ''), 10);
+
+        const target = new Date(year, month, day, hour, minute, 0).getTime();
+        return isNaN(target) ? null : target;
+      }
+
+      function render(d, h, m, s) {
+        const pad = (n) => (n < 10 ? "0" + n : n);
+        const setVal = (id, val) => {
+          const el = document.querySelector(`${id} span`);
+          if (el) el.innerText = pad(val);
+        };
+
+        setVal("#TIMER_DAY", d);
+        setVal("#TIMER_HOUR", h);
+        setVal("#TIMER_MIN", m);
+        setVal("#TIMER_SEC", s);
+      }
+
+      function updateCountdown() {
+        const endTime = getTargetDate();
+        if (!endTime) return;
+
+        if (countdownInterval) clearInterval(countdownInterval);
+
+        const logic = () => {
+          const now = new Date().getTime();
+          const distance = endTime - now;
+
+          if (distance < 0) {
+            clearInterval(countdownInterval);
+            render(0, 0, 0, 0);
+            return;
+          }
+
+          const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const h = Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+          );
+          const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+          render(d, h, m, s);
+        };
+
+        logic();
+        countdownInterval = setInterval(logic, 1000);
+      }
+
+      // Khởi tạo và theo dõi thay đổi
+      window.addEventListener("load", () => {
+        updateCountdown();
+
+        const observer = new MutationObserver(updateCountdown);
+        const config = {
+          characterData: true,
+          childList: true,
+          subtree: true,
+        };
+
+        // Theo dõi tất cả các nguồn dữ liệu thời gian
+        ["#js-hour", "#js-day", "#js-month", "#js-year"].forEach(
+          (selector) => {
+            const el = document.querySelector(selector);
+            if (el) observer.observe(el, config);
+          },
+        );
+      });
+    })();
+  </script>
+  <!-- Animation script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const animationObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const target = entry.target;
+
+              const delay = target.getAttribute("data-aos-delay") || "0";
+              const duration =
+                target.getAttribute("data-aos-duration") || "800";
+
+              target.style.transitionDelay = `${delay}ms`;
+              target.style.transitionDuration = `${duration}ms`;
+
+              target.classList.add("aos-animate");
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      document
+        .querySelectorAll("[data-aos]")
+        .forEach((el) => animationObserver.observe(el));
+    });
+  </script>
+</head>
+
+<body>
+  <main>
+    <!-- Banner Section Begin-->
+    <section id="SECTION_BANNER"
+      class="before:absolute before:inset-0 before:z-2 before:bg-[rgba(23,23,38,.6)] before:content-[''] relative pb-0"
+      data-image-editable="photo_1">
+      <div class="wrapper">
+        <div class="text-center" data-aos="fade-up">
+          <p class="font-josefin font-light text-center text-[3rem] md:text-[4.8rem] text-white"
+            data-editable="field_1">Together
+            Forever</p>
+          <h1 class="font-petit text-[7.2rem] md:text-[12.8rem] text-[#e25d5d]" data-editable="field_2">Emma & John
+          </h1>
+          <p class="text-center flex justify-center items-center">
+            <span id="js-month" class="font-oswald text-center text-[2.4rem] md:text-[3.6rem] text-white"
+              data-editable="field_3">04</span>
+            <span id="js-day" class="font-oswald text-center text-[7.2rem] md:text-[12.8rem] text-[#e25d5d]"
+              data-editable="field_4">&nbsp;05&nbsp;</span>
+            <span id="js-year" class="font-oswald text-center text-[2.4rem] md:text-[3.6rem] text-white"
+              data-editable="field_5">2026</span>
+          </p>
+        </div>
+      </div>
+      <div class="relative top-1 z-[2] w-full">
+        <svg class="relative top-1 z-2 h-[7vw] w-full fill-white" width="100%" height="100%" version="1.1"
+          xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 2560 168.6227"
+          enable-background="new 0 0 2560 168.6227" xml:space="preserve" data-sentry-element="svg"
+          data-sentry-source-file="HeroSection.tsx">
+          <g data-sentry-element="g" data-sentry-source-file="HeroSection.tsx"></g>
+          <g data-sentry-element="g" data-sentry-source-file="HeroSection.tsx">
+            <path
+              d="M2560,0c0,0-219.6543,165.951-730.788,124.0771c-383.3156-31.4028-827.2138-96.9514-1244.7139-96.9514 c-212.5106,0-439,3.5-584.4982,1.5844l0,139.9126h2560V0z"
+              data-sentry-element="path" data-sentry-source-file="HeroSection.tsx"></path>
+          </g>
+        </svg>
+      </div>
+    </section>
+    <!-- Banner Section End-->
+    <!-- Introduction Section Begin -->
+    <section id="SECTION_INTRODUCTION">
+      <div class="wrapper">
+        <div class="flex flex-wrap items-center lg:justify-between">
+          <div class="mb-0 w-full md:mb-5 md:w-1/2">
+            <p class="mb-[2.4rem] font-gilda text-[1.8rem] md:text-[2.4rem] text-[#6f738a]" data-editable="field_6"
+              data-aos="fade-up">Join Our
+              Joy!</p>
+            <p class="mb-[2.4rem] font-oswald text-[2rem] md:text-[3rem] text-[#e25d5d]" data-editable="field_7"
+              data-aos="fade-up" data-aos-delay="200">Celebrating
+              Love in a Magical
+              Setting</p>
+            <p class="mb-[2.4rem] font-lora text-[1.4rem] md:text-[1.8rem] text-[#8e8d8d]" data-editable="field_8"
+              data-aos="fade-up" data-aos-delay="400">We warmly
+              invite you to be
+              part of the most
+              important
+              chapter of our lives. Let's unite our hearts and
+              celebrate together, in a storybook setting.</p>
+          </div>
+          <div class="relative w-full md:w-1/2">
+            <div class="aspect-square p-1">
+              <picture data-image-editable="photo_2"></picture>
+            </div>
+            <div class="absolute inset-0">
+              <div class="size-full p-1">
+                <picture class="bg-repeat-round element_7"></picture>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Introduction Section End -->
+    <!-- Wedding Timeline Section Begin -->
+    <section id="SECTION_TIMELINE"
+      class="relative after:absolute after:inset-0 after:bg-[url('https://pinvite.io/assets/images/templates/wedding/website/heart-beats/pattern.svg')]">
+      <div>
+        <svg width="100%" height="100%" class="relative -bottom-1 fill-[#e25d5d]" version="1.1"
+          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+          viewBox="0 0 2560 168.6227" enable-background="new 0 0 2560 168.6227" xml:space="preserve"
+          data-sentry-element="svg">
+          <g data-sentry-element="g"></g>
+          <g data-sentry-element="g">
+            <path
+              d="M0,0c0,0,219.6543,165.951,730.788,124.0771c383.3156-31.4028,827.2139-96.9514,1244.7139-96.9514 c212.5106,0,438.9999,3.5,584.4982,1.5844v139.9126H0V0z"
+              data-sentry-element="path"></path>
+          </g>
+        </svg>
+      </div>
+      <div class="bg-[#e25d5d] py-0">
+        <div class="wrapper relative z-[1] py-[6rem] min-[768px]:py-[10rem]">
+          <div class="flex max-md:flex-col gap-[2rem] font-oswald drop-shadow-lg">
+            <div class="flex-1 bg-white p-[2.4rem] rounded-[2rem]" data-aos="fade-up">
+              <div class="size-[7.2rem] bg-[#e25d5d1a] p-[1rem] mx-[1.6rem] rounded-full bg-contain">
+                <picture class="element_4"></picture>
+              </div>
+              <div class="py-[.8rem] px-[1.6rem]">
+                <p class="mb-[2.4rem] text-[2rem] md:text-[3rem] text-[#e25d5d]" data-editable="field_9">City Hall</p>
+                <p class="mb-[2.4rem] text-[1.6rem] md:text-[2rem] text-[#6f738a]" data-editable="field_10">04 PM - 05
+                  PM
+                </p>
+                <p class="text-[1.4rem] md:text-[1.8rem] text-[#8e8d8d]" data-editable="field_11">123 Main Street,
+                  Springfield</p>
+              </div>
+            </div>
+            <div class="flex-1 bg-white p-[2.4rem] rounded-[2rem]" data-aos="fade-up" data-aos-delay="200">
+              <div class="size-[7.2rem] bg-[#e25d5d1a] p-[1rem] mx-[1.6rem] rounded-full bg-contain">
+                <picture class="element_5"></picture>
+              </div>
+              <div class="py-[.8rem] px-[1.6rem]">
+                <p class="mb-[2.4rem] text-[2rem] md:text-[3rem] text-[#e25d5d]" data-editable="field_12">City Hall</p>
+                <p class="mb-[2.4rem] text-[1.6rem] md:text-[2rem] text-[#6f738a]" data-editable="field_13">04 PM - 05
+                  PM
+                </p>
+                <p class="text-[1.4rem] md:text-[1.8rem] text-[#8e8d8d]" data-editable="field_14">123 Main Street,
+                  Springfield</p>
+              </div>
+            </div>
+            <div class="flex-1 bg-white p-[2.4rem] rounded-[2rem]" data-aos="fade-up" data-aos-delay="400">
+              <div class="size-[7.2rem] bg-[#e25d5d1a] p-[1rem] mx-[1.6rem] rounded-full bg-contain">
+                <picture class="element_6"></picture>
+              </div>
+              <div class="py-[.8rem] px-[1.6rem]">
+                <p class="mb-[2.4rem] text-[2rem] md:text-[3rem] text-[#e25d5d]" data-editable="field_15">City Hall</p>
+                <p class="mb-[2.4rem] text-[1.6rem] md:text-[2rem] text-[#6f738a]" data-editable="field_102">04 PM - 05
+                  PM
+                </p>
+                <p class="text-[1.4rem] md:text-[1.8rem] text-[#8e8d8d]" data-editable="field_16">123 Main Street,
+                  Springfield</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <svg width="100%" height="100%" class="relative -bottom-1 fill-white" version="1.1"
+            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 2560 168.6227" enable-background="new 0 0 2560 168.6227" xml:space="preserve"
+            data-sentry-element="svg">
+            <g data-sentry-element="g"></g>
+            <g data-sentry-element="g">
+              <path
+                d="M2560,0c0,0-219.6543,165.951-730.788,124.0771c-383.3156-31.4028-827.2138-96.9514-1244.7139-96.9514 c-212.5106,0-439,3.5-584.4982,1.5844l0,139.9126h2560V0z"
+                data-sentry-element="path"></path>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+    <!-- Wedding Timeline Section End -->
+    <!-- Timer Section Begin -->
+    <section id="SECTION_TIMER">
+      <div class="wrapper">
+        <div
+          class="z-[1] relative flex w-full flex-col items-center justify-center border bg-white px-10 py-16 text-center before:absolute before:inset-0 before:-left-1 before:top-1 before:-z-[1] before:-rotate-3 before:bg-[#fafafa] before:shadow-[0_0_8px_rgba(0,0,0,0.2)] before:content-['']">
+          <div class="mt-[2.4rem] max-w-[76.9rem]">
+            <p class="mb-[2.4rem] font-gilda text-[1.8rem] md:text-[2.4rem] text-[#6f738a]" data-editable="field_17"
+              data-aos="fade-up">Join Our
+              Joy!</p>
+            <p class="mb-[2.4rem] font-oswald text-[2rem] md:text-[3rem] text-[#e25d5d]" data-editable="field_18"
+              data-aos="fade-up" data-aos-delay="200">The Wedding Countdown</p>
+            <p class="mb-[2.4rem] font-lora text-[1.4rem] md:text-[1.8rem] text-[#8e8d8d]" data-editable="field_19"
+              data-aos="fade-up" data-aos-delay="400">We warmly
+              invite you to be
+              part of the most
+              important
+              chapter of our lives. Let's unite our hearts and
+              celebrate together, in a storybook setting.</p>
+          </div>
+          <div class="w-full">
+            <div class="relative flex max-sm:flex-col max-md:items-center m-auto p-[1rem] text-center text-[#e25d5d]">
+              <div id="TIMER_DAY" class="w-full" data-aos="fade-up" data-aos-delay="100">
+                <span class="font-oswald text-[3.6rem] md:text-[6rem] font-medium">00</span>
+                <p class="font-light text-[1.8rem] md:text-[3rem] text-[#6f738a]">
+                  Day
+                </p>
+              </div>
+              <div id="TIMER_HOUR" class="w-full" data-aos="fade-up" data-aos-delay="200">
+                <span class="font-oswald text-[3.6rem] md:text-[6rem] font-medium">00</span>
+                <p class="font-light text-[1.8rem] md:text-[3rem] text-[#6f738a]">
+                  Hour
+                </p>
+              </div>
+              <div id="TIMER_MIN" class="w-full" data-aos="fade-up" data-aos-delay="300">
+                <span class="font-oswald text-[3.6rem] md:text-[6rem] font-medium">00</span>
+                <p class="font-light text-[1.8rem] md:text-[3rem] text-[#6f738a]">
+                  Min
+                </p>
+              </div>
+              <div id="TIMER_SEC" class="w-full" data-aos="fade-up" data-aos-delay="400">
+                <span class="font-oswald text-[3.6rem] md:text-[6rem] font-medium">00</span>
+                <p class="font-light text-[1.8rem] md:text-[3rem] text-[#6f738a]">
+                  Sec
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Timer Section End -->
+    <!-- About Us Section Begin -->
+    <section id="SECTION_ABOUTUS">
+      <div>
+        <svg width="100%" height="100%" class="relative -bottom-1 fill-[#fff9f5]" version="1.1"
+          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+          viewBox="0 0 2560 168.6227" enable-background="new 0 0 2560 168.6227" xml:space="preserve"
+          data-sentry-element="svg">
+          <g data-sentry-element="g"></g>
+          <g data-sentry-element="g">
+            <path
+              d="M0,0c0,0,219.6543,165.951,730.788,124.0771c383.3156-31.4028,827.2139-96.9514,1244.7139-96.9514 c212.5106,0,438.9999,3.5,584.4982,1.5844v139.9126H0V0z"
+              data-sentry-element="path"></path>
+          </g>
+        </svg>
+      </div>
+      <div class="bg-[#fff9f5] py-0">
+        <div class="wrapper relative z-[1] py-[6rem] min-[768px]:py-[10rem]">
+          <div class="w-full py-[3.2rem] flex flex-col md:flex-row items-start justify-center gap-[5rem] ">
+            <div class="flex w-full md:w-1/2 flex-col items-center justify-center text-center" data-aos="fade-right">
+              <div class="max-w-[30rem] relative w-full">
+                <div class="aspect-square p-1">
+                  <picture data-image-editable="photo_2"></picture>
+                </div>
+                <div class="absolute inset-0">
+                  <div class="size-full p-1">
+                    <picture class="bg-contain bg-repeat-round element_8"></picture>
+                  </div>
+                </div>
+              </div>
+              <div class="max-w-[51.2rem] py-[.8rem] px-[1.6rem]">
+                <p class="font-oswald text-[#6f738a] text-[1.8rem] md:text-[2.4rem]" data-editable="field_20">SMITH</p>
+                <p class="mb-[2.4rem] font-oswald text-[#e25d5d] text-[2.4rem] md:text-[3.6rem]"
+                  data-editable="field_21">EMMA</p>
+                <p class="font-lora text-[#8e8d8d] text-[1.4rem] md:text-[1.8rem]" data-editable="field_22">I have
+                  always brought color and art
+                  into the
+                  lives of those around me. Every detail
+                  for me is an opportunity to create something beautiful, and I hope my smile brings you light, just as
+                  John brings light into my life every day.</p>
+              </div>
+            </div>
+            <div class="flex w-full md:w-1/2 flex-col items-center justify-center text-center" data-aos="fade-left">
+              <div class="max-w-[30rem] relative w-full">
+                <div class="aspect-square p-1">
+                  <picture data-image-editable="photo_2"></picture>
+                </div>
+                <div class="absolute inset-0">
+                  <div class="size-full p-1">
+                    <picture class="bg-contain bg-repeat-round element_8"></picture>
+                  </div>
+                </div>
+              </div>
+              <div class="max-w-[51.2rem] py-[.8rem] px-[1.6rem]">
+                <p class="font-oswald text-[#6f738a] text-[1.8rem] md:text-[2.4rem]" data-editable="field_23">SMITH</p>
+                <p class="mb-[2.4rem] font-oswald text-[#e25d5d] text-[2.4rem] md:text-[3.6rem]"
+                  data-editable="field_24">EMMA</p>
+                <p class="font-lora text-[#8e8d8d] text-[1.4rem] md:text-[1.8rem]" data-editable="field_25">I have
+                  always brought color and art
+                  into the
+                  lives of those around me. Every detail
+                  for me is an opportunity to create something beautiful, and I hope my smile brings you light, just as
+                  John brings light into my life every day.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <svg width="100%" height="100%" class="relative -bottom-1 fill-white" version="1.1"
+            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 2560 168.6227" enable-background="new 0 0 2560 168.6227" xml:space="preserve"
+            data-sentry-element="svg">
+            <g data-sentry-element="g"></g>
+            <g data-sentry-element="g">
+              <path
+                d="M2560,0c0,0-219.6543,165.951-730.788,124.0771c-383.3156-31.4028-827.2138-96.9514-1244.7139-96.9514 c-212.5106,0-439,3.5-584.4982,1.5844l0,139.9126h2560V0z"
+                data-sentry-element="path"></path>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+    <!-- About Us Section End -->
+    <!-- love Story Section Begin -->
+    <section id="SECTION_STORY" class="relative z-[1]">
+      <div class="wrapper">
+        <div class="text-center">
+          <div class="mb-[5rem] py-[.8rem] px-[1.6rem]">
+            <p class="mb-[2.4rem] font-gilda text-[2.4rem] md:text-[3.6rem] text-[#6f738a]" data-editable="field_26"
+              data-aos="fade-up">Our Story
+            </p>
+            <p class="font-oswald text-[3rem] md:text-[4.8rem] text-[#e25d5d]" data-editable="field_27"
+              data-aos="fade-up" data-aos-delay="200">
+              How We Met and Decided to Journey Through
+              Life Together
+            </p>
+          </div>
+        </div>
+        <div>
+          <div class="flex w-full flex-col items-center">
+            <ol class="mb-0 flex w-full flex-col">
+              <li
+                class="group relative flex items-center pb-[8rem] after:absolute after:-bottom-[3.2rem] after:left-[2.4rem] after:h-1/2 after:w-[1px] after:bg-[#7c7e7f33] after:py-[1.6rem] after:content-[''] last:pb-0 after:last:content-none even:ml-auto md:after:left-[4rem] lg:ml-[50%] lg:w-1/2 lg:after:left-auto lg:even:mr-[50%] lg:even:flex-row-reverse lg:even:text-right">
+                <div
+                  class="flex size-[4.8rem] flex-shrink-0 items-center justify-center rounded-full bg-[#e25d5d1a] md:size-[8rem] lg:group-odd:-ml-[4rem] lg:group-odd:mr-[4rem] lg:group-even:-mr-[4rem] lg:group-even:ml-[4rem]">
+                  <svg version="1.1" class="animate-heartbeat size-[1rem] fill-[#e25d5d] md:size-[2.4rem]"
+                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    viewBox="0 0 107 93" enable-background="new 0 0 107 93" xml:space="preserve">
+                    <path
+                      d="M53.6825,9.4436L53.6825,9.4436C41.6532-2.4793,22.2392-2.5,10.1866,9.4439 c-12.1565,12.0471-12.07,31.7375-0.0219,43.8819l35.08,35.3601c4.5697,4.6061,12.0081,4.6357,16.6142,0.0661l35.1704-34.8918 c12.1523-12.056,12.4179-32.0464,0.3787-44.2154C85.3917-2.5013,65.8078-2.5857,53.6825,9.4436z">
+                    </path>
+                  </svg>
+                </div>
+                <div>
+                  <div class="relative px-4 py-2" data-aos="fade-up">
+                    <div>
+                      <P class="text-[#e25d5d] font-oswald text-[2rem] md:text-[3rem]" data-editable="field_28">The
+                        Beginning of a New Adventure
+                      </P>
+                      <P class="mb-[2.4rem] font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]"
+                        data-editable="field_271">An Ordinary Evening,
+                        An Extraordinary
+                        Destiny</P>
+                      <P class="font-lora text-[#8e8d8d] text-[1.4rem] md:text-[1.8rem]" data-editable="field_29">On a
+                        seemingly ordinary evening,
+                        our destinies
+                        met. A spontaneous conversation, shared laughter,
+                        and an instant connection transformed a chance encounter into the first chapter of our life
+                        together.</P>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="group relative flex items-center pb-[8rem] after:absolute after:-bottom-[3.2rem] after:left-[2.4rem] after:h-1/2 after:w-[1px] after:bg-[#7c7e7f33] after:py-[1.6rem] after:content-[''] last:pb-0 after:last:content-none even:ml-auto md:after:left-[4rem] lg:ml-[50%] lg:w-1/2 lg:after:left-auto lg:even:mr-[50%] lg:even:flex-row-reverse lg:even:text-right">
+                <div
+                  class="flex size-[4.8rem] flex-shrink-0 items-center justify-center rounded-full bg-[#e25d5d1a] md:size-[8rem] lg:group-odd:-ml-[4rem] lg:group-odd:mr-[4rem] lg:group-even:-mr-[4rem] lg:group-even:ml-[4rem]">
+                  <svg version="1.1" class="animate-heartbeat size-[1rem] fill-[#e25d5d] md:size-[2.4rem]"
+                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    viewBox="0 0 107 93" enable-background="new 0 0 107 93" xml:space="preserve">
+                    <path
+                      d="M53.6825,9.4436L53.6825,9.4436C41.6532-2.4793,22.2392-2.5,10.1866,9.4439 c-12.1565,12.0471-12.07,31.7375-0.0219,43.8819l35.08,35.3601c4.5697,4.6061,12.0081,4.6357,16.6142,0.0661l35.1704-34.8918 c12.1523-12.056,12.4179-32.0464,0.3787-44.2154C85.3917-2.5013,65.8078-2.5857,53.6825,9.4436z">
+                    </path>
+                  </svg>
+                </div>
+                <div>
+                  <div class="relative px-4 py-2" data-aos="fade-up">
+                    <div>
+                      <P class="text-[#e25d5d] font-oswald text-[2rem] md:text-[3rem]" data-editable="field_30">The
+                        Beginning of a New Adventure
+                      </P>
+                      <P class="mb-[2.4rem] font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]"
+                        data-editable="field_272">An Ordinary Evening,
+                        An Extraordinary
+                        Destiny</P>
+                      <P class="font-lora text-[#8e8d8d] text-[1.4rem] md:text-[1.8rem]" data-editable="field_31">On a
+                        seemingly ordinary evening,
+                        our destinies
+                        met. A spontaneous conversation, shared laughter,
+                        and an instant connection transformed a chance encounter into the first chapter of our life
+                        together.</P>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="group relative flex items-center pb-[8rem] after:absolute after:-bottom-[3.2rem] after:left-[2.4rem] after:h-1/2 after:w-[1px] after:bg-[#7c7e7f33] after:py-[1.6rem] after:content-[''] last:pb-0 after:last:content-none even:ml-auto md:after:left-[4rem] lg:ml-[50%] lg:w-1/2 lg:after:left-auto lg:even:mr-[50%] lg:even:flex-row-reverse lg:even:text-right">
+                <div
+                  class="flex size-[4.8rem] flex-shrink-0 items-center justify-center rounded-full bg-[#e25d5d1a] md:size-[8rem] lg:group-odd:-ml-[4rem] lg:group-odd:mr-[4rem] lg:group-even:-mr-[4rem] lg:group-even:ml-[4rem]">
+                  <svg version="1.1" class="animate-heartbeat size-[1rem] fill-[#e25d5d] md:size-[2.4rem]"
+                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    viewBox="0 0 107 93" enable-background="new 0 0 107 93" xml:space="preserve">
+                    <path
+                      d="M53.6825,9.4436L53.6825,9.4436C41.6532-2.4793,22.2392-2.5,10.1866,9.4439 c-12.1565,12.0471-12.07,31.7375-0.0219,43.8819l35.08,35.3601c4.5697,4.6061,12.0081,4.6357,16.6142,0.0661l35.1704-34.8918 c12.1523-12.056,12.4179-32.0464,0.3787-44.2154C85.3917-2.5013,65.8078-2.5857,53.6825,9.4436z">
+                    </path>
+                  </svg>
+                </div>
+                <div>
+                  <div class="relative px-4 py-2" data-aos="fade-up">
+                    <div>
+                      <P class="text-[#e25d5d] font-oswald text-[2rem] md:text-[3rem]" data-editable="field_32">The
+                        Beginning of a New Adventure
+                      </P>
+                      <P class="mb-[2.4rem] font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]"
+                        data-editable="field_273">An Ordinary Evening,
+                        An Extraordinary
+                        Destiny</P>
+                      <P class="font-lora text-[#8e8d8d] text-[1.4rem] md:text-[1.8rem]" data-editable="field_33">On a
+                        seemingly ordinary evening,
+                        our destinies
+                        met. A spontaneous conversation, shared laughter,
+                        and an instant connection transformed a chance encounter into the first chapter of our life
+                        together.</P>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- love Story Section End -->
+    <!-- Form Section Begin -->
+    <section id="SECTION_TIMER">
+      <div class="wrapper">
+        <div
+          class="z-[1] relative flex w-full flex-col items-center justify-center border bg-white px-10 py-16 text-center before:absolute before:inset-0 before:-left-1 before:top-1 before:-z-[1] before:-rotate-3 before:bg-[#fafafa] before:shadow-[0_0_8px_rgba(0,0,0,0.2)] before:content-['']">
+          <div class="max-w-[76.9rem] py-[.8rem] px-[1.6rem] mt-[2.4rem]">
+            <p class="mb-[2.4rem] font-gilda text-[1.8rem] md:text-[2.4rem] text-[#6f738a]" data-editable="field_34">
+              Guestbook</p>
+            <p class="mb-[2.4rem] font-oswald text-[2rem] md:text-[3rem] text-[#e25d5d]" data-editable="field_35">Come
+              to attend our marriage
+              ceremony
+            </p>
+            <p class="mb-[2.4rem] font-lora text-[1.4rem] md:text-[1.8rem] text-[#8e8d8d]" data-editable="field_36">
+              Congratulations on your
+              wedding! Hope it was the most wonderful day ever Now that your wedding is done and dusted, there is only
+              one more thing left to do..Oh yes the thank you cards!
+            </p>
+          </div>
+          <div class="w-full">
+            <div class="flex-1 p-[3rem] rounded-2xl text-center w-full max-w-[40rem] m-auto">
+              <form action="" class="space-y-4">
+                <div class="relative">
+                  <input type="text" placeholder="Tên của bạn"
+                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#e25d5d] focus:outline-none text-[1.3rem] bg-transparent" />
+                </div>
+
+                <div class="relative">
+                  <input type="text" placeholder="Số điện thoại"
+                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#e25d5d] focus:outline-none text-[1.3rem] bg-transparent" />
+                </div>
+
+                <div class="relative">
+                  <input type="number" min="1" max="5" placeholder="Số người tham dự"
+                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#e25d5d] focus:outline-none text-[1.3rem] bg-transparent" />
+                </div>
+
+                <div class="flex justify-around py-[10px] text-[1.7rem] text-gray-600">
+                  <label class="flex items-center space-x-2 cursor-pointer group">
+                    <input type="radio" name="guest_type" id="side_groom" class="accent-black" />
+                    <span class="group-hover:text-black">Nhà trai</span>
+                  </label>
+                  <label class="flex items-center space-x-2 cursor-pointer group">
+                    <input type="radio" name="guest_type" id="side_bride" class="accent-black" />
+                    <span class="group-hover:text-black">Nhà gái</span>
+                  </label>
+                </div>
+
+                <div class="relative">
+                  <textarea name="congratulations" rows="3" placeholder="Lời chúc của bạn"
+                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#e25d5d] focus:outline-none text-[1.3rem] bg-transparent resize-none"></textarea>
+                </div>
+                <button type="submit"
+                  class="rounded-[1rem] px-[2rem] py-[1rem] text-[10px] font-semibold transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60 bg-[#e25d5d] text-white">
+                  Gửi lời chúc
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Form Section End -->
+    <!-- Gift Section Begin -->
+    <section id="SECTION_ABOUTUS" class="bg-white relative z-[1] overflow-visible">
+      <div class="absolute w-full h-[11.2rem] left-0 top-[-4rem] element_3">
+      </div>
+      <div class="wrapper ">
+        <div>
+          <div class="wrapper text-center py-[15px]">
+            <div class="mb-[2rem]" data-aos="fade-up">
+              <p class="mb-[2.4rem] font-gilda text-[1.8rem] md:text-[2.4rem] text-[#6f738a]"
+                data-editable="gift_title">
+                Wedding box
+              </p>
+              <p class="mb-[2.4rem] font-oswald text-[2rem] md:text-[3rem] text-[#e25d5d]" data-editable="gift_des">
+                your presence is our best gift
+              </p>
+            </div>
+            <div class="justify-self-center text-black p-[10px] rounded-[10px]">
+              <div class="flex max-md:flex-col gap-[3rem]">
+                <div class="flex-1 p-[1rem] shadow-md rounded-[1rem]">
+                  <h6 class="mb-[1rem] text-[#e25d5d] font-oswald text-[2rem] md:text-[3rem]"
+                    data-editable="groom_title" data-aos="fade-right" data-aos-delay="100">
+                    Groom
+                  </h6>
+                  <picture class="size-[300px] aspect-[1/1] m-auto mb-[1rem]" data-image-editable="qr_1"
+                    data-aos="fade-right" data-aos-delay="200">
+                  </picture>
+                  <p class="font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]" data-aos="fade-right"
+                    data-aos-delay="300">
+                    <span data-editable="groom_name">Nguyễn ABC</span>
+                  </p>
+                  <p class="font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]" data-aos="fade-right"
+                    data-aos-delay="400">
+                    <span data-editable="groom_bank">Techcomebank</span>
+                  </p>
+                  <p class="font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]" data-aos="fade-right"
+                    data-aos-delay="500">
+                    <span data-editable="groom_bank_nummber">0123456789</span>
+                  </p>
+                </div>
+                <div class="flex-1 p-[1rem] shadow-md rounded-[1rem]">
+                  <h6 class="mb-[1rem] text-[#e25d5d] font-oswald text-[2rem] md:text-[3rem]"
+                    data-editable="bride_title" data-aos="fade-left" data-aos-delay="100">
+                    Bride
+                  </h6>
+                  <picture class="size-[300px] aspect-[1/1] m-auto mb-[1rem]" data-image-editable="qr_2"
+                    data-aos="fade-left" data-aos-delay="200">
+                  </picture>
+                  <p class="font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]" data-aos="fade-left"
+                    data-aos-delay="300">
+                    <span data-editable="bride_name">Nguyễn ABC</span>
+                  </p>
+                  <p class="font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]" data-aos="fade-left"
+                    data-aos-delay="400">
+                    <span data-editable="bride_bank">Techcomebank</span>
+                  </p>
+                  <p class="font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]" data-aos="fade-left"
+                    data-aos-delay="500">
+                    <span data-editable="bride_bank_number">0123456789</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="absolute w-full h-[11.2rem] left-0 bottom-[-4rem] rotate-180 element_3">
+      </div>
+    </section>
+    <!-- Gift Section End -->
+    <footer>
+      <p class="bg-gray-200 text-center">Bản quyền thuộc Hiweb</p>
+    </footer>
+    <div class="snowflakes" aria-hidden="true">
+      <div class="snowflake" style="font-size: 20px">🌸</div>
+      <div class="snowflake">❅</div>
+      <div class="snowflake" style="font-size: 18px">🤍</div>
+      <div class="snowflake">❅</div>
+      <div class="snowflake" style="font-size: 20px">🌸</div>
+      <div class="snowflake" style="font-size: 22px">❅</div>
+      <div class="snowflake" style="font-size: 14px">🤍</div>
+      <div class="snowflake" style="font-size: 15px">❅</div>
+    </div>
+  </main>
+  <script>
+    const OPTIONS = { loop: true };
+
+    const emblaNode = document.querySelector(".embla");
+    const viewportNode = emblaNode.querySelector(".embla__viewport");
+    const prevBtnNode = emblaNode.querySelector(".embla__button--prev");
+    const nextBtnNode = emblaNode.querySelector(".embla__button--next");
+
+    const emblaApi = EmblaCarousel(viewportNode, OPTIONS);
+
+    const addPrevNextButtonClickHandlers = (emblaApi, prevBtn, nextBtn) => {
+      const scrollPrev = () => emblaApi.scrollPrev();
+      const scrollNext = () => emblaApi.scrollNext();
+
+      prevBtn.addEventListener("click", scrollPrev, false);
+      nextBtn.addEventListener("click", scrollNext, false);
+
+      const togglePrevNextButtonsState = () => {
+        if (emblaApi.canScrollPrev()) prevBtn.removeAttribute("disabled");
+        else prevBtn.setAttribute("disabled", "disabled");
+
+        if (emblaApi.canScrollNext()) nextBtn.removeAttribute("disabled");
+        else nextBtn.setAttribute("disabled", "disabled");
+      };
+
+      emblaApi
+        .on("select", togglePrevNextButtonsState)
+        .on("reinit", togglePrevNextButtonsState);
+
+      togglePrevNextButtonsState();
+    };
+
+    addPrevNextButtonClickHandlers(emblaApi, prevBtnNode, nextBtnNode);
+    addDotButtonsAndClickHandlers(emblaApi);
+    function toggleGalleryPopup(show) {
+      const popup = document.getElementById("GALLERY_POPUP");
+      const viewportNode = popup.querySelector(".embla__viewport");
+      const prevBtn = popup.querySelector(".embla__button--prev");
+      const nextBtn = popup.querySelector(".embla__button--next");
+
+      if (show) {
+        popup.classList.add("active");
+        document.body.style.overflow = "hidden";
+
+        if (!emblaApi) {
+          emblaApi = EmblaCarousel(viewportNode, { loop: true });
+
+          prevBtn.addEventListener("click", () => emblaApi.scrollPrev());
+          nextBtn.addEventListener("click", () => emblaApi.scrollNext());
+        } else {
+          setTimeout(() => {
+            emblaApi.reInit();
+          }, 10);
+        }
+      } else {
+        popup.classList.remove("active");
+        document.body.style.overflow = "auto";
+      }
+    }
+  </script>
+</body>
+
+</html>
