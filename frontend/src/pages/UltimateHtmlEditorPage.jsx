@@ -8,6 +8,7 @@ import authService from '../services/auth.service'
 import { useToast } from '../context/ToastContext'
 import MediaLibraryModal from '../components/MediaLibraryModal'
 
+
 // Custom debounce hook for smooth preview
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value)
@@ -382,14 +383,18 @@ const UltimateHtmlEditorPage = () => {
 
     // Wait for DOM to be fully loaded before injecting styles
     const waitForBody = () => {
-      if (!doc.body) {
+      if (!doc || !doc.body) {
         setTimeout(waitForBody, 10)
         return
       }
 
       // Inject styles & listeners after body is ready
-      injectViewportAndStyles()
-      setupEventListeners()
+      try {
+        injectViewportAndStyles()
+        setupEventListeners()
+      } catch (error) {
+        console.warn('Failed to setup iframe:', error)
+      }
     }
 
     waitForBody()
@@ -397,8 +402,16 @@ const UltimateHtmlEditorPage = () => {
 
     // Restore Scroll
     try {
-      if (scrollX || scrollY) win.scrollTo(scrollX, scrollY);
-    } catch (e) { }
+      if (scrollX || scrollY) {
+        setTimeout(() => {
+          if (win && typeof win.scrollTo === 'function') {
+            win.scrollTo(scrollX, scrollY)
+          }
+        }, 50)
+      }
+    } catch (e) {
+      console.warn('Could not restore scroll position:', e)
+    }
 
   }, [previewHtml]);
 
@@ -625,16 +638,145 @@ const UltimateHtmlEditorPage = () => {
       }
     })
 
-    // 2d. Scan ALL remaining img tags (Fallback for un-managed images)
-    // const allImgs = doc.querySelectorAll('img')
-    // allImgs.forEach((img, idx) => {
-    //   // Skip if already captured via data-editable
-    //   if (img.hasAttribute('data-editable')) return
+    // 2d. ENHANCED: Scan ALL img tags and auto-detect editable images
+    const allImgs = doc.querySelectorAll('img')
+    allImgs.forEach((img, idx) => {
+      // Skip if already captured via data-editable
+      if (img.hasAttribute('data-editable')) return
 
-    //   // FILTER JUNK IMAGES
-    //   const src = img.getAttribute('src') || ''
-    //   if (!src || src.startsWith('data:') || src.startsWith('chrome-extension:') || src.includes('extension')) return
-    //   if (img.id && img.id.includes('eJOY')) return
+      // FILTER JUNK IMAGES
+      const src = img.getAttribute('src') || ''
+      if (!src || src.startsWith('data:') || src.startsWith('chrome-extension:') || src.includes('extension')) return
+      if (img.id && img.id.includes('eJOY')) return
+      if (img.className && typeof img.className === 'string' && img.className.includes('extension')) return
+
+      // Skip very small images (likely icons or decorations)
+      if (img.width && img.height && (img.width < 50 || img.height < 50)) return
+
+      // Generate an ID if not present
+      let id = img.id || ''
+      if (!id) {
+        // Try to derive from class
+        if (img.className && typeof img.className === 'string') {
+          const classList = img.className.split(' ')
+          id = classList.find(cls => cls.match(/^[a-zA-Z]/)) || classList[0]
+        }
+        // Try to derive from alt
+        if (!id && img.alt) id = img.alt.replace(/[^a-zA-Z0-9]/gi, '_').toLowerCase()
+        // Try to derive from src filename
+        if (!id && src) {
+          const filename = src.split('/').pop().split('.')[0]
+          if (filename && filename.length > 0) id = filename
+        }
+        // Fallback to index
+        if (!id) id = `image_${idx + 1}`
+      }
+
+      // Clean up ID
+      id = id.replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase()
+
+      // Ensure ID is unique
+      let originalId = id
+      let counter = 1
+      while (imageMap.has(id)) {
+        id = `${originalId}_${counter}`
+        counter++
+      }
+
+      // Auto-add data-editable attribute for future reference
+      img.setAttribute('data-editable', id)
+
+      imageMap.set(id, {
+        id: id,
+        originalSrc: src,
+        currentSrc: src,
+        alt: img.getAttribute('alt') || `Ảnh ${idx + 1}`,
+        className: img.className || '',
+        index: idx, // Keep index for fallback replacement
+        type: 'img',
+        isManaged: true, // Now managed after auto-detection
+        autoDetected: true // Flag to indicate this was auto-detected
+      })
+    })
+
+    // 2e. ENHANCED: Auto-detect background images in CSS without data-image-editable
+    const allElements = doc.querySelectorAll('*')
+    allElements.forEach((el, idx) => {
+      // Skip if already processed or invalid
+      if (el.hasAttribute('data-image-editable')) return
+      if (['style', 'script', 'head', 'meta', 'link', 'title', 'img'].includes(el.tagName.toLowerCase())) return
+      if (el.id && (el.id.includes('eJOY') || el.id.includes('extension'))) return
+
+      // Check for background image in inline style
+      let bgUrl = ''
+      if (el.style.backgroundImage) {
+        const match = el.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/)
+        if (match) {
+          bgUrl = match[1]
+          if (bgUrl.startsWith('data:') || bgUrl.startsWith('chrome-extension:')) return
+        }
+      }
+
+      // Check computed style for background image
+      if (!bgUrl && window.getComputedStyle) {
+        try {
+          const computedStyle = window.getComputedStyle(el)
+          if (computedStyle.backgroundImage && computedStyle.backgroundImage !== 'none') {
+            const match = computedStyle.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/)
+            if (match) {
+              bgUrl = match[1]
+              if (bgUrl.startsWith('data:') || bgUrl.startsWith('chrome-extension:')) return
+            }
+          }
+        } catch (e) {
+          // Ignore computed style errors
+        }
+      }
+
+      if (bgUrl) {
+        // Generate ID for background image
+        let id = el.id || ''
+        if (!id) {
+          if (el.className && typeof el.className === 'string') {
+            const classList = el.className.split(' ')
+            id = classList.find(cls => cls.match(/^[a-zA-Z]/)) || classList[0]
+          }
+          if (!id) {
+            const filename = bgUrl.split('/').pop().split('.')[0]
+            if (filename && filename.length > 0) id = `bg_${filename}`
+          }
+          if (!id) id = `background_${idx + 1}`
+        }
+
+        // Clean up ID
+        id = id.replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase()
+
+        // Ensure ID is unique
+        let originalId = id
+        let counter = 1
+        while (imageMap.has(id)) {
+          id = `${originalId}_${counter}`
+          counter++
+        }
+
+        // Auto-add data-image-editable attribute
+        el.setAttribute('data-image-editable', id)
+
+        const isLadipage = el.classList.contains('ladi-element') || el.querySelector('.ladi-image-background') !== null
+
+        imageMap.set(id, {
+          id: id,
+          htmlId: el.id,
+          originalSrc: bgUrl,
+          currentSrc: bgUrl,
+          alt: id.replace(/_/g, ' '),
+          className: el.className || '',
+          type: isLadipage ? 'ladi-background' : 'background',
+          isManaged: true,
+          autoDetected: true
+        })
+      }
+    })
     //   if (img.className && typeof img.className === 'string' && img.className.includes('extension')) return
 
     //   // Generate an ID if not present
@@ -1257,17 +1399,25 @@ const UltimateHtmlEditorPage = () => {
     }
 
     try {
+      console.log('📤 Processing image:', file.name)
+      
+      // Convert to optimized format for fast loading
       const reader = new FileReader()
       reader.onloadend = () => {
+        console.log('✅ Image processing successful')
         setImageData(prev => ({
           ...prev,
-          [imageId]: reader.result
+          [imageId]: reader.result // Store optimized image data
         }))
         toast.success('✅ Đã tải ảnh lên!')
       }
+      reader.onerror = () => {
+        console.error('❌ Image processing failed')
+        toast.error('❌ Không thể xử lý ảnh!')
+      }
       reader.readAsDataURL(file)
     } catch (error) {
-      console.error('Failed to upload image:', error)
+      console.error('Failed to process image:', error)
       toast.error('❌ Không thể tải ảnh lên!')
     }
   }
@@ -1665,8 +1815,21 @@ const UltimateHtmlEditorPage = () => {
                 <p className="text-center text-gray-400 text-sm py-10">Không tìm thấy ảnh chỉnh sửa được trong mẫu này.</p>
               ) : (
                 <>
+                  {/* Auto-detection Info */}
+                  {templateAnalysis.images.some(img => img.autoDetected) && (
+                    <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3 border border-green-200 dark:border-green-800 mb-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="material-symbols-outlined text-green-600 text-[18px]">auto_detect_voice</span>
+                        <span className="text-sm font-semibold text-green-900 dark:text-green-100">Tự động phát hiện ảnh</span>
+                      </div>
+                      <p className="text-xs text-green-800 dark:text-green-200">
+                        Hệ thống đã tự động phát hiện {templateAnalysis.images.filter(img => img.autoDetected).length} ảnh có thể chỉnh sửa trong template này.
+                      </p>
+                    </div>
+                  )}
+
                   {/* Storage Info */}
-                  <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 border border-blue-200 dark:border-blue-800">
+                  <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 border border-blue-200 dark:border-blue-800 mb-4">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="material-symbols-outlined text-blue-600 text-[18px]">cloud_upload</span>
                       <span className="text-xs font-semibold text-blue-900 dark:text-blue-100">Free</span>
@@ -1713,6 +1876,21 @@ const UltimateHtmlEditorPage = () => {
                           />
                           <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-2">
                             <p className="text-[10px] text-white truncate font-medium">{img.alt || 'Image'}</p>
+                            {img.autoDetected && (
+                              <span className="text-[8px] text-green-300 font-bold">Auto-detected</span>
+                            )}
+                          </div>
+                          
+                          {/* Type Badge */}
+                          <div className="absolute top-2 right-2">
+                            <span className={`px-2 py-1 rounded text-[8px] font-bold ${
+                              img.type === 'img' ? 'bg-blue-500/90 text-white' :
+                              img.type === 'ladi-background' ? 'bg-purple-500/90 text-white' :
+                              'bg-green-500/90 text-white'
+                            }`}>
+                              {img.type === 'img' ? 'IMG' : 
+                               img.type === 'ladi-background' ? 'LADI' : 'BG'}
+                            </span>
                           </div>
                         </div>
                         
@@ -1897,6 +2075,7 @@ const UltimateHtmlEditorPage = () => {
           currentImageId={selectedImageId}
         />
       )}
+
     </div>
   )
 }
@@ -1904,130 +2083,137 @@ const UltimateHtmlEditorPage = () => {
 export default UltimateHtmlEditorPage
 
 // Custom CSS for react-datepicker
-const style = document.createElement('style')
-style.textContent = `
-  /* Custom DatePicker Styles */
-  .react-datepicker {
-    font-family: inherit;
-    border: 2px solid #e7e5e4;
-    border-radius: 1rem;
-    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  }
+if (typeof document !== 'undefined' && !document.getElementById('react-datepicker-styles')) {
+  const style = document.createElement('style')
+  style.id = 'react-datepicker-styles'
+  style.textContent = `
+    /* Custom DatePicker Styles */
+    .react-datepicker {
+      font-family: inherit;
+      border: 2px solid #e7e5e4;
+      border-radius: 1rem;
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+    
+    .react-datepicker__header {
+      background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+      border-bottom: none;
+      border-radius: 0.875rem 0.875rem 0 0;
+      padding: 1rem;
+    }
+    
+    .react-datepicker__current-month,
+    .react-datepicker-time__header {
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .react-datepicker__day-name {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 600;
+      font-size: 0.875rem;
+      width: 2.5rem;
+      line-height: 2.5rem;
+      margin: 0.166rem;
+    }
+    
+    .react-datepicker__day {
+      width: 2.5rem;
+      line-height: 2.5rem;
+      margin: 0.166rem;
+      border-radius: 0.75rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .react-datepicker__day:hover {
+      background: #fef3c7;
+      color: #92400e;
+      transform: scale(1.1);
+    }
+    
+    .react-datepicker__day--selected,
+    .react-datepicker__day--keyboard-selected {
+      background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+      color: white;
+      font-weight: 700;
+      transform: scale(1.1);
+    }
+    
+    .react-datepicker__day--today {
+      font-weight: 700;
+      color: #f59e0b;
+      border: 2px solid #fbbf24;
+    }
+    
+    .react-datepicker__navigation {
+      top: 1.25rem;
+    }
+    
+    .react-datepicker__navigation-icon::before {
+      border-color: white;
+      border-width: 2px 2px 0 0;
+    }
+    
+    .react-datepicker__time-container {
+      border-left: 2px solid #e7e5e4;
+    }
+    
+    .react-datepicker__time-list-item {
+      padding: 0.5rem 1rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .react-datepicker__time-list-item:hover {
+      background: #f3e8ff !important;
+      color: #6b21a8;
+    }
+    
+    .react-datepicker__time-list-item--selected {
+      background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%) !important;
+      color: white !important;
+      font-weight: 700;
+    }
+    
+    .react-datepicker__triangle {
+      display: none;
+    }
+    
+    /* Dark mode support */
+    .dark .react-datepicker {
+      background: #1c1917;
+      border-color: #44403c;
+    }
+    
+    .dark .react-datepicker__header {
+      background: linear-gradient(135deg, #d97706 0%, #ea580c 100%);
+    }
+    
+    .dark .react-datepicker__day {
+      color: #e7e5e4;
+    }
+    
+    .dark .react-datepicker__day:hover {
+      background: #44403c;
+      color: #fbbf24;
+    }
+    
+    .dark .react-datepicker__time-container {
+      border-left-color: #44403c;
+    }
+    
+    .dark .react-datepicker__time-list-item {
+      color: #e7e5e4;
+    }
+  `
   
-  .react-datepicker__header {
-    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
-    border-bottom: none;
-    border-radius: 0.875rem 0.875rem 0 0;
-    padding: 1rem;
+  // Safely append to head
+  try {
+    document.head.appendChild(style)
+  } catch (error) {
+    console.warn('Could not inject DatePicker styles:', error)
   }
-  
-  .react-datepicker__current-month,
-  .react-datepicker-time__header {
-    color: white;
-    font-weight: 700;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .react-datepicker__day-name {
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: 600;
-    font-size: 0.875rem;
-    width: 2.5rem;
-    line-height: 2.5rem;
-    margin: 0.166rem;
-  }
-  
-  .react-datepicker__day {
-    width: 2.5rem;
-    line-height: 2.5rem;
-    margin: 0.166rem;
-    border-radius: 0.75rem;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-  
-  .react-datepicker__day:hover {
-    background: #fef3c7;
-    color: #92400e;
-    transform: scale(1.1);
-  }
-  
-  .react-datepicker__day--selected,
-  .react-datepicker__day--keyboard-selected {
-    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
-    color: white;
-    font-weight: 700;
-    transform: scale(1.1);
-  }
-  
-  .react-datepicker__day--today {
-    font-weight: 700;
-    color: #f59e0b;
-    border: 2px solid #fbbf24;
-  }
-  
-  .react-datepicker__navigation {
-    top: 1.25rem;
-  }
-  
-  .react-datepicker__navigation-icon::before {
-    border-color: white;
-    border-width: 2px 2px 0 0;
-  }
-  
-  .react-datepicker__time-container {
-    border-left: 2px solid #e7e5e4;
-  }
-  
-  .react-datepicker__time-list-item {
-    padding: 0.5rem 1rem;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-  
-  .react-datepicker__time-list-item:hover {
-    background: #f3e8ff !important;
-    color: #6b21a8;
-  }
-  
-  .react-datepicker__time-list-item--selected {
-    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%) !important;
-    color: white !important;
-    font-weight: 700;
-  }
-  
-  .react-datepicker__triangle {
-    display: none;
-  }
-  
-  /* Dark mode support */
-  .dark .react-datepicker {
-    background: #1c1917;
-    border-color: #44403c;
-  }
-  
-  .dark .react-datepicker__header {
-    background: linear-gradient(135deg, #d97706 0%, #ea580c 100%);
-  }
-  
-  .dark .react-datepicker__day {
-    color: #e7e5e4;
-  }
-  
-  .dark .react-datepicker__day:hover {
-    background: #44403c;
-    color: #fbbf24;
-  }
-  
-  .dark .react-datepicker__time-container {
-    border-left-color: #44403c;
-  }
-  
-  .dark .react-datepicker__time-list-item {
-    color: #e7e5e4;
-  }
-`
-if (typeof document !== 'undefined') {
-  document.head.appendChild(style)
 }

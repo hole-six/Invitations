@@ -27,6 +27,7 @@ import DashboardPage from './pages/DashboardPage.jsx'
 import DashboardInvitationsPage from './pages/DashboardInvitationsPage.jsx'
 import DashboardTemplatesPage from './pages/DashboardTemplatesPage.jsx'
 import DashboardTemplateEditorPage from './pages/DashboardTemplateEditorPage.jsx'
+import DashboardCategoriesPage from './pages/DashboardCategoriesPage.jsx'
 import DashboardUsersPage from './pages/DashboardUsersPage.jsx'
 import DashboardAnalyticsPage from './pages/DashboardAnalyticsPage.jsx'
 import DashboardSettingsPage from './pages/DashboardSettingsPage.jsx'
@@ -180,7 +181,7 @@ function App() {
               path="/dashboard/templates/categories"
               element={
                 <AdminRoute>
-                  <DashboardTemplatesPage />
+                  <DashboardCategoriesPage />
                 </AdminRoute>
               }
             />
