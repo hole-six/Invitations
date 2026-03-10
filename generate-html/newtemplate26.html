@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Lora:ital,wght@0,400..700;1,400..700&family=Oswald:wght@200..700&family=Petit+Formal+Script&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@400..700&family=Great+Vibes&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
     rel="stylesheet">
   <!-- CDN -->
   <!-- Tailwind CSS -->
@@ -351,6 +351,26 @@
       background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Fheart-beats%2FheartFrame.png&w=2048&q=75");
     }
 
+    .element_9 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Fsunflower%2FheroTop.webp&w=3840&q=75");
+    }
+
+    .element_10 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Fsunflower%2FheroBottom.webp&w=3840&q=75");
+    }
+
+    .element_11 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Fsunflower%2FstoriesFrame.webp&w=3840&q=100");
+    }
+
+    .element_12 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Fsunflower%2FrsvpTop.webp&w=3840&q=80");
+    }
+
+    .element_13 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Fsunflower%2FrsvpBottom.webp&w=3840&q=80");
+    }
+
     [data-image-editable="photo_1"] {
       background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342159_9a35bc8074ac983581f10a243218dee5-20250720112650-xdgti.jpg");
     }
@@ -546,25 +566,22 @@
     }
 
     /* font familly */
-    .font-josefin {
+    .font-greatvibes {
+      font-family: "Great Vibes", cursive;
+    }
+
+    .font-josefinsans {
       font-family: "Josefin Sans", sans-serif;
     }
 
-    .font-petit {
-      font-family: "Petit Formal Script", cursive;
+    .font-dancingscript {
+      font-family: "Dancing Script", cursive;
     }
 
-    .font-oswald {
-      font-family: "Oswald", sans-serif;
+    .font-cardo {
+      font-family: "Cardo", serif;
     }
 
-    .font-gilda {
-      font-family: "Gilda Display", serif;
-    }
-
-    .font-lora {
-      font-family: "Lora", serif;
-    }
 
     [data-image-editable] {
       background-size: cover;
@@ -573,7 +590,7 @@
     }
 
     .wrapper {
-      max-width: 1140px;
+      max-width: 1440px;
       width: 100%;
       margin: auto;
       padding-inline: 30px;
@@ -749,163 +766,45 @@
 <body>
   <main>
     <!-- Banner Section Begin-->
-    <section id="SECTION_BANNER"
-      class="before:absolute before:inset-0 before:z-2 before:bg-[rgba(23,23,38,.6)] before:content-[''] relative pb-0"
-      data-image-editable="photo_1">
+    <section id="SECTION_BANNER" class="bg-[#cd6a131a] relative m-[2rem] md:m-[5rem] lg:m-[10rem]">
+      <div class="absolute top-0 left-0 w-full">
+        <picture class="aspect-[3720/1161] element_9"></picture>
+      </div>
       <div class="wrapper">
-        <div class="text-center" data-aos="fade-up">
-          <p class="font-josefin font-light text-center text-[3rem] md:text-[4.8rem] text-white"
-            data-editable="field_1">Together
+        <div class="text-center">
+          <p class="font-josefinsans font-light text-center text-[3rem] md:text-[4.8rem] text-[#cd6a13]"
+            data-editable="field_1" data-aos="fade-up">Together
             Forever</p>
-          <h1 class="font-petit text-[7.2rem] md:text-[12.8rem] text-[#e25d5d]" data-editable="field_2">Emma & John
+          <h1 class="font-greatvibes text-[7.2rem] lg:text-[12.8rem] text-[#738766]" data-editable="field_2"
+            data-aos="fade-up" data-aos-delay="200">Emma & John
           </h1>
-          <p class="text-center flex justify-center items-center">
-            <span id="js-month" class="font-oswald text-center text-[2.4rem] md:text-[3.6rem] text-white"
+          <p class="text-center flex justify-center items-center font-light" data-aos="fade-up" data-aos-delay="400">
+            <span id="js-month" class="font-josefinsans text-center text-[3rem] md:text-[3.6rem] text-[#cd6a13]"
               data-editable="field_3">04</span>
-            <span id="js-day" class="font-oswald text-center text-[7.2rem] md:text-[12.8rem] text-[#e25d5d]"
+            <span id="js-day" class="font-josefinsans text-center text-[7.2rem] md:text-[12.8rem] text-[#738766]"
               data-editable="field_4">&nbsp;05&nbsp;</span>
-            <span id="js-year" class="font-oswald text-center text-[2.4rem] md:text-[3.6rem] text-white"
+            <span id="js-year" class="font-josefinsans text-center text-[3rem] md:text-[3.6rem] text-[#cd6a13]"
               data-editable="field_5">2026</span>
           </p>
         </div>
       </div>
-      <div class="relative top-1 z-[2] w-full">
-        <svg class="relative top-1 z-2 h-[7vw] w-full fill-white" width="100%" height="100%" version="1.1"
-          xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 2560 168.6227"
-          enable-background="new 0 0 2560 168.6227" xml:space="preserve" data-sentry-element="svg"
-          data-sentry-source-file="HeroSection.tsx">
-          <g data-sentry-element="g" data-sentry-source-file="HeroSection.tsx"></g>
-          <g data-sentry-element="g" data-sentry-source-file="HeroSection.tsx">
-            <path
-              d="M2560,0c0,0-219.6543,165.951-730.788,124.0771c-383.3156-31.4028-827.2138-96.9514-1244.7139-96.9514 c-212.5106,0-439,3.5-584.4982,1.5844l0,139.9126h2560V0z"
-              data-sentry-element="path" data-sentry-source-file="HeroSection.tsx"></path>
-          </g>
-        </svg>
-      </div>
+      <!-- <div class="absolute bottom-0 left-0 w-full">
+        <picture class="aspect-[1280/399] element_10"></picture>
+      </div> -->
     </section>
     <!-- Banner Section End-->
-    <!-- Introduction Section Begin -->
-    <section id="SECTION_INTRODUCTION">
-      <div class="wrapper">
-        <div class="flex flex-wrap items-center lg:justify-between">
-          <div class="mb-0 w-full md:mb-5 md:w-1/2">
-            <p class="mb-[2.4rem] font-gilda text-[1.8rem] md:text-[2.4rem] text-[#6f738a]" data-editable="field_6"
-              data-aos="fade-up">Join Our
-              Joy!</p>
-            <p class="mb-[2.4rem] font-oswald text-[2rem] md:text-[3rem] text-[#e25d5d]" data-editable="field_7"
-              data-aos="fade-up" data-aos-delay="200">Celebrating
-              Love in a Magical
-              Setting</p>
-            <p class="mb-[2.4rem] font-lora text-[1.4rem] md:text-[1.8rem] text-[#8e8d8d]" data-editable="field_8"
-              data-aos="fade-up" data-aos-delay="400">We warmly
-              invite you to be
-              part of the most
-              important
-              chapter of our lives. Let's unite our hearts and
-              celebrate together, in a storybook setting.</p>
-          </div>
-          <div class="relative w-full md:w-1/2">
-            <div class="aspect-square p-1">
-              <picture data-image-editable="photo_2"></picture>
-            </div>
-            <div class="absolute inset-0">
-              <div class="size-full p-1">
-                <picture class="bg-repeat-round element_7"></picture>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Introduction Section End -->
-    <!-- Wedding Timeline Section Begin -->
-    <section id="SECTION_TIMELINE"
-      class="relative after:absolute after:inset-0 after:bg-[url('https://pinvite.io/assets/images/templates/wedding/website/heart-beats/pattern.svg')]">
-      <div>
-        <svg width="100%" height="100%" class="relative -bottom-1 fill-[#e25d5d]" version="1.1"
-          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-          viewBox="0 0 2560 168.6227" enable-background="new 0 0 2560 168.6227" xml:space="preserve"
-          data-sentry-element="svg">
-          <g data-sentry-element="g"></g>
-          <g data-sentry-element="g">
-            <path
-              d="M0,0c0,0,219.6543,165.951,730.788,124.0771c383.3156-31.4028,827.2139-96.9514,1244.7139-96.9514 c212.5106,0,438.9999,3.5,584.4982,1.5844v139.9126H0V0z"
-              data-sentry-element="path"></path>
-          </g>
-        </svg>
-      </div>
-      <div class="bg-[#e25d5d] py-0">
-        <div class="wrapper relative z-[1] py-[6rem] min-[768px]:py-[10rem]">
-          <div class="flex max-md:flex-col gap-[2rem] font-oswald drop-shadow-lg">
-            <div class="flex-1 bg-white p-[2.4rem] rounded-[2rem]" data-aos="fade-up">
-              <div class="size-[7.2rem] bg-[#e25d5d1a] p-[1rem] mx-[1.6rem] rounded-full bg-contain">
-                <picture class="element_4"></picture>
-              </div>
-              <div class="py-[.8rem] px-[1.6rem]">
-                <p class="mb-[2.4rem] text-[2rem] md:text-[3rem] text-[#e25d5d]" data-editable="field_9">City Hall</p>
-                <p class="mb-[2.4rem] text-[1.6rem] md:text-[2rem] text-[#6f738a]" data-editable="field_10">04 PM - 05
-                  PM
-                </p>
-                <p class="text-[1.4rem] md:text-[1.8rem] text-[#8e8d8d]" data-editable="field_11">123 Main Street,
-                  Springfield</p>
-              </div>
-            </div>
-            <div class="flex-1 bg-white p-[2.4rem] rounded-[2rem]" data-aos="fade-up" data-aos-delay="200">
-              <div class="size-[7.2rem] bg-[#e25d5d1a] p-[1rem] mx-[1.6rem] rounded-full bg-contain">
-                <picture class="element_5"></picture>
-              </div>
-              <div class="py-[.8rem] px-[1.6rem]">
-                <p class="mb-[2.4rem] text-[2rem] md:text-[3rem] text-[#e25d5d]" data-editable="field_12">City Hall</p>
-                <p class="mb-[2.4rem] text-[1.6rem] md:text-[2rem] text-[#6f738a]" data-editable="field_13">04 PM - 05
-                  PM
-                </p>
-                <p class="text-[1.4rem] md:text-[1.8rem] text-[#8e8d8d]" data-editable="field_14">123 Main Street,
-                  Springfield</p>
-              </div>
-            </div>
-            <div class="flex-1 bg-white p-[2.4rem] rounded-[2rem]" data-aos="fade-up" data-aos-delay="400">
-              <div class="size-[7.2rem] bg-[#e25d5d1a] p-[1rem] mx-[1.6rem] rounded-full bg-contain">
-                <picture class="element_6"></picture>
-              </div>
-              <div class="py-[.8rem] px-[1.6rem]">
-                <p class="mb-[2.4rem] text-[2rem] md:text-[3rem] text-[#e25d5d]" data-editable="field_15">City Hall</p>
-                <p class="mb-[2.4rem] text-[1.6rem] md:text-[2rem] text-[#6f738a]" data-editable="field_102">04 PM - 05
-                  PM
-                </p>
-                <p class="text-[1.4rem] md:text-[1.8rem] text-[#8e8d8d]" data-editable="field_16">123 Main Street,
-                  Springfield</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <svg width="100%" height="100%" class="relative -bottom-1 fill-white" version="1.1"
-            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-            viewBox="0 0 2560 168.6227" enable-background="new 0 0 2560 168.6227" xml:space="preserve"
-            data-sentry-element="svg">
-            <g data-sentry-element="g"></g>
-            <g data-sentry-element="g">
-              <path
-                d="M2560,0c0,0-219.6543,165.951-730.788,124.0771c-383.3156-31.4028-827.2138-96.9514-1244.7139-96.9514 c-212.5106,0-439,3.5-584.4982,1.5844l0,139.9126h2560V0z"
-                data-sentry-element="path"></path>
-            </g>
-          </svg>
-        </div>
-      </div>
-    </section>
-    <!-- Wedding Timeline Section End -->
     <!-- Timer Section Begin -->
     <section id="SECTION_TIMER">
       <div class="wrapper">
         <div
           class="z-[1] relative flex w-full flex-col items-center justify-center border bg-white px-10 py-16 text-center before:absolute before:inset-0 before:-left-1 before:top-1 before:-z-[1] before:-rotate-3 before:bg-[#fafafa] before:shadow-[0_0_8px_rgba(0,0,0,0.2)] before:content-['']">
           <div class="mt-[2.4rem] max-w-[76.9rem]">
-            <p class="mb-[2.4rem] font-gilda text-[1.8rem] md:text-[2.4rem] text-[#6f738a]" data-editable="field_17"
-              data-aos="fade-up">Join Our
+            <p class="mb-[2.4rem] font-josefinsans text-[1.8rem] md:text-[2.4rem] text-[#cd6a13]"
+              data-editable="field_17" data-aos="fade-up">Join Our
               Joy!</p>
-            <p class="mb-[2.4rem] font-oswald text-[2rem] md:text-[3rem] text-[#e25d5d]" data-editable="field_18"
+            <p class="mb-[2.4rem] font-greatvibes text-[3rem] md:text-[3.6rem] text-[#738766]" data-editable="field_18"
               data-aos="fade-up" data-aos-delay="200">The Wedding Countdown</p>
-            <p class="mb-[2.4rem] font-lora text-[1.4rem] md:text-[1.8rem] text-[#8e8d8d]" data-editable="field_19"
+            <p class="mb-[2.4rem] font-cardo text-[1.8rem] md:text-[2rem] text-[#7c7c7c]" data-editable="field_19"
               data-aos="fade-up" data-aos-delay="400">We warmly
               invite you to be
               part of the most
@@ -914,28 +813,28 @@
               celebrate together, in a storybook setting.</p>
           </div>
           <div class="w-full">
-            <div class="relative flex max-sm:flex-col max-md:items-center m-auto p-[1rem] text-center text-[#e25d5d]">
+            <div class="relative flex max-sm:flex-col max-md:items-center m-auto p-[1rem] text-center text-[#738766]">
               <div id="TIMER_DAY" class="w-full" data-aos="fade-up" data-aos-delay="100">
-                <span class="font-oswald text-[3.6rem] md:text-[6rem] font-medium">00</span>
-                <p class="font-light text-[1.8rem] md:text-[3rem] text-[#6f738a]">
+                <span class="font-dancingscript text-[3.6rem] md:text-[6rem] font-medium">00</span>
+                <p class="font-dancingscript font-light text-[1.8rem] md:text-[3rem] text-[#cd6a13]">
                   Day
                 </p>
               </div>
               <div id="TIMER_HOUR" class="w-full" data-aos="fade-up" data-aos-delay="200">
-                <span class="font-oswald text-[3.6rem] md:text-[6rem] font-medium">00</span>
-                <p class="font-light text-[1.8rem] md:text-[3rem] text-[#6f738a]">
+                <span class="font-dancingscript text-[3.6rem] md:text-[6rem] font-medium">00</span>
+                <p class="font-dancingscript font-light text-[1.8rem] md:text-[3rem] text-[#cd6a13]">
                   Hour
                 </p>
               </div>
               <div id="TIMER_MIN" class="w-full" data-aos="fade-up" data-aos-delay="300">
-                <span class="font-oswald text-[3.6rem] md:text-[6rem] font-medium">00</span>
-                <p class="font-light text-[1.8rem] md:text-[3rem] text-[#6f738a]">
+                <span class="font-dancingscript text-[3.6rem] md:text-[6rem] font-medium">00</span>
+                <p class="font-dancingscript font-light text-[1.8rem] md:text-[3rem] text-[#cd6a13]">
                   Min
                 </p>
               </div>
               <div id="TIMER_SEC" class="w-full" data-aos="fade-up" data-aos-delay="400">
-                <span class="font-oswald text-[3.6rem] md:text-[6rem] font-medium">00</span>
-                <p class="font-light text-[1.8rem] md:text-[3rem] text-[#6f738a]">
+                <span class="font-dancingscript text-[3.6rem] md:text-[6rem] font-medium">00</span>
+                <p class="font-dancingscript font-light text-[1.8rem] md:text-[3rem] text-[#cd6a13]">
                   Sec
                 </p>
               </div>
@@ -945,40 +844,89 @@
       </div>
     </section>
     <!-- Timer Section End -->
+    <!-- Wedding Timeline Section Begin -->
+    <section id="SECTION_TIMELINE" class="relative">
+      <div class="">
+        <div class="wrapper relative z-[1]">
+          <div class="py-[.8rem] px-[1.6rem] mt-[2.4rem] text-center">
+            <p class="mb-[2.4rem] font-josefinsans font-light text-[2.4rem] md:text-[3.6rem] text-[#cd6a13]"
+              data-editable="field_343">
+              Join Our Joy!</p>
+            <p class="mb-[2.4rem] font-greatvibes text-[3.6rem] md:text-[6rem] text-[#738766]"
+              data-editable="field_353">
+              Celebrating Love in a Magical Setting
+            </p>
+            <p class="mb-[2.4rem] font-cardo text-[1.8rem] md:text-[2.4rem] text-[#7c7c7c]" data-editable="field_363">
+              We warmly invite you to be part of the most important chapter of our lives. Let's unite our hearts and
+              celebrate together, in a storybook setting.
+            </p>
+          </div>
+          <div class="flex max-md:flex-col gap-[2rem] text-center">
+            <div class="flex-1 p-[2.4rem]" data-aos="fade-up">
+              <div class="size-[8rem] p-[1rem] mx-auto rounded-full bg-contain">
+                <picture class="element_4"></picture>
+              </div>
+              <div class="py-[.8rem] px-[1.6rem]">
+                <p class="mb-[2.4rem] font-josefinsans font-light text-[2.4rem] md:text-[3.6rem] text-[#738766]"
+                  data-editable="field_9">City Hall</p>
+                <p class="mb-[2.4rem] font-cardo text-[1.6rem] md:text-[2.4rem] text-[#cd6a13]"
+                  data-editable="field_10">
+                  03 PM - 04
+                  PM
+                </p>
+                <p class="font-cardo text-[1.8rem] md:text-[2rem] text-[#7c7c7c]" data-editable="field_11">123 Main
+                  123 Main Street, Springfield</p>
+              </div>
+            </div>
+            <div class="flex-1 p-[2.4rem]" data-aos="fade-up" data-aos-delay="200">
+              <div class="size-[8rem] p-[1rem] mx-auto rounded-full bg-contain">
+                <picture class="element_5"></picture>
+              </div>
+              <div class="py-[.8rem] px-[1.6rem]">
+                <p class="mb-[2.4rem] font-josefinsans font-light text-[2.4rem] md:text-[3.6rem] text-[#738766]"
+                  data-editable="field_12">St. Michael's Church</p>
+                <p class="mb-[2.4rem] font-cardo text-[1.6rem] md:text-[2.4rem] text-[#cd6a13]"
+                  data-editable="field_13">
+                  04 PM - 05
+                  PM
+                </p>
+                <p class="font-cardo text-[1.8rem] md:text-[2rem] text-[#7c7c7c]" data-editable="field_14">123 Main
+                  Union Square, Springfield</p>
+              </div>
+            </div>
+            <div class="flex-1 p-[2.4rem]" data-aos="fade-up" data-aos-delay="400">
+              <div class="size-[8rem] p-[1rem] mx-auto rounded-full bg-contain">
+                <picture class="element_6"></picture>
+              </div>
+              <div class="py-[.8rem] px-[1.6rem]">
+                <p class="mb-[2.4rem] font-josefinsans font-light text-[2.4rem] md:text-[3.6rem] text-[#738766]"
+                  data-editable="field_15">Bohemian House</p>
+                <p class="mb-[2.4rem] font-cardo text-[1.6rem] md:text-[2.4rem] text-[#cd6a13]"
+                  data-editable="field_102">
+                  05 PM - 06
+                  PM
+                </p>
+                <p class="font-cardo text-[1.8rem] md:text-[2rem] text-[#7c7c7c]" data-editable="field_16">123 Main
+                  12 Julius Maniu Street, Springfield</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Wedding Timeline Section End -->
     <!-- About Us Section Begin -->
     <section id="SECTION_ABOUTUS">
-      <div>
-        <svg width="100%" height="100%" class="relative -bottom-1 fill-[#fff9f5]" version="1.1"
-          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-          viewBox="0 0 2560 168.6227" enable-background="new 0 0 2560 168.6227" xml:space="preserve"
-          data-sentry-element="svg">
-          <g data-sentry-element="g"></g>
-          <g data-sentry-element="g">
-            <path
-              d="M0,0c0,0,219.6543,165.951,730.788,124.0771c383.3156-31.4028,827.2139-96.9514,1244.7139-96.9514 c212.5106,0,438.9999,3.5,584.4982,1.5844v139.9126H0V0z"
-              data-sentry-element="path"></path>
-          </g>
-        </svg>
-      </div>
-      <div class="bg-[#fff9f5] py-0">
-        <div class="wrapper relative z-[1] py-[6rem] min-[768px]:py-[10rem]">
-          <div class="w-full py-[3.2rem] flex flex-col md:flex-row items-start justify-center gap-[5rem] ">
+      <div class="">
+        <div class="wrapper relative z-[1]">
+          <div class="w-full flex flex-col md:flex-row items-start justify-center gap-[2rem] lg:gap-[5rem]">
             <div class="flex w-full md:w-1/2 flex-col items-center justify-center text-center" data-aos="fade-right">
-              <div class="max-w-[30rem] relative w-full">
-                <div class="aspect-square p-1">
-                  <picture data-image-editable="photo_2"></picture>
-                </div>
-                <div class="absolute inset-0">
-                  <div class="size-full p-1">
-                    <picture class="bg-contain bg-repeat-round element_8"></picture>
-                  </div>
-                </div>
-              </div>
               <div class="max-w-[51.2rem] py-[.8rem] px-[1.6rem]">
-                <p class="font-oswald text-[#6f738a] text-[1.8rem] md:text-[2.4rem]" data-editable="field_20">SMITH</p>
-                <p class="mb-[2.4rem] font-oswald text-[#e25d5d] text-[2.4rem] md:text-[3.6rem]"
+                <p class="font-josefinsans font-light text-[#cd6a13] text-[1.8rem] md:text-[2.4rem]"
+                  data-editable="field_20">SMITH</p>
+                <p class="mb-[2.4rem] font-josefinsans font-light text-[#738766] text-[3rem] md:text-[3.6rem]"
                   data-editable="field_21">EMMA</p>
-                <p class="font-lora text-[#8e8d8d] text-[1.4rem] md:text-[1.8rem]" data-editable="field_22">I have
+                <p class="font-cardo text-[#7c7c7c] text-[1.8rem] md:text-[2rem]" data-editable="field_22">I have
                   always brought color and art
                   into the
                   lives of those around me. Every detail
@@ -986,22 +934,17 @@
                   John brings light into my life every day.</p>
               </div>
             </div>
+            <div class="flex size-full p-[5rem] md:p-[7rem] aspect-[1500/1453] bg-contain element_11"
+              data-aos="fade-up">
+              <picture class="w-full aspect-square rounded-full" data-image-editable="photo_1"></picture>
+            </div>
             <div class="flex w-full md:w-1/2 flex-col items-center justify-center text-center" data-aos="fade-left">
-              <div class="max-w-[30rem] relative w-full">
-                <div class="aspect-square p-1">
-                  <picture data-image-editable="photo_2"></picture>
-                </div>
-                <div class="absolute inset-0">
-                  <div class="size-full p-1">
-                    <picture class="bg-contain bg-repeat-round element_8"></picture>
-                  </div>
-                </div>
-              </div>
               <div class="max-w-[51.2rem] py-[.8rem] px-[1.6rem]">
-                <p class="font-oswald text-[#6f738a] text-[1.8rem] md:text-[2.4rem]" data-editable="field_23">SMITH</p>
-                <p class="mb-[2.4rem] font-oswald text-[#e25d5d] text-[2.4rem] md:text-[3.6rem]"
+                <p class="font-josefinsans font-light text-[#cd6a13] text-[1.8rem] md:text-[2.4rem]"
+                  data-editable="field_23">SMITH</p>
+                <p class="mb-[2.4rem] font-josefinsans font-light text-[#738766] text-[3rem] md:text-[3.6rem]"
                   data-editable="field_24">EMMA</p>
-                <p class="font-lora text-[#8e8d8d] text-[1.4rem] md:text-[1.8rem]" data-editable="field_25">I have
+                <p class="font-cardo text-[#7c7c7c] text-[1.8rem] md:text-[2rem]" data-editable="field_25">I have
                   always brought color and art
                   into the
                   lives of those around me. Every detail
@@ -1011,19 +954,6 @@
             </div>
           </div>
         </div>
-        <div>
-          <svg width="100%" height="100%" class="relative -bottom-1 fill-white" version="1.1"
-            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-            viewBox="0 0 2560 168.6227" enable-background="new 0 0 2560 168.6227" xml:space="preserve"
-            data-sentry-element="svg">
-            <g data-sentry-element="g"></g>
-            <g data-sentry-element="g">
-              <path
-                d="M2560,0c0,0-219.6543,165.951-730.788,124.0771c-383.3156-31.4028-827.2138-96.9514-1244.7139-96.9514 c-212.5106,0-439,3.5-584.4982,1.5844l0,139.9126h2560V0z"
-                data-sentry-element="path"></path>
-            </g>
-          </svg>
-        </div>
       </div>
     </section>
     <!-- About Us Section End -->
@@ -1031,11 +961,11 @@
     <section id="SECTION_STORY" class="relative z-[1]">
       <div class="wrapper">
         <div class="text-center">
-          <div class="mb-[5rem] py-[.8rem] px-[1.6rem]">
-            <p class="mb-[2.4rem] font-gilda text-[2.4rem] md:text-[3.6rem] text-[#6f738a]" data-editable="field_26"
-              data-aos="fade-up">Our Story
+          <div class="mb-[2.4rem] py-[.8rem] px-[1.6rem]">
+            <p class="mb-[2.4rem] font-josefinsans font-light text-[2.4rem] md:text-[3.6rem] text-[#cd6a13]"
+              data-editable="field_26" data-aos="fade-up">Our Story
             </p>
-            <p class="font-oswald text-[3rem] md:text-[4.8rem] text-[#e25d5d]" data-editable="field_27"
+            <p class="font-greatvibes text-[3rem] md:text-[4.8rem] text-[#738766]" data-editable="field_27"
               data-aos="fade-up" data-aos-delay="200">
               How We Met and Decided to Journey Through
               Life Together
@@ -1046,10 +976,10 @@
           <div class="flex w-full flex-col items-center">
             <ol class="mb-0 flex w-full flex-col">
               <li
-                class="group relative flex items-center pb-[8rem] after:absolute after:-bottom-[3.2rem] after:left-[2.4rem] after:h-1/2 after:w-[1px] after:bg-[#7c7e7f33] after:py-[1.6rem] after:content-[''] last:pb-0 after:last:content-none even:ml-auto md:after:left-[4rem] lg:ml-[50%] lg:w-1/2 lg:after:left-auto lg:even:mr-[50%] lg:even:flex-row-reverse lg:even:text-right">
+                class="group relative flex items-center pb-[8rem] after:absolute after:-bottom-[3.2rem] after:left-[2.4rem] after:h-1/2 after:w-[1px] after:bg-[#cd6a13] after:py-[1.6rem] after:content-[''] last:pb-0 after:last:content-none even:ml-auto md:after:left-[4rem] lg:ml-[50%] lg:w-1/2 lg:after:left-auto lg:even:mr-[50%] lg:even:flex-row-reverse lg:even:text-right">
                 <div
-                  class="flex size-[4.8rem] flex-shrink-0 items-center justify-center rounded-full bg-[#e25d5d1a] md:size-[8rem] lg:group-odd:-ml-[4rem] lg:group-odd:mr-[4rem] lg:group-even:-mr-[4rem] lg:group-even:ml-[4rem]">
-                  <svg version="1.1" class="animate-heartbeat size-[1rem] fill-[#e25d5d] md:size-[2.4rem]"
+                  class="flex size-[4.8rem] flex-shrink-0 items-center justify-center rounded-full bg-[#7387661a] md:size-[8rem] lg:group-odd:-ml-[4rem] lg:group-odd:mr-[4rem] lg:group-even:-mr-[4rem] lg:group-even:ml-[4rem]">
+                  <svg version="1.1" class="animate-heartbeat size-[1rem] fill-[#738766] md:size-[2.4rem]"
                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                     viewBox="0 0 107 93" enable-background="new 0 0 107 93" xml:space="preserve">
                     <path
@@ -1058,16 +988,17 @@
                   </svg>
                 </div>
                 <div>
-                  <div class="relative px-4 py-2" data-aos="fade-up">
+                  <div class="relative px-4 py-2" data-aos="zoom-in">
                     <div>
-                      <P class="text-[#e25d5d] font-oswald text-[2rem] md:text-[3rem]" data-editable="field_28">The
+                      <P class="text-[#738766] font-josefinsans font-light text-[3rem] md:text-[3.6rem]"
+                        data-editable="field_28">The
                         Beginning of a New Adventure
                       </P>
-                      <P class="mb-[2.4rem] font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]"
+                      <P class="mb-[2.4rem] font-cardo text-[#cd6a13] text-[2rem] md:text-[2.4rem]"
                         data-editable="field_271">An Ordinary Evening,
                         An Extraordinary
                         Destiny</P>
-                      <P class="font-lora text-[#8e8d8d] text-[1.4rem] md:text-[1.8rem]" data-editable="field_29">On a
+                      <P class="font-cardo text-[#7c7c7c] text-[1.8rem] md:text-[2rem]" data-editable="field_29">On a
                         seemingly ordinary evening,
                         our destinies
                         met. A spontaneous conversation, shared laughter,
@@ -1078,10 +1009,10 @@
                 </div>
               </li>
               <li
-                class="group relative flex items-center pb-[8rem] after:absolute after:-bottom-[3.2rem] after:left-[2.4rem] after:h-1/2 after:w-[1px] after:bg-[#7c7e7f33] after:py-[1.6rem] after:content-[''] last:pb-0 after:last:content-none even:ml-auto md:after:left-[4rem] lg:ml-[50%] lg:w-1/2 lg:after:left-auto lg:even:mr-[50%] lg:even:flex-row-reverse lg:even:text-right">
+                class="group relative flex items-center pb-[8rem] after:absolute after:-bottom-[3.2rem] after:left-[2.4rem] after:h-1/2 after:w-[1px] after:bg-[#cd6a13] after:py-[1.6rem] after:content-[''] last:pb-0 after:last:content-none even:ml-auto md:after:left-[4rem] lg:ml-[50%] lg:w-1/2 lg:after:left-auto lg:even:mr-[50%] lg:even:flex-row-reverse lg:even:text-right">
                 <div
-                  class="flex size-[4.8rem] flex-shrink-0 items-center justify-center rounded-full bg-[#e25d5d1a] md:size-[8rem] lg:group-odd:-ml-[4rem] lg:group-odd:mr-[4rem] lg:group-even:-mr-[4rem] lg:group-even:ml-[4rem]">
-                  <svg version="1.1" class="animate-heartbeat size-[1rem] fill-[#e25d5d] md:size-[2.4rem]"
+                  class="flex size-[4.8rem] flex-shrink-0 items-center justify-center rounded-full bg-[#7387661a] md:size-[8rem] lg:group-odd:-ml-[4rem] lg:group-odd:mr-[4rem] lg:group-even:-mr-[4rem] lg:group-even:ml-[4rem]">
+                  <svg version="1.1" class="animate-heartbeat size-[1rem] fill-[#738766] md:size-[2.4rem]"
                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                     viewBox="0 0 107 93" enable-background="new 0 0 107 93" xml:space="preserve">
                     <path
@@ -1090,16 +1021,17 @@
                   </svg>
                 </div>
                 <div>
-                  <div class="relative px-4 py-2" data-aos="fade-up">
+                  <div class="relative px-4 py-2" data-aos="zoom-in">
                     <div>
-                      <P class="text-[#e25d5d] font-oswald text-[2rem] md:text-[3rem]" data-editable="field_30">The
+                      <P class="text-[#738766] font-josefinsans font-light text-[3rem] md:text-[3.6rem]"
+                        data-editable="field_30">The
                         Beginning of a New Adventure
                       </P>
-                      <P class="mb-[2.4rem] font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]"
+                      <P class="mb-[2.4rem] font-cardo text-[#cd6a13] text-[2rem] md:text-[2.4rem]"
                         data-editable="field_272">An Ordinary Evening,
                         An Extraordinary
                         Destiny</P>
-                      <P class="font-lora text-[#8e8d8d] text-[1.4rem] md:text-[1.8rem]" data-editable="field_31">On a
+                      <P class="font-cardo text-[#7c7c7c] text-[1.8rem] md:text-[2rem]" data-editable="field_31">On a
                         seemingly ordinary evening,
                         our destinies
                         met. A spontaneous conversation, shared laughter,
@@ -1112,8 +1044,8 @@
               <li
                 class="group relative flex items-center pb-[8rem] after:absolute after:-bottom-[3.2rem] after:left-[2.4rem] after:h-1/2 after:w-[1px] after:bg-[#7c7e7f33] after:py-[1.6rem] after:content-[''] last:pb-0 after:last:content-none even:ml-auto md:after:left-[4rem] lg:ml-[50%] lg:w-1/2 lg:after:left-auto lg:even:mr-[50%] lg:even:flex-row-reverse lg:even:text-right">
                 <div
-                  class="flex size-[4.8rem] flex-shrink-0 items-center justify-center rounded-full bg-[#e25d5d1a] md:size-[8rem] lg:group-odd:-ml-[4rem] lg:group-odd:mr-[4rem] lg:group-even:-mr-[4rem] lg:group-even:ml-[4rem]">
-                  <svg version="1.1" class="animate-heartbeat size-[1rem] fill-[#e25d5d] md:size-[2.4rem]"
+                  class="flex size-[4.8rem] flex-shrink-0 items-center justify-center rounded-full bg-[#7387661a] md:size-[8rem] lg:group-odd:-ml-[4rem] lg:group-odd:mr-[4rem] lg:group-even:-mr-[4rem] lg:group-even:ml-[4rem]">
+                  <svg version="1.1" class="animate-heartbeat size-[1rem] fill-[#738766] md:size-[2.4rem]"
                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                     viewBox="0 0 107 93" enable-background="new 0 0 107 93" xml:space="preserve">
                     <path
@@ -1122,16 +1054,17 @@
                   </svg>
                 </div>
                 <div>
-                  <div class="relative px-4 py-2" data-aos="fade-up">
+                  <div class="relative px-4 py-2" data-aos="zoom-in">
                     <div>
-                      <P class="text-[#e25d5d] font-oswald text-[2rem] md:text-[3rem]" data-editable="field_32">The
+                      <P class="text-[#738766] font-josefinsans font-light text-[3rem] md:text-[3.6rem]"
+                        data-editable="field_32">The
                         Beginning of a New Adventure
                       </P>
-                      <P class="mb-[2.4rem] font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]"
+                      <P class="mb-[2.4rem] font-cardo text-[#cd6a13] text-[2rem] md:text-[2.4rem]"
                         data-editable="field_273">An Ordinary Evening,
                         An Extraordinary
                         Destiny</P>
-                      <P class="font-lora text-[#8e8d8d] text-[1.4rem] md:text-[1.8rem]" data-editable="field_33">On a
+                      <P class="font-cardo text-[#7c7c7c] text-[1.8rem] md:text-[2rem]" data-editable="field_33">On a
                         seemingly ordinary evening,
                         our destinies
                         met. A spontaneous conversation, shared laughter,
@@ -1148,21 +1081,23 @@
     </section>
     <!-- love Story Section End -->
     <!-- Form Section Begin -->
-    <section id="SECTION_TIMER">
-      <div class="wrapper">
+    <section id="SECTION_FORM" class="py-0">
+      <div class="w-full">
+        <picture class="aspect-[2485/1101] element_12"></picture>
+      </div>
+      <div class="wrapper mt-[-3rem] md:mt-[-10rem] mb-[-3rem] md:mb-[-10rem]">
         <div
           class="z-[1] relative flex w-full flex-col items-center justify-center border bg-white px-10 py-16 text-center before:absolute before:inset-0 before:-left-1 before:top-1 before:-z-[1] before:-rotate-3 before:bg-[#fafafa] before:shadow-[0_0_8px_rgba(0,0,0,0.2)] before:content-['']">
           <div class="max-w-[76.9rem] py-[.8rem] px-[1.6rem] mt-[2.4rem]">
-            <p class="mb-[2.4rem] font-gilda text-[1.8rem] md:text-[2.4rem] text-[#6f738a]" data-editable="field_34">
-              Guestbook</p>
-            <p class="mb-[2.4rem] font-oswald text-[2rem] md:text-[3rem] text-[#e25d5d]" data-editable="field_35">Come
-              to attend our marriage
-              ceremony
+            <p class="mb-[2.4rem] font-josefinsans font-light text-[2.4rem] md:text-[3.6rem] text-[#cd6a13]"
+              data-editable="field_34">
+              We Look Forward to Your Confirmation</p>
+            <p class="mb-[2.4rem] font-cardo text-[1.6rem] md:text-[2rem] text-[#7c7c7c]" data-editable="field_36">
+              Every detail matters to us, and your presence is the most precious gift. Please confirm your attendance by
+              July 1, 2025, to ensure everything is as we have dreamed.
             </p>
-            <p class="mb-[2.4rem] font-lora text-[1.4rem] md:text-[1.8rem] text-[#8e8d8d]" data-editable="field_36">
-              Congratulations on your
-              wedding! Hope it was the most wonderful day ever Now that your wedding is done and dusted, there is only
-              one more thing left to do..Oh yes the thank you cards!
+            <p class="mb-[2.4rem] font-greatvibes text-[3.6rem] md:text-[6rem] text-[#738766]" data-editable="field_35">
+              Help us plan the perfect day
             </p>
           </div>
           <div class="w-full">
@@ -1170,17 +1105,17 @@
               <form action="" class="space-y-4">
                 <div class="relative">
                   <input type="text" placeholder="Tên của bạn"
-                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#e25d5d] focus:outline-none text-[1.3rem] bg-transparent" />
+                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#738766] focus:outline-none text-[1.3rem] bg-transparent" />
                 </div>
 
                 <div class="relative">
                   <input type="text" placeholder="Số điện thoại"
-                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#e25d5d] focus:outline-none text-[1.3rem] bg-transparent" />
+                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#738766] focus:outline-none text-[1.3rem] bg-transparent" />
                 </div>
 
                 <div class="relative">
                   <input type="number" min="1" max="5" placeholder="Số người tham dự"
-                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#e25d5d] focus:outline-none text-[1.3rem] bg-transparent" />
+                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#738766] focus:outline-none text-[1.3rem] bg-transparent" />
                 </div>
 
                 <div class="flex justify-around py-[10px] text-[1.7rem] text-gray-600">
@@ -1196,16 +1131,19 @@
 
                 <div class="relative">
                   <textarea name="congratulations" rows="3" placeholder="Lời chúc của bạn"
-                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#e25d5d] focus:outline-none text-[1.3rem] bg-transparent resize-none"></textarea>
+                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#738766] focus:outline-none text-[1.3rem] bg-transparent resize-none"></textarea>
                 </div>
                 <button type="submit"
-                  class="rounded-[1rem] px-[2rem] py-[1rem] text-[10px] font-semibold transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60 bg-[#e25d5d] text-white">
+                  class="rounded-[1rem] px-[2rem] py-[1rem] text-[10px] font-semibold transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60 bg-[#738766] text-white">
                   Gửi lời chúc
                 </button>
               </form>
             </div>
           </div>
         </div>
+      </div>
+      <div class="w-full">
+        <picture class="aspect-[2387/838] element_13"></picture>
       </div>
     </section>
     <!-- Form Section End -->
@@ -1217,54 +1155,55 @@
         <div>
           <div class="wrapper text-center py-[15px]">
             <div class="mb-[2rem]" data-aos="fade-up">
-              <p class="mb-[2.4rem] font-gilda text-[1.8rem] md:text-[2.4rem] text-[#6f738a]"
+              <p class="mb-[2.4rem] font-josefinsans text-[1.8rem] md:text-[2.4rem] text-[#cd6a13]"
                 data-editable="gift_title">
                 Wedding box
               </p>
-              <p class="mb-[2.4rem] font-oswald text-[2rem] md:text-[3rem] text-[#e25d5d]" data-editable="gift_des">
+              <p class="mb-[2.4rem] font-greatvibes text-[3.6rem] md:text-[6rem] text-[#738766]"
+                data-editable="gift_des">
                 your presence is our best gift
               </p>
             </div>
             <div class="justify-self-center text-black p-[10px] rounded-[10px]">
               <div class="flex max-md:flex-col gap-[3rem]">
                 <div class="flex-1 p-[1rem] shadow-md rounded-[1rem]">
-                  <h6 class="mb-[1rem] text-[#e25d5d] font-oswald text-[2rem] md:text-[3rem]"
+                  <h6 class="mb-[1rem] text-[#738766] font-josefinsans font-light text-[3rem] md:text-[3.6rem]"
                     data-editable="groom_title" data-aos="fade-right" data-aos-delay="100">
                     Groom
                   </h6>
                   <picture class="size-[300px] aspect-[1/1] m-auto mb-[1rem]" data-image-editable="qr_1"
                     data-aos="fade-right" data-aos-delay="200">
                   </picture>
-                  <p class="font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]" data-aos="fade-right"
+                  <p class="font-cardo text-[#cd6a13] text-[2rem] md:text-[2.4rem]" data-aos="fade-right"
                     data-aos-delay="300">
                     <span data-editable="groom_name">Nguyễn ABC</span>
                   </p>
-                  <p class="font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]" data-aos="fade-right"
+                  <p class="font-cardo text-[#cd6a13] text-[2rem] md:text-[2.4rem]" data-aos="fade-right"
                     data-aos-delay="400">
                     <span data-editable="groom_bank">Techcomebank</span>
                   </p>
-                  <p class="font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]" data-aos="fade-right"
+                  <p class="font-cardo text-[#cd6a13] text-[2rem] md:text-[2.4rem]" data-aos="fade-right"
                     data-aos-delay="500">
                     <span data-editable="groom_bank_nummber">0123456789</span>
                   </p>
                 </div>
                 <div class="flex-1 p-[1rem] shadow-md rounded-[1rem]">
-                  <h6 class="mb-[1rem] text-[#e25d5d] font-oswald text-[2rem] md:text-[3rem]"
+                  <h6 class="mb-[1rem] text-[#738766] font-josefinsans font-light text-[3rem] md:text-[3.6rem]"
                     data-editable="bride_title" data-aos="fade-left" data-aos-delay="100">
                     Bride
                   </h6>
                   <picture class="size-[300px] aspect-[1/1] m-auto mb-[1rem]" data-image-editable="qr_2"
                     data-aos="fade-left" data-aos-delay="200">
                   </picture>
-                  <p class="font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]" data-aos="fade-left"
+                  <p class="font-cardo text-[#cd6a13] text-[2rem] md:text-[2.4rem]" data-aos="fade-left"
                     data-aos-delay="300">
                     <span data-editable="bride_name">Nguyễn ABC</span>
                   </p>
-                  <p class="font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]" data-aos="fade-left"
+                  <p class="font-cardo text-[#cd6a13] text-[2rem] md:text-[2.4rem]" data-aos="fade-left"
                     data-aos-delay="400">
                     <span data-editable="bride_bank">Techcomebank</span>
                   </p>
-                  <p class="font-gilda text-[#6f738a] text-[1.6rem] md:text-[2rem]" data-aos="fade-left"
+                  <p class="font-cardo text-[#cd6a13] text-[2rem] md:text-[2.4rem]" data-aos="fade-left"
                     data-aos-delay="500">
                     <span data-editable="bride_bank_number">0123456789</span>
                   </p>
