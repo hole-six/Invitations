@@ -5,7 +5,8 @@ const CreateCategoryModal = ({ onClose, onCreate, initialData }) => {
   const toast = useToast()
   console.log("Initial Data:", initialData) // Debug log to check initialData
 
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
+  id: initialData?.id || null,
   name: initialData?.name || "",
   slug: initialData?.slug || "",
   description: initialData?.description || "",
@@ -15,18 +16,32 @@ const CreateCategoryModal = ({ onClose, onCreate, initialData }) => {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // const generateSlug = (name) => {
+  //   return name
+  //     .toLowerCase()
+  //     .replace(/[^a-z0-9]+/g, "-")
+  //     .replace(/^-+|-+$/g, "")
+  // }
+
   const generateSlug = (name) => {
-    return name
+   return  name
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "")
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[đĐ]/g, 'd')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim()
+
+    // setFormData(prev => ({ ...prev, slug }))
   }
 
   const handleNameChange = (value) => {
     setFormData(prev => ({
       ...prev,
       name: value,
-      slug: generateSlug(value)
+      // slug: generateSlug(value)
     }))
   }
 
@@ -91,6 +106,12 @@ const CreateCategoryModal = ({ onClose, onCreate, initialData }) => {
               className="w-full mt-1 px-3 py-2 border rounded-lg"
               placeholder="hien-dai"
             />
+            <button
+              onClick={() => setFormData(prev => ({ ...prev, slug: generateSlug(formData.name) }))}
+              className="mt-2 px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+            >
+              Tạo Slug
+            </button>
           </div>
 
           {/* Description */}
