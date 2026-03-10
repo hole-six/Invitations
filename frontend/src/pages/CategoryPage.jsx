@@ -4,7 +4,7 @@ import DashboardLayout from '../components/DashboardLayout'
 import adminService from '../services/admin.service'
 import templateService from '../services/template.service'
 import { useToast } from '../context/ToastContext'
-import CreateCategoryModal from './CreateCategoryModal'
+import CategoryManageModal from './CategoryManageModal'
 
 const CategoryPage = () => {
   const navigate = useNavigate()
@@ -565,16 +565,16 @@ const handleEditCategory = (category) => {
         </div>
       </div>
 
-    {openModalCategory && (
-  <CreateCategoryModal
-    initialData={editingCategory}
-    onClose={() => {
-      setOpenModalCategory(false)
-      setEditingCategory(null)
-    }}
-     onCreate={editingCategory ? handleUpdateCategory : handleCreateCategory}
-  />
-)}
+        {openModalCategory && (
+            <CategoryManageModal
+                initialData={editingCategory}
+                onClose={() => {
+                    setOpenModalCategory(false)
+                    setEditingCategory(null)
+                }}
+                onCreate={editingCategory ? handleUpdateCategory : handleCreateCategory}
+            />
+        )}
 
       {/* Delete Modal */}
       {showDeleteModal && (

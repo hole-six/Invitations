@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { useToast } from "../context/ToastContext"
 
-const CreateCategoryModal = ({ onClose, onCreate, initialData }) => {
+const CategoryManageModal = ({ onClose, onCreate, initialData }) => {
   const toast = useToast()
   console.log("Initial Data:", initialData) // Debug log to check initialData
 
@@ -15,13 +15,6 @@ const [formData, setFormData] = useState({
 })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  // const generateSlug = (name) => {
-  //   return name
-  //     .toLowerCase()
-  //     .replace(/[^a-z0-9]+/g, "-")
-  //     .replace(/^-+|-+$/g, "")
-  // }
 
   const generateSlug = (name) => {
    return  name
@@ -77,11 +70,9 @@ const [formData, setFormData] = useState({
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl max-w-lg w-full p-6">
 
        <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">
-  {initialData ? "Cập nhật Category" : "Tạo Category"}
-</h2>
-
+        {initialData ? "Cập nhật Category" : "Tạo Category"}
+      </h2>
         <div className="space-y-4">
-
           {/* Name */}
           <div>
             <label className="text-sm font-medium">Tên Category</label>
@@ -169,21 +160,20 @@ const [formData, setFormData] = useState({
           </button>
 
          <button
-  onClick={handleSubmit}
-  disabled={isSubmitting}
-  className="px-5 py-2 rounded-lg bg-primary text-white"
->
-  {isSubmitting
-    ? "Đang xử lý..."
-    : initialData
-    ? "Cập nhật"
-    : "Tạo Category"}
-</button>
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className="px-5 py-2 rounded-lg bg-primary text-white"
+        >
+            {isSubmitting
+              ? "Đang xử lý..."
+              : initialData
+              ? "Cập nhật"
+              : "Tạo Category"}
+          </button>
         </div>
-
       </div>
     </div>
-  )
-}
+          )
+        }
 
-export default CreateCategoryModal
+export default CategoryManageModal
