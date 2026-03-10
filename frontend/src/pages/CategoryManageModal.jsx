@@ -1,11 +1,12 @@
 import React, { useState } from "react"
 import { useToast } from "../context/ToastContext"
 
-const CreateCategoryModal = ({ onClose, onCreate, initialData }) => {
+const CategoryManageModal = ({ onClose, onCreate, initialData }) => {
   const toast = useToast()
   console.log("Initial Data:", initialData) // Debug log to check initialData
 
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
+  id: initialData?.id || null,
   name: initialData?.name || "",
   slug: initialData?.slug || "",
   description: initialData?.description || "",
@@ -16,17 +17,24 @@ const CreateCategoryModal = ({ onClose, onCreate, initialData }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const generateSlug = (name) => {
-    return name
+   return  name
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "")
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[đĐ]/g, 'd')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim()
+
+    // setFormData(prev => ({ ...prev, slug }))
   }
 
   const handleNameChange = (value) => {
     setFormData(prev => ({
       ...prev,
       name: value,
-      slug: generateSlug(value)
+      // slug: generateSlug(value)
     }))
   }
 
@@ -62,11 +70,9 @@ const CreateCategoryModal = ({ onClose, onCreate, initialData }) => {
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl max-w-lg w-full p-6">
 
        <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">
-  {initialData ? "Cập nhật Category" : "Tạo Category"}
-</h2>
-
+        {initialData ? "Cập nhật Category" : "Tạo Category"}
+      </h2>
         <div className="space-y-4">
-
           {/* Name */}
           <div>
             <label className="text-sm font-medium">Tên Category</label>
@@ -91,6 +97,12 @@ const CreateCategoryModal = ({ onClose, onCreate, initialData }) => {
               className="w-full mt-1 px-3 py-2 border rounded-lg"
               placeholder="hien-dai"
             />
+            <button
+              onClick={() => setFormData(prev => ({ ...prev, slug: generateSlug(formData.name) }))}
+              className="mt-2 px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+            >
+              Tạo Slug
+            </button>
           </div>
 
           {/* Description */}
@@ -148,21 +160,20 @@ const CreateCategoryModal = ({ onClose, onCreate, initialData }) => {
           </button>
 
          <button
-  onClick={handleSubmit}
-  disabled={isSubmitting}
-  className="px-5 py-2 rounded-lg bg-primary text-white"
->
-  {isSubmitting
-    ? "Đang xử lý..."
-    : initialData
-    ? "Cập nhật"
-    : "Tạo Category"}
-</button>
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className="px-5 py-2 rounded-lg bg-primary text-white"
+        >
+            {isSubmitting
+              ? "Đang xử lý..."
+              : initialData
+              ? "Cập nhật"
+              : "Tạo Category"}
+          </button>
         </div>
-
       </div>
     </div>
-  )
-}
+          )
+        }
 
-export default CreateCategoryModal
+export default CategoryManageModal
