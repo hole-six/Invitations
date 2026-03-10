@@ -284,7 +284,7 @@ const handleEditCategory = (category) => {
             <div className="flex items-center gap-3">
               {!showFilters && (
                 <span className="text-xs text-gray-500 dark:text-gray-400">
-                  {filters.category !== 'all' && `${categories.find(c => c.value === filters.category)?.label} • `}
+                  {filters.category !== 'all' && `${categories.find(c => c.value === filters.category)?.name} • `}
                   {filters.status !== 'all' && `${filters.status} • `}
                   {filters.search && `"${filters.search}"`}
                 </span>
@@ -335,7 +335,7 @@ const handleEditCategory = (category) => {
                   >
                     <option value="all">Tất cả</option>
                     {categories.map(cat => (
-                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                      <option key={cat.value} value={cat.value}>{cat.name}</option>
                     ))}
                   </select>
                 </div>

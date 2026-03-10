@@ -210,8 +210,7 @@ const pageNumbers = Array.from(
 
   return (
     <DashboardLayout>
-      <div className="space-y-4">
-        {/* Header - Matching Screenshot Logic */}
+      {/* <div className="space-y-4">
         <div className="flex flex-col gap-4 justify-between md:flex-row md:items-center">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Quản lý thiệp mời</h1>
@@ -219,11 +218,26 @@ const pageNumbers = Array.from(
           </div>
           <button
             onClick={() => navigate('/collection')}
-            className="w-full md:w-auto px-6 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-black font-bold text-sm uppercase tracking-wider hover:bg-black dark:hover:bg-gray-100 transition-colors shadow-lg"
+            className="w-full md:w-auto px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-black font-bold rounded-full shadow-lg transition-all flex items-center justify-center gap-2 hover:opacity-90"
           >
-            Tạo thiệp mới
+            <span className="material-symbols-outlined">add</span> Tạo Mới
+          </button>
+        </div> */}
+       <div className="space-y-4">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Quản lý thiệp mời</h1>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Quản lý tất cả thiệp mời trong hệ thống</p>
+          </div>
+          <button
+            onClick={() => navigate('/collection')}
+            className="px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-semibold rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+          >
+            Tạo Thiệp Mới
           </button>
         </div>
+
 
         {/* Filters - Stacked Card Style for Mobile */}
         <div className="bg-white dark:bg-gray-800 p-6 shadow-sm border border-gray-100 dark:border-gray-700">
@@ -392,7 +406,7 @@ const pageNumbers = Array.from(
                               </div>
                               <div>
                                 <p className="font-bold text-gray-900 dark:text-white text-sm">{invitation.title || 'Chưa đặt tên'}</p>
-                                <p className="text-xs text-gray-500">{invitation.groom_name} & {invitation.bride_name}</p>
+                                <p className="text-xs text-gray-500">{invitation.groom_name || 'Chưa đặt tên'} & {invitation.bride_name || 'Chưa đặt tên'}</p>
                               </div>
                             </div>
                           </td>
@@ -402,14 +416,14 @@ const pageNumbers = Array.from(
                                 <div className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-[10px] font-bold">
                                   {invitation.user_name?.charAt(0)}
                                 </div>
-                                <span className="text-sm text-gray-600 dark:text-gray-300">{invitation.user_name}</span>
+                                <span className="text-sm text-gray-600 dark:text-gray-300">{invitation.user_name || 'Chưa đặt tên'}</span>
                               </div>
                             </td>
                           )}
                           <td className="px-6 py-4">{getStatusBadge(invitation.status)}</td>
                           <td className="px-6 py-4 text-sm text-gray-500">{formatDate(invitation.created_at)}</td>
                           <td className="px-6 py-4 text-right">
-                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="flex items-center justify-end gap-2">
                               <button onClick={() => navigate(`/ultimate-html-editor?invitationId=${invitation.id}`)} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full" title="Sửa">
                                 <span className="material-symbols-outlined text-gray-600 dark:text-gray-400 text-lg">edit</span>
                               </button>

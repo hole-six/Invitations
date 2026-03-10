@@ -301,7 +301,7 @@ const DashboardTemplatesPage = () => {
             </div>
             <div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Lượt sử dụng</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">1,247</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">0</p>
             </div>
           </div>
         </div>
