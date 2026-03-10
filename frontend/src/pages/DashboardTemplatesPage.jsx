@@ -32,19 +32,59 @@ const DashboardTemplatesPage = () => {
     return window.innerWidth < 768 ? 'list' : 'grid'
   }
   const [viewMode, setViewMode] = useState(getInitialViewMode())
+    const [categories, setCategories] = useState([])
 
-  const categories = [
-    { value: 'wedding', label: 'Thiệp cưới' },
-    { value: 'birthday', label: 'Sinh nhật' },
-    { value: 'anniversary', label: 'Kỷ niệm' },
-    { value: 'graduation', label: 'Tốt nghiệp' },
-    { value: 'business', label: 'Doanh nghiệp' },
-    { value: 'other', label: 'Khác' }
-  ]
+  // const categories = [
+  //   { value: 'wedding', label: 'Thiệp cưới' },
+  //   { value: 'birthday', label: 'Sinh nhật' },
+  //   { value: 'anniversary', label: 'Kỷ niệm' },
+  //   { value: 'graduation', label: 'Tốt nghiệp' },
+  //   { value: 'business', label: 'Doanh nghiệp' },
+  //   { value: 'other', label: 'Khác' }
+  // ]
+
+  const loadCategories = async () => {
+  try {
+    const response = await templateService.getCategories()
+
+    const categoryData = (response.data || []).map(cat => ({
+        id: cat.id,
+        name: cat.name,
+        description: cat.description,
+        display_order: cat.display_order,
+        slug: cat.slug,
+        deleted_at: cat.deleted_at
+    }))
+
+    const filteredData = categoryData.filter(cat => !cat.deleted_at)
+
+    setCategories(filteredData)
+    setTemplates(data)
+      setTemplatesCount(pagination.total || data.length) // Use total from API if available, otherwise fallback to data length
+
+      const paginationMeta = response.pagination || response.meta || {}
+      const totalPagesFromApi = Number(paginationMeta.total_pages || paginationMeta.last_page || 0)
+      const currentPageFromApi = Number(paginationMeta.current_page || paginationMeta.page || currentPage)
+
+      setPagination({
+        currentPage: currentPageFromApi > 0 ? currentPageFromApi : currentPage,
+        totalPages: totalPagesFromApi > 0 ? totalPagesFromApi : Math.max(1, currentPage)
+      })
+  } catch (error) {
+    console.error('Failed to load categories:', error)
+  }
+}
 
   useEffect(() => {
     loadTemplates()
   }, [filters, currentPage])
+
+      useEffect(() => {
+      loadCategories()
+      // if (decodedId) {
+      //   loadTemplate(decodedId)
+      // }
+    }, [])
 
   useEffect(() => {
     const pageFromUrl = Math.max(1, Number(searchParams.get('page') || 1))
@@ -73,7 +113,7 @@ const DashboardTemplatesPage = () => {
         return {
           ...template,
           category: categoryMap[template.category_id] || 'other',
-          thumbnail: template.thumbnail_url // Map thumbnail_url to thumbnail
+          thumbnail: template.thumbnail_url, // Map thumbnail_url to thumbnail
         }
       })
 
@@ -301,7 +341,7 @@ const DashboardTemplatesPage = () => {
             </div>
             <div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Lượt sử dụng</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">1,247</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">0</p>
             </div>
           </div>
         </div>
@@ -375,7 +415,7 @@ const DashboardTemplatesPage = () => {
                   >
                     <option value="all">Tất cả</option>
                     {categories.map(cat => (
-                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                      <option key={cat.value} value={cat.value}>{cat.name}</option>
                     ))}
                   </select>
                 </div>
@@ -492,7 +532,7 @@ const DashboardTemplatesPage = () => {
               {viewMode === 'grid' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
                   {templates.map((template) => (
-                    <div key={getTemplateIdentifier(template)} className="border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow rounded-lg overflow-hidden">
+                    <div key={getTemplateIdentifier(template)} className="border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow rounded-lg overflow-hidden flex flex-col">
                       <div className="relative">
                         <input
                           type="checkbox"
@@ -518,7 +558,7 @@ const DashboardTemplatesPage = () => {
                           )}
                         </div>
                       </div>
-                      <div className="p-4">
+                      <div className="p-4 flex flex-col flex-1">
                         <div className="flex items-start justify-between mb-2 gap-2">
                           <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate flex-1">
                             {template.name}
@@ -532,13 +572,17 @@ const DashboardTemplatesPage = () => {
                           {template.description || 'Không có mô tả'}
                         </p>
                         <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4">
-                          <span>ID: {template.template_id || template.id}</span>
+                         {template.deleted_at != null ? (
+                           <span className={template.deleted_at ? 'text-red-600 dark:text-red-400 font-medium' : 'text-gray-500 dark:text-gray-400'}>
+                            Delete at : {template.deleted_at ? formatDate(template.deleted_at) : 'N/A'}
+                          </span>
+                         ) : null}
                           <span>{formatDate(template.created_at)}</span>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 mt-auto pt-4">
                           <button
                             onClick={() => navigate(`/dashboard/templates/edit/${encodeURIComponent(getTemplateIdentifier(template))}`)}
-                            className="flex-1 px-4 py-2.5 text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded"
+                            className="flex-1 px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded"
                           >
                             Chỉnh sửa
                           </button>
@@ -712,7 +756,6 @@ const DashboardTemplatesPage = () => {
 }
 
 export default DashboardTemplatesPage
-
 
 
 

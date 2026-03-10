@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useToast } from "../context/ToastContext"
 
 const CategoryManageModal = ({ onClose, onCreate, initialData }) => {
@@ -65,9 +65,39 @@ const [formData, setFormData] = useState({
   }
 }
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose()
+        return
+      }
+
+      if (event.key === 'Enter') {
+        const target = event.target
+        const isFormField = target instanceof HTMLElement
+          && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable)
+
+        if (!isFormField) {
+          onClose()
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [onClose])
+
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl max-w-lg w-full p-6">
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60"
+      onMouseDown={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl max-w-lg w-full p-6"
+        onMouseDown={(e) => e.stopPropagation()}
+      >
 
        <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">
         {initialData ? "Cập nhật Category" : "Tạo Category"}

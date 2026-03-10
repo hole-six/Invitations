@@ -30,12 +30,14 @@ const DashboardLayout = ({ children }) => {
       icon: (
         <span className="material-symbols-outlined">mail</span>
       ),
-      children: [
-        { title: 'Tất cả thiệp mời', path: '/dashboard/invitations' },
-        { title: 'Thiệp nháp', path: '/dashboard/invitations/drafts' },
-        { title: 'Thiệp đã xuất bản', path: '/dashboard/invitations/published' },
-        { title: 'Thiệp đã lưu trữ', path: '/dashboard/invitations/archived' }
-      ]
+      path : '/dashboard/invitations',
+      active: location.pathname === '/dashboard/invitations'
+      // children: [
+      //   { title: 'Tất cả thiệp mời', path: '/dashboard/invitations' },
+      //   { title: 'Thiệp nháp', path: '/dashboard/invitations/drafts' },
+      //   { title: 'Thiệp đã xuất bản', path: '/dashboard/invitations/published' },
+      //   { title: 'Thiệp đã lưu trữ', path: '/dashboard/invitations/archived' }
+      // ]
     },
     {
       id: 'templates',
@@ -67,11 +69,13 @@ const DashboardLayout = ({ children }) => {
       icon: (
         <span className="material-symbols-outlined">analytics</span>
       ),
-      children: [
-        { title: 'Tổng quan', path: '/dashboard/analytics' },
-        { title: 'Báo cáo sử dụng', path: '/dashboard/analytics/usage' },
-        { title: 'Báo cáo doanh thu', path: '/dashboard/analytics/revenue' }
-      ]
+      path: '/dashboard/analytics',
+      active: location.pathname === '/dashboard/analytics'
+      // children: [
+      //   { title: 'Tổng quan', path: '/dashboard/analytics' },
+      //   { title: 'Báo cáo sử dụng', path: '/dashboard/analytics/usage' },
+      //   { title: 'Báo cáo doanh thu', path: '/dashboard/analytics/revenue' }
+      // ]
     },
     {
       id: 'settings',
@@ -79,11 +83,13 @@ const DashboardLayout = ({ children }) => {
       icon: (
         <span className="material-symbols-outlined">settings</span>
       ),
-      children: [
-        { title: 'Cài đặt chung', path: '/dashboard/settings' },
-        { title: 'Email Templates', path: '/dashboard/settings/email' },
-        { title: 'Backup & Restore', path: '/dashboard/settings/backup' }
-      ]
+      path : '/dashboard/settings',
+      active: location.pathname === '/dashboard/settings'
+      // children: [
+      //   { title: 'Cài đặt chung', path: '/dashboard/settings' },
+      //   { title: 'Email Templates', path: '/dashboard/settings/email' },
+      //   { title: 'Backup & Restore', path: '/dashboard/settings/backup' }
+      // ]
     }
   ]
 

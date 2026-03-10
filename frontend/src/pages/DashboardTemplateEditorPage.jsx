@@ -38,14 +38,16 @@ const DashboardTemplateEditorPage = () => {
     }
   }, [decodedId])
 
-  const loadCategories = async () => {
+  const loadCategories = async () => { 
     try {
       const response = await templateService.getCategories()
-      setCategories(response.data || [])
+      const filtered = (response.data || []).filter(cat => !cat.deleted_at)
+
+      setCategories(filtered)
     } catch (error) {
       console.error('Failed to load categories:', error)
     }
-  }
+}
 
   const loadTemplate = async (templateId) => {
     try {

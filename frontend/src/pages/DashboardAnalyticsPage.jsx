@@ -11,9 +11,25 @@ const DashboardAnalyticsPage = () => {
       totalUsers: 0,
       conversionRate: 0
     },
-    chartData: [],
+    chartData: [
+      { date: '2024-01-08', views: 8, invitations: 37, users: 5 },
+      { date: '2024-01-09', views: 0, invitations: 0, users: 0 },
+      { date: '2024-01-10', views: 0, invitations: 0, users: 0 },
+      { date: '2024-01-11', views: 0, invitations: 0, users: 0 },
+    ],
     topTemplates: [],
-    userActivity: [],
+    userActivity: [
+      { hour: '00:00', users: 29 },
+      { hour: '01:00', users: 9 },
+      { hour: '02:00', users: 7 },
+      { hour: '03:00', users: 4 },
+      { hour: '04:00', users: 3 },
+      { hour: '05:00', users: 5 },
+      { hour: '06:00', users: 18 },
+      { hour: '07:00', users: 35 },
+      { hour: '08:00', users: 60 },
+      { hour: '09:00', users: 80 },
+    ],
     revenueData: []
   })
 
