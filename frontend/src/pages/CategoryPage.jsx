@@ -501,7 +501,7 @@ className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
             <button
               onClick={() => {
                 if (isDeleted) return
-                handleDeleteCategory(category.value)
+                handleDeleteCategory(category.id)
               }}
               disabled={isDeleted}
               className={`flex-1 px-2 py-1 text-xs rounded ${
