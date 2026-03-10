@@ -49,18 +49,18 @@ const DashboardLayout = ({ children }) => {
         { title: 'Categories', path: '/dashboard/templates/categories' }
       ]
     },
-    {
-      id: 'users',
-      title: 'Quản lý người dùng',
-      icon: (
-        <span className="material-symbols-outlined">group</span>
-      ),
-      children: [
-        { title: 'Tất cả người dùng', path: '/dashboard/users' },
-        { title: 'Người dùng hoạt động', path: '/dashboard/users/active' },
-        { title: 'Quyền & Vai trò', path: '/dashboard/users/roles' }
-      ]
-    },
+    // {
+    //   id: 'users',
+    //   title: 'Quản lý người dùng',
+    //   icon: (
+    //     <span className="material-symbols-outlined">group</span>
+    //   ),
+    //   children: [
+    //     { title: 'Tất cả người dùng', path: '/dashboard/users' },
+    //     { title: 'Người dùng hoạt động', path: '/dashboard/users/active' },
+    //     { title: 'Quyền & Vai trò', path: '/dashboard/users/roles' }
+    //   ]
+    // },
     {
       id: 'analytics',
       title: 'Thống kê & Báo cáo',
@@ -119,16 +119,16 @@ const DashboardLayout = ({ children }) => {
       >
         {/* Header Logo Area */}
         <div className="h-[72px] flex items-center justify-between px-6 border-b border-gray-100 dark:border-gray-800">
-          {/* <Link to="/dashboard" className={`flex items-center gap-3 ${sidebarCollapsed ? 'justify-center w-full' : ''}`}>
+          <Link to="/dashboard" className={`flex items-center gap-3 ${sidebarCollapsed ? 'justify-center w-full' : ''}`}>
             <div className="relative w-8 h-8">
               <img src="/assets/images/logo-small.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
             {!sidebarCollapsed && (
               <span className="font-bold text-gray-900 dark:text-white text-lg tracking-tight">Dashboard</span>
             )}
-          </Link> */}
+          </Link>
 
-        {!sidebarCollapsed && (
+        {/* {!sidebarCollapsed && (
   <div className="w-full">
     <div className="bg-gray-900 dark:bg-white rounded-xl p-4 flex items-center gap-3 shadow-lg w-full">
       <div className="w-10 h-10 rounded-full bg-white/20 dark:bg-black/10 flex items-center justify-center text-white dark:text-black font-bold">
@@ -145,7 +145,7 @@ const DashboardLayout = ({ children }) => {
       </div>
     </div>
   </div>
-)}
+)} */}
 
           {/* Mobile Close Button */}
           <button

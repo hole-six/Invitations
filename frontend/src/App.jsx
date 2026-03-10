@@ -30,6 +30,7 @@ import DashboardTemplateEditorPage from './pages/DashboardTemplateEditorPage.jsx
 import DashboardUsersPage from './pages/DashboardUsersPage.jsx'
 import DashboardAnalyticsPage from './pages/DashboardAnalyticsPage.jsx'
 import DashboardSettingsPage from './pages/DashboardSettingsPage.jsx'
+import CategoryPage from './pages/CategoryPage.jsx'
 
 function App() {
   return (
@@ -180,7 +181,7 @@ function App() {
               path="/dashboard/templates/categories"
               element={
                 <AdminRoute>
-                  <DashboardTemplatesPage />
+                  <CategoryPage />
                 </AdminRoute>
               }
             />
