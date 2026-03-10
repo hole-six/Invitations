@@ -29,6 +29,18 @@ const CategoryPage = () => {
   const [templatesCount, setTemplatesCount] = useState(0)
     const [categories, setCategories] = useState([])
     const [openModalCategory, setOpenModalCategory] = useState(false)
+const [editingCategory, setEditingCategory] = useState(null)
+
+const handleCreateCategory = async (data) => {
+  await templateService.createCategory(data)
+  loadCategories()
+}
+
+const handleUpdateCategory = async (data) => {
+  await templateService.updateCategory(editingCategory.value, data)
+  setEditingCategory(null)
+  loadCategories()
+}
 
   // Auto list view on mobile
   const getInitialViewMode = () => {
@@ -41,8 +53,10 @@ const loadCategories = async () => {
     const response = await templateService.getCategories()
 
     const categoryData = (response.data || []).map(cat => ({
-      value: cat.id,       // dùng id
-      label: cat.name,     // hiển thị name
+      id: cat.id,       // dùng id
+      name: cat.name,
+          description: cat.description,
+          display_order: cat.display_order,
       slug: cat.slug
     }))
 
@@ -62,16 +76,6 @@ const loadCategories = async () => {
     console.error('Failed to load categories:', error)
   }
 }
-
-//   const categories = [
-//     { value: 'wedding', label: 'Thiệp cưới' },
-//     { value: 'birthday', label: 'Sinh nhật' },
-//     { value: 'anniversary', label: 'Kỷ niệm' },
-//     { value: 'graduation', label: 'Tốt nghiệp' },
-//     { value: 'business', label: 'Doanh nghiệp' },
-//     { value: 'other', label: 'Khác' }
-//   ]
-
   useEffect(() => {
     loadTemplates()
   }, [filters, currentPage])
@@ -102,18 +106,6 @@ const loadCategories = async () => {
   category: template.category_id, // dùng id luôn
   thumbnail: template.thumbnail_url
 }))
-
-    //   setTemplates(data)
-    //   setTemplatesCount(pagination.total || data.length) // Use total from API if available, otherwise fallback to data length
-
-    //   const paginationMeta = response.pagination || response.meta || {}
-    //   const totalPagesFromApi = Number(paginationMeta.total_pages || paginationMeta.last_page || 0)
-    //   const currentPageFromApi = Number(paginationMeta.current_page || paginationMeta.page || currentPage)
-
-    //   setPagination({
-    //     currentPage: currentPageFromApi > 0 ? currentPageFromApi : currentPage,
-    //     totalPages: totalPagesFromApi > 0 ? totalPagesFromApi : Math.max(1, currentPage)
-    //   })
     } catch (error) {
       console.error('Failed to load templates:', error)
       toast.error('Không thể tải danh sách templates')
@@ -122,21 +114,22 @@ const loadCategories = async () => {
     }
   }
 
-  const handleSelectAll = (checked) => {
-    if (checked) {
-      setSelectedTemplates(templates.map(template => template.id))
-    } else {
-      setSelectedTemplates([])
-    }
-  }
+  const handleDeleteCategory = async (id) => {
+  if (!window.confirm("Bạn có chắc muốn xóa category này?")) return
 
-  const handleSelectTemplate = (id, checked) => {
-    if (checked) {
-      setSelectedTemplates([...selectedTemplates, id])
-    } else {
-      setSelectedTemplates(selectedTemplates.filter(templateId => templateId !== id))
-    }
+  try {
+    await templateService.deleteCategory(id)
+    toast.success("Xóa category thành công")
+    loadCategories()
+  } catch (error) {
+    console.error(error)
+    toast.error("Không thể xóa category")
   }
+}
+
+const handleEditCategory = (category) => {
+  navigate(`/dashboard/categories/edit/${category.value}`)
+}
 
   console.log('Selected templates:', categories)
 
@@ -464,7 +457,7 @@ const loadCategories = async () => {
         className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition"
       >
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {category.label}
+          {category.name}
         </h3>
 
         <p className="text-sm text-gray-500 mt-1">
@@ -472,7 +465,27 @@ const loadCategories = async () => {
         </p>
 
         <div className="mt-3 text-xs text-gray-400">
-          id: {category.value}
+          mô tả: {category.description}
+        </div>
+
+        {/* ACTIONS */}
+        <div className="flex gap-2 mt-4">
+          <button
+             onClick={() => {
+    setEditingCategory(category)
+    setOpenModalCategory(true)
+  }}
+            className="flex-1 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+          >
+            <span className="material-symbols-outlined text-sm">edit</span>
+          </button>
+
+          <button
+            onClick={() => handleDeleteCategory(category.value)}
+            className="flex-1 px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200"
+          >
+            <span className="material-symbols-outlined text-sm">delete</span>
+          </button>
         </div>
       </div>
     ))}
@@ -547,29 +560,21 @@ const loadCategories = async () => {
                   </button>
                 </div>
               )}
-              {templates.length === 0 && (
-                <div className="text-center py-12">
-                  <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                  </svg>
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Không có template nào</h3>
-                  <p className="text-gray-500 dark:text-gray-400">Bắt đầu tạo template đầu tiên của bạn</p>
-                </div>
-              )}
             </div>
           )}
         </div>
       </div>
 
-      {openModalCategory && (
-        <CreateCategoryModal
-            onClose={() => setOpenModalCategory(false)}
-            onPublish={() => {
-                setOpenModalCategory(false)
-                loadCategories()
-            }}
-        />
-      )}
+    {openModalCategory && (
+  <CreateCategoryModal
+    initialData={editingCategory}
+    onClose={() => {
+      setOpenModalCategory(false)
+      setEditingCategory(null)
+    }}
+     onCreate={editingCategory ? handleUpdateCategory : handleCreateCategory}
+  />
+)}
 
       {/* Delete Modal */}
       {showDeleteModal && (
