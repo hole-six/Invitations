@@ -921,8 +921,8 @@ const UltimateHtmlEditorPage = () => {
 
   // AUTO-SAVE: Debounced auto-save when data changes
   useEffect(() => {
-    // Skip auto-save if invitation not loaded yet
-    if (!invitation || loading) return
+    // Skip auto-save if invitation not loaded yet or in preview mode
+    if ((!invitation && !searchParams.get('previewMode')) || loading) return
 
     // Skip if data hasn't changed
     const currentData = JSON.stringify({ formData, imageData, customFieldData, htmlCode })
@@ -982,6 +982,55 @@ const UltimateHtmlEditorPage = () => {
     try {
       setLoading(true)
 
+      const isPreviewMode = searchParams.get('previewMode') === 'true'
+
+      if (isPreviewMode) {
+        console.log('🚀 Entering Ultimate Editor PREVIEW MODE')
+        const previewHtml = sessionStorage.getItem('ultimate_preview_html')
+        const previewTemplateData = JSON.parse(sessionStorage.getItem('ultimate_preview_template') || '{}')
+
+        if (!previewHtml) {
+          toast.error('Không tìm thấy dữ liệu preview')
+          navigate('/dashboard/templates')
+          return
+        }
+
+        setHtmlCode(previewHtml)
+        setInvitation({
+          id: 'preview',
+          uuid: 'preview',
+          title: previewTemplateData.name || 'Preview Template',
+          status: 'preview'
+        })
+
+        const loadedFormData = {
+          title: previewTemplateData.name || 'Wedding Invitation',
+          groom_name: 'Nguyễn Văn A',
+          bride_name: 'Trần Thị B',
+          event_date: new Date().toISOString().split('T')[0],
+          event_time: '18:00',
+          event_location: 'Melisa Center',
+          event_address: '85 Thoại Ngọc Hầu, Hòa Thạnh, Tân Phú, TP. HCM',
+          music_url: '',
+          music_autoplay: true,
+          slug: 'preview-slug',
+          visibility: 'private'
+        }
+
+        setFormData(loadedFormData)
+        setImageData({})
+        setCustomFieldData({})
+
+        const initialData = JSON.stringify({
+          formData: loadedFormData,
+          imageData: {},
+          customFieldData: {},
+          htmlCode: previewHtml
+        })
+        setLastSavedData(initialData)
+        return
+      }
+
       // Check if user is authenticated before making request
       if (!authService.isAuthenticated()) {
         toast.error('Vui lòng đăng nhập để tiếp tục')
@@ -1007,21 +1056,21 @@ const UltimateHtmlEditorPage = () => {
         // If html_content is empty but we have a template, try to load template HTML
         if (!htmlContent && res.data.template_id) {
           console.warn('⚠️ Invitation has no HTML content, attempting to load from template...')
-          
+
           try {
             // Import template service
             const templateService = (await import('../services/template.service')).default
             const templateRes = await templateService.getById(res.data.template_id)
-            
+
             let templateHtml = templateRes.data?.html_template; // Template uses html_template
-            
+
             // Fallback to designData if html_template is empty
             if (!templateHtml && templateRes.data?.design_data) {
               try {
                 const designData = typeof templateRes.data.design_data === 'string'
                   ? JSON.parse(templateRes.data.design_data)
                   : templateRes.data.design_data;
-                
+
                 if (designData?.html) {
                   console.log('📄 Using HTML from template designData');
                   templateHtml = designData.html;
@@ -1030,11 +1079,11 @@ const UltimateHtmlEditorPage = () => {
                 console.error('Failed to parse design_data:', parseErr);
               }
             }
-            
+
             if (templateHtml) {
               console.log('✅ Loaded HTML from template:', templateRes.data.name)
               setHtmlCode(templateHtml)
-              
+
               // Auto-save the HTML to the invitation
               try {
                 // Include multiple fields - Invitation uses html_content
@@ -1400,7 +1449,7 @@ const UltimateHtmlEditorPage = () => {
 
     try {
       console.log('📤 Processing image:', file.name)
-      
+
       // Convert to optimized format for fast loading
       const reader = new FileReader()
       reader.onloadend = () => {
@@ -1446,6 +1495,10 @@ const UltimateHtmlEditorPage = () => {
   }
 
   const handleSaveAndExit = async () => {
+    if (searchParams.get('previewMode') === 'true') {
+      toast.info('Đây là chế độ xem trước, không thể lưu.')
+      return
+    }
     if (!invitation) return
 
     try {
@@ -1491,6 +1544,10 @@ const UltimateHtmlEditorPage = () => {
   }
 
   const handleSave = async () => {
+    if (searchParams.get('previewMode') === 'true') {
+      toast.info('Đây là chế độ xem trước, không thể lưu.')
+      return
+    }
     if (!invitation) return
 
     try {
@@ -1516,12 +1573,12 @@ const UltimateHtmlEditorPage = () => {
         custom_field_data: JSON.stringify(customFieldData),
         status: invitation.status // Keep current status (published/draft)
       })
-      
+
       // Update lastSavedData and clear unsaved changes flag
       const currentData = JSON.stringify({ formData, imageData, customFieldData, htmlCode })
       setLastSavedData(currentData)
       setHasUnsavedChanges(false)
-      
+
       toast.success('✅ Đã lưu thành công!')
     } catch (error) {
       console.error('Save failed:', error)
@@ -1536,6 +1593,10 @@ const UltimateHtmlEditorPage = () => {
   }
 
   const handlePublish = async () => {
+    if (searchParams.get('previewMode') === 'true') {
+      toast.info('Đây là chế độ xem trước, không thể xuất bản.')
+      return
+    }
     if (!invitation) return
 
     // Auto-save before publishing if there are unsaved changes
@@ -1549,6 +1610,10 @@ const UltimateHtmlEditorPage = () => {
   }
 
   const confirmPublish = async () => {
+    if (searchParams.get('previewMode') === 'true') {
+      toast.info('Đây là chế độ xem trước, không thể xuất bản.')
+      return
+    }
     setShowPublishConfirm(false)
 
     try {
@@ -1580,7 +1645,7 @@ const UltimateHtmlEditorPage = () => {
       })
 
       toast.success('✅ Đã xuất bản thiệp mời!')
-      
+
       // Get slug for public URL
       const slug = formData.slug || invitation.slug
       if (slug) {
@@ -1599,6 +1664,11 @@ const UltimateHtmlEditorPage = () => {
   }
 
   const handlePreview = async () => {
+    if (searchParams.get('previewMode') === 'true') {
+      // In preview mode, just open the same page or do nothing since we are already in an editor preview
+      toast.info('Bạn đang ở chế độ xem trước của Ultimate Editor.')
+      return
+    }
     if (!invitation) return
 
     // Auto-save before preview if there are unsaved changes
@@ -1634,10 +1704,10 @@ const UltimateHtmlEditorPage = () => {
       })
 
       console.log('📥 Update response:', updateResponse)
-      
+
       // Get slug for preview
       const slug = formData.slug || invitation.slug
-      
+
       console.log('🔗 Opening preview with slug:', slug)
 
       toast.success('✅ Đã lưu! Đang mở xem trước...')
@@ -1678,9 +1748,13 @@ const UltimateHtmlEditorPage = () => {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
           </button>
           <div>
-            <h2 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">{invitation?.title || 'Chỉnh sửa thiệp'}</h2>
+            <h2 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">
+              {searchParams.get('previewMode') === 'true' ? 'Ultimate Preview Mode' : (invitation?.title || 'Chỉnh sửa thiệp')}
+            </h2>
             <div className="flex items-center gap-2">
-              {hasUnsavedChanges ? (
+              {searchParams.get('previewMode') === 'true' ? (
+                <span className="text-[10px] text-blue-600 dark:text-blue-400 font-bold px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 rounded-full border border-blue-200 dark:border-blue-800">PREVIEW ONLY</span>
+              ) : hasUnsavedChanges ? (
                 <>
                   <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
                   <span className="text-[10px] text-orange-600 dark:text-orange-400 font-medium">Chưa lưu • Tự động lưu sau 5 phút</span>
@@ -1852,13 +1926,13 @@ const UltimateHtmlEditorPage = () => {
                     {templateAnalysis.images.map(img => (
                       <div key={img.id} className="relative">
                         <div className="group relative aspect-square rounded-xl overflow-hidden border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-primary dark:hover:border-primary bg-gray-50 dark:bg-gray-800 transition-all">
-                          <img 
-                            src={imageData[img.id] || img.originalSrc} 
-                            className="w-full h-full object-cover" 
+                          <img
+                            src={imageData[img.id] || img.originalSrc}
+                            className="w-full h-full object-cover"
                             alt={img.alt || 'Image'}
                           />
-                          <label 
-                            htmlFor={`upload-${img.id}`} 
+                          <label
+                            htmlFor={`upload-${img.id}`}
                             className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer"
                           >
                             <div className="size-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-2">
@@ -1867,12 +1941,12 @@ const UltimateHtmlEditorPage = () => {
                             <span className="text-xs text-white font-semibold">Hãy chọn ảnh bạn muốn thay thế</span>
                             <span className="text-[10px] text-white/80 mt-1">Kéo thả hoặc click để chọn file</span>
                           </label>
-                          <input 
-                            type="file" 
-                            id={`upload-${img.id}`} 
-                            className="hidden" 
-                            accept="image/*" 
-                            onChange={(e) => handleImageUpload(img.id, e.target.files[0])} 
+                          <input
+                            type="file"
+                            id={`upload-${img.id}`}
+                            className="hidden"
+                            accept="image/*"
+                            onChange={(e) => handleImageUpload(img.id, e.target.files[0])}
                           />
                           <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-2">
                             <p className="text-[10px] text-white truncate font-medium">{img.alt || 'Image'}</p>
@@ -1880,20 +1954,19 @@ const UltimateHtmlEditorPage = () => {
                               <span className="text-[8px] text-green-300 font-bold">Auto-detected</span>
                             )}
                           </div>
-                          
+
                           {/* Type Badge */}
                           <div className="absolute top-2 right-2">
-                            <span className={`px-2 py-1 rounded text-[8px] font-bold ${
-                              img.type === 'img' ? 'bg-blue-500/90 text-white' :
+                            <span className={`px-2 py-1 rounded text-[8px] font-bold ${img.type === 'img' ? 'bg-blue-500/90 text-white' :
                               img.type === 'ladi-background' ? 'bg-purple-500/90 text-white' :
-                              'bg-green-500/90 text-white'
-                            }`}>
-                              {img.type === 'img' ? 'IMG' : 
-                               img.type === 'ladi-background' ? 'LADI' : 'BG'}
+                                'bg-green-500/90 text-white'
+                              }`}>
+                              {img.type === 'img' ? 'IMG' :
+                                img.type === 'ladi-background' ? 'LADI' : 'BG'}
                             </span>
                           </div>
                         </div>
-                        
+
                         {/* Button: Chọn từ thư viện */}
                         <button
                           onClick={() => handleOpenMediaLibrary(img.id)}
@@ -2209,7 +2282,7 @@ if (typeof document !== 'undefined' && !document.getElementById('react-datepicke
       color: #e7e5e4;
     }
   `
-  
+
   // Safely append to head
   try {
     document.head.appendChild(style)
