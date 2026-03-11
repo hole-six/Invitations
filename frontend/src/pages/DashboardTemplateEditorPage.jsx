@@ -41,7 +41,7 @@ const DashboardTemplateEditorPage = () => {
     }
   }, [decodedId])
 
-  const loadCategories = async () => { 
+  const loadCategories = async () => {
     try {
       const response = await templateService.getCategories()
       const filtered = (response.data || []).filter(cat => !cat.deleted_at)
@@ -50,7 +50,7 @@ const DashboardTemplateEditorPage = () => {
     } catch (error) {
       console.error('Failed to load categories:', error)
     }
-}
+  }
 
   const loadTemplate = async (templateId) => {
     try {
@@ -64,14 +64,14 @@ const DashboardTemplateEditorPage = () => {
 
       // Get html_template with fallback to design_data.html
       let htmlContent = template.html_template || '';
-      
+
       // If html_template is empty, try to get from design_data
       if (!htmlContent && template.design_data) {
         try {
           const designData = typeof template.design_data === 'string'
             ? JSON.parse(template.design_data)
             : template.design_data;
-          
+
           if (designData?.html) {
             console.log('📄 Loading HTML from design_data');
             htmlContent = designData.html;
@@ -168,20 +168,20 @@ const DashboardTemplateEditorPage = () => {
           setLoading(false);
           return;
         }
-        
+
         // Set uuid to current user's uuid (creator)
         submitData.uuid = user.uuid;
-        
+
         // Remove id (backend will auto-generate)
         delete submitData.id;
-        
+
         // Validate required fields for CREATE
         if (!submitData.html_template && submitData.template_type === 'html') {
           toast.error('❌ Vui lòng nhập HTML content cho template');
           setLoading(false);
           return;
         }
-        
+
         console.log('➕ Creating new template with creator UUID:', user.uuid);
         response = await templateService.create(submitData)
         toast.success('✨ Template đã được tạo thành công!')
@@ -450,13 +450,30 @@ const DashboardTemplateEditorPage = () => {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     HTML Content {formData.template_type === 'html' && '*'}
                   </label>
-                  <button
-                    type="button"
-                    onClick={() => setPreviewMode(!previewMode)}
-                    className="w-full md:w-auto px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded-lg text-xs font-medium"
-                  >
-                    {previewMode ? 'Chỉnh sửa Code' : 'Xem Preview nhanh'}
-                  </button>
+                  <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        sessionStorage.setItem('ultimate_preview_html', formData.html_template);
+                        sessionStorage.setItem('ultimate_preview_template', JSON.stringify({
+                          name: formData.name,
+                          category_id: formData.category_id,
+                          is_premium: formData.is_premium
+                        }));
+                        window.open('/ultimate-html-editor?previewMode=true', '_blank');
+                      }}
+                      className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 transition-all rounded-lg text-xs font-bold flex items-center justify-center gap-2 shadow-sm"
+                    >
+                      Ultimate Editor (Preview)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPreviewMode(!previewMode)}
+                      className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded-lg text-xs font-medium"
+                    >
+                      {previewMode ? 'Chỉnh sửa Code' : 'Xem Preview nhanh'}
+                    </button>
+                  </div>
                 </div>
                 {!previewMode ? (
                   <textarea
