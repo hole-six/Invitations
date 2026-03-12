@@ -65,16 +65,23 @@ class AuthService {
   async login(credentials) {
     try {
       console.log('🔐 Attempting login to:', `${API_URL}/api/v1/user/login`);
-      
+
+      const payload = {
+        user_name: credentials.email, // API expects 'user_name' field
+        password: credentials.password,
+      };
+
+      if (credentials.captchaToken) {
+        payload.captcha_token = credentials.captchaToken;
+        payload.captcha_provider = credentials.captchaProvider || 'turnstile';
+      }
+
       const response = await fetch(`${API_URL}/api/v1/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          user_name: credentials.email, // API expects 'user_name' field
-          password: credentials.password
-        })
+        body: JSON.stringify(payload)
       });
 
       const data = await response.json();
@@ -82,7 +89,12 @@ class AuthService {
       console.log('📥 Login response:', data);
 
       if (!response.ok) {
-        throw new Error(data.message || data.msg || 'Login failed');
+        const error = new Error(data.message || data.msg || 'Login failed');
+        error.status = response.status;
+        error.code = data.code;
+        error.data = data.data;
+        error.raw = data;
+        throw error;
       }
 
       if (data && data.Authorization) {

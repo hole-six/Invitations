@@ -31,7 +31,9 @@ import DashboardCategoriesPage from './pages/DashboardCategoriesPage.jsx'
 import DashboardUsersPage from './pages/DashboardUsersPage.jsx'
 import DashboardAnalyticsPage from './pages/DashboardAnalyticsPage.jsx'
 import DashboardSettingsPage from './pages/DashboardSettingsPage.jsx'
+import DashboardProfilePage from './pages/DashboardProfilePage.jsx'
 import CategoryPage from './pages/CategoryPage.jsx'
+import ProfilePage from './pages/ProfilePage.jsx'
 
 function App() {
   return (
@@ -100,6 +102,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ManagementPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
                 </ProtectedRoute>
               }
             />
@@ -255,6 +265,14 @@ function App() {
               element={
                 <AdminRoute>
                   <DashboardSettingsPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/dashboard/profile"
+              element={
+                <AdminRoute>
+                  <DashboardProfilePage />
                 </AdminRoute>
               }
             />

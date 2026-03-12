@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { hasAdminAccess } from '../utils/permissions'
 import BottomNavigation from './BottomNavigation'
 
 const DashboardLayout = ({ children }) => {
@@ -9,6 +10,7 @@ const DashboardLayout = ({ children }) => {
   const { user, logout } = useAuth()
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState(null)
+  const isAdmin = hasAdminAccess()
 
   // Mobile drawer state
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
@@ -160,6 +162,31 @@ const DashboardLayout = ({ children }) => {
           >
             <span className="material-symbols-outlined">close</span>
           </button>
+        </div>
+
+        {/* User Profile Shortcut */}
+        <div className="px-4 py-3">
+          <Link
+            to="/dashboard/profile"
+            className={`flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${sidebarCollapsed ? 'justify-center' : ''}`}
+          >
+            <div className="w-9 h-9 rounded-full bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center text-sm font-bold">
+              {(user?.full_name || user?.user_name || user?.email || 'U').charAt(0).toUpperCase()}
+            </div>
+            {!sidebarCollapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                  {user?.full_name || user?.user_name || user?.email || 'Tài khoản'}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {isAdmin ? 'Admin' : 'User'}
+                </p>
+              </div>
+            )}
+            {!sidebarCollapsed && (
+              <span className="material-symbols-outlined text-gray-400 text-lg">chevron_right</span>
+            )}
+          </Link>
         </div>
 
         {/* Navigation Menu */}

@@ -1,11 +1,13 @@
 import React from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { hasAdminAccess } from '../utils/permissions'
 
 const Header = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { user, isAuthenticated, logout } = useAuth()
+  const isAdmin = hasAdminAccess()
 
   const handleLogout = () => {
     logout()
@@ -42,7 +44,10 @@ const Header = () => {
                 <Link to="/management" className="text-gray-700 hover:text-blue-600">
                   Quản lý
                 </Link>
-                {user?.role === 'admin' && (
+                <Link to="/profile" className="text-gray-700 hover:text-blue-600">
+                  Profile
+                </Link>
+                {isAdmin && (
                   <Link to="/dashboard" className="text-gray-700 hover:text-blue-600">
                     Dashboard
                   </Link>

@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Turnstile } from 'react-turnstile';
 import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { login, error } = useAuth();
+  // const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY;
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
   const [loading, setLoading] = useState(false);
+  const [captchaRequired, setCaptchaRequired] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaMeta, setCaptchaMeta] = useState(null);
+  const [captchaError, setCaptchaError] = useState('');
+  const TURNSTILE_SITE_KEY = "0x4AAAAAACLHdYHJg9SEsMFi"; // site key
 
   const handleChange = (e) => {
     setFormData({
@@ -20,27 +27,59 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (captchaRequired && !captchaToken) {
+      setCaptchaError('Vui lòng xác minh CAPTCHA để tiếp tục.');
+      return;
+    }
     setLoading(true);
 
     try {
-      const response = await login(formData);
+      const response = await login({
+        ...formData,
+        captchaToken,
+        captchaProvider: 'turnstile',
+      });
       const user = response.data?.user;
 
       // Import permission helper
       const { hasAdminAccess } = await import('../utils/permissions');
-      
+
       // Redirect based on permissions
       if (hasAdminAccess()) {
         navigate('/dashboard');
       } else {
         navigate('/');
       }
+      setCaptchaRequired(false);
+      setCaptchaToken('');
+      setCaptchaMeta(null);
+      setCaptchaError('');
     } catch (err) {
       console.error('Login failed:', err);
+      const isCaptchaRequired =
+        err?.code === 428 ||
+        err?.status === 428 ||
+        err?.raw?.code === 428 ||
+        err?.raw?.msg === 'captcha.required' ||
+        err?.message === 'captcha.required';
+      if (isCaptchaRequired) {
+        setCaptchaRequired(true);
+        setCaptchaToken('');
+        setCaptchaMeta(err?.data || err?.raw?.data || null);
+        setCaptchaError('Vui lòng xác minh CAPTCHA để tiếp tục.');
+      }
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!captchaRequired) {
+      setCaptchaToken('');
+      setCaptchaMeta(null);
+      setCaptchaError('');
+    }
+  }, [captchaRequired]);
 
   return (
     <div className="min-h-screen flex">
@@ -198,6 +237,44 @@ const LoginPage = () => {
                 </Link>
               </div>
             </div>
+
+            {/* CAPTCHA */}
+            {captchaRequired && (
+              <div className="space-y-3">
+                <div className="text-sm text-gray-700">
+                  Vui lòng xác minh CAPTCHA để tiếp tục.
+                  {captchaMeta?.retry_after_seconds
+                    ? ` Thử lại sau ${captchaMeta.retry_after_seconds}s.`
+                    : ''}
+                </div>
+                {TURNSTILE_SITE_KEY ? (
+                  <Turnstile
+                    sitekey={TURNSTILE_SITE_KEY}
+                    fixedSize
+                    refreshExpired="auto"
+                    onVerify={(token) => {
+                      setCaptchaToken(token);
+                      setCaptchaError('');
+                    }}
+                    onExpire={() => {
+                      setCaptchaToken('');
+                    }}
+                    onError={() => {
+                      setCaptchaToken('');
+                      setCaptchaError('CAPTCHA gặp lỗi, vui lòng thử lại.');
+                    }}
+                    className="min-h-[65px]"
+                  />
+                ) : (
+                  <div className="text-sm text-red-600">
+                    Thiếu cấu hình `VITE_TURNSTILE_SITE_KEY`.
+                  </div>
+                )}
+                {captchaError && (
+                  <p className="text-sm text-red-600">{captchaError}</p>
+                )}
+              </div>
+            )}
 
             {/* Submit Button */}
             <button

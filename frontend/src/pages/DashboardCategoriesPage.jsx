@@ -151,27 +151,39 @@ const DashboardCategoriesPage = () => {
                       <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">{category.description}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900 dark:text-white">{category.display_order}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-center">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          category.is_active 
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
-                            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                        }`}>
-                          {category.is_active ? 'Hoạt động' : 'Vô hiệu'}
+                       <span
+                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            category.deleted_at
+                              ? 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                              : category.is_active
+                              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                              : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                          }`}
+                        >
+                          {category.deleted_at
+                            ? 'Đã xóa'
+                            : category.is_active
+                            ? 'Hoạt động'
+                            : 'Vô hiệu'}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          onClick={() => handleEdit(category)}
-                          className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-3"
-                        >
-                          Sửa
-                        </button>
-                        <button
-                          onClick={() => handleDelete(category)}
-                          className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                        >
-                          Xóa
-                        </button>
+                         {!category.deleted_at && (
+                          <button
+                            onClick={() => handleEdit(category)}
+                            className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-3"
+                          >
+                            Sửa
+                          </button>
+                        )}
+                        {!category.deleted_at && (
+                          <button
+                            onClick={() => handleDelete(category)}
+                            className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                          >
+                            Xóa
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
