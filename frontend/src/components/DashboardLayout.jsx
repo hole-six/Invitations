@@ -30,7 +30,7 @@ const DashboardLayout = ({ children }) => {
       icon: (
         <span className="material-symbols-outlined">mail</span>
       ),
-      path : '/dashboard/invitations',
+      path: '/dashboard/invitations',
       active: location.pathname === '/dashboard/invitations'
       // children: [
       //   { title: 'Tất cả thiệp mời', path: '/dashboard/invitations' },
@@ -83,7 +83,7 @@ const DashboardLayout = ({ children }) => {
       icon: (
         <span className="material-symbols-outlined">settings</span>
       ),
-      path : '/dashboard/settings',
+      path: '/dashboard/settings',
       active: location.pathname === '/dashboard/settings'
       // children: [
       //   { title: 'Cài đặt chung', path: '/dashboard/settings' },
@@ -107,7 +107,7 @@ const DashboardLayout = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
+    <div className="h-screen bg-gray-50 dark:bg-gray-900 flex overflow-hidden">
       {/* Mobile Drawer Overlay */}
       {mobileDrawerOpen && (
         <div
@@ -134,7 +134,7 @@ const DashboardLayout = ({ children }) => {
             )}
           </Link>
 
-        {/* {!sidebarCollapsed && (
+          {/* {!sidebarCollapsed && (
   <div className="w-full">
     <div className="bg-gray-900 dark:bg-white rounded-xl p-4 flex items-center gap-3 shadow-lg w-full">
       <div className="w-10 h-10 rounded-full bg-white/20 dark:bg-black/10 flex items-center justify-center text-white dark:text-black font-bold">
@@ -172,8 +172,8 @@ const DashboardLayout = ({ children }) => {
                   <button
                     onClick={() => toggleDropdown(item.id)}
                     className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${isChildActive(item.children) || activeDropdown === item.id
-                        ? 'text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700/50'
-                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white'
+                      ? 'text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700/50'
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white'
                       }`}
                   >
                     <div className="flex items-center gap-3">
@@ -197,8 +197,8 @@ const DashboardLayout = ({ children }) => {
                           key={child.path}
                           to={child.path}
                           className={`block px-4 py-2 text-sm rounded-lg transition-colors ${location.pathname === child.path
-                              ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-bold'
-                              : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800'
+                            ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-bold'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800'
                             }`}
                         >
                           {child.title}
@@ -211,8 +211,8 @@ const DashboardLayout = ({ children }) => {
                 <Link
                   to={item.path}
                   className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${item.active
-                      ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-md'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white'
+                    ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-md'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white'
                     }`}
                 >
                   {item.icon}

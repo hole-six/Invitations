@@ -78,10 +78,10 @@ const AdminTemplatePage = () => {
   }
 
   return (
-    <div className="bg-white dark:bg-black min-h-screen flex flex-col">
+    <div className="bg-white dark:bg-black h-screen overflow-hidden flex flex-col">
       <Header />
 
-      <main className="flex-1 px-3 sm:px-4 lg:px-6 xl:px-8 pt-20 sm:pt-24 pb-6 sm:pb-10 max-w-[1600px] mx-auto w-full">
+      <main className="flex-1 px-3 sm:px-4 lg:px-6 xl:px-8 pt-20 sm:pt-24 pb-6 sm:pb-10 max-w-[1600px] mx-auto w-full overflow-y-auto">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gray-100 dark:bg-gray-900 p-4 sm:p-6 lg:p-8 shadow-2xl mb-6 sm:mb-8">
           <div className="relative z-10">
@@ -105,8 +105,8 @@ const AdminTemplatePage = () => {
           <button
             onClick={() => setActiveTab('create')}
             className={`px-4 sm:px-6 py-3 font-bold transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base ${activeTab === 'create'
-                ? 'bg-gray-900 dark:bg-white text-white dark:text-black shadow-lg'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+              ? 'bg-gray-900 dark:bg-white text-white dark:text-black shadow-lg'
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
           >
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -117,8 +117,8 @@ const AdminTemplatePage = () => {
           <button
             onClick={() => setActiveTab('list')}
             className={`px-4 sm:px-6 py-3 font-bold transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base ${activeTab === 'list'
-                ? 'bg-gray-900 dark:bg-white text-white dark:text-black shadow-lg'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+              ? 'bg-gray-900 dark:bg-white text-white dark:text-black shadow-lg'
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
           >
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
