@@ -32,7 +32,7 @@ const DashboardLayout = ({ children }) => {
       icon: (
         <span className="material-symbols-outlined">mail</span>
       ),
-      path : '/dashboard/invitations',
+      path: '/dashboard/invitations',
       active: location.pathname === '/dashboard/invitations'
       // children: [
       //   { title: 'Tất cả thiệp mời', path: '/dashboard/invitations' },
@@ -85,7 +85,7 @@ const DashboardLayout = ({ children }) => {
       icon: (
         <span className="material-symbols-outlined">settings</span>
       ),
-      path : '/dashboard/settings',
+      path: '/dashboard/settings',
       active: location.pathname === '/dashboard/settings'
       // children: [
       //   { title: 'Cài đặt chung', path: '/dashboard/settings' },
@@ -136,7 +136,7 @@ const DashboardLayout = ({ children }) => {
             )}
           </Link>
 
-        {/* {!sidebarCollapsed && (
+          {/* {!sidebarCollapsed && (
   <div className="w-full">
     <div className="bg-gray-900 dark:bg-white rounded-xl p-4 flex items-center gap-3 shadow-lg w-full">
       <div className="w-10 h-10 rounded-full bg-white/20 dark:bg-black/10 flex items-center justify-center text-white dark:text-black font-bold">
@@ -164,31 +164,6 @@ const DashboardLayout = ({ children }) => {
           </button>
         </div>
 
-        {/* User Profile Shortcut */}
-        <div className="px-4 py-3">
-          <Link
-            to="/dashboard/profile"
-            className={`flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${sidebarCollapsed ? 'justify-center' : ''}`}
-          >
-            <div className="w-9 h-9 rounded-full bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center text-sm font-bold">
-              {(user?.full_name || user?.user_name || user?.email || 'U').charAt(0).toUpperCase()}
-            </div>
-            {!sidebarCollapsed && (
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                  {user?.full_name || user?.user_name || user?.email || 'Tài khoản'}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {isAdmin ? 'Admin' : 'User'}
-                </p>
-              </div>
-            )}
-            {!sidebarCollapsed && (
-              <span className="material-symbols-outlined text-gray-400 text-lg">chevron_right</span>
-            )}
-          </Link>
-        </div>
-
         {/* Navigation Menu */}
         <nav className="flex-1 px-4 py-2 space-y-1 overflow-y-auto custom-scrollbar">
           {menuItems.map((item) => (
@@ -199,8 +174,8 @@ const DashboardLayout = ({ children }) => {
                   <button
                     onClick={() => toggleDropdown(item.id)}
                     className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${isChildActive(item.children) || activeDropdown === item.id
-                        ? 'text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700/50'
-                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white'
+                      ? 'text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700/50'
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white'
                       }`}
                   >
                     <div className="flex items-center gap-3">
@@ -224,8 +199,8 @@ const DashboardLayout = ({ children }) => {
                           key={child.path}
                           to={child.path}
                           className={`block px-4 py-2 text-sm rounded-lg transition-colors ${location.pathname === child.path
-                              ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-bold'
-                              : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800'
+                            ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-bold'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800'
                             }`}
                         >
                           {child.title}
@@ -238,8 +213,8 @@ const DashboardLayout = ({ children }) => {
                 <Link
                   to={item.path}
                   className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${item.active
-                      ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-md'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white'
+                    ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-md'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white'
                     }`}
                 >
                   {item.icon}
@@ -310,15 +285,43 @@ const DashboardLayout = ({ children }) => {
               <span className="material-symbols-outlined absolute left-3 top-2 text-gray-400 text-lg">search</span>
             </div>
 
-            <button className="relative p-2 text-gray-500 hover:text-black dark:hover:text-white transition-colors">
-              <span className="material-symbols-outlined">notifications</span>
+            <button className="relative w-9 h-9 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-500 hover:text-black dark:hover:text-white bg-gray-50 dark:bg-gray-900 transition-colors">
+              <span className="material-symbols-outlined text-[20px]">notifications</span>
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-800"></span>
             </button>
 
+            <Link
+              to="/dashboard/profile"
+              className="hidden md:flex w-9 h-9 rounded-full border border-gray-200 dark:border-gray-700 overflow-hidden items-center justify-center bg-gray-50 dark:bg-gray-900"
+              title="Profile"
+              aria-label="Profile"
+            >
+              <img
+                src={user?.avatar_url || '/assets/images/avatar-default.png'}
+                alt="Profile"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = '/assets/images/avatar-default.png'
+                }}
+              />
+            </Link>
+
             {/* User Profile - Header (Mobile Only) */}
-            <div className="md:hidden w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs">
-              {user?.full_name?.charAt(0)}
-            </div>
+            <Link
+              to="/dashboard/profile"
+              className="md:hidden w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700 overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-gray-900"
+              title="Profile"
+              aria-label="Profile"
+            >
+              <img
+                src={user?.avatar_url || '/assets/images/avatar-default.png'}
+                alt="Profile"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = '/assets/images/avatar-default.png'
+                }}
+              />
+            </Link>
           </div>
         </header>
 

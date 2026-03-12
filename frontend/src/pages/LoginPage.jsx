@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Turnstile } from 'react-turnstile';
 import { useAuth } from '../context/AuthContext';
@@ -12,10 +12,13 @@ const LoginPage = () => {
     password: '',
   });
   const [loading, setLoading] = useState(false);
-  const [captchaRequired, setCaptchaRequired] = useState(false);
+  const [showTurnstile, setShowTurnstile] = useState(false);
   const [captchaToken, setCaptchaToken] = useState('');
-  const [captchaMeta, setCaptchaMeta] = useState(null);
+  const [isVerifyingCaptcha, setIsVerifyingCaptcha] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
   const [captchaError, setCaptchaError] = useState('');
+  const turnstileBoundRef = useRef(null);
+  const verifyTimeoutRef = useRef(null);
   const TURNSTILE_SITE_KEY = "0x4AAAAAACLHdYHJg9SEsMFi"; // site key
 
   const handleChange = (e) => {
@@ -27,7 +30,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (captchaRequired && !captchaToken) {
+    if (showTurnstile && (!captchaToken || !captchaVerified)) {
       setCaptchaError('Vui lòng xác minh CAPTCHA để tiếp tục.');
       return;
     }
@@ -50,9 +53,10 @@ const LoginPage = () => {
       } else {
         navigate('/');
       }
-      setCaptchaRequired(false);
+      setShowTurnstile(false);
       setCaptchaToken('');
-      setCaptchaMeta(null);
+      setCaptchaVerified(false);
+      setIsVerifyingCaptcha(false);
       setCaptchaError('');
     } catch (err) {
       console.error('Login failed:', err);
@@ -63,10 +67,12 @@ const LoginPage = () => {
         err?.raw?.msg === 'captcha.required' ||
         err?.message === 'captcha.required';
       if (isCaptchaRequired) {
-        setCaptchaRequired(true);
+        setShowTurnstile(true);
         setCaptchaToken('');
-        setCaptchaMeta(err?.data || err?.raw?.data || null);
+        setCaptchaVerified(false);
+        setIsVerifyingCaptcha(false);
         setCaptchaError('Vui lòng xác minh CAPTCHA để tiếp tục.');
+        if (turnstileBoundRef.current?.reset) turnstileBoundRef.current.reset();
       }
     } finally {
       setLoading(false);
@@ -74,12 +80,19 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (!captchaRequired) {
+    if (!showTurnstile) {
       setCaptchaToken('');
-      setCaptchaMeta(null);
+      setCaptchaVerified(false);
+      setIsVerifyingCaptcha(false);
       setCaptchaError('');
     }
-  }, [captchaRequired]);
+    return () => {
+      if (verifyTimeoutRef.current) {
+        clearTimeout(verifyTimeoutRef.current);
+        verifyTimeoutRef.current = null;
+      }
+    };
+  }, [showTurnstile]);
 
   return (
     <div className="min-h-screen flex">
@@ -239,28 +252,39 @@ const LoginPage = () => {
             </div>
 
             {/* CAPTCHA */}
-            {captchaRequired && (
+            {showTurnstile && (
               <div className="space-y-3">
-                <div className="text-sm text-gray-700">
-                  Vui lòng xác minh CAPTCHA để tiếp tục.
-                  {captchaMeta?.retry_after_seconds
-                    ? ` Thử lại sau ${captchaMeta.retry_after_seconds}s.`
-                    : ''}
-                </div>
                 {TURNSTILE_SITE_KEY ? (
                   <Turnstile
                     sitekey={TURNSTILE_SITE_KEY}
-                    fixedSize
-                    refreshExpired="auto"
+                    appearance="interaction-only"
+                    execution="render"
+                    theme="light"
+                    onLoad={(widgetId, bound) => {
+                      turnstileBoundRef.current = bound;
+                    }}
                     onVerify={(token) => {
+                      setIsVerifyingCaptcha(true);
                       setCaptchaToken(token);
-                      setCaptchaError('');
+                      if (verifyTimeoutRef.current) {
+                        clearTimeout(verifyTimeoutRef.current);
+                      }
+                      verifyTimeoutRef.current = setTimeout(() => {
+                        setIsVerifyingCaptcha(false);
+                        setCaptchaVerified(true);
+                        setShowTurnstile(false);
+                        setCaptchaError('');
+                      }, 2000);
                     }}
                     onExpire={() => {
                       setCaptchaToken('');
+                      setCaptchaVerified(false);
+                      setShowTurnstile(true);
                     }}
                     onError={() => {
                       setCaptchaToken('');
+                      setCaptchaVerified(false);
+                      setShowTurnstile(true);
                       setCaptchaError('CAPTCHA gặp lỗi, vui lòng thử lại.');
                     }}
                     className="min-h-[65px]"
@@ -270,16 +294,22 @@ const LoginPage = () => {
                     Thiếu cấu hình `VITE_TURNSTILE_SITE_KEY`.
                   </div>
                 )}
-                {captchaError && (
-                  <p className="text-sm text-red-600">{captchaError}</p>
+                {isVerifyingCaptcha && (
+                  <p className="text-xs text-blue-600">Đang xác minh CAPTCHA...</p>
                 )}
+                {showTurnstile && !captchaToken && (
+                  <p className="text-xs text-amber-600">Vui lòng xác minh CAPTCHA.</p>
+                )}
+                {/* {captchaError && (
+                  <p className="text-sm text-red-600">{captchaError}</p>
+                )} */}
               </div>
             )}
 
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || isVerifyingCaptcha || (showTurnstile && !captchaVerified)}
               className="w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {loading ? (
