@@ -4,6 +4,8 @@ import DashboardLayout from '../components/DashboardLayout'
 import { useToast } from '../context/ToastContext'
 import { useAuth } from '../context/AuthContext'
 import templateService from '../services/template.service'
+import mediaService from '../services/media.service'
+import MediaLibraryModal from '../components/MediaLibraryModal'
 
 const DashboardTemplateEditorPage = () => {
   const navigate = useNavigate()
@@ -12,6 +14,15 @@ const DashboardTemplateEditorPage = () => {
   const [searchParams] = useSearchParams()
   const toast = useToast()
   const { user } = useAuth() // Get current user for UUID
+  const [showMediaLibrary, setShowMediaLibrary] = useState(false)
+
+  const handleSelectThumbnail = (image) => {
+    setFormData(prev => ({
+      ...prev,
+      thumbnail_url: image.url
+    }))
+    toast.success('Đã chọn ảnh làm thumbnail!')
+  }
 
   const [loading, setLoading] = useState(false)
   const [previewMode, setPreviewMode] = useState(false)
@@ -41,7 +52,7 @@ const DashboardTemplateEditorPage = () => {
     }
   }, [decodedId])
 
-  const loadCategories = async () => { 
+  const loadCategories = async () => {
     try {
       const response = await templateService.getCategories()
       const filtered = (response.data || []).filter(cat => !cat.deleted_at)
@@ -50,7 +61,7 @@ const DashboardTemplateEditorPage = () => {
     } catch (error) {
       console.error('Failed to load categories:', error)
     }
-}
+  }
 
   const loadTemplate = async (templateId) => {
     try {
@@ -64,14 +75,14 @@ const DashboardTemplateEditorPage = () => {
 
       // Get html_template with fallback to design_data.html
       let htmlContent = template.html_template || '';
-      
+
       // If html_template is empty, try to get from design_data
       if (!htmlContent && template.design_data) {
         try {
           const designData = typeof template.design_data === 'string'
             ? JSON.parse(template.design_data)
             : template.design_data;
-          
+
           if (designData?.html) {
             console.log('📄 Loading HTML from design_data');
             htmlContent = designData.html;
@@ -168,20 +179,20 @@ const DashboardTemplateEditorPage = () => {
           setLoading(false);
           return;
         }
-        
+
         // Set uuid to current user's uuid (creator)
         submitData.uuid = user.uuid;
-        
+
         // Remove id (backend will auto-generate)
         delete submitData.id;
-        
+
         // Validate required fields for CREATE
         if (!submitData.html_template && submitData.template_type === 'html') {
           toast.error('❌ Vui lòng nhập HTML content cho template');
           setLoading(false);
           return;
         }
-        
+
         console.log('➕ Creating new template with creator UUID:', user.uuid);
         response = await templateService.create(submitData)
         toast.success('✨ Template đã được tạo thành công!')
@@ -348,14 +359,24 @@ const DashboardTemplateEditorPage = () => {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Thumbnail URL
                   </label>
-                  <input
-                    type="url"
-                    name="thumbnail_url"
-                    value={formData.thumbnail_url}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none transition-all"
-                    placeholder="https://images.unsplash.com/..."
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      name="thumbnail_url"
+                      value={formData.thumbnail_url}
+                      onChange={handleChange}
+                      className="flex-1 px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none transition-all"
+                      placeholder="https://images.unsplash.com/..."
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowMediaLibrary(true)}
+                      className="px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all flex items-center gap-2"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">upload</span>
+                      Tải lên
+                    </button>
+                  </div>
                   {formData.thumbnail_url && (
                     <div className="mt-3 relative aspect-video w-full max-w-sm rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                       <img
@@ -450,13 +471,30 @@ const DashboardTemplateEditorPage = () => {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     HTML Content {formData.template_type === 'html' && '*'}
                   </label>
-                  <button
-                    type="button"
-                    onClick={() => setPreviewMode(!previewMode)}
-                    className="w-full md:w-auto px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded-lg text-xs font-medium"
-                  >
-                    {previewMode ? 'Chỉnh sửa Code' : 'Xem Preview nhanh'}
-                  </button>
+                  <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        sessionStorage.setItem('ultimate_preview_html', formData.html_template);
+                        sessionStorage.setItem('ultimate_preview_template', JSON.stringify({
+                          name: formData.name,
+                          category_id: formData.category_id,
+                          is_premium: formData.is_premium
+                        }));
+                        window.open('/ultimate-html-editor?previewMode=true', '_blank');
+                      }}
+                      className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 transition-all rounded-lg text-xs font-bold flex items-center justify-center gap-2 shadow-sm"
+                    >
+                      Ultimate Editor (Preview)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPreviewMode(!previewMode)}
+                      className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded-lg text-xs font-medium"
+                    >
+                      {previewMode ? 'Chỉnh sửa Code' : 'Xem Preview nhanh'}
+                    </button>
+                  </div>
                 </div>
                 {!previewMode ? (
                   <textarea
@@ -575,6 +613,12 @@ const DashboardTemplateEditorPage = () => {
           </div>
         </form>
       </div>
+      {showMediaLibrary && (
+        <MediaLibraryModal
+          onClose={() => setShowMediaLibrary(false)}
+          onSelectImage={handleSelectThumbnail}
+        />
+      )}
     </DashboardLayout>
   )
 }

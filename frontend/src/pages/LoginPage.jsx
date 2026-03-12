@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Turnstile } from 'react-turnstile';
 import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { login, error } = useAuth();
+  // const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY;
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
   const [loading, setLoading] = useState(false);
+  const [showTurnstile, setShowTurnstile] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [isVerifyingCaptcha, setIsVerifyingCaptcha] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [captchaError, setCaptchaError] = useState('');
+  const turnstileBoundRef = useRef(null);
+  const verifyTimeoutRef = useRef(null);
+  const TURNSTILE_SITE_KEY = "0x4AAAAAACLHdYHJg9SEsMFi"; // site key
 
   const handleChange = (e) => {
     setFormData({
@@ -20,27 +30,69 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (showTurnstile && (!captchaToken || !captchaVerified)) {
+      setCaptchaError('Vui lòng xác minh CAPTCHA để tiếp tục.');
+      return;
+    }
     setLoading(true);
 
     try {
-      const response = await login(formData);
+      const response = await login({
+        ...formData,
+        captchaToken,
+        captchaProvider: 'turnstile',
+      });
       const user = response.data?.user;
 
       // Import permission helper
       const { hasAdminAccess } = await import('../utils/permissions');
-      
+
       // Redirect based on permissions
       if (hasAdminAccess()) {
         navigate('/dashboard');
       } else {
         navigate('/');
       }
+      setShowTurnstile(false);
+      setCaptchaToken('');
+      setCaptchaVerified(false);
+      setIsVerifyingCaptcha(false);
+      setCaptchaError('');
     } catch (err) {
       console.error('Login failed:', err);
+      const isCaptchaRequired =
+        err?.code === 428 ||
+        err?.status === 428 ||
+        err?.raw?.code === 428 ||
+        err?.raw?.msg === 'captcha.required' ||
+        err?.message === 'captcha.required';
+      if (isCaptchaRequired) {
+        setShowTurnstile(true);
+        setCaptchaToken('');
+        setCaptchaVerified(false);
+        setIsVerifyingCaptcha(false);
+        setCaptchaError('Vui lòng xác minh CAPTCHA để tiếp tục.');
+        if (turnstileBoundRef.current?.reset) turnstileBoundRef.current.reset();
+      }
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!showTurnstile) {
+      setCaptchaToken('');
+      setCaptchaVerified(false);
+      setIsVerifyingCaptcha(false);
+      setCaptchaError('');
+    }
+    return () => {
+      if (verifyTimeoutRef.current) {
+        clearTimeout(verifyTimeoutRef.current);
+        verifyTimeoutRef.current = null;
+      }
+    };
+  }, [showTurnstile]);
 
   return (
     <div className="min-h-screen flex">
@@ -199,10 +251,65 @@ const LoginPage = () => {
               </div>
             </div>
 
+            {/* CAPTCHA */}
+            {showTurnstile && (
+              <div className="space-y-3">
+                {TURNSTILE_SITE_KEY ? (
+                  <Turnstile
+                    sitekey={TURNSTILE_SITE_KEY}
+                    appearance="interaction-only"
+                    execution="render"
+                    theme="light"
+                    onLoad={(widgetId, bound) => {
+                      turnstileBoundRef.current = bound;
+                    }}
+                    onVerify={(token) => {
+                      setIsVerifyingCaptcha(true);
+                      setCaptchaToken(token);
+                      if (verifyTimeoutRef.current) {
+                        clearTimeout(verifyTimeoutRef.current);
+                      }
+                      verifyTimeoutRef.current = setTimeout(() => {
+                        setIsVerifyingCaptcha(false);
+                        setCaptchaVerified(true);
+                        setShowTurnstile(false);
+                        setCaptchaError('');
+                      }, 2000);
+                    }}
+                    onExpire={() => {
+                      setCaptchaToken('');
+                      setCaptchaVerified(false);
+                      setShowTurnstile(true);
+                    }}
+                    onError={() => {
+                      setCaptchaToken('');
+                      setCaptchaVerified(false);
+                      setShowTurnstile(true);
+                      setCaptchaError('CAPTCHA gặp lỗi, vui lòng thử lại.');
+                    }}
+                    className="min-h-[65px]"
+                  />
+                ) : (
+                  <div className="text-sm text-red-600">
+                    Thiếu cấu hình `VITE_TURNSTILE_SITE_KEY`.
+                  </div>
+                )}
+                {isVerifyingCaptcha && (
+                  <p className="text-xs text-blue-600">Đang xác minh CAPTCHA...</p>
+                )}
+                {showTurnstile && !captchaToken && (
+                  <p className="text-xs text-amber-600">Vui lòng xác minh CAPTCHA.</p>
+                )}
+                {/* {captchaError && (
+                  <p className="text-sm text-red-600">{captchaError}</p>
+                )} */}
+              </div>
+            )}
+
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || isVerifyingCaptcha || (showTurnstile && !captchaVerified)}
               className="w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {loading ? (

@@ -10,11 +10,11 @@ const AdminTemplatePage = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const toast = useToast()
-  
+
   const [activeTab, setActiveTab] = useState('create') // create | list
   const [loading, setLoading] = useState(false)
   const [previewMode, setPreviewMode] = useState(false)
-  
+
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -45,15 +45,15 @@ const AdminTemplatePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    
+
     try {
       console.log('📤 Submitting template data:', formData)
-      
+
       const response = await templateService.create(formData)
-      
+
       console.log('✅ Template created:', response)
       toast.success('✨ Template đã được tạo thành công!')
-      
+
       // Reset form
       setFormData({
         name: '',
@@ -80,7 +80,7 @@ const AdminTemplatePage = () => {
   return (
     <div className="bg-white dark:bg-black min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1 px-3 sm:px-4 lg:px-6 xl:px-8 pt-20 sm:pt-24 pb-6 sm:pb-10 max-w-[1600px] mx-auto w-full">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gray-100 dark:bg-gray-900 p-4 sm:p-6 lg:p-8 shadow-2xl mb-6 sm:mb-8">
@@ -104,11 +104,10 @@ const AdminTemplatePage = () => {
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8">
           <button
             onClick={() => setActiveTab('create')}
-            className={`px-4 sm:px-6 py-3 font-bold transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base ${
-              activeTab === 'create'
+            className={`px-4 sm:px-6 py-3 font-bold transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base ${activeTab === 'create'
                 ? 'bg-gray-900 dark:bg-white text-white dark:text-black shadow-lg'
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-            }`}
+              }`}
           >
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
@@ -117,11 +116,10 @@ const AdminTemplatePage = () => {
           </button>
           <button
             onClick={() => setActiveTab('list')}
-            className={`px-4 sm:px-6 py-3 font-bold transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base ${
-              activeTab === 'list'
+            className={`px-4 sm:px-6 py-3 font-bold transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base ${activeTab === 'list'
                 ? 'bg-gray-900 dark:bg-white text-white dark:text-black shadow-lg'
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-            }`}
+              }`}
           >
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
@@ -138,7 +136,7 @@ const AdminTemplatePage = () => {
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
                 Thông Tin Template
               </h2>
-              
+
               <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Name */}
                 <div>
@@ -201,9 +199,9 @@ const AdminTemplatePage = () => {
                     placeholder="https://images.unsplash.com/..."
                   />
                   {formData.thumbnail_url && (
-                    <img 
-                      src={formData.thumbnail_url} 
-                      alt="Preview" 
+                    <img
+                      src={formData.thumbnail_url}
+                      alt="Preview"
                       className="mt-3 w-full h-32 sm:h-40 object-cover"
                       onError={(e) => e.target.style.display = 'none'}
                     />
@@ -245,13 +243,30 @@ const AdminTemplatePage = () => {
                 <div>
                   <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center justify-between">
                     <span>HTML Content</span>
-                    <button
-                      type="button"
-                      onClick={() => setPreviewMode(!previewMode)}
-                      className="text-xs px-2 sm:px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
-                    >
-                      {previewMode ? 'Edit' : 'Preview'}
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          sessionStorage.setItem('ultimate_preview_html', formData.html_content);
+                          sessionStorage.setItem('ultimate_preview_template', JSON.stringify({
+                            name: formData.name,
+                            category_id: formData.category_id,
+                            is_premium: formData.is_premium
+                          }));
+                          window.open('/ultimate-html-editor?previewMode=true', '_blank');
+                        }}
+                        className="text-[10px] px-2 py-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold hover:from-purple-700 hover:to-blue-700 transition-all shadow-sm"
+                      >
+                        Ultimate Editor
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPreviewMode(!previewMode)}
+                        className="text-xs px-2 sm:px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+                      >
+                        {previewMode ? 'Edit' : 'Preview'}
+                      </button>
+                    </div>
                   </label>
                   <textarea
                     name="html_content"
@@ -292,7 +307,7 @@ const AdminTemplatePage = () => {
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
                 Live Preview
               </h2>
-              
+
               <div className="border-2 border-gray-200 dark:border-gray-700 overflow-hidden bg-white">
                 {formData.html_content ? (
                   <iframe

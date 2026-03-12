@@ -68,11 +68,23 @@ export const AuthProvider = ({ children }) => {
       if (storedUser) {
         setUser(storedUser);
       }
+
+      console.log('Login successful, user data:', storedUser);
       
       return { data }; // Return in expected format for LoginPage
     } catch (err) {
-      const errorMessage = err.response?.data?.message || err.response?.data?.msg || err.message || 'Login failed. Please try again.';
-      setError(errorMessage);
+      const isCaptchaRequired =
+        err?.code === 428 ||
+        err?.status === 428 ||
+        err?.raw?.code === 428 ||
+        err?.raw?.msg === 'captcha.required' ||
+        err?.message === 'captcha.required';
+      const errorMessage =
+        err?.raw?.message ||
+        err?.raw?.msg ||
+        err?.message ||
+        'Login failed. Please try again.';
+      setError(isCaptchaRequired ? 'Vui lòng xác minh CAPTCHA để tiếp tục.' : errorMessage);
       throw err;
     }
   };

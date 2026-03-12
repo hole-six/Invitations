@@ -1,16 +1,30 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { hasAdminAccess } from '../utils/permissions'
 
 const Header = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { user, isAuthenticated, logout } = useAuth()
+  const isAdmin = hasAdminAccess()
+  const [profileOpen, setProfileOpen] = useState(false)
+  const profileRef = useRef(null)
 
   const handleLogout = () => {
     logout()
     navigate('/login')
   }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setProfileOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -36,23 +50,61 @@ const Header = () => {
           </nav>
 
           {/* Auth buttons */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-3">
             {isAuthenticated ? (
               <>
-                <Link to="/management" className="text-gray-700 hover:text-blue-600">
-                  Quản lý
-                </Link>
-                {user?.role === 'admin' && (
-                  <Link to="/dashboard" className="text-gray-700 hover:text-blue-600">
-                    Dashboard
-                  </Link>
-                )}
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-                >
-                  Đăng xuất
-                </button>
+                <div className="relative" ref={profileRef}>
+                  <button
+                    type="button"
+                    onClick={() => setProfileOpen((prev) => !prev)}
+                    className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition"
+                    title="Profile"
+                    aria-label="Profile"
+                    aria-expanded={profileOpen}
+                  >
+                    <span className="material-symbols-outlined text-[20px]">person</span>
+                  </button>
+                  {profileOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden z-50">
+                      <Link
+                        to="/profile"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">account_circle</span>
+                        Hồ sơ
+                      </Link>
+                      <Link
+                        to="/management"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">inbox</span>
+                        Quản lý
+                      </Link>
+                      {isAdmin && (
+                        <Link
+                          to="/dashboard"
+                          onClick={() => setProfileOpen(false)}
+                          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">dashboard</span>
+                          Dashboard
+                        </Link>
+                      )}
+                      <button
+                        onClick={() => {
+                          setProfileOpen(false)
+                          handleLogout()
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">logout</span>
+                        Đăng xuất
+                      </button>
+                    </div>
+                  )}
+                </div>
               </>
             ) : (
               <>

@@ -1991,7 +1991,8 @@ function addWish(){
   el.style.opacity='0';el.style.transform='translateY(14px)';el.style.transition='opacity .5s, transform .5s';
   list.prepend(el);
   requestAnimationFrame(()=>requestAnimationFrame(()=>{el.style.opacity='1';el.style.transform='none'}));
-  document.getElementById('wName').value='';document.getElementById('wText').value='';
+  document.getElementById('wName').value='';
+  document.getElementById('wText').value='';
 }
 </script>
 </body>

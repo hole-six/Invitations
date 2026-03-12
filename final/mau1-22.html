@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>Thiệp Cưới – Kim Yến & Hoài Nam</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Ma+Shan+Zheng&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #c8171f; --red2: #a01016; --red3: #e63030; --red4: #ff6060;
+  --crimson: #7a0a10; --gold: #d4a017; --gold2: #f0c040; --gold3: #ffe580;
+  --gold4: #b8850a; --ivory: #fdf8ee; --cream: #faf3e2; --parchment: #f5ecd5;
+  --ink: #1a0808; --ink2: #3d1010;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--crimson); font-family:'Cormorant Garamond',serif; color:var(--ink); overflow-x:hidden; }
+
+/* CONFETTI */
+#confetti-layer { position:fixed; inset:0; z-index:9999; pointer-events:none; overflow:hidden; }
+.cf { position:absolute; top:-40px; border-radius:50% 0 50% 0; opacity:0; animation:cfFall linear infinite; }
+@keyframes cfFall {
+  0%{opacity:0;transform:translateY(0) rotate(0deg) scale(0);}
+  5%{opacity:1;}90%{opacity:.7;}
+  100%{opacity:0;transform:translateY(105vh) rotate(var(--rot)) scale(1);}
+}
+@keyframes cfFadeUp { from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;} }
+
+/* ENVELOPE */
+#env-scene {
+  position:fixed; inset:0; z-index:8000;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background:radial-gradient(ellipse 120% 100% at 50% 0%,#e83030 0%,#8a0a12 55%,#3d0205 100%);
+  overflow:hidden; cursor:pointer;
+  transition:opacity .8s ease,visibility .8s;
+}
+#env-scene.fade-away{opacity:0;visibility:hidden;pointer-events:none;}
+.env-bg-pattern{position:absolute;inset:0;z-index:0;opacity:.12;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23ffd700' opacity='1'%3E%3Cpath d='M40 4 L44 18 L58 18 L47 27 L51 41 L40 33 L29 41 L33 27 L22 18 L36 18 Z' fill='none' stroke='%23ffd700' stroke-width='1.5'/%3E%3Ccircle cx='40' cy='40' r='8' fill='none' stroke='%23ffd700' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E");background-size:80px 80px;}
+.env-frame{position:absolute;inset:clamp(8px,2vw,18px);z-index:2;pointer-events:none;border:1px solid rgba(212,160,23,.35);box-shadow:inset 0 0 0 4px rgba(212,160,23,.1),inset 0 0 60px rgba(0,0,0,.2);}
+.env-frame::before{content:'';position:absolute;inset:5px;border:1px solid rgba(212,160,23,.18);}
+.env-corner{position:absolute;z-index:2;width:clamp(80px,15vw,140px);pointer-events:none;}
+.env-corner.tl{top:0;left:0;}
+.env-corner.tr{top:0;right:0;transform:scaleX(-1);}
+.env-corner.bl{bottom:0;left:0;transform:scaleY(-1);}
+.env-corner.br{bottom:0;right:0;transform:scale(-1,-1);}
+.env-open-burst{position:absolute;inset:0;z-index:5;background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(255,220,100,.9) 0%,rgba(255,100,50,.4) 40%,transparent 70%);opacity:0;pointer-events:none;transition:opacity .4s ease;}
+.env-open-burst.active{opacity:1;}
+.env-greeting{position:relative;z-index:10;text-align:center;animation:envGreetIn 1.2s cubic-bezier(.22,1,.36,1) .4s both;display:flex;flex-direction:column;align-items:center;}
+@keyframes envGreetIn{from{opacity:0;transform:translateY(30px) scale(.9);}to{opacity:1;transform:none;}}
+.env-char{font-family:'Ma Shan Zheng',cursive;font-size:clamp(5rem,18vw,10rem);color:var(--gold2);line-height:.9;text-shadow:0 2px 20px rgba(0,0,0,.4),0 0 60px rgba(212,160,23,.4);animation:charFloat 4s ease-in-out infinite;letter-spacing:8px;}
+@keyframes charFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+.env-subtext{font-family:'Cinzel',serif;font-size:clamp(9px,1.8vw,13px);letter-spacing:6px;text-transform:uppercase;color:rgba(255,240,180,.7);margin-top:16px;}
+.env-names{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.4rem,5vw,2.8rem);color:#fff;margin-top:10px;line-height:1.3;text-shadow:0 2px 20px rgba(0,0,0,.3);}
+.env-names em{display:block;font-family:'Cinzel',serif;font-style:normal;font-size:clamp(9px,1.8vw,12px);letter-spacing:4px;color:rgba(255,240,180,.65);margin:6px 0;}
+.env-date-pill{margin-top:14px;padding:8px 22px;border:1px solid rgba(212,160,23,.4);background:rgba(0,0,0,.2);font-family:'Cinzel',serif;font-size:clamp(9px,1.6vw,11px);letter-spacing:5px;color:rgba(255,240,180,.75);}
+.env-tap{position:absolute;bottom:clamp(20px,5vw,40px);left:50%;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center;gap:8px;animation:cfFadeUp .8s ease 2.2s both;}
+.env-tap-txt{font-family:'Cinzel',serif;font-size:clamp(8px,1.5vw,10px);letter-spacing:4px;text-transform:uppercase;color:rgba(255,240,180,.6);animation:tapPulse 2s ease-in-out infinite;}
+@keyframes tapPulse{0%,100%{opacity:.3}50%{opacity:1}}
+.env-tap-chevrons{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.env-tap-chevrons span{display:block;width:18px;height:10px;border-left:1.5px solid rgba(212,160,23,.5);border-bottom:1.5px solid rgba(212,160,23,.5);transform:rotate(-45deg);animation:chevAnim 1.6s ease-in-out infinite;}
+.env-tap-chevrons span:nth-child(2){animation-delay:.2s;}
+.env-tap-chevrons span:nth-child(3){animation-delay:.4s;}
+@keyframes chevAnim{0%,100%{opacity:.2}50%{opacity:.85}}
+
+/* NAV */
+.main-nav{position:sticky;top:0;z-index:600;background:rgba(122,10,16,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(212,160,23,.25);display:flex;justify-content:center;flex-wrap:nowrap;overflow-x:auto;gap:0;-webkit-overflow-scrolling:touch;}
+.main-nav::-webkit-scrollbar{display:none;}
+.main-nav a{padding:13px 14px;font-family:'Cinzel',serif;font-size:clamp(7px,1.1vw,9px);letter-spacing:2px;text-transform:uppercase;color:rgba(255,235,170,.55);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:color .3s,border-color .3s;}
+.main-nav a:hover,.main-nav a.active{color:var(--gold2);border-bottom-color:var(--gold2);}
+
+/* ══ HERO FULLSCREEN PHOTO ══ */
+.hero {
+  min-height:100vh; position:relative; overflow:hidden;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:60px 24px 48px;
+}
+.hero-photo-bg {
+  position:absolute; inset:0; z-index:0;
+  background-image: url('https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1600&q=80');
+  background-size:cover; background-position:center top;
+  transform:scale(1.05);
+  animation:heroZoom 18s ease-in-out infinite alternate;
+}
+@keyframes heroZoom{from{transform:scale(1.05);}to{transform:scale(1.12);}}
+.hero-overlay {
+  position:absolute; inset:0; z-index:1;
+  background:linear-gradient(160deg,rgba(180,10,20,.75) 0%,rgba(80,5,10,.85) 50%,rgba(20,2,5,.92) 100%);
+}
+.hero-pattern{position:absolute;inset:0;z-index:2;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23ffd700' stroke-width='1'%3E%3Ccircle cx='60' cy='60' r='40'/%3E%3Ccircle cx='60' cy='60' r='28'/%3E%3Cpath d='M60,20 L64,34 L78,34 L67,43 L71,57 L60,48 L49,57 L53,43 L42,34 L56,34 Z'/%3E%3C/g%3E%3C/svg%3E");background-size:120px 120px;}
+.hero-card{position:relative;z-index:5;background:rgba(122,10,16,.55);backdrop-filter:blur(12px);border:1px solid rgba(212,160,23,.4);box-shadow:0 0 0 8px rgba(212,160,23,.06),0 30px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,200,100,.15);padding:clamp(36px,6vw,64px) clamp(24px,5vw,52px);max-width:min(520px,95vw);width:100%;text-align:center;animation:cardReveal 1.2s cubic-bezier(.22,1,.36,1) .3s both;}
+@keyframes cardReveal{from{opacity:0;transform:translateY(40px) scale(.96);}to{opacity:1;transform:none;}}
+.hero-card::before{content:'';position:absolute;inset:10px;border:1px solid rgba(212,160,23,.25);pointer-events:none;}
+.hero-card::after{content:'';position:absolute;inset:18px;border:1px solid rgba(212,160,23,.1);pointer-events:none;}
+.hc-corner{position:absolute;width:44px;height:44px;z-index:8;pointer-events:none;}
+.hc-corner.tl{top:4px;left:4px;}.hc-corner.tr{top:4px;right:4px;transform:scaleX(-1);}
+.hc-corner.bl{bottom:4px;left:4px;transform:scaleY(-1);}.hc-corner.br{bottom:4px;right:4px;transform:scale(-1,-1);}
+.hero-xi{font-family:'Ma Shan Zheng',cursive;font-size:clamp(2.4rem,8vw,4.2rem);color:var(--gold2);line-height:1;text-shadow:0 2px 16px rgba(0,0,0,.4);animation:cfFadeUp .7s ease .6s both;opacity:0;}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:clamp(7px,1.4vw,10px);letter-spacing:6px;text-transform:uppercase;color:rgba(255,220,150,.7);margin:14px 0 8px;animation:cfFadeUp .7s ease .8s both;opacity:0;}
+.hero-divider-line{display:flex;align-items:center;gap:10px;justify-content:center;margin:10px 0 16px;animation:cfFadeUp .7s ease .9s both;opacity:0;}
+.hero-divider-line span{display:block;flex:1;max-width:60px;height:1px;background:linear-gradient(90deg,transparent,rgba(212,160,23,.5));}
+.hero-divider-line span:last-child{background:linear-gradient(270deg,transparent,rgba(212,160,23,.5));}
+.hero-divider-line em{color:var(--gold2);font-style:normal;font-size:14px;}
+.hero-names{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(2.2rem,7vw,4rem);color:#fff;line-height:1.1;text-shadow:0 2px 20px rgba(0,0,0,.5);animation:cfFadeUp .8s ease 1s both;opacity:0;}
+.hero-names .amp{display:block;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.45em;color:var(--gold2);margin:6px 0;letter-spacing:2px;}
+.hero-date-bar{margin:20px 0 0;padding:14px 20px;background:rgba(0,0,0,.35);border:1px solid rgba(212,160,23,.25);animation:cfFadeUp .8s ease 1.2s both;opacity:0;}
+.hero-date-bar .d-top{font-family:'Cinzel',serif;font-size:clamp(10px,1.8vw,13px);letter-spacing:4px;color:var(--gold3);}
+.hero-date-bar .d-main{font-family:'Cinzel',serif;font-size:clamp(1.5rem,4vw,2.2rem);font-weight:600;color:#fff;letter-spacing:3px;margin:4px 0 2px;}
+.hero-date-bar .d-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(11px,1.8vw,13px);color:rgba(255,220,150,.65);}
+.scroll-cue{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:10;text-align:center;animation:cfFadeUp .8s ease 2.5s both;opacity:0;}
+.scroll-cue span{font-family:'Cinzel',serif;font-size:9px;letter-spacing:4px;color:rgba(255,220,150,.4);display:block;margin-bottom:8px;}
+.scroll-arrow{width:1px;height:36px;margin:0 auto;background:linear-gradient(to bottom,rgba(212,160,23,.6),transparent);animation:scrollPulse 2s ease-in-out infinite;}
+@keyframes scrollPulse{0%,100%{opacity:.4;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.2)}}
+
+/* ══ SECTION BASE ══ */
+.section{padding:clamp(64px,8vw,96px) clamp(16px,5vw,32px);position:relative;overflow:hidden;}
+.section-inner{max-width:820px;margin:0 auto;}
+.sec-label{font-family:'Cinzel',serif;font-size:clamp(8px,1.4vw,10px);letter-spacing:6px;text-transform:uppercase;text-align:center;margin-bottom:10px;color:var(--gold2);}
+.sec-label.dark{color:rgba(122,10,16,.7);}
+h2.sec-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(2rem,5.5vw,3.4rem);text-align:center;line-height:1.2;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.3);}
+h2.sec-title.dark{color:var(--crimson);text-shadow:none;}
+.orn-rule{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px 0 40px;}
+.orn-rule::before,.orn-rule::after{content:'';flex:1;max-width:80px;height:1px;background:linear-gradient(90deg,transparent,rgba(212,160,23,.5));}
+.orn-rule::after{background:linear-gradient(270deg,transparent,rgba(212,160,23,.5));}
+.orn-rule em{color:var(--gold2);font-style:normal;font-size:16px;}
+.orn-rule.dark::before{background:linear-gradient(90deg,transparent,rgba(160,16,22,.4));}
+.orn-rule.dark::after{background:linear-gradient(270deg,transparent,rgba(160,16,22,.4));}
+.orn-rule.dark em{color:var(--crimson);}
+
+/* RIBBON */
+.ribbon-div{height:48px;background:var(--gold4);position:relative;overflow:hidden;}
+.ribbon-div svg{width:100%;height:100%;display:block;}
+
+/* ══ PHOTO STRIP ══ */
+.photo-strip {
+  display:grid; gap:3px; overflow:hidden;
+}
+.photo-strip.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.photo-strip.cols-2 { grid-template-columns: 1.3fr 1fr; }
+.photo-strip.cols-hero { grid-template-columns: 2fr 1fr 1fr; }
+.photo-strip img {
+  width:100%; height:100%; object-fit:cover; display:block;
+  transition:transform .6s ease;
+}
+.photo-strip .ph-item { overflow:hidden; position:relative; }
+.photo-strip .ph-item:hover img { transform:scale(1.05); }
+.photo-strip .ph-item .ph-label {
+  position:absolute; bottom:0; left:0; right:0;
+  background:linear-gradient(to top,rgba(80,5,10,.8),transparent);
+  padding:20px 14px 10px;
+  font-family:'Cormorant Garamond',serif; font-style:italic;
+  font-size:clamp(12px,2vw,15px); color:rgba(255,220,200,.8);
+  text-align:center;
+}
+
+/* ══ INVITE SECTION ══ */
+.sec-invite{background:linear-gradient(155deg,#b01015 0%,#7a0a10 60%,#3d0205 100%);}
+.invite-bg-pattern{position:absolute;inset:0;opacity:.08;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23ffd700' stroke-width='.8'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3Ccircle cx='30' cy='30' r='12'/%3E%3Cpath d='M30,10 L32,18 L40,18 L34,23 L36,31 L30,26 L24,31 L26,23 L20,18 L28,18 Z'/%3E%3C/g%3E%3C/svg%3E");background-size:60px 60px;}
+
+/* Invite photo banner */
+.invite-photo-banner {
+  width:100%; height:clamp(200px,35vw,340px);
+  position:relative; overflow:hidden; margin-bottom:40px;
+}
+.invite-photo-banner img {
+  width:100%; height:100%; object-fit:cover; object-position:center 30%;
+  transform:scale(1.05);
+  animation:heroZoom 20s ease-in-out infinite alternate;
+}
+.invite-photo-banner::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(to bottom,rgba(100,8,16,.4) 0%,transparent 40%,rgba(100,8,16,.6) 100%);
+}
+.invite-photo-banner .banner-text {
+  position:absolute; bottom:0; left:0; right:0; z-index:2;
+  padding:20px; text-align:center;
+  font-family:'Ma Shan Zheng',cursive; font-size:clamp(2rem,7vw,4rem);
+  color:var(--gold2); text-shadow:0 2px 20px rgba(0,0,0,.6);
+}
+
+.invite-card{background:linear-gradient(150deg,#e8c88a 0%,#c9a140 40%,#e8c88a 70%,#b88a20 100%);max-width:480px;margin:0 auto;box-shadow:0 0 0 2px rgba(212,160,23,.6),0 0 0 10px rgba(212,160,23,.1),0 40px 100px rgba(0,0,0,.6);position:relative;overflow:hidden;}
+.invite-inner{background:var(--ivory);margin:14px;padding:clamp(28px,5vw,52px) clamp(20px,4vw,40px);text-align:center;position:relative;}
+.invite-inner::before{content:'';position:absolute;inset:8px;border:1px solid rgba(160,16,22,.2);pointer-events:none;}
+.ic-corner{position:absolute;width:36px;height:36px;z-index:5;pointer-events:none;}
+.ic-corner.tl{top:4px;left:4px;}.ic-corner.tr{top:4px;right:4px;transform:scaleX(-1);}
+.ic-corner.bl{bottom:4px;left:4px;transform:scaleY(-1);}.ic-corner.br{bottom:4px;right:4px;transform:scale(-1,-1);}
+.i-xi{font-family:'Ma Shan Zheng',cursive;font-size:clamp(2rem,6vw,3rem);color:var(--red);line-height:1;}
+.i-label{font-family:'Cinzel',serif;font-size:clamp(7px,1.2vw,9px);letter-spacing:5px;text-transform:uppercase;color:rgba(160,16,22,.5);margin:12px 0 8px;}
+.i-together{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(14px,2.5vw,18px);color:rgba(160,16,22,.65);margin-bottom:18px;}
+.i-name{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(2rem,6.5vw,3.2rem);color:var(--red);line-height:1.05;}
+.i-fullname{font-family:'Cinzel',serif;font-size:clamp(8px,1.3vw,10px);letter-spacing:3px;color:rgba(160,16,22,.45);margin-top:4px;}
+.i-and{font-family:'Cinzel',serif;font-size:clamp(8px,1.4vw,10px);letter-spacing:6px;color:var(--gold4);margin:14px 0;}
+.i-date-box{background:var(--red2);padding:14px 20px;margin:20px 0;position:relative;}
+.i-date-box::before{content:'';position:absolute;inset:3px;border:1px solid rgba(212,160,23,.3);pointer-events:none;}
+.i-date-num{font-family:'Cinzel',serif;font-size:clamp(1.6rem,5vw,2.6rem);color:var(--gold2);font-weight:600;letter-spacing:4px;}
+.i-date-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(11px,1.8vw,13px);color:rgba(255,220,150,.7);margin-top:2px;}
+.i-venue{font-family:'Cinzel',serif;font-size:clamp(9px,1.5vw,11px);letter-spacing:3px;text-transform:uppercase;color:var(--crimson);line-height:2.2;margin-top:16px;}
+.i-reception{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(13px,2vw,16px);color:rgba(160,16,22,.55);margin-top:10px;}
+
+/* ══ COUPLE SECTION ══ */
+.sec-couple{background:var(--parchment);}
+.sec-couple .sec-label{color:rgba(122,10,16,.6);}
+
+/* Large couple photo hero */
+.couple-hero-photo {
+  width:100%; height:clamp(280px,50vw,480px);
+  position:relative; overflow:hidden; margin-bottom:36px;
+  border:6px solid rgba(160,16,22,.12);
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+.couple-hero-photo img {
+  width:100%; height:100%; object-fit:cover; object-position:center 20%;
+  transition:transform .8s ease;
+}
+.couple-hero-photo:hover img { transform:scale(1.04); }
+.couple-hero-photo::after {
+  content:'囍'; position:absolute; bottom:16px; right:20px;
+  font-family:'Ma Shan Zheng',cursive; font-size:3rem;
+  color:rgba(212,160,23,.7);
+  text-shadow:0 2px 10px rgba(0,0,0,.3);
+}
+
+.couple-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(160,16,22,.12);border:1px solid rgba(160,16,22,.12);}
+.person-card{background:var(--ivory);padding:clamp(28px,4vw,44px) clamp(18px,3vw,34px);text-align:center;position:relative;overflow:hidden;}
+.person-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--red),transparent);}
+
+/* Person photo — larger, portrait style */
+.pc-photo {
+  width:clamp(100px,22vw,160px); height:clamp(130px,28vw,200px);
+  border-radius:4px;
+  border:2px solid rgba(160,16,22,.2);
+  margin:0 auto 16px; overflow:hidden; position:relative;
+  box-shadow:0 8px 24px rgba(160,16,22,.15);
+}
+.pc-photo img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;}
+.pc-photo-frame {
+  position:absolute; inset:-6px;
+  border:1px solid rgba(212,160,23,.35);
+  pointer-events:none;
+}
+.pc-role{font-family:'Cinzel',serif;font-size:clamp(7px,1.1vw,9px);letter-spacing:4px;text-transform:uppercase;color:rgba(160,16,22,.5);margin-bottom:8px;}
+.pc-name{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.4rem,3.5vw,2rem);color:var(--red);margin-bottom:6px;}
+.pc-fullname{font-family:'Cinzel',serif;font-size:clamp(7px,1.1vw,9px);letter-spacing:2px;color:rgba(160,16,22,.4);margin-bottom:10px;}
+.pc-rule{width:24px;height:1px;background:rgba(160,16,22,.2);margin:0 auto 12px;}
+.pc-family{font-family:'Cormorant Garamond',serif;font-size:clamp(12px,2vw,14px);color:var(--ink2);line-height:1.9;}
+.pc-family em{font-style:italic;color:rgba(160,16,22,.5);font-size:.9em;}
+
+/* Bottom photo row for couple */
+.couple-photo-row {
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:3px; margin-top:3px;
+}
+.couple-photo-row .ph-item {
+  height:clamp(100px,18vw,160px); overflow:hidden; position:relative;
+}
+.couple-photo-row .ph-item img {
+  width:100%; height:100%; object-fit:cover;
+  transition:transform .5s ease;
+}
+.couple-photo-row .ph-item:hover img { transform:scale(1.08); }
+
+/* ══ STORY SECTION ══ */
+.sec-story{background:linear-gradient(155deg,#b01015 0%,#7a0a10 60%,#3d0205 100%);}
+
+/* Timeline photo items */
+.timeline{position:relative;max-width:720px;margin:0 auto;}
+.timeline::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(212,160,23,.2);transform:translateX(-50%);}
+.tl-item{display:grid;grid-template-columns:1fr 32px 1fr;align-items:start;margin-bottom:48px;}
+.tl-body{padding:0 20px;}
+.tl-item:nth-child(odd)  .tl-body{grid-column:1;text-align:right;}
+.tl-item:nth-child(even) .tl-body{grid-column:3;text-align:left;}
+.tl-item:nth-child(odd)  .tl-void{grid-column:3;}
+.tl-item:nth-child(even) .tl-void{grid-column:1;}
+.tl-dot-wrap{display:flex;justify-content:center;padding-top:4px;position:relative;z-index:2;}
+.tl-dot{width:12px;height:12px;background:var(--gold2);border:2px solid var(--crimson);border-radius:50%;box-shadow:0 0 0 2px rgba(212,160,23,.4);}
+.tl-yr{font-family:'Cinzel',serif;font-size:clamp(7px,1.2vw,9px);letter-spacing:3px;color:var(--gold2);margin-bottom:6px;}
+.tl-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1rem,2.5vw,1.35rem);color:#fff;line-height:1.2;margin-bottom:6px;}
+.tl-desc{font-family:'Cormorant Garamond',serif;font-size:clamp(12px,2vw,14px);color:rgba(255,220,200,.55);line-height:1.85;}
+
+/* Story photo card */
+.tl-photo {
+  width:100%; aspect-ratio:4/3; overflow:hidden; border-radius:2px;
+  margin-bottom:12px; position:relative;
+  border:1px solid rgba(212,160,23,.2);
+  box-shadow:0 8px 28px rgba(0,0,0,.4);
+}
+.tl-photo img { width:100%; height:100%; object-fit:cover; transition:transform .5s ease; }
+.tl-photo:hover img { transform:scale(1.06); }
+.tl-item:nth-child(odd) .tl-photo { margin-left:auto; }
+
+/* ══ EVENTS SECTION ══ */
+.sec-events{background:var(--crimson);}
+.events-photo-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:3px;
+  margin-bottom:32px; height:clamp(200px,35vw,320px);
+}
+.events-photo-grid .ph-main { grid-row:1/3; }
+.events-photo-grid .ph-item { overflow:hidden; position:relative; }
+.events-photo-grid .ph-item img { width:100%; height:100%; object-fit:cover; transition:transform .5s; }
+.events-photo-grid .ph-item:hover img { transform:scale(1.06); }
+.events-photo-grid .ph-label {
+  position:absolute; bottom:0; left:0; right:0;
+  background:linear-gradient(to top,rgba(80,5,10,.85),transparent);
+  padding:20px 12px 10px; font-family:'Cinzel',serif;
+  font-size:clamp(7px,1.1vw,9px); letter-spacing:3px; text-transform:uppercase;
+  color:var(--gold2); text-align:center;
+}
+.events-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(212,160,23,.15);border:1px solid rgba(212,160,23,.15);}
+.ev-card{background:rgba(122,10,16,.6);padding:clamp(28px,4vw,44px) clamp(16px,3vw,28px);text-align:center;position:relative;overflow:hidden;transition:background .4s;backdrop-filter:blur(4px);}
+.ev-card:hover{background:rgba(160,20,26,.7);}
+.ev-type{font-family:'Cinzel',serif;font-size:clamp(7px,1.2vw,9px);letter-spacing:4px;text-transform:uppercase;color:var(--gold2);margin-bottom:10px;}
+.ev-name{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1rem,2.5vw,1.4rem);color:#fff;margin-bottom:12px;line-height:1.2;}
+.ev-detail{font-family:'Cormorant Garamond',serif;font-size:clamp(12px,1.8vw,14px);color:rgba(255,220,200,.6);line-height:2.1;}
+.ev-detail strong{color:rgba(255,220,200,.9);font-weight:600;}
+.schedule{margin-top:48px;border-top:1px solid rgba(212,160,23,.15);}
+.sch-row{display:flex;align-items:flex-start;gap:20px;padding:18px 0;border-bottom:1px solid rgba(212,160,23,.1);transition:transform .3s;}
+.sch-row:hover{transform:translateX(6px);}
+.sch-time{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.2rem,3vw,1.6rem);color:var(--gold2);min-width:70px;}
+.sch-name{font-family:'Cormorant Garamond',serif;font-size:clamp(14px,2.2vw,16px);font-weight:600;color:#fff;margin-bottom:3px;}
+.sch-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(11px,1.8vw,13px);color:rgba(255,220,200,.45);}
+
+/* Venue photo banner */
+.venue-photo-banner {
+  width:100%; height:clamp(180px,30vw,280px);
+  position:relative; overflow:hidden; margin-top:48px;
+  border:1px solid rgba(212,160,23,.2);
+}
+.venue-photo-banner img { width:100%; height:100%; object-fit:cover; }
+.venue-photo-banner::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(to right,rgba(80,5,10,.7),transparent 50%,rgba(80,5,10,.7));
+}
+.venue-photo-banner .vb-text {
+  position:absolute; inset:0; z-index:2;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+.venue-photo-banner .vb-name {
+  font-family:'Cinzel',serif; font-size:clamp(1rem,3vw,1.8rem); font-weight:600;
+  letter-spacing:6px; color:#fff; text-shadow:0 2px 20px rgba(0,0,0,.5);
+}
+.venue-photo-banner .vb-addr {
+  font-family:'Cormorant Garamond',serif; font-style:italic;
+  font-size:clamp(12px,2vw,15px); color:rgba(255,220,180,.7);
+  margin-top:8px; letter-spacing:2px;
+}
+
+/* ══ RSVP ══ */
+.sec-rsvp{background:linear-gradient(155deg,#1a0205 0%,#3d0205 60%,#6a0a10 100%);}
+
+/* RSVP photo bg */
+.rsvp-photo-bg {
+  position:absolute; inset:0; z-index:0;
+  background-image:url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80');
+  background-size:cover; background-position:center;
+  opacity:.12;
+}
+
+.rsvp-wrap{max-width:520px;margin:0 auto;position:relative;z-index:2;}
+.rf{margin-bottom:20px;}
+.rf label{display:block;font-family:'Cinzel',serif;font-size:clamp(7px,1.1vw,9px);letter-spacing:4px;text-transform:uppercase;color:var(--gold2);margin-bottom:8px;opacity:.8;}
+.rf input,.rf select{width:100%;border:none;border-bottom:1px solid rgba(212,160,23,.2);background:transparent;padding:10px 0;font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(16px,2.5vw,20px);color:#fff;outline:none;transition:border-color .3s;}
+.rf input:focus,.rf select:focus{border-bottom-color:var(--gold2);}
+.rf input::placeholder{color:rgba(255,220,200,.2);font-size:.85em;}
+.att-row{display:flex;gap:10px;margin-top:8px;}
+.att-btn{flex:1;padding:13px;border:1px solid rgba(212,160,23,.2);background:transparent;font-family:'Cinzel',serif;font-size:clamp(7px,1.1vw,9px);letter-spacing:3px;text-transform:uppercase;color:rgba(255,220,200,.45);cursor:pointer;transition:all .3s;}
+.att-btn.on,.att-btn:hover{border-color:var(--gold2);color:var(--gold2);background:rgba(212,160,23,.08);}
+.rsvp-submit{width:100%;margin-top:10px;padding:15px;background:linear-gradient(135deg,var(--gold),var(--gold4));border:none;font-family:'Cinzel',serif;font-size:clamp(8px,1.3vw,10px);letter-spacing:5px;text-transform:uppercase;color:var(--crimson);font-weight:600;cursor:pointer;transition:opacity .3s,transform .2s;box-shadow:0 4px 20px rgba(212,160,23,.3);}
+.rsvp-submit:hover{opacity:.9;transform:translateY(-1px);}
+.rsvp-done{display:none;text-align:center;padding:40px 0;}
+.rsvp-done p{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.8rem,5vw,2.8rem);color:var(--gold2);}
+.rsvp-done span{font-family:'Cinzel',serif;font-size:clamp(8px,1.3vw,10px);letter-spacing:4px;color:rgba(255,220,200,.4);display:block;margin-top:8px;}
+
+/* ══ WISHES ══ */
+.sec-wishes{background:var(--crimson);}
+
+/* Wishes photo header */
+.wishes-photo-header {
+  width:100%; height:clamp(160px,25vw,220px);
+  position:relative; overflow:hidden; margin-bottom:40px;
+  border-bottom:2px solid rgba(212,160,23,.2);
+}
+.wishes-photo-header img { width:100%; height:100%; object-fit:cover; object-position:center 60%; }
+.wishes-photo-header::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(to bottom,rgba(100,8,16,.5),rgba(100,8,16,.8));
+}
+.wishes-photo-header .wph-text {
+  position:absolute; inset:0; z-index:2;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center;
+}
+.wishes-photo-header .wph-text .sec-label { margin-bottom:6px; }
+.wishes-photo-header .wph-text h2 { color:#fff; }
+
+.wishes-feed{max-height:320px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(212,160,23,.3) transparent;margin-bottom:28px;}
+.wish-item{padding:16px 18px;border-left:2px solid rgba(212,160,23,.3);background:rgba(122,10,16,.3);margin-bottom:10px;transition:border-color .3s;}
+.wish-item:hover{border-left-color:var(--gold2);}
+.wi-name{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1rem,2.2vw,1.3rem);color:rgba(255,220,200,.8);margin-bottom:5px;}
+.wi-text{font-family:'Cormorant Garamond',serif;font-size:clamp(12px,2vw,14px);color:rgba(255,220,200,.5);line-height:1.9;}
+.wish-form{display:flex;flex-direction:column;gap:12px;}
+.w-input{background:rgba(255,255,255,.04);border:1px solid rgba(212,160,23,.18);padding:12px 16px;color:#fff;outline:none;font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(16px,2.5vw,20px);transition:border-color .3s;}
+.w-input:focus{border-color:rgba(212,160,23,.45);}
+.w-input::placeholder{color:rgba(255,220,200,.2);font-size:.85em;}
+.w-btn{background:transparent;border:1px solid rgba(212,160,23,.35);padding:14px;font-family:'Cinzel',serif;font-size:clamp(7px,1.2vw,9px);letter-spacing:4px;text-transform:uppercase;color:var(--gold2);cursor:pointer;transition:all .3s;}
+.w-btn:hover{background:rgba(212,160,23,.1);}
+
+/* ══ CLOSING ══ */
+.sec-closing{
+  position:relative; overflow:hidden;
+  padding:clamp(80px,10vw,120px) 24px;
+  text-align:center;
+}
+.closing-photo-bg {
+  position:absolute; inset:0; z-index:0;
+  background-image:url('https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1600&q=80');
+  background-size:cover; background-position:center top;
+  opacity:.18;
+  transform:scale(1.05);
+  animation:heroZoom 25s ease-in-out infinite alternate;
+}
+.closing-overlay {
+  position:absolute; inset:0; z-index:1;
+  background:linear-gradient(160deg,rgba(100,8,16,.9) 0%,rgba(20,2,5,.95) 100%);
+}
+.closing-xi{font-family:'Ma Shan Zheng',cursive;font-size:clamp(3rem,10vw,6rem);color:var(--gold2);line-height:1;text-shadow:0 2px 20px rgba(0,0,0,.4);}
+.closing-names{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(2rem,7vw,4.5rem);color:#fff;margin-top:16px;line-height:1.1;text-shadow:0 2px 24px rgba(0,0,0,.4);}
+.closing-names span{display:block;font-family:'Cinzel',serif;font-style:normal;font-size:.22em;letter-spacing:5px;color:var(--gold2);margin:10px 0;}
+.closing-date{font-family:'Cinzel',serif;font-size:clamp(8px,1.4vw,11px);letter-spacing:6px;color:rgba(212,160,23,.5);margin-top:20px;}
+.closing-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,2.5vw,18px);color:rgba(255,220,200,.5);margin:24px auto 0;max-width:480px;line-height:2;}
+.wax-seal{width:clamp(60px,10vw,80px);height:clamp(60px,10vw,80px);border-radius:50%;margin:36px auto 0;background:radial-gradient(circle at 35% 30%,#e83030,#7a0a10);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 28px rgba(0,0,0,.5);font-family:'Ma Shan Zheng',cursive;font-size:clamp(1.4rem,3vw,2rem);color:var(--gold2);position:relative;}
+.wax-seal::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(212,160,23,.3);animation:waxRing 3s ease-in-out infinite;}
+@keyframes waxRing{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.07);opacity:1}}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease;}
+.rv.show{opacity:1;transform:none;}
+.rv-l{opacity:0;transform:translateX(-28px);transition:opacity .8s ease,transform .8s ease;}
+.rv-l.show{opacity:1;transform:none;}
+.rv-r{opacity:0;transform:translateX(28px);transition:opacity .8s ease,transform .8s ease;}
+.rv-r.show{opacity:1;transform:none;}
+
+/* RESPONSIVE */
+@media(max-width:720px){
+  .couple-grid{grid-template-columns:1fr;}
+  .events-grid{grid-template-columns:1fr;}
+  .photo-strip.cols-3{grid-template-columns:1fr 1fr;}
+  .events-photo-grid{grid-template-columns:1fr;height:auto;}
+  .events-photo-grid .ph-main{grid-row:auto;height:clamp(180px,50vw,260px);}
+  .events-photo-grid .ph-item:not(.ph-main){height:clamp(120px,30vw,180px);}
+  .couple-photo-row{grid-template-columns:1fr 1fr;}
+  .couple-photo-row .ph-item:last-child{display:none;}
+  .timeline::before{left:16px;transform:none;}
+  .tl-item{grid-template-columns:32px 1fr;}
+  .tl-item:nth-child(odd)  .tl-body,
+  .tl-item:nth-child(even) .tl-body{grid-column:2;text-align:left;padding:0 0 0 12px;}
+  .tl-item:nth-child(odd)  .tl-dot-wrap,
+  .tl-item:nth-child(even) .tl-dot-wrap{grid-column:1;}
+  .tl-item .tl-void{display:none;}
+  .tl-photo{width:100% !important;margin:0 0 12px 0;}
+}
+@media(max-width:480px){
+  .invite-inner{padding:22px 14px;}
+  .hero-card{padding:28px 18px;}
+  .photo-strip.cols-hero{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="confetti-layer"></div>
+
+<!-- ══ ENVELOPE ══ -->
+<div id="env-scene" onclick="openEnvelope()">
+  <div class="env-bg-pattern"></div>
+  <div class="env-frame"></div>
+  <div class="env-open-burst" id="burst"></div>
+
+  <svg class="env-corner tl" viewBox="0 0 140 140" fill="none">
+    <path d="M5,135 L5,25 Q5,5 25,5 L135,5" stroke="rgba(212,160,23,.7)" stroke-width="1.5" fill="none"/>
+    <path d="M5,120 L5,35 Q5,18 22,18 L120,18" stroke="rgba(212,160,23,.3)" stroke-width=".8" fill="none"/>
+    <g transform="translate(32,32)">
+      <path d="M0,-22 Q-5,-14 -5,-6 Q-5,3 0,6 Q5,3 5,-6 Q5,-14 0,-22Z" fill="rgba(212,160,23,.8)"/>
+      <path d="M-12,-18 Q-20,-11 -19,-3 Q-18,5 -12,8 Q-6,4 -7,-4 Q-8,-12 -12,-18Z" fill="rgba(212,160,23,.65)"/>
+      <path d="M12,-18 Q20,-11 19,-3 Q18,5 12,8 Q6,4 7,-4 Q8,-12 12,-18Z" fill="rgba(212,160,23,.65)"/>
+      <circle cx="0" cy="5" r="4.5" fill="rgba(212,160,23,.9)"/>
+    </g>
+    <circle cx="5" cy="5" r="5" fill="none" stroke="rgba(212,160,23,.6)" stroke-width="1"/>
+    <circle cx="5" cy="5" r="2" fill="rgba(212,160,23,.7)"/>
+  </svg>
+  <svg class="env-corner tr" viewBox="0 0 140 140" fill="none">
+    <path d="M5,135 L5,25 Q5,5 25,5 L135,5" stroke="rgba(212,160,23,.7)" stroke-width="1.5" fill="none"/>
+    <path d="M5,120 L5,35 Q5,18 22,18 L120,18" stroke="rgba(212,160,23,.3)" stroke-width=".8" fill="none"/>
+    <g transform="translate(32,32)">
+      <path d="M0,-22 Q-5,-14 -5,-6 Q-5,3 0,6 Q5,3 5,-6 Q5,-14 0,-22Z" fill="rgba(212,160,23,.8)"/>
+      <path d="M-12,-18 Q-20,-11 -19,-3 Q-18,5 -12,8 Q-6,4 -7,-4 Q-8,-12 -12,-18Z" fill="rgba(212,160,23,.65)"/>
+      <path d="M12,-18 Q20,-11 19,-3 Q18,5 12,8 Q6,4 7,-4 Q8,-12 12,-18Z" fill="rgba(212,160,23,.65)"/>
+      <circle cx="0" cy="5" r="4.5" fill="rgba(212,160,23,.9)"/>
+    </g>
+    <circle cx="5" cy="5" r="5" fill="none" stroke="rgba(212,160,23,.6)" stroke-width="1"/>
+    <circle cx="5" cy="5" r="2" fill="rgba(212,160,23,.7)"/>
+  </svg>
+
+  <div class="env-greeting">
+    <div class="env-char">囍</div>
+    <p class="env-subtext">Trân Trọng Kính Mời</p>
+    <div class="env-names">
+      Kim Yến
+      <em>✦ &amp; ✦</em>
+      Hoài Nam
+    </div>
+    <div class="env-date-pill">21 · 06 · 2025 &nbsp;·&nbsp; Hà Nội</div>
+  </div>
+
+  <div class="env-tap">
+    <div class="env-tap-txt">Chạm để mở thiệp</div>
+    <div class="env-tap-chevrons"><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div id="main" style="display:none;opacity:0;background:var(--crimson);transition:opacity 1.2s ease;">
+
+  <nav class="main-nav" id="mainNav">
+    <a href="#s-hero">Trang Bìa</a>
+    <a href="#s-invite">Thiệp Mời</a>
+    <a href="#s-couple">Đôi Uyên Ương</a>
+    <a href="#s-story">Chuyện Tình</a>
+    <a href="#s-events">Sự Kiện</a>
+    <a href="#s-rsvp">RSVP</a>
+    <a href="#s-wishes">Lời Chúc</a>
+  </nav>
+
+  <!-- ══ HERO ══ -->
+  <section class="hero" id="s-hero">
+    <div class="hero-photo-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-pattern"></div>
+
+    <div class="hero-card">
+      <svg class="hc-corner tl" viewBox="0 0 44 44" fill="none"><path d="M2,42 L2,10 Q2,2 10,2 L42,2" stroke="rgba(212,160,23,.6)" stroke-width="1.2" fill="none"/><circle cx="10" cy="10" r="4" fill="none" stroke="rgba(212,160,23,.55)" stroke-width="1"/><circle cx="10" cy="10" r="1.5" fill="rgba(212,160,23,.7)"/></svg>
+      <svg class="hc-corner tr" viewBox="0 0 44 44" fill="none"><path d="M2,42 L2,10 Q2,2 10,2 L42,2" stroke="rgba(212,160,23,.6)" stroke-width="1.2" fill="none"/><circle cx="10" cy="10" r="4" fill="none" stroke="rgba(212,160,23,.55)" stroke-width="1"/><circle cx="10" cy="10" r="1.5" fill="rgba(212,160,23,.7)"/></svg>
+      <svg class="hc-corner bl" viewBox="0 0 44 44" fill="none"><path d="M2,42 L2,10 Q2,2 10,2 L42,2" stroke="rgba(212,160,23,.6)" stroke-width="1.2" fill="none"/><circle cx="10" cy="10" r="4" fill="none" stroke="rgba(212,160,23,.55)" stroke-width="1"/><circle cx="10" cy="10" r="1.5" fill="rgba(212,160,23,.7)"/></svg>
+      <svg class="hc-corner br" viewBox="0 0 44 44" fill="none"><path d="M2,42 L2,10 Q2,2 10,2 L42,2" stroke="rgba(212,160,23,.6)" stroke-width="1.2" fill="none"/><circle cx="10" cy="10" r="4" fill="none" stroke="rgba(212,160,23,.55)" stroke-width="1"/><circle cx="10" cy="10" r="1.5" fill="rgba(212,160,23,.7)"/></svg>
+
+      <div class="hero-xi">囍</div>
+      <div class="hero-eyebrow">✦ Trân Trọng Kính Mời ✦</div>
+      <div class="hero-divider-line"><span></span><em>❦</em><span></span></div>
+      <div class="hero-names">
+        Kim Yến
+        <span class="amp">— &amp; —</span>
+        Hoài Nam
+      </div>
+      <div class="hero-date-bar">
+        <div class="d-top">Kính Mời Dự Tiệc Thành Hôn</div>
+        <div class="d-main">21 · 06 · 2025</div>
+        <div class="d-sub">Thứ Bảy ✦ Royal Palace ✦ Hà Nội</div>
+      </div>
+    </div>
+
+    <div class="scroll-cue"><span>Cuộn xuống</span><div class="scroll-arrow"></div></div>
+  </section>
+
+  <!-- Photo strip after hero -->
+  <div class="photo-strip cols-hero" style="height:clamp(140px,22vw,220px);">
+    <div class="ph-item">
+      <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80" alt="wedding" loading="lazy" referrerpolicy="no-referrer">
+    </div>
+    <div class="ph-item">
+      <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=600&q=80" alt="groom" loading="lazy" referrerpolicy="no-referrer">
+    </div>
+    <div class="ph-item">
+      <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=600&q=80" alt="couple" loading="lazy" referrerpolicy="no-referrer">
+    </div>
+  </div>
+
+  <!-- RIBBON -->
+  <div class="ribbon-div"><svg viewBox="0 0 1200 48" preserveAspectRatio="xMidYMid slice"><rect width="1200" height="48" fill="#b8850a"/><path d="M0,24 Q150,4 300,24 Q450,44 600,24 Q750,4 900,24 Q1050,44 1200,24" stroke="rgba(255,220,100,.5)" stroke-width="1.5" fill="none"/><text x="600" y="30" text-anchor="middle" font-family="Cinzel,serif" font-size="9" fill="rgba(122,10,16,.8)" letter-spacing="7">✦ KIM YẾN &amp; HOÀI NAM ✦ 21.06.2025 ✦</text></svg></div>
+
+  <!-- ══ THIỆP MỜI ══ -->
+  <section class="section sec-invite" id="s-invite">
+    <div class="invite-bg-pattern"></div>
+
+    <!-- Photo banner at top of invite section -->
+    <div class="invite-photo-banner rv">
+      <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1400&q=80" alt="wedding ceremony" loading="lazy" referrerpolicy="no-referrer">
+      <div class="banner-text">囍</div>
+    </div>
+
+    <div class="section-inner rv" style="position:relative;z-index:5;">
+      <p class="sec-label">— Kính Mời —</p>
+      <h2 class="sec-title">Thiệp Mời Chính Thức</h2>
+      <div class="orn-rule"><em>囍</em></div>
+
+      <div class="invite-card">
+        <div class="invite-inner">
+          <svg class="ic-corner tl" viewBox="0 0 36 36" fill="none"><path d="M1,35 L1,9 Q1,1 9,1 L35,1" stroke="rgba(160,16,22,.4)" stroke-width="1" fill="none"/><circle cx="8" cy="8" r="3" fill="none" stroke="rgba(160,16,22,.3)" stroke-width=".8"/><circle cx="8" cy="8" r="1" fill="rgba(160,16,22,.4)"/></svg>
+          <svg class="ic-corner tr" viewBox="0 0 36 36" fill="none"><path d="M1,35 L1,9 Q1,1 9,1 L35,1" stroke="rgba(160,16,22,.4)" stroke-width="1" fill="none"/><circle cx="8" cy="8" r="3" fill="none" stroke="rgba(160,16,22,.3)" stroke-width=".8"/><circle cx="8" cy="8" r="1" fill="rgba(160,16,22,.4)"/></svg>
+          <svg class="ic-corner bl" viewBox="0 0 36 36" fill="none"><path d="M1,35 L1,9 Q1,1 9,1 L35,1" stroke="rgba(160,16,22,.4)" stroke-width="1" fill="none"/><circle cx="8" cy="8" r="3" fill="none" stroke="rgba(160,16,22,.3)" stroke-width=".8"/><circle cx="8" cy="8" r="1" fill="rgba(160,16,22,.4)"/></svg>
+          <svg class="ic-corner br" viewBox="0 0 36 36" fill="none"><path d="M1,35 L1,9 Q1,1 9,1 L35,1" stroke="rgba(160,16,22,.4)" stroke-width="1" fill="none"/><circle cx="8" cy="8" r="3" fill="none" stroke="rgba(160,16,22,.3)" stroke-width=".8"/><circle cx="8" cy="8" r="1" fill="rgba(160,16,22,.4)"/></svg>
+
+          <div class="i-xi">囍</div>
+          <div class="i-label">✦ Thiệp Cưới ✦</div>
+          <div class="i-together">Together with their families</div>
+          <div style="width:30px;height:1px;background:rgba(160,16,22,.2);margin:12px auto"></div>
+          <div class="i-name">Kim Yến</div>
+          <div class="i-fullname">TRẦN KIM YẾN</div>
+          <div class="i-and">— AND —</div>
+          <div class="i-name">Hoài Nam</div>
+          <div class="i-fullname">NGUYỄN MINH HOÀI NAM</div>
+          <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(13px,2vw,15px);color:rgba(160,16,22,.6);line-height:2;margin:18px 0;">
+            trân trọng kính mời quý khách<br>đến chung vui trong lễ thành hôn
+          </p>
+          <div class="i-date-box">
+            <div class="i-date-num">21 · 06 · 2025</div>
+            <div class="i-date-sub">Thứ Bảy ✦ 18:00 giờ</div>
+          </div>
+          <div class="i-venue">Royal Palace<br>Sảnh Hồng Nhung · Tầng 3<br>480 Trần Quý Cáp · Hà Nội</div>
+          <div class="i-reception">Reception to follow</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3-photo strip below invite card -->
+    <div style="max-width:820px;margin:40px auto 0;" class="rv">
+      <div class="photo-strip cols-3" style="height:clamp(120px,18vw,180px);">
+        <div class="ph-item">
+          <img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=600&q=80" alt="flowers" loading="lazy" referrerpolicy="no-referrer">
+          <div class="ph-label">Hoa Cưới</div>
+        </div>
+        <div class="ph-item">
+          <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=600&q=80" alt="rings" loading="lazy" referrerpolicy="no-referrer">
+          <div class="ph-label">Nhẫn Đôi</div>
+        </div>
+        <div class="ph-item">
+          <img src="https://images.unsplash.com/photo-1562609952-78f8c5f5d577?auto=format&fit=crop&w=600&q=80" alt="cake" loading="lazy" referrerpolicy="no-referrer">
+          <div class="ph-label">Bánh Cưới</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIBBON -->
+  <div class="ribbon-div"><svg viewBox="0 0 1200 48" preserveAspectRatio="xMidYMid slice"><rect width="1200" height="48" fill="#9a6808"/><path d="M0,10 Q200,40 400,10 Q600,-20 800,10 Q1000,40 1200,10" stroke="rgba(255,220,100,.4)" stroke-width="1.5" fill="none"/></svg></div>
+
+  <!-- ══ CÔ DÂU & CHÚ RỂ ══ -->
+  <section class="section sec-couple" id="s-couple">
+    <div class="section-inner">
+      <!-- Large couple photo hero -->
+      <div class="couple-hero-photo rv">
+        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1400&q=80" alt="couple wedding" loading="lazy" referrerpolicy="no-referrer">
+      </div>
+
+      <p class="sec-label dark rv">— Nhân Vật Chính —</p>
+      <h2 class="sec-title dark rv">Cô Dâu &amp; Chú Rể</h2>
+      <div class="orn-rule dark rv"><em>❦</em></div>
+
+      <div class="couple-grid">
+        <div class="person-card rv-l">
+          <div class="pc-photo">
+            <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=600&q=80" alt="Co dau" loading="lazy" referrerpolicy="no-referrer">
+          </div>
+          <div class="pc-role">Cô Dâu</div>
+          <div class="pc-name">Kim Yến</div>
+          <div class="pc-fullname">TRẦN KIM YẾN</div>
+          <div class="pc-rule"></div>
+          <p class="pc-family">
+            Con gái của<br>
+            <strong>Ông Trần Thanh Hoa</strong><br>
+            &amp; <strong>Bà Nguyễn Thị Lan Anh</strong><br>
+            <em>45 Hoàng Diệu, Hà Nội</em>
+          </p>
+        </div>
+        <div class="person-card rv-r">
+          <div class="pc-photo">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80" alt="Chu re" loading="lazy" referrerpolicy="no-referrer">
+          </div>
+          <div class="pc-role">Chú Rể</div>
+          <div class="pc-name">Hoài Nam</div>
+          <div class="pc-fullname">NGUYỄN MINH HOÀI NAM</div>
+          <div class="pc-rule"></div>
+          <p class="pc-family">
+            Con trai của<br>
+            <strong>Ông Nguyễn Văn Bình</strong><br>
+            &amp; <strong>Bà Lê Thị Thu Hương</strong><br>
+            <em>12 Đội Cấn, Ba Đình, Hà Nội</em>
+          </p>
+        </div>
+      </div>
+
+      <!-- 3 more photos below couple cards -->
+      <div class="couple-photo-row rv">
+        <div class="ph-item">
+          <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=600&q=80" alt="wedding" loading="lazy" referrerpolicy="no-referrer">
+        </div>
+        <div class="ph-item">
+          <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80" alt="ceremony" loading="lazy" referrerpolicy="no-referrer">
+        </div>
+        <div class="ph-item">
+          <img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=600&q=80" alt="flowers" loading="lazy" referrerpolicy="no-referrer">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CHUYỆN TÌNH ══ -->
+  <section class="section sec-story" id="s-story">
+    <div style="position:absolute;inset:0;opacity:.06;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Cg fill=%22none%22 stroke=%22%23ffd700%22 stroke-width=%221%22%3E%3Ccircle cx=%2240%22 cy=%2240%22 r=%2230%22/%3E%3Cpath d=%22M40 10 L43 20 L53 20 L45 26 L48 36 L40 30 L32 36 L35 26 L27 20 L37 20 Z%22/%3E%3C/g%3E%3C/svg%3E');background-size:80px 80px;pointer-events:none;"></div>
+
+    <div class="section-inner rv">
+      <p class="sec-label">— Hành Trình —</p>
+      <h2 class="sec-title">Chuyện Tình Của Chúng Mình</h2>
+      <div class="orn-rule"><em>❦</em></div>
+
+      <div class="timeline">
+        <div class="tl-item rv">
+          <div class="tl-body">
+            <div class="tl-photo">
+              <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=500&q=80" alt="first meet" loading="lazy" referrerpolicy="no-referrer">
+            </div>
+            <div class="tl-yr">MÙA THU 2021</div>
+            <div class="tl-title">Lần Đầu Gặp Gỡ</div>
+            <p class="tl-desc">Một buổi chiều bên đầm sen Hà Nội, ánh mắt chạm nhau — và cả thế giới như dừng lại.</p>
+          </div>
+          <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+          <div class="tl-void"></div>
+        </div>
+
+        <div class="tl-item rv">
+          <div class="tl-void"></div>
+          <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+          <div class="tl-body">
+            <div class="tl-photo">
+              <img src="https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?auto=format&fit=crop&w=500&q=80" alt="love" loading="lazy" referrerpolicy="no-referrer">
+            </div>
+            <div class="tl-yr">THÁNG 2, 2022</div>
+            <div class="tl-title">Chính Thức Yêu Nhau</div>
+            <p class="tl-desc">Những sáng cà phê Hoàn Kiếm, những chiều bộ Hồ Tây — tình yêu lớn dần từng ngày.</p>
+          </div>
+        </div>
+
+        <div class="tl-item rv">
+          <div class="tl-body">
+            <div class="tl-photo">
+              <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=500&q=80" alt="proposal" loading="lazy" referrerpolicy="no-referrer">
+            </div>
+            <div class="tl-yr">GIÁNG SINH 2024</div>
+            <div class="tl-title">Lời Cầu Hôn</div>
+            <p class="tl-desc">Anh quỳ gối giữa vườn hoa đêm Giáng Sinh với bó hoa hồng đỏ. Em gật đầu trong nước mắt hạnh phúc.</p>
+          </div>
+          <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+          <div class="tl-void"></div>
+        </div>
+
+        <div class="tl-item rv">
+          <div class="tl-void"></div>
+          <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+          <div class="tl-body">
+            <div class="tl-photo">
+              <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=500&q=80" alt="wedding day" loading="lazy" referrerpolicy="no-referrer">
+            </div>
+            <div class="tl-yr">21.06.2025</div>
+            <div class="tl-title">✦ Về Chung Một Nhà</div>
+            <p class="tl-desc">Hành trình tươi đẹp nhất bắt đầu — từ hôm nay và mãi mãi, chúng mình là gia đình.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SỰ KIỆN ══ -->
+  <section class="section sec-events" id="s-events">
+    <div class="section-inner rv">
+      <p class="sec-label">— Thời Gian &amp; Địa Điểm —</p>
+      <h2 class="sec-title">Sự Kiện Trọng Đại</h2>
+      <div class="orn-rule"><em>囍</em></div>
+
+      <!-- Photo collage for events -->
+      <div class="events-photo-grid rv">
+        <div class="ph-item ph-main" style="height:100%;">
+          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" alt="wedding hall" loading="lazy" referrerpolicy="no-referrer">
+          <div class="ph-label">Royal Palace · Hà Nội</div>
+        </div>
+        <div class="ph-item" style="height:clamp(100px,17vw,158px);">
+          <img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=600&q=80" alt="decor" loading="lazy" referrerpolicy="no-referrer">
+          <div class="ph-label">Lễ Gia Tiên</div>
+        </div>
+        <div class="ph-item" style="height:clamp(100px,17vw,158px);">
+          <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80" alt="reception" loading="lazy" referrerpolicy="no-referrer">
+          <div class="ph-label">Tiệc Cưới</div>
+        </div>
+      </div>
+
+      <div class="events-grid rv">
+        <div class="ev-card">
+          <div class="ev-type">Lễ Gia Tiên</div>
+          <div class="ev-name">Nghi Lễ Sáng</div>
+          <p class="ev-detail"><strong>09:00 SA</strong><br>Thứ Bảy, 21/06/2025<br>12 Đội Cấn, Ba Đình</p>
+        </div>
+        <div class="ev-card">
+          <div class="ev-type">Tiệc Cưới</div>
+          <div class="ev-name">Đêm Trọng Đại</div>
+          <p class="ev-detail"><strong>18:00</strong> Đón khách<br><strong>18:30</strong> Khai tiệc<br>Royal Palace</p>
+        </div>
+        <div class="ev-card">
+          <div class="ev-type">Địa Điểm</div>
+          <div class="ev-name">Royal Palace</div>
+          <p class="ev-detail">Sảnh Hồng Nhung<br>480 Trần Quý Cáp<br>Hà Nội</p>
+        </div>
+      </div>
+
+      <div class="schedule rv">
+        <div class="sch-row"><p class="sch-time">09:00</p><div><p class="sch-name">Lễ Gia Tiên Nhà Gái</p><p class="sch-desc">Nghi thức truyền thống tại nhà cô dâu</p></div></div>
+        <div class="sch-row"><p class="sch-time">11:00</p><div><p class="sch-name">Đón Tiếp Nhà Trai</p><p class="sch-desc">Trao nhẫn cưới và nhận lễ vật</p></div></div>
+        <div class="sch-row"><p class="sch-time">17:30</p><div><p class="sch-name">Đón Khách Tiệc Cưới</p><p class="sch-desc">Tại Royal Palace, Sảnh Hồng Nhung</p></div></div>
+        <div class="sch-row"><p class="sch-time">18:00</p><div><p class="sch-name">Khai Tiệc Mừng</p><p class="sch-desc">Nhập tiệc và dùng bữa cùng hai gia đình</p></div></div>
+        <div class="sch-row"><p class="sch-time">18:30</p><div><p class="sch-name">Lễ Trao Nhẫn &amp; Cắt Bánh</p><p class="sch-desc">Khoảnh khắc thiêng liêng nhất của buổi tiệc</p></div></div>
+        <div class="sch-row"><p class="sch-time">20:00</p><div><p class="sch-name">Chụp Ảnh &amp; Tạm Biệt</p><p class="sch-desc">Cùng lưu giữ những kỷ niệm đẹp</p></div></div>
+      </div>
+
+      <!-- Venue photo banner -->
+      <div class="venue-photo-banner rv">
+        <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1400&q=80" alt="venue" loading="lazy" referrerpolicy="no-referrer">
+        <div class="vb-text">
+          <div class="vb-name">ROYAL PALACE</div>
+          <div class="vb-addr">480 Trần Quý Cáp · Sảnh Hồng Nhung · Tầng 3 · Hà Nội</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIBBON -->
+  <div class="ribbon-div"><svg viewBox="0 0 1200 48" preserveAspectRatio="xMidYMid slice"><rect width="1200" height="48" fill="#b8850a"/><path d="M0,38 Q300,8 600,38 Q900,68 1200,38" stroke="rgba(255,220,100,.4)" stroke-width="1.5" fill="none"/></svg></div>
+
+  <!-- ══ RSVP ══ -->
+  <section class="section sec-rsvp" id="s-rsvp">
+    <div class="rsvp-photo-bg"></div>
+    <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(155deg,rgba(20,2,5,.92) 0%,rgba(60,3,8,.88) 60%,rgba(100,10,16,.85) 100%);"></div>
+
+    <div class="section-inner rv" style="position:relative;z-index:2;">
+      <p class="sec-label">— Xác Nhận Tham Dự —</p>
+      <h2 class="sec-title">R · S · V · P</h2>
+      <p style="text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(13px,2vw,15px);color:rgba(255,220,200,.45);margin-bottom:8px;">
+        Vui lòng xác nhận trước ngày <span style="color:var(--gold2);">10.06.2025</span>
+      </p>
+      <div class="orn-rule"><em>❦</em></div>
+
+      <!-- RSVP photo strip -->
+      <div class="photo-strip cols-2 rv" style="height:clamp(140px,22vw,200px);margin-bottom:40px;border:1px solid rgba(212,160,23,.2);">
+        <div class="ph-item">
+          <img src="https://images.unsplash.com/photo-1562609952-78f8c5f5d577?auto=format&fit=crop&w=800&q=80" alt="wedding" loading="lazy" referrerpolicy="no-referrer">
+          <div class="ph-label">Chào Đón Quý Khách</div>
+        </div>
+        <div class="ph-item">
+          <img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=600&q=80" alt="flowers" loading="lazy" referrerpolicy="no-referrer">
+          <div class="ph-label">Chờ Đón Bạn</div>
+        </div>
+      </div>
+
+      <div class="rsvp-wrap">
+        <div id="rsvpForm">
+          <div class="rf"><label>Họ &amp; Tên</label><input type="text" id="rName" placeholder="Nguyễn Văn A…"></div>
+          <div class="rf"><label>Số Điện Thoại</label><input type="tel" placeholder="0xxx xxx xxx"></div>
+          <div class="rf"><label>Số Người Tham Dự</label><input type="text" placeholder="2 người…"></div>
+          <div class="rf">
+            <label>Xác Nhận</label>
+            <div class="att-row">
+              <button class="att-btn on" id="attY" onclick="setAtt('yes')">✓ Tham Dự</button>
+              <button class="att-btn" id="attN" onclick="setAtt('no')">✕ Không Thể</button>
+            </div>
+          </div>
+          <button class="rsvp-submit" onclick="submitRsvp()">Gửi Xác Nhận &nbsp;✦</button>
+        </div>
+        <div class="rsvp-done" id="rsvpDone">
+          <p>Cảm ơn bạn! ✦</p>
+          <span>Chúng mình rất vui được đón bạn</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ LỜI CHÚC ══ -->
+  <section class="section sec-wishes" id="s-wishes">
+    <!-- Photo header for wishes -->
+    <div class="wishes-photo-header">
+      <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1400&q=80" alt="wedding" loading="lazy" referrerpolicy="no-referrer">
+      <div class="wph-text">
+        <p class="sec-label">— Lời Chúc Mừng —</p>
+        <h2 class="sec-title">Gửi Lời Chúc</h2>
+      </div>
+    </div>
+
+    <div class="section-inner rv">
+      <div class="orn-rule"><em>❦</em></div>
+
+      <div class="wishes-feed" id="wishFeed">
+        <div class="wish-item"><p class="wi-name">Anh Minh &amp; Chị Lan</p><p class="wi-text">Chúc hai bạn trăm năm hạnh phúc, mãi yêu thương bên nhau! 🌸</p></div>
+        <div class="wish-item"><p class="wi-name">Gia Đình Chú Tám</p><p class="wi-text">Cầu chúc đôi uyên ương bền vững như ngàn năm, hạnh phúc mãi mãi.</p></div>
+        <div class="wish-item"><p class="wi-name">Nhóm Bạn Đại Học</p><p class="wi-text">Cuối cùng cũng đến ngày này rồi! Chúc mừng hai đứa nhé 🎉</p></div>
+      </div>
+
+      <div style="height:1px;background:rgba(212,160,23,.15);margin:20px 0"></div>
+
+      <div class="wish-form">
+        <input class="w-input" id="wName" placeholder="Tên của bạn…">
+        <textarea class="w-input" id="wText" placeholder="Lời chúc tốt đẹp nhất…" style="height:76px;resize:none"></textarea>
+        <button class="w-btn" onclick="addWish()">Gửi Lời Chúc &nbsp;✦</button>
+      </div>
+
+      <!-- Contact grid -->
+      <p class="sec-label" style="margin-top:52px;">— Liên Hệ Gia Đình —</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(212,160,23,.15);border:1px solid rgba(212,160,23,.15);margin-top:12px;">
+        <div style="background:rgba(122,10,16,.5);padding:clamp(18px,3vw,28px) clamp(14px,2.5vw,22px);text-align:center;">
+          <p style="font-family:'Cinzel',serif;font-size:clamp(7px,1.1vw,9px);letter-spacing:4px;text-transform:uppercase;color:var(--gold2);margin-bottom:8px;">Nhà Gái</p>
+          <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(14px,2.2vw,18px);color:#fff;margin-bottom:6px;">Ông Trần Thanh Hoa</p>
+          <a style="font-family:'Cormorant Garamond',serif;font-size:clamp(13px,2vw,15px);color:rgba(255,220,200,.5);text-decoration:none;" href="tel:0900000001">0900 000 001</a>
+        </div>
+        <div style="background:rgba(122,10,16,.5);padding:clamp(18px,3vw,28px) clamp(14px,2.5vw,22px);text-align:center;">
+          <p style="font-family:'Cinzel',serif;font-size:clamp(7px,1.1vw,9px);letter-spacing:4px;text-transform:uppercase;color:var(--gold2);margin-bottom:8px;">Nhà Trai</p>
+          <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(14px,2.2vw,18px);color:#fff;margin-bottom:6px;">Ông Nguyễn Văn Bình</p>
+          <a style="font-family:'Cormorant Garamond',serif;font-size:clamp(13px,2vw,15px);color:rgba(255,220,200,.5);text-decoration:none;" href="tel:0900000003">0900 000 003</a>
+        </div>
+        <div style="background:rgba(122,10,16,.5);padding:clamp(18px,3vw,28px) clamp(14px,2.5vw,22px);text-align:center;">
+          <p style="font-family:'Cinzel',serif;font-size:clamp(7px,1.1vw,9px);letter-spacing:4px;text-transform:uppercase;color:var(--gold2);margin-bottom:8px;">Nhà Gái</p>
+          <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(14px,2.2vw,18px);color:#fff;margin-bottom:6px;">Bà Nguyễn Thị Lan Anh</p>
+          <a style="font-family:'Cormorant Garamond',serif;font-size:clamp(13px,2vw,15px);color:rgba(255,220,200,.5);text-decoration:none;" href="tel:0900000002">0900 000 002</a>
+        </div>
+        <div style="background:rgba(122,10,16,.5);padding:clamp(18px,3vw,28px) clamp(14px,2.5vw,22px);text-align:center;">
+          <p style="font-family:'Cinzel',serif;font-size:clamp(7px,1.1vw,9px);letter-spacing:4px;text-transform:uppercase;color:var(--gold2);margin-bottom:8px;">Nhà Trai</p>
+          <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(14px,2.2vw,18px);color:#fff;margin-bottom:6px;">Bà Lê Thị Thu Hương</p>
+          <a style="font-family:'Cormorant Garamond',serif;font-size:clamp(13px,2vw,15px);color:rgba(255,220,200,.5);text-decoration:none;" href="tel:0900000004">0900 000 004</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CLOSING ══ -->
+  <div class="sec-closing rv" id="s-closing">
+    <div class="closing-photo-bg"></div>
+    <div class="closing-overlay"></div>
+    <div style="position:relative;z-index:2;text-align:center;">
+      <div class="closing-xi">囍</div>
+      <div class="closing-names">
+        Kim Yến
+        <span>— &amp; —</span>
+        Hoài Nam
+      </div>
+      <div class="closing-date">21 · 06 · 2025 &nbsp;—&nbsp; MÃI MÃI YÊU NHAU</div>
+      <p class="closing-msg">
+        Cảm ơn bạn đã dành thời gian quý báu đến chung vui cùng chúng mình.<br>
+        Sự hiện diện của bạn là điều trân quý nhất trong ngày trọng đại này.
+      </p>
+      <div class="wax-seal">囍</div>
+    </div>
+
+    <!-- Final photo strip -->
+    <div style="position:relative;z-index:2;margin-top:48px;" class="rv">
+      <div class="photo-strip cols-3" style="height:clamp(100px,16vw,150px);border-top:1px solid rgba(212,160,23,.2);">
+        <div class="ph-item">
+          <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=500&q=80" alt="" loading="lazy" referrerpolicy="no-referrer">
+        </div>
+        <div class="ph-item">
+          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=500&q=80" alt="" loading="lazy" referrerpolicy="no-referrer">
+        </div>
+        <div class="ph-item">
+          <img src="https://images.unsplash.com/photo-1562609952-78f8c5f5d577?auto=format&fit=crop&w=500&q=80" alt="" loading="lazy" referrerpolicy="no-referrer">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#main -->
+
+<script>
+/* CONFETTI */
+(function(){
+  const layer = document.getElementById('confetti-layer');
+  const COLORS = ['#ffd700','#ffaa00','#ff6060','#ff9999','#fff0a0','#ffcc66','#e83030','#c8a020'];
+  function spawnConf(){
+    const el = document.createElement('div');
+    const size = 6 + Math.random() * 12;
+    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    const shapes = ['circle','petal','diamond'];
+    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+    const dur = 4 + Math.random() * 5;
+    const rot = (Math.random() < 0.5 ? '' : '-') + (200 + Math.random() * 400) + 'deg';
+    el.className = 'cf';
+    el.style.cssText = `left:${Math.random()*100}%;width:${size}px;height:${size*(shape==='petal'?1.8:1)}px;background:${color};opacity:0;animation-duration:${dur}s;animation-delay:${Math.random()*3}s;--rot:${rot};border-radius:${shape==='diamond'?'0':shape==='circle'?'50%':'60% 0 60% 0'};transform-origin:center;${shape==='diamond'?'transform:rotate(45deg);':''}`;
+    layer.appendChild(el);
+    setTimeout(() => el.remove(), (dur + 4) * 1000);
+  }
+  for(let i=0;i<6;i++) setTimeout(spawnConf, i*400);
+  setInterval(spawnConf, 500);
+})();
+
+/* ENVELOPE */
+let envOpened = false;
+function openEnvelope() {
+  if (envOpened) return;
+  envOpened = true;
+  const scene = document.getElementById('env-scene');
+  const burst = document.getElementById('burst');
+  const main = document.getElementById('main');
+  burst.classList.add('active');
+  const layer = document.getElementById('confetti-layer');
+  for (let i = 0; i < 40; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'cf';
+      const size = 8 + Math.random() * 14;
+      const colors = ['#ffd700','#ffaa00','#ff6060','#fff0a0','#ffcc66','#e83030'];
+      el.style.cssText = `left:${20+Math.random()*60}%;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};opacity:0;animation-duration:${2+Math.random()*3}s;animation-delay:0s;--rot:${Math.random()<.5?'':'-'}${200+Math.random()*400}deg;border-radius:${Math.random()>.5?'50%':'60% 0 60% 0'};`;
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), 6000);
+    }, i * 30);
+  }
+  setTimeout(() => {
+    scene.classList.add('fade-away');
+    main.style.display = 'block';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      main.style.opacity = '1';
+      checkReveal();
+    }));
+  }, 500);
+}
+
+/* SCROLL REVEAL */
+function checkReveal() {
+  const vH = window.innerHeight;
+  document.querySelectorAll('.rv:not(.show),.rv-l:not(.show),.rv-r:not(.show)').forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.top < vH * .92) {
+      setTimeout(() => el.classList.add('show'), 0);
+    }
+  });
+}
+window.addEventListener('scroll', checkReveal, { passive: true });
+
+/* NAV */
+const SEC_IDS = ['s-hero','s-invite','s-couple','s-story','s-events','s-rsvp','s-wishes'];
+window.addEventListener('scroll', () => {
+  const mid = window.scrollY + window.innerHeight * .35;
+  const links = document.querySelectorAll('.main-nav a');
+  SEC_IDS.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    links[i]?.classList.toggle('active', mid >= el.offsetTop && mid < el.offsetTop + el.offsetHeight);
+  });
+}, { passive: true });
+
+/* RSVP */
+let attChoice = 'yes';
+function setAtt(v) {
+  attChoice = v;
+  document.getElementById('attY').classList.toggle('on', v === 'yes');
+  document.getElementById('attN').classList.toggle('on', v === 'no');
+}
+function submitRsvp() {
+  const name = document.getElementById('rName').value.trim();
+  if (!name) { alert('Vui lòng nhập tên!'); return; }
+  document.getElementById('rsvpForm').style.display = 'none';
+  document.getElementById('rsvpDone').style.display = 'block';
+}
+
+/* WISHES */
+function addWish() {
+  const name = document.getElementById('wName').value.trim();
+  const text = document.getElementById('wText').value.trim();
+  if (!name || !text) { alert('Vui lòng nhập tên và lời chúc!'); return; }
+  const feed = document.getElementById('wishFeed');
+  const el = document.createElement('div');
+  el.className = 'wish-item';
+  el.style.opacity = '0'; el.style.transform = 'translateY(12px)'; el.style.transition = 'opacity .5s, transform .5s';
+  el.innerHTML = `<p class="wi-name">${name}</p><p class="wi-text">${text}</p>`;
+  feed.prepend(el);
+  requestAnimationFrame(() => requestAnimationFrame(() => { el.style.opacity='1'; el.style.transform='none'; }));
+  document.getElementById('wName').value = '';
+  document.getElementById('wText').value = '';
+}
+</script>
+</body>
+</html>

@@ -60,7 +60,7 @@ const BottomNavigation = () => {
             { label: 'Sản phẩm', path: '/collection', icon: 'grid_view' },
             { isCenter: true }, // LOGO TRIGGER
             { label: 'Của tôi', path: '/management', icon: 'inbox' },
-            { label: 'Tài khoản', path: user ? '/account' : '/login', icon: 'person' },
+            { label: 'Tài khoản', path: user ? '/profile' : '/login', icon: 'person' },
         ]
     }
 
