@@ -57,12 +57,19 @@ const Header = () => {
                   <button
                     type="button"
                     onClick={() => setProfileOpen((prev) => !prev)}
-                    className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition"
+                    className="w-9 h-9 rounded-full border border-gray-200 overflow-hidden flex items-center justify-center bg-gray-50 hover:border-blue-200 hover:bg-blue-50 transition"
                     title="Profile"
                     aria-label="Profile"
                     aria-expanded={profileOpen}
                   >
-                    <span className="material-symbols-outlined text-[20px]">person</span>
+                    <img
+                      src={user?.avatar_url || '/assets/images/avatar-default.png'}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = '/assets/images/avatar-default.png'
+                      }}
+                    />
                   </button>
                   {profileOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden z-50">
