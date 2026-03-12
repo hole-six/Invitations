@@ -6,6 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import invitationService from '../services/invitation.service'
 import authService from '../services/auth.service'
 import { useToast } from '../context/ToastContext'
+import mediaService from '../services/media.service'
 import MediaLibraryModal from '../components/MediaLibraryModal'
 
 
@@ -1448,25 +1449,16 @@ const UltimateHtmlEditorPage = () => {
     }
 
     try {
-      console.log('📤 Processing image:', file.name)
+      console.log('🚀 Uploading image to S3:', file.name)
+      const uploadResult = await mediaService.upload(file)
 
-      // Convert to optimized format for fast loading
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        console.log('✅ Image processing successful')
-        setImageData(prev => ({
-          ...prev,
-          [imageId]: reader.result // Store optimized image data
-        }))
-        toast.success('✅ Đã tải ảnh lên!')
-      }
-      reader.onerror = () => {
-        console.error('❌ Image processing failed')
-        toast.error('❌ Không thể xử lý ảnh!')
-      }
-      reader.readAsDataURL(file)
+      setImageData(prev => ({
+        ...prev,
+        [imageId]: uploadResult.final_url || uploadResult.url
+      }))
+      toast.success('✅ Đã tải ảnh lên!')
     } catch (error) {
-      console.error('Failed to process image:', error)
+      console.error('Failed to upload image:', error)
       toast.error('❌ Không thể tải ảnh lên!')
     }
   }

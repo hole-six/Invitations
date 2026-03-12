@@ -4,6 +4,8 @@ import DashboardLayout from '../components/DashboardLayout'
 import { useToast } from '../context/ToastContext'
 import { useAuth } from '../context/AuthContext'
 import templateService from '../services/template.service'
+import mediaService from '../services/media.service'
+import MediaLibraryModal from '../components/MediaLibraryModal'
 
 const DashboardTemplateEditorPage = () => {
   const navigate = useNavigate()
@@ -12,6 +14,15 @@ const DashboardTemplateEditorPage = () => {
   const [searchParams] = useSearchParams()
   const toast = useToast()
   const { user } = useAuth() // Get current user for UUID
+  const [showMediaLibrary, setShowMediaLibrary] = useState(false)
+
+  const handleSelectThumbnail = (image) => {
+    setFormData(prev => ({
+      ...prev,
+      thumbnail_url: image.url
+    }))
+    toast.success('Đã chọn ảnh làm thumbnail!')
+  }
 
   const [loading, setLoading] = useState(false)
   const [previewMode, setPreviewMode] = useState(false)
@@ -348,14 +359,24 @@ const DashboardTemplateEditorPage = () => {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Thumbnail URL
                   </label>
-                  <input
-                    type="url"
-                    name="thumbnail_url"
-                    value={formData.thumbnail_url}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none transition-all"
-                    placeholder="https://images.unsplash.com/..."
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      name="thumbnail_url"
+                      value={formData.thumbnail_url}
+                      onChange={handleChange}
+                      className="flex-1 px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none transition-all"
+                      placeholder="https://images.unsplash.com/..."
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowMediaLibrary(true)}
+                      className="px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all flex items-center gap-2"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">upload</span>
+                      Tải lên
+                    </button>
+                  </div>
                   {formData.thumbnail_url && (
                     <div className="mt-3 relative aspect-video w-full max-w-sm rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                       <img
@@ -592,6 +613,12 @@ const DashboardTemplateEditorPage = () => {
           </div>
         </form>
       </div>
+      {showMediaLibrary && (
+        <MediaLibraryModal
+          onClose={() => setShowMediaLibrary(false)}
+          onSelectImage={handleSelectThumbnail}
+        />
+      )}
     </DashboardLayout>
   )
 }
