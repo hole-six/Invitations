@@ -113,15 +113,14 @@ export const ProfileContent = () => {
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-6">
         <div className="flex flex-col md:flex-row md:items-center gap-6">
           <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center text-2xl font-bold">
-            {profile.avatar_url ? (
-              <img
-                src={profile.avatar_url}
-                alt={displayName}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              initials
-            )}
+            <img
+              src={profile.avatar_url || '/assets/images/avatar-default.png'}
+              alt={displayName}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.src = '/assets/images/avatar-default.png'
+              }}
+            />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-gray-400 uppercase tracking-widest">Hồ sơ</p>
