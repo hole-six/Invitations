@@ -109,7 +109,7 @@ const DashboardLayout = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
+    <div className="h-screen bg-gray-50 dark:bg-gray-900 flex overflow-hidden">
       {/* Mobile Drawer Overlay */}
       {mobileDrawerOpen && (
         <div
