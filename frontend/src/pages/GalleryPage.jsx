@@ -72,6 +72,9 @@ const GalleryContent = () => {
   const [sortType, setSortType] = useState("day"); // Options: 'day', 'month', 'year'
   const fileInputRef = useRef(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
+  const [pendingUploadFile, setPendingUploadFile] = useState(null);
+  const [pendingUploadPreviewUrl, setPendingUploadPreviewUrl] = useState("");
   const [pagination, setPagination] = useState({
     page: 1,
     total_pages: 1,
@@ -85,6 +88,24 @@ const GalleryContent = () => {
     type: "photo",
   });
   const [showCalendar, setShowCalendar] = useState(false);
+
+  const formatFileSizeMb = (bytes) => `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+
+  const closePreviewModal = (eventOrForce = false) => {
+    const force = typeof eventOrForce === "boolean" ? eventOrForce : false;
+    if (isUploading && !force) return;
+    setPreviewModalOpen(false);
+    setPendingUploadFile(null);
+    setPendingUploadPreviewUrl("");
+    if (fileInputRef.current) fileInputRef.current.value = null;
+  };
+
+  useEffect(() => {
+    if (!pendingUploadFile) return;
+    const objectUrl = URL.createObjectURL(pendingUploadFile);
+    setPendingUploadPreviewUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [pendingUploadFile]);
 
   const fetchGallery = async (pageNum) => {
     try {
@@ -301,21 +322,36 @@ const GalleryContent = () => {
     if (!file) return;
 
     try {
+      if (!file.type?.startsWith("image/")) {
+        toast.warning("Vui lòng chọn file ảnh");
+        return;
+      }
+
+      setPendingUploadFile(file);
+      setPreviewModalOpen(true);
+    } catch (err) {
+      console.error("Select file failed:", err);
+      toast.error(tr("common.error_default") || "Không thể chọn ảnh");
+    } finally {
+      if (e.target) e.target.value = null; // allow re-select same file
+    }
+  };
+
+  const handleConfirmUpload = async () => {
+    if (!pendingUploadFile) return;
+
+    try {
       setIsUploading(true);
-      await mediaService.upload(
-        file,
-        DEFAULT_FOLDER
-      );
+      await mediaService.upload(pendingUploadFile, DEFAULT_FOLDER);
       toast.success(tr("common.success") || "Tải lên thành công");
 
-      // Refresh gallery
+      closePreviewModal(true);
       fetchGallery(1);
     } catch (err) {
-      console.error('Upload failed:', err);
+      console.error("Upload failed:", err);
       toast.error(tr("common.error_default") || "Tải lên thất bại");
     } finally {
       setIsUploading(false);
-      if (e.target) e.target.value = null; // Clear input
     }
   };
 
@@ -600,6 +636,80 @@ const GalleryContent = () => {
           </div>
         </main>
       </div>
+
+      {previewModalOpen && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 px-4"
+          onMouseDown={closePreviewModal}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl w-full max-w-2xl p-6 md:p-8"
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <div className="relative">
+              <h2 className="text-center text-xl font-semibold text-gray-900">
+                Xem trước
+              </h2>
+              <button
+                type="button"
+                onClick={closePreviewModal}
+                disabled={isUploading}
+                className="absolute right-0 top-0 text-gray-500 hover:text-gray-700 disabled:opacity-60"
+                aria-label="Đóng"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            <div className="mt-5 flex flex-col items-center gap-4">
+              <div className="w-full max-w-md">
+                <div className="rounded-2xl overflow-hidden bg-gray-100 shadow-inner">
+                  {pendingUploadPreviewUrl ? (
+                    <img
+                      src={pendingUploadPreviewUrl}
+                      alt={pendingUploadFile?.name || "preview"}
+                      className="w-full h-auto max-h-[60vh] object-contain bg-black"
+                    />
+                  ) : (
+                    <div className="w-full aspect-[3/4] flex items-center justify-center text-gray-500">
+                      Đang tạo xem trước...
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {pendingUploadFile && (
+                <div className="text-center text-gray-700">
+                  <div className="text-lg font-medium break-all">
+                    {pendingUploadFile.name} ({formatFileSizeMb(pendingUploadFile.size)})
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-2 flex items-center justify-center gap-4">
+                <button
+                  type="button"
+                  onClick={handleConfirmUpload}
+                  disabled={isUploading || !pendingUploadFile}
+                  className="px-10 py-3 rounded-lg font-semibold text-white bg-red-600 hover:bg-red-700 disabled:opacity-60"
+                >
+                  {isUploading ? "Đang tải..." : "Xác nhận"}
+                </button>
+                <button
+                  type="button"
+                  onClick={closePreviewModal}
+                  disabled={isUploading}
+                  className="px-10 py-3 rounded-lg font-semibold text-white bg-gray-600 hover:bg-gray-700 disabled:opacity-60"
+                >
+                  Hủy
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {menuConfig.visible && (
         <div

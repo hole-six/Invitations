@@ -4,6 +4,7 @@ import Footer from '../components/Footer'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import authService from '../services/auth.service'
+import mediaService from '../services/media.service'
 
 export const ProfileContent = () => {
   const { user } = useAuth()
@@ -207,56 +208,6 @@ export const ProfileContent = () => {
     }
   }
 
-  const uploadAvatarToS3 = async (file, uploadUrl) => {
-    const response = await fetch(uploadUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': file.type || 'image/jpeg',
-      },
-      body: file,
-    })
-    if (!response.ok) {
-      throw new Error('Upload failed')
-    }
-  }
-
-  const confirmUpload = async (fileKey, token) => {
-    const response = await fetch(`${API_BASE}/system/confirmUpload`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: token || '',
-      },
-      body: JSON.stringify({ file_key: fileKey }),
-    })
-    const data = await response.json()
-    if (!data.status) {
-      throw new Error(data.msg || 'Xác nhận upload thất bại')
-    }
-    return data.data?.final_url
-  }
-
-  const getPresignedUrl = async (file, token) => {
-    const ext = file.type.split('/')[1] || 'jpg'
-    const response = await fetch(`${API_BASE}/system/upload`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: token || '',
-      },
-      body: JSON.stringify({
-        size: file.size,
-        ext,
-        folder: 'Profile',
-      }),
-    })
-    const data = await response.json()
-    if (!data.status) {
-      throw new Error(data.msg || 'Không thể lấy link upload')
-    }
-    return data.data
-  }
-
   const handleUpdateProfile = async (e) => {
     e.preventDefault()
 
@@ -277,11 +228,8 @@ export const ProfileContent = () => {
 
       if (pendingFile) {
         try {
-          const presignedData = await getPresignedUrl(pendingFile, token)
-          const { upload_url, file_key, final_url } = presignedData
-          await uploadAvatarToS3(pendingFile, upload_url)
-          const confirmedFinalUrl = await confirmUpload(file_key, token)
-          finalAvatarUrl = confirmedFinalUrl || final_url
+          const uploaded = await mediaService.upload(pendingFile)
+          finalAvatarUrl = uploaded?.final_url || uploaded?.url || finalAvatarUrl
         } catch (uploadError) {
           toast.error(uploadError.message || 'Upload ảnh thất bại.')
           setIsSubmitting(false)
