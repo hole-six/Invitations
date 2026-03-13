@@ -467,16 +467,6 @@ export const ProfileContent = () => {
   return (
     <form onSubmit={handleUpdateProfile} className="max-w-2xl mx-auto space-y-6 pb-28">
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-6">
-        <div className="flex justify-between items-center mb-4">
-          <button
-            type="button"
-            onClick={handleChangePassword}
-            disabled={changingPassword}
-            className="px-4 py-2 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {changingPassword ? 'Đang gửi...' : 'Đổi mật khẩu'}
-          </button>
-        </div>
         <div className="flex flex-col md:flex-row md:items-center gap-6">
           <div className="relative w-20 h-20 rounded-full overflow-hidden bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center text-2xl font-bold">
             <img
@@ -648,6 +638,16 @@ export const ProfileContent = () => {
                 Cập nhật
               </button>
             )}
+            <div className="flex justify-between items-center">
+              <button
+                type="button"
+                onClick={handleChangePassword}
+                disabled={changingPassword}
+                className="px-4 py-2 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {changingPassword ? 'Đang gửi...' : 'Đổi mật khẩu'}
+              </button>
+            </div>
           </div>
         </div>
       </div>
