@@ -43,10 +43,10 @@ const Header = () => {
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-gray-700 hover:text-blue-600">Trang chủ</Link>
-            <Link to="/collection" className="text-gray-700 hover:text-blue-600">Mẫu thiệp</Link>
-            <Link to="/pricing" className="text-gray-700 hover:text-blue-600">Bảng giá</Link>
-            <Link to="/contact" className="text-gray-700 hover:text-blue-600">Liên hệ</Link>
+            <Link to="/" className={`${location.pathname === '/' ? 'text-black font-semibold' : 'text-gray-700 hover:text-blue-600'}`}>Trang chủ</Link>
+            <Link to="/collection" className={`${location.pathname.startsWith('/collection') ? 'text-black font-semibold' : 'text-gray-700 hover:text-blue-600'}`}>Mẫu thiệp</Link>
+            <Link to="/pricing" className={`${location.pathname.startsWith('/pricing') ? 'text-black font-semibold' : 'text-gray-700 hover:text-blue-600'}`}>Bảng giá</Link>
+            <Link to="/contact" className={`${location.pathname.startsWith('/contact') ? 'text-black font-semibold' : 'text-gray-700 hover:text-blue-600'}`}>Liên hệ</Link>
           </nav>
 
           {/* Auth buttons */}
@@ -61,11 +61,18 @@ const Header = () => {
                     title="Profile"
                     aria-label="Profile"
                     aria-expanded={profileOpen}
+                    style={{
+                      backgroundImage: "url('/assets/images/avatar-default.png')",
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
                   >
                     <img
                       src={user?.avatar_url || '/assets/images/avatar-default.png'}
                       alt="Profile"
                       className="w-full h-full object-cover"
+                      loading="eager"
+                      decoding="async"
                       onError={(e) => {
                         e.currentTarget.src = '/assets/images/avatar-default.png'
                       }}
@@ -88,6 +95,14 @@ const Header = () => {
                       >
                         <span className="material-symbols-outlined text-[18px]">inbox</span>
                         Quản lý
+                      </Link>
+                       <Link
+                        to="/gallery"
+                        // onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">image</span>
+                        Thư viện ảnh
                       </Link>
                       {isAdmin && (
                         <Link

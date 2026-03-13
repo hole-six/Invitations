@@ -34,6 +34,7 @@ import DashboardSettingsPage from './pages/DashboardSettingsPage.jsx'
 import DashboardProfilePage from './pages/DashboardProfilePage.jsx'
 import CategoryPage from './pages/CategoryPage.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
+import GalleryPage from './pages/GalleryPage.jsx'
 
 function App() {
   return (
@@ -110,6 +111,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+             <Route
+              path="/gallery"
+              element={
+                <ProtectedRoute>
+                  <GalleryPage />
                 </ProtectedRoute>
               }
             />
