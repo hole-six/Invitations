@@ -5,7 +5,7 @@ const DashboardProfilePage = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6 max-w-full">
-        <ProfileContent />
+        <ProfileContent variant="dashboard" />
       </div>
     </DashboardLayout>
   )

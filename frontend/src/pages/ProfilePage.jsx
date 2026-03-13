@@ -6,9 +6,10 @@ import { useToast } from '../context/ToastContext'
 import authService from '../services/auth.service'
 import mediaService from '../services/media.service'
 
-export const ProfileContent = () => {
+export const ProfileContent = ({ variant = 'page' } = {}) => {
   const { user } = useAuth()
   const toast = useToast()
+  const isDashboard = variant === 'dashboard'
   const [profileData, setProfileData] = useState(null)
   const [editData, setEditData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -399,7 +400,7 @@ export const ProfileContent = () => {
 
   if (loading) {
     return (
-      <div className="max-w-2xl mx-auto">
+      <div className={isDashboard ? 'w-full' : 'max-w-2xl mx-auto'}>
         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-10 flex items-center justify-center">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gray-900 dark:border-white"></div>
         </div>
@@ -409,7 +410,7 @@ export const ProfileContent = () => {
 
   if (error) {
     return (
-      <div className="max-w-2xl mx-auto">
+      <div className={isDashboard ? 'w-full' : 'max-w-2xl mx-auto'}>
         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-6">
           <p className="text-red-600 font-semibold mb-2">Không thể tải hồ sơ</p>
           <p className="text-sm text-gray-500">{error}</p>
@@ -421,8 +422,11 @@ export const ProfileContent = () => {
   const profile = (isEditing ? editData : profileData) || user || {}
 
   return (
-    <form onSubmit={handleUpdateProfile} className="max-w-2xl mx-auto space-y-6 pb-8">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-6">
+    <form
+      onSubmit={handleUpdateProfile}
+      className={isDashboard ? 'w-full space-y-6' : 'max-w-2xl mx-auto space-y-6'}
+    >
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-3">
         <div className="flex flex-col md:flex-row md:items-center gap-6">
           <div className="relative w-20 h-20 rounded-full overflow-hidden bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center text-2xl font-bold">
             <img
@@ -490,9 +494,9 @@ export const ProfileContent = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-6">
-          <h2 className="text-lg font-bold mb-4">Thông tin cá nhân</h2>
+          <h2 className="text-lg font-bold mb-2">Thông tin cá nhân</h2>
           {isEditing ? (
             <div className="space-y-4">
               <div>
@@ -569,8 +573,8 @@ export const ProfileContent = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-20 md:bottom-4 left-0 right-0 z-40 px-4">
-        <div className="max-w-2xl mx-auto">
+      <div className={isDashboard ? 'mt-1' : 'fixed bottom-20 md:bottom-4 left-0 right-0 z-20 px-4'}>
+        <div className={isDashboard ? 'w-full' : 'max-w-2xl mx-auto'}>
           <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-lg rounded-2xl p-3 flex items-center justify-end gap-2">
             {isEditing ? (
               <>
