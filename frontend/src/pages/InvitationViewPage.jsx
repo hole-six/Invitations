@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import invitationService from '../services/invitation.service'
 import CanvasElement from '../components/editor/CanvasElement'
 
 const InvitationViewPage = () => {
   const { slug } = useParams()
+  const navigate = useNavigate()
   const [invitation, setInvitation] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -502,6 +503,14 @@ const InvitationViewPage = () => {
     loadInvitation(password)
   }
 
+  const handleGoBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1)
+    } else {
+      navigate('/dashboard')
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
@@ -563,12 +572,13 @@ const InvitationViewPage = () => {
           <p className="text-gray-600 dark:text-gray-400 mb-8">
             {error}
           </p>
-          <a
-            href="/"
+          <button
+            type="button"
+            onClick={handleGoBack}
             className="inline-block px-8 py-3 bg-gradient-to-r from-primary to-pink-500 text-white rounded-full font-bold hover:from-primary-dark hover:to-pink-600 transition-all shadow-lg hover:shadow-xl"
           >
-            Về Trang Chủ
-          </a>
+            Quay lại trang trước
+          </button>
         </div>
       </div>
     )

@@ -10,6 +10,10 @@ const Header = () => {
   const isAdmin = hasAdminAccess()
   const [profileOpen, setProfileOpen] = useState(false)
   const profileRef = useRef(null)
+  const isActivePath = (path, { exact = false } = {}) => {
+    if (exact) return location.pathname === path
+    return location.pathname === path || location.pathname.startsWith(`${path}/`)
+  }
 
   const handleLogout = () => {
     logout()
@@ -83,7 +87,7 @@ const Header = () => {
                       <Link
                         to="/profile"
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        className={`flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 ${isActivePath('/profile', { exact: true }) ? 'text-blue-600 font-semibold bg-blue-50' : 'text-gray-700'}`}
                       >
                         <span className="material-symbols-outlined text-[18px]">account_circle</span>
                         Hồ sơ
@@ -91,15 +95,15 @@ const Header = () => {
                       <Link
                         to="/management"
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        className={`flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 ${isActivePath('/management') ? 'text-blue-600 font-semibold bg-blue-50' : 'text-gray-700'}`}
                       >
                         <span className="material-symbols-outlined text-[18px]">inbox</span>
-                        Quản lý
+                        Quản lý thiệp
                       </Link>
                        <Link
                         to="/gallery"
                         // onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        className={`flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 ${isActivePath('/gallery', { exact: true }) ? 'text-blue-600 font-semibold bg-blue-50' : 'text-gray-700'}`}
                       >
                         <span className="material-symbols-outlined text-[18px]">image</span>
                         Thư viện ảnh
@@ -108,7 +112,7 @@ const Header = () => {
                         <Link
                           to="/dashboard"
                           onClick={() => setProfileOpen(false)}
-                          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          className={`flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 ${isActivePath('/dashboard') ? 'text-blue-600 font-semibold bg-blue-50' : 'text-gray-700'}`}
                         >
                           <span className="material-symbols-outlined text-[18px]">dashboard</span>
                           Dashboard

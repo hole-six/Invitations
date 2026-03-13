@@ -135,8 +135,13 @@ const CollectionPage = () => {
         }
       }).filter(Boolean)
 
+      const rawCategories = categoriesRes?.data || []
+      const activeCategories = Array.isArray(rawCategories)
+        ? rawCategories.filter((category) => !category?.deleted_at)
+        : []
+
       setTemplates(apiTemplates)
-      setCategories(categoriesRes?.data || [])
+      setCategories(activeCategories)
 
       const paginationMeta = templatesRes?.pagination
         || templatesRes?.meta
@@ -971,7 +976,6 @@ const CollectionPage = () => {
 }
 
 export default CollectionPage
-
 
 
 

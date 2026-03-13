@@ -84,6 +84,14 @@ export const ProfileContent = () => {
       { label: 'Tên đăng nhập', value: source.user_name },
       { label: 'Email', value: source.email },
       { label: 'Số điện thoại', value: source.phone_number },
+      {
+        label: 'Xác minh',
+        value: source.is_verified ? 'Đã xác minh' : 'Chưa xác minh',
+      },
+      {
+        label: 'Bảo mật 2FA',
+        value: (source['2fa'] ?? source.twofa) ? 'Đang bật' : 'Đang tắt',
+      },
     ]
     return rows.filter((row) => row.value !== null && row.value !== undefined && row.value !== '')
   }, [editData, isEditing, profileData])
@@ -465,7 +473,7 @@ export const ProfileContent = () => {
   const profile = (isEditing ? editData : profileData) || user || {}
 
   return (
-    <form onSubmit={handleUpdateProfile} className="max-w-2xl mx-auto space-y-6 pb-28">
+    <form onSubmit={handleUpdateProfile} className="max-w-2xl mx-auto space-y-6 pb-8">
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-6">
         <div className="flex flex-col md:flex-row md:items-center gap-6">
           <div className="relative w-20 h-20 rounded-full overflow-hidden bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center text-2xl font-bold">
@@ -524,7 +532,11 @@ export const ProfileContent = () => {
           <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
             <span className="text-xs text-gray-500">Trạng thái</span>
             <span className="text-sm font-semibold text-gray-900 dark:text-white">
-              {profile.is_active === false ? 'Tạm khóa' : 'Đang hoạt động'}
+              {profile.is_active === false
+                ? 'Tạm khóa'
+                : profile.is_verified === false
+                  ? 'Chưa xác minh'
+                  : 'Đang hoạt động'}
             </span>
           </div>
         </div>
@@ -609,7 +621,7 @@ export const ProfileContent = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-4 left-0 right-0 z-40 px-4">
+      <div className="fixed bottom-20 md:bottom-4 left-0 right-0 z-40 px-4">
         <div className="max-w-2xl mx-auto">
           <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-lg rounded-2xl p-3 flex items-center justify-end gap-2">
             {isEditing ? (
@@ -777,7 +789,7 @@ const ProfilePage = () => {
   return (
     <div className="bg-gray-50 dark:bg-black text-gray-900 dark:text-white min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 px-4 md:px-8 pt-8 pb-20">
+      <main className="flex-1 px-4 md:px-8 pt-2 pb-16">
         <ProfileContent />
       </main>
       <Footer />
