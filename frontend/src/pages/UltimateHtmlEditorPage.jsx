@@ -1272,6 +1272,12 @@ const UltimateHtmlEditorPage = () => {
             if (imgEl) {
               imgEl.src = newSrc
               imgEl.setAttribute('src', newSrc)
+
+              // Album tiles use anchor href as the source for lightbox; keep href synced.
+              const albumLink = imgEl.closest('a.js-album-trigger')
+              if (albumLink) {
+                albumLink.setAttribute('href', newSrc)
+              }
             }
           }
         }
