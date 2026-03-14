@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+      const arr=[1,2,3,4,5];
+      const map = arr.map((num)=>{
+        return num*num;
+      })
+      console.log(map)    
+    
+    const mixedArray = [2, 'hello', true, { key: 'value' }, [1, 2, 3]];
+     const map1 = mixedArray.map((num)=>{
+        return num*num;
+      })   
+    console.log(map1)    
+      for (var i = 0 ; i<3 ;i++ ){
+        setTimeout(()=>console.log(i),100)
+      }
+    </script>
+</body>
+</html>

@@ -58,6 +58,15 @@ const UltimateHtmlEditorPage = () => {
   const [previewHtml, setPreviewHtml] = useState('')
   const [imageData, setImageData] = useState({})
   const [customFieldData, setCustomFieldData] = useState({})
+  
+  // Music settings - stored in HTML content, not database
+  const [musicSettings, setMusicSettings] = useState({
+    music_url: '',
+    music_autoplay: true,
+    music_loop: true,
+    music_start_time: '',
+    music_end_time: ''
+  })
 
   const [formData, setFormData] = useState({
     title: '',
@@ -67,8 +76,6 @@ const UltimateHtmlEditorPage = () => {
     event_time: '14:00',
     event_location: '',
     event_address: '',
-    music_url: '',
-    music_autoplay: true,
     slug: '', // Use slug instead of subdomain
     visibility: 'private' // Add visibility field (public/private/password)
   })
@@ -77,6 +84,301 @@ const UltimateHtmlEditorPage = () => {
   const debouncedFormData = useDebounce(formData, 500)
   const debouncedImageData = useDebounce(imageData, 500)
   const debouncedCustomFieldData = useDebounce(customFieldData, 500)
+  const debouncedMusicSettings = useDebounce(musicSettings, 500)
+
+  // Helper functions to manage music settings in HTML content
+  const extractMusicFromHtml = (htmlContent) => {
+    if (!htmlContent) return {
+      music_url: '',
+      music_autoplay: true,
+      music_loop: true,
+      music_start_time: '',
+      music_end_time: ''
+    }
+
+    // Look for music settings in HTML comments
+    const musicCommentRegex = /<!--\s*MUSIC_SETTINGS:\s*({.*?})\s*-->/s
+    const match = htmlContent.match(musicCommentRegex)
+    
+    if (match) {
+      try {
+        const parsed = JSON.parse(match[1])
+        // Ensure all required fields exist with defaults
+        return {
+          music_url: parsed.music_url || '',
+          music_autoplay: parsed.music_autoplay !== undefined ? parsed.music_autoplay : true,
+          music_loop: parsed.music_loop !== undefined ? parsed.music_loop : true,
+          music_start_time: parsed.music_start_time || '',
+          music_end_time: parsed.music_end_time || ''
+        }
+      } catch (e) {
+        console.warn('Failed to parse music settings from HTML:', e)
+      }
+    }
+
+    return {
+      music_url: '',
+      music_autoplay: true,
+      music_loop: true,
+      music_start_time: '',
+      music_end_time: ''
+    }
+  }
+
+  const injectMusicIntoHtml = (htmlContent, musicData) => {
+    if (!htmlContent) return htmlContent
+
+    // Ensure musicData has all required fields
+    const safeMusicData = {
+      music_url: musicData?.music_url || '',
+      music_autoplay: musicData?.music_autoplay !== undefined ? musicData.music_autoplay : true,
+      music_loop: musicData?.music_loop !== undefined ? musicData.music_loop : true,
+      music_start_time: musicData?.music_start_time || '',
+      music_end_time: musicData?.music_end_time || ''
+    }
+
+    // Remove existing music settings comment and player
+    let cleanHtml = htmlContent
+      .replace(/<!--\s*MUSIC_SETTINGS:\s*{.*?}\s*-->/s, '')
+      .replace(/<div id="music-player"[\s\S]*?<\/script>/g, '')
+    
+    // Add music settings comment at the beginning
+    const musicComment = `<!-- MUSIC_SETTINGS: ${JSON.stringify(safeMusicData)} -->`
+    
+    // Add music player if URL exists
+    let musicPlayerHtml = ''
+    if (safeMusicData.music_url) {
+      const isYouTube = safeMusicData.music_url.includes('youtube.com') || safeMusicData.music_url.includes('youtu.be')
+      
+      if (isYouTube) {
+        // Extract YouTube video ID with better error handling
+        let youtubeVideoId = ''
+        const urlPatterns = [
+          /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/,
+          /youtube\.com\/embed\/([^&\s]+)/
+        ]
+        for (const pattern of urlPatterns) {
+          const match = safeMusicData.music_url.match(pattern)
+          if (match) {
+            youtubeVideoId = match[1]
+            break
+          }
+        }
+
+        if (youtubeVideoId) {
+          const startTime = safeMusicData.music_start_time ? parseInt(safeMusicData.music_start_time) : 0
+          const endTime = safeMusicData.music_end_time ? parseInt(safeMusicData.music_end_time) : 0
+          
+          musicPlayerHtml = `
+            <div id="music-player" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+              <div id="youtube-player-container" style="display: none;">
+                <div id="youtube-player"></div>
+              </div>
+              <button id="music-toggle" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                <svg id="play-icon" style="display: ${!safeMusicData.music_autoplay ? 'block' : 'none'}; width: 24px; height: 24px;" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <svg id="pause-icon" style="display: ${safeMusicData.music_autoplay ? 'block' : 'none'}; width: 24px; height: 24px;" fill="white" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
+              </button>
+            </div>
+            <script>
+              (function() {
+                try {
+                  var player = null;
+                  var isPlaying = ${safeMusicData.music_autoplay ? 'true' : 'false'};
+                  var toggle = document.getElementById('music-toggle');
+                  var playIcon = document.getElementById('play-icon');
+                  var pauseIcon = document.getElementById('pause-icon');
+                  var startTime = ${startTime || 0};
+                  var endTime = ${endTime || 0};
+                  var shouldLoop = ${safeMusicData.music_loop ? 'true' : 'false'};
+                  var videoId = '${youtubeVideoId}';
+                  
+                  function initializePlayer() {
+                    if (typeof YT === 'undefined' || !YT.Player) {
+                      setTimeout(initializePlayer, 500);
+                      return;
+                    }
+                    
+                    try {
+                      player = new YT.Player('youtube-player', {
+                        height: '0',
+                        width: '0',
+                        videoId: videoId,
+                        playerVars: {
+                          autoplay: ${safeMusicData.music_autoplay ? 1 : 0},
+                          controls: 0,
+                          disablekb: 1,
+                          fs: 0,
+                          modestbranding: 1,
+                          playsinline: 1,
+                          start: startTime,
+                          end: endTime > 0 ? endTime : undefined
+                        },
+                        events: {
+                          onReady: function(event) {
+                            if (${safeMusicData.music_autoplay ? 'true' : 'false'}) {
+                              event.target.playVideo();
+                            }
+                          },
+                          onStateChange: function(event) {
+                            if (event.data === 0 && shouldLoop) {
+                              if (startTime > 0) {
+                                player.seekTo(startTime);
+                              }
+                              player.playVideo();
+                            }
+                            
+                            if (event.data === 1) {
+                              isPlaying = true;
+                              if(playIcon) playIcon.style.display = 'none';
+                              if(pauseIcon) pauseIcon.style.display = 'block';
+                            } else if (event.data === 2 || event.data === 0) {
+                              isPlaying = false;
+                              if(playIcon) playIcon.style.display = 'block';
+                              if(pauseIcon) pauseIcon.style.display = 'none';
+                            }
+                          }
+                        }
+                      });
+                    } catch (e) {
+                      console.warn('YouTube player initialization failed');
+                    }
+                  }
+                  
+                  // Load YouTube API if not already loaded
+                  if (typeof YT === 'undefined') {
+                    var tag = document.createElement('script');
+                    tag.src = 'https://www.youtube.com/iframe_api';
+                    tag.onload = function() {
+                      window.onYouTubeIframeAPIReady = initializePlayer;
+                    };
+                    var firstScriptTag = document.getElementsByTagName('script')[0];
+                    if (firstScriptTag && firstScriptTag.parentNode) {
+                      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+                    }
+                  } else {
+                    initializePlayer();
+                  }
+                  
+                  if (toggle) {
+                    toggle.addEventListener('click', function() {
+                      if (!player) return;
+                      try {
+                        if (isPlaying) {
+                          player.pauseVideo();
+                        } else {
+                          player.playVideo();
+                        }
+                      } catch (e) {
+                        console.warn('YouTube player control failed');
+                      }
+                    });
+                  }
+                } catch (e) {
+                  console.warn('Music player setup failed');
+                }
+              })();
+            </script>
+          `
+        }
+      } else {
+        // Regular MP3 player with better error handling
+        const startTime = safeMusicData.music_start_time ? parseInt(safeMusicData.music_start_time) : 0
+        const endTime = safeMusicData.music_end_time ? parseInt(safeMusicData.music_end_time) : 0
+        
+        musicPlayerHtml = `
+          <div id="music-player" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+            <audio id="background-music" ${safeMusicData.music_autoplay ? 'autoplay' : ''} ${safeMusicData.music_loop ? 'loop' : ''} preload="metadata">
+              <source src="${safeMusicData.music_url}" type="audio/mpeg">
+            </audio>
+            <button id="music-toggle" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+              <svg id="play-icon" style="display: ${safeMusicData.music_autoplay ? 'none' : 'block'}; width: 24px; height: 24px;" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <svg id="pause-icon" style="display: ${safeMusicData.music_autoplay ? 'block' : 'none'}; width: 24px; height: 24px;" fill="white" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
+            </button>
+          </div>
+          <script>
+            (function() {
+              try {
+                var audio = document.getElementById('background-music');
+                var toggle = document.getElementById('music-toggle');
+                var playIcon = document.getElementById('play-icon');
+                var pauseIcon = document.getElementById('pause-icon');
+                var startTime = ${startTime || 0};
+                var endTime = ${endTime || 0};
+                var shouldLoop = ${safeMusicData.music_loop ? 'true' : 'false'};
+
+                if (audio) {
+                  if (startTime > 0) {
+                    audio.currentTime = startTime;
+                  }
+
+                  audio.addEventListener('timeupdate', function() {
+                    if (endTime > 0 && audio.currentTime >= endTime) {
+                      if (shouldLoop) {
+                        audio.currentTime = startTime;
+                        audio.play().catch(function(e) { 
+                          console.log('Play error:', e); 
+                        });
+                      } else {
+                        audio.pause();
+                        audio.currentTime = startTime;
+                      }
+                    }
+                  });
+
+                  audio.addEventListener('ended', function() {
+                    if (shouldLoop && endTime === 0) {
+                      audio.currentTime = startTime;
+                      audio.play().catch(function(e) { 
+                        console.log('Play error:', e); 
+                      });
+                    }
+                  });
+
+                  audio.addEventListener('error', function(e) {
+                    console.warn('Audio loading failed');
+                  });
+                }
+
+                if (toggle && audio) {
+                  toggle.addEventListener('click', function() {
+                    try {
+                      if (audio.paused) {
+                        audio.play().catch(function(e) { 
+                          console.log('Play error:', e); 
+                        });
+                        if(playIcon) playIcon.style.display = 'none';
+                        if(pauseIcon) pauseIcon.style.display = 'block';
+                      } else {
+                        audio.pause();
+                        if(playIcon) playIcon.style.display = 'block';
+                        if(pauseIcon) pauseIcon.style.display = 'none';
+                      }
+                    } catch (e) {
+                      console.warn('Audio control failed');
+                    }
+                  });
+                }
+              } catch (e) {
+                console.warn('Music player setup failed');
+              }
+            })();
+          </script>
+        `
+      }
+    }
+
+    // Insert music comment and player before closing body tag
+    const bodyCloseIndex = cleanHtml.lastIndexOf('</body>')
+    if (bodyCloseIndex !== -1) {
+      return cleanHtml.slice(0, bodyCloseIndex) + 
+             musicComment + '\n' + 
+             musicPlayerHtml + '\n' + 
+             cleanHtml.slice(bodyCloseIndex)
+    } else {
+      // If no </body> tag, append to end
+      return cleanHtml + '\n' + musicComment + '\n' + musicPlayerHtml
+    }
+  }
 
   // Push to history when state stabilizes
   useEffect(() => {
@@ -92,7 +394,8 @@ const UltimateHtmlEditorPage = () => {
     const currentState = {
       formData: debouncedFormData,
       imageData: debouncedImageData,
-      customFieldData: debouncedCustomFieldData
+      customFieldData: debouncedCustomFieldData,
+      musicSettings: debouncedMusicSettings
     }
 
     // Get current head
@@ -110,7 +413,7 @@ const UltimateHtmlEditorPage = () => {
       setHistory(newHistory)
       setHistoryIndex(newHistory.length - 1)
     }
-  }, [debouncedFormData, debouncedImageData, debouncedCustomFieldData, invitation])
+  }, [debouncedFormData, debouncedImageData, debouncedCustomFieldData, debouncedMusicSettings, invitation])
 
   const performUndo = useCallback(() => {
     if (historyIndex > 0) {
@@ -122,6 +425,13 @@ const UltimateHtmlEditorPage = () => {
       setFormData(prevState.formData)
       setImageData(prevState.imageData)
       setCustomFieldData(prevState.customFieldData)
+      setMusicSettings(prevState.musicSettings || {
+        music_url: '',
+        music_autoplay: true,
+        music_loop: true,
+        music_start_time: '',
+        music_end_time: ''
+      })
 
       // Force Iframe Refresh
       if (lastRenderedHtmlRef.current) lastRenderedHtmlRef.current = ''
@@ -138,6 +448,13 @@ const UltimateHtmlEditorPage = () => {
       setFormData(nextState.formData)
       setImageData(nextState.imageData)
       setCustomFieldData(nextState.customFieldData)
+      setMusicSettings(nextState.musicSettings || {
+        music_url: '',
+        music_autoplay: true,
+        music_loop: true,
+        music_start_time: '',
+        music_end_time: ''
+      })
 
       // Force Iframe Refresh
       if (lastRenderedHtmlRef.current) lastRenderedHtmlRef.current = ''
@@ -195,13 +512,77 @@ const UltimateHtmlEditorPage = () => {
       return
     }
 
-    // 3. Render Procedure
+    // 3. Render Procedure with error handling
     const scrollX = win.scrollX || 0
     const scrollY = win.scrollY || 0
 
-    doc.open()
-    doc.write(previewHtml)
-    doc.close()
+    try {
+      // Validate and sanitize HTML before writing
+      let htmlToWrite = previewHtml
+      
+      if (!htmlToWrite || !htmlToWrite.trim()) {
+        htmlToWrite = '<html><head><title>Loading</title></head><body><p>Loading...</p></body></html>'
+      } else {
+        // More aggressive HTML cleaning and validation
+        htmlToWrite = htmlToWrite
+          // Remove all script tags that might cause syntax errors
+          .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+          // Remove problematic style blocks
+          .replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
+          // Fix unescaped characters
+          .replace(/&(?![a-zA-Z0-9#]{1,6};)/g, '&amp;')
+          // Remove malformed comments
+          .replace(/<!--[\s\S]*?-->/g, '')
+          // Remove any remaining problematic characters
+          .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+          // Ensure proper HTML structure
+          .trim()
+        
+        // Ensure HTML has proper structure
+        if (!htmlToWrite.includes('<html')) {
+          htmlToWrite = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Preview</title></head><body>${htmlToWrite}</body></html>`
+        }
+        
+        // Final validation - check for basic HTML structure
+        if (!htmlToWrite.includes('<body') || !htmlToWrite.includes('</body>')) {
+          htmlToWrite = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Preview</title></head><body><div>${htmlToWrite}</div></body></html>`
+        }
+      }
+      
+      doc.open()
+      doc.write(htmlToWrite)
+      doc.close()
+    } catch (error) {
+      console.warn('Failed to write to iframe document:', error)
+      // Enhanced fallback with better error handling
+      try {
+        // Use a completely safe minimal document
+        const safeHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Preview</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; text-align: center; color: #666; }
+    .error { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <div class="error">
+    <h3>Preview Temporarily Unavailable</h3>
+    <p>The preview is being processed. Please save your changes and try again.</p>
+  </div>
+</body>
+</html>`
+        
+        doc.open()
+        doc.write(safeHtml)
+        doc.close()
+      } catch (fallbackError) {
+        console.error('All iframe write methods failed:', fallbackError)
+        return
+      }
+    }
 
     // Update Ref
     lastRenderedHtmlRef.current = previewHtml
@@ -863,7 +1244,7 @@ const UltimateHtmlEditorPage = () => {
     if ((!invitation && !searchParams.get('previewMode')) || loading) return
 
     // Skip if data hasn't changed
-    const currentData = JSON.stringify({ formData, imageData, customFieldData, htmlCode })
+    const currentData = JSON.stringify({ formData, imageData, customFieldData, musicSettings, htmlCode })
     if (currentData === lastSavedData) {
       setHasUnsavedChanges(false)
       return
@@ -882,17 +1263,47 @@ const UltimateHtmlEditorPage = () => {
       try {
         console.log('🔄 Auto-saving...')
 
-        // Compress HTML
-        const compressedHtml = htmlCode
+        // Compile HTML with current music settings
+        let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData, musicSettings)
+
+        // Aggressive compression to avoid Chrome storage limits
+        cleanHtml = cleanHtml
+          // Remove all scripts first to avoid syntax errors
+          .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+          // Remove editor-styles
+          .replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
+          // Remove comments except music settings
+          .replace(/<!--(?!\s*MUSIC_SETTINGS:)[\s\S]*?-->/g, '')
+          // Compress whitespace
           .replace(/\s+/g, ' ')
           .replace(/>\s+</g, '><')
+          .replace(/\n\s*/g, '')
           .trim()
+
+        // Re-inject only essential music settings (no player HTML for storage)
+        const musicComment = `<!-- MUSIC_SETTINGS: ${JSON.stringify(musicSettings)} -->`
+        const bodyCloseIndex = cleanHtml.lastIndexOf('</body>')
+        if (bodyCloseIndex !== -1) {
+          cleanHtml = cleanHtml.slice(0, bodyCloseIndex) + musicComment + cleanHtml.slice(bodyCloseIndex)
+        } else {
+          cleanHtml += musicComment
+        }
+
+        // Check size before saving
+        const sizeInBytes = new Blob([cleanHtml]).size
+        const sizeInMB = sizeInBytes / (1024 * 1024)
+        
+        if (sizeInMB > 10) {
+          console.warn('HTML content too large for auto-save:', sizeInMB, 'MB')
+          toast.warning('⚠️ Nội dung quá lớn, vui lòng lưu thủ công')
+          return
+        }
 
         // Auto-save without blocking UI (don't use setSaving)
         await invitationService.update(invitation.uuid, {
           ...formData,
           event_date: formData.event_date || null, // Fix: Send null if empty to avoid SQL error
-          html_content: compressedHtml, // Invitation uses html_content
+          html_content: cleanHtml, // Invitation uses html_content
           image_data: JSON.stringify(imageData),
           custom_field_data: JSON.stringify(customFieldData),
           status: invitation.status // Keep current status
@@ -904,6 +1315,27 @@ const UltimateHtmlEditorPage = () => {
         toast.success('✅ Đã tự động lưu')
       } catch (error) {
         console.error('❌ Auto-save failed:', error)
+        // Handle Chrome storage errors specifically
+        if (error.message && (error.message.includes('FILE_ERROR_NO_SPACE') || error.message.includes('storage'))) {
+          console.warn('Chrome storage full, skipping auto-save')
+          toast.warning('⚠️ Bộ nhớ trình duyệt đầy, vui lòng lưu thủ công')
+          
+          // Try to clear some browser storage
+          try {
+            if (typeof localStorage !== 'undefined') {
+              // Clear old data but keep essential items
+              const keysToKeep = ['auth_token', 'user_data']
+              const allKeys = Object.keys(localStorage)
+              allKeys.forEach(key => {
+                if (!keysToKeep.some(keepKey => key.includes(keepKey))) {
+                  localStorage.removeItem(key)
+                }
+              })
+            }
+          } catch (cleanupError) {
+            console.warn('Storage cleanup failed:', cleanupError)
+          }
+        }
         // Don't show error toast for auto-save failures to avoid annoying user
       }
     }, 300000) // 5 minutes delay (300 seconds)
@@ -914,7 +1346,7 @@ const UltimateHtmlEditorPage = () => {
     return () => {
       if (timer) clearTimeout(timer)
     }
-  }, [formData, imageData, customFieldData, htmlCode, invitation, loading])
+  }, [formData, imageData, customFieldData, musicSettings, htmlCode, invitation, loading])
 
   const loadInvitation = async () => {
     try {
@@ -951,6 +1383,9 @@ const UltimateHtmlEditorPage = () => {
           event_address: '85 Thoại Ngọc Hầu, Hòa Thạnh, Tân Phú, TP. HCM',
           music_url: '',
           music_autoplay: true,
+          music_loop: true,
+          music_start_time: '',
+          music_end_time: '',
           slug: 'preview-slug',
           visibility: 'private'
         }
@@ -963,6 +1398,7 @@ const UltimateHtmlEditorPage = () => {
           formData: loadedFormData,
           imageData: {},
           customFieldData: {},
+          musicSettings: extractMusicFromHtml(previewHtml),
           htmlCode: previewHtml
         })
         setLastSavedData(initialData)
@@ -988,8 +1424,13 @@ const UltimateHtmlEditorPage = () => {
         // Handle html_content - Invitation uses html_content (not html_template)
         const htmlContent = res.data.html_content || ''
         setHtmlCode(htmlContent)
+        
+        // Extract music settings from HTML content
+        const extractedMusicSettings = extractMusicFromHtml(htmlContent)
+        setMusicSettings(extractedMusicSettings)
 
-        console.log('✅ Set htmlCode length:', htmlContent.length);
+        console.log('✅ Set htmlCode length:', htmlContent.length)
+        console.log('🎵 Extracted music settings:', extractedMusicSettings)
 
         // If html_content is empty but we have a template, try to load template HTML
         if (!htmlContent && res.data.template_id) {
@@ -1021,6 +1462,11 @@ const UltimateHtmlEditorPage = () => {
             if (templateHtml) {
               console.log('✅ Loaded HTML from template:', templateRes.data.name)
               setHtmlCode(templateHtml)
+              
+              // Extract music settings from template HTML
+              const extractedMusicSettings = extractMusicFromHtml(templateHtml)
+              setMusicSettings(extractedMusicSettings)
+              console.log('🎵 Extracted music from template:', extractedMusicSettings)
 
               // Auto-save the HTML to the invitation
               try {
@@ -1055,6 +1501,9 @@ const UltimateHtmlEditorPage = () => {
           event_address: res.data.event_address || '',
           music_url: res.data.music_url || '',
           music_autoplay: res.data.music_autoplay !== undefined ? res.data.music_autoplay : true,
+          music_loop: res.data.music_loop !== undefined ? res.data.music_loop : true,
+          music_start_time: res.data.music_start_time || '',
+          music_end_time: res.data.music_end_time || '',
           slug: res.data.slug || '', // Load slug from backend
           visibility: res.data.visibility || 'private' // Load visibility from backend
         }
@@ -1082,6 +1531,7 @@ const UltimateHtmlEditorPage = () => {
           formData: loadedFormData,
           imageData: res.data.image_data ? JSON.parse(res.data.image_data) : {},
           customFieldData: res.data.custom_field_data ? JSON.parse(res.data.custom_field_data) : {},
+          musicSettings: extractedMusicSettings,
           htmlCode: htmlContent
         })
         setLastSavedData(initialData)
@@ -1106,37 +1556,53 @@ const UltimateHtmlEditorPage = () => {
   }
 
   // Helper to compile HTML with current data (Synchronous)
-  const compileHtml = (templateHtml, currentFormData, currentImageData, currentCustomFieldData) => {
+  const compileHtml = (templateHtml, currentFormData, currentImageData, currentCustomFieldData, currentMusicSettings) => {
     let html = templateHtml || ''
 
-    // 1. Text Replacements (Regex is fine/faster for placeholders)
-    Object.keys(currentFormData).forEach(key => {
-      const value = currentFormData[key]
-      if (value && key !== 'music_url' && key !== 'music_autoplay') {
-        if (key === 'event_date') {
-          const date = new Date(value)
-          // Check validity
-          if (!isNaN(date.getTime())) {
-            const formatted = date.toLocaleDateString('vi-VN', {
-              weekday: 'long',
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric'
-            })
-            html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), formatted)
-          } else {
-            html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value)
-          }
-        } else {
-          html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value)
-        }
-      }
-    })
+    // Early validation - ensure we have valid HTML to work with
+    if (!html || html.trim().length === 0) {
+      return '<!DOCTYPE html><html><head><title>Empty Template</title></head><body><p>No content available</p></body></html>'
+    }
 
-    // 2. DOM Replacements (Text & Images)
     try {
+      // 1. Text Replacements (Regex is fine/faster for placeholders)
+      Object.keys(currentFormData).forEach(key => {
+        const value = currentFormData[key]
+        if (value && key !== 'music_url' && key !== 'music_autoplay' && key !== 'music_loop' && key !== 'music_start_time' && key !== 'music_end_time') {
+          if (key === 'event_date') {
+            const date = new Date(value)
+            // Check validity
+            if (!isNaN(date.getTime())) {
+              const formatted = date.toLocaleDateString('vi-VN', {
+                weekday: 'long',
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+              })
+              html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), formatted)
+            } else {
+              html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value)
+            }
+          } else {
+            // Escape special characters in replacement value to prevent HTML injection
+            const safeValue = String(value).replace(/[<>&"']/g, function(match) {
+              const escapeMap = { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#x27;' }
+              return escapeMap[match]
+            })
+            html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), safeValue)
+          }
+        }
+      })
+
+      // 2. DOM Replacements (Text & Images)
       const parser = new DOMParser()
       const doc = parser.parseFromString(html, 'text/html')
+
+      // Check if parsing was successful
+      if (!doc || !doc.documentElement) {
+        console.warn('HTML parsing failed, using original HTML')
+        return injectMusicIntoHtml(html, currentMusicSettings || {})
+      }
 
       // 2a. Update Custom Text Fields
       Object.keys(currentCustomFieldData).forEach(key => {
@@ -1145,7 +1611,7 @@ const UltimateHtmlEditorPage = () => {
 
         const els = doc.querySelectorAll(`[data-editable="${key}"]`)
         els.forEach(el => {
-          const htmlContent = val ? val.replace(/\n/g, '<br/>') : '';
+          const htmlContent = val ? String(val).replace(/\n/g, '<br/>') : '';
 
           let targetEl = el.querySelector('h1, h2, h3, h4, h5, h6, p, ul, ol, div');
           if (!targetEl) targetEl = el.querySelector('span, b, strong, i, em, mark, small') || el;
@@ -1215,58 +1681,36 @@ const UltimateHtmlEditorPage = () => {
         }
       })
 
-      // Music Player Injection
-      if (currentFormData.music_url) {
-        const musicPlayer = `
-                <div id="music-player" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
-                  <audio id="background-music" ${currentFormData.music_autoplay ? 'autoplay' : ''} loop>
-                    <source src="${currentFormData.music_url}" type="audio/mpeg">
-                  </audio>
-                  <button id="music-toggle" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
-                    <svg id="play-icon" style="display: ${currentFormData.music_autoplay ? 'none' : 'block'}; width: 24px; height: 24px;" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    <svg id="pause-icon" style="display: ${currentFormData.music_autoplay ? 'block' : 'none'}; width: 24px; height: 24px;" fill="white" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
-                  </button>
-                </div>
-                <script>
-                  (function() {
-                    var audio = document.getElementById('background-music');
-                    var toggle = document.getElementById('music-toggle');
-                    var playIcon = document.getElementById('play-icon');
-                    var pauseIcon = document.getElementById('pause-icon');
-
-                    if(toggle && audio) {
-                        toggle.addEventListener('click', function() {
-                          if (audio.paused) {
-                            audio.play().catch(e => console.log('Play error', e));
-                            if(playIcon) playIcon.style.display = 'none';
-                            if(pauseIcon) pauseIcon.style.display = 'block';
-                          } else {
-                            audio.pause();
-                            if(playIcon) playIcon.style.display = 'block';
-                            if(pauseIcon) pauseIcon.style.display = 'none';
-                          }
-                        });
-                    }
-                  })();
-                </script>
-              `
-        const tempDiv = doc.createElement('div');
-        tempDiv.innerHTML = musicPlayer;
-        while (tempDiv.firstChild) {
-          doc.body.appendChild(tempDiv.firstChild);
-        }
-      }
-
+      // Get the compiled HTML
       html = '<!DOCTYPE html>' + doc.documentElement.outerHTML
+
+      // 3. Inject music settings and player into HTML
+      html = injectMusicIntoHtml(html, currentMusicSettings || {})
+
     } catch (e) {
       console.error("Compile HTML Error", e)
+      // Return safe fallback HTML
+      return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Compilation Error</title>
+</head>
+<body>
+  <div style="padding: 20px; text-align: center; color: #666;">
+    <h3>Template Processing Error</h3>
+    <p>There was an issue processing the template. Please save and reload the page.</p>
+  </div>
+</body>
+</html>`
     }
+    
     return html
   }
 
 
   const updatePreview = () => {
-    const html = compileHtml(htmlCode, debouncedFormData, debouncedImageData, debouncedCustomFieldData)
+    const html = compileHtml(htmlCode, debouncedFormData, debouncedImageData, debouncedCustomFieldData, debouncedMusicSettings)
     setPreviewHtml(html)
   }
 
@@ -1434,7 +1878,7 @@ const UltimateHtmlEditorPage = () => {
       setSaving(true)
 
       // COMPILE HTML with CURRENT state (not debounced) to capture latest edits
-      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData)
+      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData, musicSettings)
 
       // Remove editor-styles
       cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
@@ -1483,7 +1927,7 @@ const UltimateHtmlEditorPage = () => {
       setSaving(true)
 
       // COMPILE HTML with CURRENT state
-      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData)
+      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData, musicSettings)
 
       // Remove editor-styles
       cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
@@ -1504,7 +1948,7 @@ const UltimateHtmlEditorPage = () => {
       })
 
       // Update lastSavedData and clear unsaved changes flag
-      const currentData = JSON.stringify({ formData, imageData, customFieldData, htmlCode })
+      const currentData = JSON.stringify({ formData, imageData, customFieldData, musicSettings, htmlCode })
       setLastSavedData(currentData)
       setHasUnsavedChanges(false)
 
@@ -1549,7 +1993,7 @@ const UltimateHtmlEditorPage = () => {
       setSaving(true)
 
       // COMPILE HTML with CURRENT state
-      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData)
+      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData, musicSettings)
 
       // Remove editor-styles
       cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
@@ -1610,7 +2054,7 @@ const UltimateHtmlEditorPage = () => {
       setSaving(true)
 
       // COMPILE HTML with CURRENT state
-      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData)
+      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData, musicSettings)
 
       // Remove editor-styles
       cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
@@ -1801,6 +2245,120 @@ const UltimateHtmlEditorPage = () => {
                       </div>
                     )}
                   </div>
+                </div>
+              </div>
+
+              {/* Music Settings Section */}
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-pink-600">music_note</span> Nhạc nền
+                </h3>
+                <div className="space-y-4">
+                  {/* Music URL Input */}
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 block">
+                      Link nhạc (YouTube hoặc MP3)
+                    </label>
+                    <input
+                      type="text"
+                      name="music_url"
+                      value={musicSettings.music_url}
+                      onChange={(e) => setMusicSettings(prev => ({ ...prev, music_url: e.target.value }))}
+                      placeholder="https://www.youtube.com/watch?v=... hoặc https://example.com/song.mp3"
+                      className="w-full bg-white dark:bg-gray-900 text-sm font-medium text-gray-900 dark:text-white px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 outline-none transition-all"
+                    />
+                    <p className="text-[9px] text-gray-500 dark:text-gray-400 mt-1">
+                      🎵 Hỗ trợ YouTube và file MP3 trực tiếp
+                    </p>
+                  </div>
+
+                  {/* Music Controls */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Autoplay Toggle */}
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+                      <label className="flex items-center justify-between cursor-pointer">
+                        <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">Tự động phát</span>
+                        <input
+                          type="checkbox"
+                          name="music_autoplay"
+                          checked={musicSettings.music_autoplay}
+                          onChange={(e) => setMusicSettings(prev => ({ ...prev, music_autoplay: e.target.checked }))}
+                          className="w-5 h-5 text-pink-600 rounded focus:ring-2 focus:ring-pink-500"
+                        />
+                      </label>
+                    </div>
+
+                    {/* Loop Toggle */}
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+                      <label className="flex items-center justify-between cursor-pointer">
+                        <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">Lặp lại</span>
+                        <input
+                          type="checkbox"
+                          name="music_loop"
+                          checked={musicSettings.music_loop}
+                          onChange={(e) => setMusicSettings(prev => ({ ...prev, music_loop: e.target.checked }))}
+                          className="w-5 h-5 text-pink-600 rounded focus:ring-2 focus:ring-pink-500"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Time Range Controls */}
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3 block">
+                      Cắt đoạn nhạc (tùy chọn)
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      {/* Start Time */}
+                      <div>
+                        <label className="text-[9px] text-gray-500 dark:text-gray-400 mb-1 block">Bắt đầu (giây)</label>
+                        <input
+                          type="number"
+                          name="music_start_time"
+                          value={musicSettings.music_start_time}
+                          onChange={(e) => setMusicSettings(prev => ({ ...prev, music_start_time: e.target.value }))}
+                          placeholder="0"
+                          min="0"
+                          className="w-full bg-white dark:bg-gray-900 text-sm font-medium text-gray-900 dark:text-white px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 outline-none transition-all"
+                        />
+                      </div>
+
+                      {/* End Time */}
+                      <div>
+                        <label className="text-[9px] text-gray-500 dark:text-gray-400 mb-1 block">Kết thúc (giây)</label>
+                        <input
+                          type="number"
+                          name="music_end_time"
+                          value={musicSettings.music_end_time}
+                          onChange={(e) => setMusicSettings(prev => ({ ...prev, music_end_time: e.target.value }))}
+                          placeholder="Không giới hạn"
+                          min="0"
+                          className="w-full bg-white dark:bg-gray-900 text-sm font-medium text-gray-900 dark:text-white px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 outline-none transition-all"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-[9px] text-gray-500 dark:text-gray-400 mt-2">
+                      💡 VD: Bắt đầu = 30, Kết thúc = 90 → Phát từ giây thứ 30 đến 90
+                    </p>
+                  </div>
+
+                  {/* Music Preview Info */}
+                  {musicSettings.music_url && (
+                    <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="material-symbols-outlined text-green-600 text-[18px]">check_circle</span>
+                        <span className="text-xs font-semibold text-green-900 dark:text-green-100">Đã cấu hình nhạc nền</span>
+                      </div>
+                      <div className="text-[10px] text-green-800 dark:text-green-200 space-y-1">
+                        <p>• Loại: {musicSettings.music_url.includes('youtube') || musicSettings.music_url.includes('youtu.be') ? 'YouTube' : 'MP3'}</p>
+                        <p>• Tự động phát: {musicSettings.music_autoplay ? 'Có' : 'Không'}</p>
+                        <p>• Lặp lại: {musicSettings.music_loop ? 'Có' : 'Không'}</p>
+                        {(musicSettings.music_start_time || musicSettings.music_end_time) && (
+                          <p>• Đoạn phát: {musicSettings.music_start_time || 0}s - {musicSettings.music_end_time || 'Hết'}s</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
