@@ -570,20 +570,91 @@ const CollectionPage = () => {
                       onClick={() => handleTemplateClick(template)}
                     >
                       <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 dark:bg-gray-800">
+                        {/* Main Template Image */}
                         <img
                           src={template.thumbnail || template.thumbnail_url || 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400'}
                           alt={template.name}
-                          className="w-full h-full object-cover transition-opacity duration-300"
+                          className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0"
                         />
+                        
+                        {/* Live Template Preview with CSS Animation - Hidden by default, shown on hover */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="template-preview-container">
+                            <div className="template-preview-wrapper">
+                              <iframe
+                                srcDoc={
+                                  template.html_template || 
+                                  template.designData?.html || 
+                                  (template.designData?.elements ? 
+                                    `<html><body style="margin:0;padding:20px;font-family:sans-serif;background:#f8f9fa;">
+                                      <div style="text-align:center;padding:40px 20px;">
+                                        <h1 style="color:#333;margin-bottom:20px;">${template.name}</h1>
+                                        <p style="color:#666;margin-bottom:30px;">Canvas Template Preview</p>
+                                        <div style="background:white;padding:30px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.1);margin-bottom:30px;">
+                                          <h2 style="color:#333;margin-bottom:15px;">Template Elements</h2>
+                                          <p style="color:#666;">${Object.keys(template.designData.elements || {}).length} interactive elements</p>
+                                        </div>
+                                        <div style="background:white;padding:30px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.1);margin-bottom:30px;">
+                                          <h3 style="color:#333;margin-bottom:15px;">Features</h3>
+                                          <p style="color:#666;">Drag & drop editing, responsive design, premium quality</p>
+                                        </div>
+                                        <div style="background:white;padding:30px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.1);margin-bottom:30px;">
+                                          <h3 style="color:#333;margin-bottom:15px;">Customizable</h3>
+                                          <p style="color:#666;">Easy to personalize with your details and photos</p>
+                                        </div>
+                                        <div style="background:white;padding:30px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.1);margin-bottom:30px;">
+                                          <h3 style="color:#333;margin-bottom:15px;">Mobile Friendly</h3>
+                                          <p style="color:#666;">Looks perfect on all devices and screen sizes</p>
+                                        </div>
+                                        <div style="background:white;padding:30px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.1);">
+                                          <h3 style="color:#333;margin-bottom:15px;">Ready to Use</h3>
+                                          <p style="color:#666;">Click "Sử dụng" to start editing this template</p>
+                                        </div>
+                                      </div>
+                                    </body></html>` 
+                                    : `<html><body style="margin:0;padding:20px;font-family:sans-serif;background:#f8f9fa;">
+                                        <div style="text-align:center;padding:40px 20px;">
+                                          <h1 style="color:#333;margin-bottom:20px;">${template.name}</h1>
+                                          <p style="color:#666;margin-bottom:30px;">Wedding Invitation Template</p>
+                                          <div style="background:white;padding:30px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.1);margin-bottom:30px;">
+                                            <h2 style="color:#333;margin-bottom:15px;">Elegant Design</h2>
+                                            <p style="color:#666;">Beautiful typography and layout for your special day</p>
+                                          </div>
+                                          <div style="background:white;padding:30px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.1);margin-bottom:30px;">
+                                            <h3 style="color:#333;margin-bottom:15px;">Customizable</h3>
+                                            <p style="color:#666;">Easy to personalize with your details and photos</p>
+                                          </div>
+                                          <div style="background:white;padding:30px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.1);margin-bottom:30px;">
+                                            <h3 style="color:#333;margin-bottom:15px;">Mobile Friendly</h3>
+                                            <p style="color:#666;">Looks perfect on all devices and screen sizes</p>
+                                          </div>
+                                          <div style="background:white;padding:30px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.1);margin-bottom:30px;">
+                                            <h3 style="color:#333;margin-bottom:15px;">Premium Quality</h3>
+                                            <p style="color:#666;">Professional design with attention to detail</p>
+                                          </div>
+                                          <div style="background:white;padding:30px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.1);">
+                                            <h3 style="color:#333;margin-bottom:15px;">Get Started</h3>
+                                            <p style="color:#666;">Click "Sử dụng" to start creating your invitation</p>
+                                          </div>
+                                        </div>
+                                      </body></html>`)
+                                }
+                                className="template-preview-iframe"
+                                title={`Preview ${template.name}`}
+                              />
+                            </div>
+                          </div>
+                        </div>
+
                         {/* Overlay Actions (Desktop) */}
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
                           <button className="px-6 py-2 bg-white text-black font-bold rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                             Sử dụng
                           </button>
                         </div>
 
                         {template.is_premium && (
-                          <span className="absolute top-3 left-3 px-2 py-1 bg-black/80 backdrop-blur text-white text-[10px] font-bold uppercase tracking-wider rounded">
+                          <span className="absolute top-3 left-3 px-2 py-1 bg-black/80 backdrop-blur text-white text-[10px] font-bold uppercase tracking-wider rounded z-20">
                             Premium
                           </span>
                         )}
@@ -754,6 +825,102 @@ const CollectionPage = () => {
         .mask-gradient-right {
           mask-image: linear-gradient(to right, black 90%, transparent 100%);
           -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
+        }
+        
+        /* Ultra-Smooth CSS-Only Template Preview */
+        .template-preview-container {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          border-radius: inherit;
+          /* GPU acceleration */
+          transform: translateZ(0);
+          will-change: transform;
+          backface-visibility: hidden;
+        }
+        
+        .template-preview-wrapper {
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          position: relative;
+        }
+        
+        .template-preview-iframe {
+          width: 333.33%;
+          height: 500%;
+          border: none;
+          background: white;
+          pointer-events: none;
+          transform-origin: top left;
+          transform: scale(0.3) translateZ(0);
+          /* Ultra-smooth CSS animation */
+          animation: smoothTemplateScroll 8s ease-in-out infinite;
+          /* Performance optimizations */
+          will-change: transform;
+          backface-visibility: hidden;
+          perspective: 1000px;
+        }
+        
+        @keyframes smoothTemplateScroll {
+          0% {
+            transform: scale(0.3) translateZ(0) translateY(0);
+          }
+          45% {
+            transform: scale(0.3) translateZ(0) translateY(-60%);
+          }
+          55% {
+            transform: scale(0.3) translateZ(0) translateY(-60%);
+          }
+          100% {
+            transform: scale(0.3) translateZ(0) translateY(0);
+          }
+        }
+        
+        /* Pause animation when not hovering */
+        .group:not(:hover) .template-preview-iframe {
+          animation-play-state: paused;
+        }
+        
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+          .template-preview-iframe {
+            width: 400%;
+            height: 600%;
+            transform: scale(0.25) translateZ(0);
+            animation: smoothTemplateScrollMobile 8s ease-in-out infinite;
+          }
+          
+          @keyframes smoothTemplateScrollMobile {
+            0% {
+              transform: scale(0.25) translateZ(0) translateY(0);
+            }
+            45% {
+              transform: scale(0.25) translateZ(0) translateY(-50%);
+            }
+            55% {
+              transform: scale(0.25) translateZ(0) translateY(-50%);
+            }
+            100% {
+              transform: scale(0.25) translateZ(0) translateY(0);
+            }
+          }
+        }
+        
+        /* Smooth transitions */
+        .group .template-preview-container {
+          transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Reduce motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+          .template-preview-iframe {
+            animation: none;
+            transform: scale(0.3) translateZ(0);
+          }
         }
       `}</style>
 

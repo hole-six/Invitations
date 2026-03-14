@@ -19,6 +19,7 @@ const ManagementPage = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [activeFilter, setActiveFilter] = useState('all') // 'all', 'draft', 'published', 'archived'
   const [openMenuId, setOpenMenuId] = useState(null) // For dropdown menus
+  const [previewInvitation, setPreviewInvitation] = useState(null) // For full-screen preview
   const [confirmDialog, setConfirmDialog] = useState({
     show: false,
     type: '', // 'edit', 'copy', 'delete'
@@ -164,6 +165,11 @@ const ManagementPage = () => {
     }
   }
 
+  const handlePreview = (e, invitation) => {
+    e.stopPropagation()
+    setPreviewInvitation(invitation)
+  }
+
   const toggleMenu = (e, id) => {
     e.stopPropagation()
     setOpenMenuId(openMenuId === id ? null : id)
@@ -251,12 +257,16 @@ const ManagementPage = () => {
               >
                 {/* 1. THUMBNAIL AREA */}
                 {/* Mobile: Width 32 (128px), Height Full. Desktop: Width Full, Aspect 4/3 */}
-                <div className="relative w-32 md:w-full h-full md:h-auto md:aspect-[4/3] bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 dark:from-pink-900/20 dark:via-purple-900/20 dark:to-blue-900/20 shrink-0 border-r md:border-r-0 md:border-b border-gray-100 dark:border-gray-800">
-                  {invitation.template_thumbnail ? (
+                <div className="relative w-32 md:w-full h-full md:h-auto md:aspect-[4/3] bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 dark:from-pink-900/20 dark:via-purple-900/20 dark:to-blue-900/20 shrink-0 border-r md:border-r-0 md:border-b border-gray-100 dark:border-gray-800 overflow-hidden">
+                  {invitation.thumbnail_url ? (
                     <img
-                      src={invitation.template_thumbnail}
-                      className="w-full h-full object-cover"
+                      src={invitation.thumbnail_url}
+                      className="w-full h-full object-cover object-center"
                       alt={invitation.title}
+                      style={{
+                        minHeight: '100%',
+                        minWidth: '100%'
+                      }}
                       onError={(e) => {
                         e.target.style.display = 'none'
                         e.target.nextElementSibling.style.display = 'flex'
@@ -266,8 +276,8 @@ const ManagementPage = () => {
                   
                   {/* Fallback placeholder - always render but hide if image loads */}
                   <div 
-                    className="w-full h-full flex flex-col items-center justify-center"
-                    style={{ display: invitation.template_thumbnail ? 'none' : 'flex' }}
+                    className="w-full h-full flex flex-col items-center justify-center absolute inset-0"
+                    style={{ display: invitation.thumbnail_url ? 'none' : 'flex' }}
                   >
                     <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/50 dark:bg-black/30 backdrop-blur flex items-center justify-center mb-2">
                       <span className="material-symbols-outlined text-2xl md:text-4xl text-purple-600 dark:text-purple-400">favorite</span>
@@ -351,6 +361,31 @@ const ManagementPage = () => {
                     )}
                   </div>
 
+                  {/* Mobile Action Buttons - Compact Row */}
+                  <div className="mt-auto flex md:hidden gap-1">
+                    <button
+                      onClick={(e) => handleEdit(e, invitation)}
+                      className="flex-1 flex items-center justify-center gap-1 py-2 rounded-md bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:opacity-80 transition-opacity"
+                    >
+                      <span className="material-symbols-outlined text-[14px]">edit</span>
+                      <span>Sửa</span>
+                    </button>
+                    <button
+                      onClick={(e) => handlePreview(e, invitation)}
+                      className="px-2 py-2 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors"
+                      title="Xem mẫu"
+                    >
+                      <span className="material-symbols-outlined text-[14px]">visibility</span>
+                    </button>
+                    <button
+                      onClick={(e) => handleDuplicate(e, invitation)}
+                      className="px-2 py-2 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors"
+                      title="Sao chép"
+                    >
+                      <span className="material-symbols-outlined text-[14px]">content_copy</span>
+                    </button>
+                  </div>
+
                   {/* Action Buttons - Desktop */}
                   <div className="mt-auto hidden md:flex gap-2">
                     <button
@@ -359,6 +394,13 @@ const ManagementPage = () => {
                     >
                       <span className="material-symbols-outlined text-[18px]">edit</span>
                       Chỉnh sửa
+                    </button>
+                    <button
+                      onClick={(e) => handlePreview(e, invitation)}
+                      className="px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors"
+                      title="Xem mẫu"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">visibility</span>
                     </button>
                     <button
                       onClick={(e) => handleDuplicate(e, invitation)}
@@ -371,45 +413,55 @@ const ManagementPage = () => {
                       <button
                         onClick={(e) => handleViewPublic(e, invitation)}
                         className="px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors"
-                        title="Xem thiệp"
+                        title="Xem công khai"
                       >
-                        <span className="material-symbols-outlined text-[18px]">visibility</span>
+                        <span className="material-symbols-outlined text-[18px]">open_in_new</span>
                       </button>
                     )}
                   </div>
                 </div>
 
-                {/* 3. DROPDOWN MENU (Absolute) */}
+                {/* 3. DROPDOWN MENU (Absolute) - Mobile: Only secondary actions */}
                 {openMenuId === invitation.id && (
-                  <div className="absolute top-10 right-2 md:top-14 md:right-3 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden z-30 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
+                  <div className="absolute top-10 right-2 md:top-14 md:right-3 w-40 md:w-48 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden z-30 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
+                    {/* Desktop: All actions */}
                     <button
                       onClick={(e) => handleEdit(e, invitation)}
-                      className="md:hidden w-full px-4 py-3 text-left text-sm font-bold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 border-b border-gray-100 dark:border-gray-700"
+                      className="hidden md:flex w-full px-4 py-3 text-left text-sm font-bold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 items-center gap-3 border-b border-gray-100 dark:border-gray-700"
                     >
                       <span className="material-symbols-outlined text-gray-700 dark:text-gray-300">edit</span>
                       <span>Chỉnh sửa</span>
                     </button>
                     <button
+                      onClick={(e) => handlePreview(e, invitation)}
+                      className="hidden md:flex w-full px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 items-center gap-3 border-b border-gray-100 dark:border-gray-700"
+                    >
+                      <span className="material-symbols-outlined text-gray-600 dark:text-gray-400">visibility</span>
+                      <span>Xem mẫu</span>
+                    </button>
+                    <button
                       onClick={(e) => handleDuplicate(e, invitation)}
-                      className="w-full px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
+                      className="hidden md:flex w-full px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 items-center gap-3 border-b border-gray-100 dark:border-gray-700"
                     >
                       <span className="material-symbols-outlined text-gray-600 dark:text-gray-400">content_copy</span>
                       <span>Sao chép thiệp</span>
                     </button>
+                    
+                    {/* Mobile & Desktop: Secondary actions */}
                     {invitation.status === 'published' && (
                       <button
                         onClick={(e) => handleViewPublic(e, invitation)}
-                        className="md:hidden w-full px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 border-b border-gray-100 dark:border-gray-700"
+                        className="w-full px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 border-b border-gray-100 dark:border-gray-700"
                       >
-                        <span className="material-symbols-outlined text-gray-600 dark:text-gray-400">visibility</span>
-                        <span>Xem thiệp</span>
+                        <span className="material-symbols-outlined text-gray-600 dark:text-gray-400">open_in_new</span>
+                        <span>Xem công khai</span>
                       </button>
                     )}
                     <button
                       onClick={(e) => handleDelete(e, invitation)}
-                      className="w-full px-4 py-3 text-left text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 flex items-center gap-3"
+                      className="w-full px-4 py-3 text-left text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 flex items-center gap-3 transition-all"
                     >
-                      <span className="material-symbols-outlined text-gray-600 dark:text-gray-400">delete</span>
+                      <span className="material-symbols-outlined text-red-500">delete</span>
                       <span>Xóa thiệp</span>
                     </button>
                   </div>
@@ -504,6 +556,142 @@ const ManagementPage = () => {
       )}
 
       <Footer />
+
+      {/* Full-Screen Preview Modal with Auto-Scroll for Invitations */}
+      {previewInvitation && (
+        <div className="fixed inset-0 z-[9999] bg-black">
+          {/* Back Button - Fixed at top */}
+          <button
+            onClick={() => setPreviewInvitation(null)}
+            className="fixed top-4 left-4 z-[10000] flex items-center gap-2 px-4 py-2 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md text-gray-900 dark:text-white rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-900 transition-all group"
+          >
+            <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span className="font-bold">Quay lại</span>
+          </button>
+
+          {/* Invitation Info - Fixed at top right */}
+          <div className="fixed top-4 right-4 z-[10000] px-4 py-2 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-full shadow-lg">
+            <span className="text-sm font-bold text-gray-900 dark:text-white">{previewInvitation.title || 'Thiệp cưới'}</span>
+          </div>
+
+          {/* Status Badge - Fixed at top center */}
+          <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[10000]">
+            {previewInvitation.status === 'published' ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/90 backdrop-blur-md text-white text-sm font-semibold shadow-lg">
+                <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+                Đã xuất bản
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-500/90 backdrop-blur-md text-white text-sm font-semibold shadow-lg">
+                <span className="material-symbols-outlined text-[14px]">edit_note</span>
+                Bản nháp
+              </span>
+            )}
+          </div>
+
+          {/* Iframe Container with Auto-Scroll Animation */}
+          <div className="w-full h-full overflow-hidden">
+            <iframe
+              srcDoc={
+                previewInvitation.html_content || 
+                `<html><body style="margin:0;padding:40px;font-family:sans-serif;background:#f8f9fa;text-align:center;">
+                  <div style="max-width:600px;margin:0 auto;">
+                    <div style="background:white;padding:40px;border-radius:15px;box-shadow:0 10px 40px rgba(0,0,0,0.1);margin-bottom:30px;">
+                      <h1 style="color:#333;margin-bottom:20px;font-size:2.5em;">${previewInvitation.title || 'Thiệp Cưới'}</h1>
+                      <p style="color:#666;margin-bottom:30px;font-size:1.2em;">Nội dung thiệp đang được cập nhật...</p>
+                      <div style="width:100px;height:2px;background:#ddd;margin:30px auto;"></div>
+                      <p style="color:#999;font-size:0.9em;">Vui lòng chỉnh sửa thiệp để thêm nội dung</p>
+                    </div>
+                    <div style="background:white;padding:30px;border-radius:15px;box-shadow:0 10px 40px rgba(0,0,0,0.1);margin-bottom:30px;">
+                      <h3 style="color:#333;margin-bottom:15px;">Trạng thái: ${previewInvitation.status === 'published' ? 'Đã xuất bản' : 'Bản nháp'}</h3>
+                      <p style="color:#666;">Ngày tạo: ${new Date(previewInvitation.created_at).toLocaleDateString('vi-VN')}</p>
+                    </div>
+                  </div>
+                </body></html>`
+              }
+              className="w-full h-full border-0 bg-white"
+              title={`Preview ${previewInvitation.title}`}
+              onLoad={(e) => {
+                // Auto-scroll animation from top to bottom
+                const iframe = e.target
+                const iframeWindow = iframe.contentWindow
+                if (iframeWindow) {
+                  let autoScrollActive = true
+                  let animationFrameId = null
+
+                  // Detect user scroll to stop auto-scroll
+                  const handleUserScroll = () => {
+                    if (autoScrollActive) {
+                      autoScrollActive = false
+                      if (animationFrameId) {
+                        cancelAnimationFrame(animationFrameId)
+                      }
+                      console.log('🛑 Auto-scroll stopped by user interaction')
+                    }
+                  }
+
+                  // Listen for user scroll events
+                  iframeWindow.addEventListener('wheel', handleUserScroll, { passive: true })
+                  iframeWindow.addEventListener('touchstart', handleUserScroll, { passive: true })
+                  iframeWindow.addEventListener('keydown', (e) => {
+                    // Stop on arrow keys, page up/down, space
+                    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' '].includes(e.key)) {
+                      handleUserScroll()
+                    }
+                  })
+
+                  // Wait a bit for content to load
+                  setTimeout(() => {
+                    try {
+                      const scrollHeight = iframeWindow.document.documentElement.scrollHeight
+                      const viewportHeight = iframeWindow.innerHeight
+                      const scrollDistance = scrollHeight - viewportHeight
+
+                      if (scrollDistance > 0 && autoScrollActive) {
+                        // Slower scroll: 8 pixels per second for smooth viewing
+                        const scrollDuration = Math.min(scrollDistance * 12, 25000) // Max 25 seconds
+
+                        let startTime = null
+                        const animateScroll = (currentTime) => {
+                          if (!autoScrollActive) return // Stop if user interacted
+
+                          if (!startTime) startTime = currentTime
+                          const elapsed = currentTime - startTime
+                          const progress = Math.min(elapsed / scrollDuration, 1)
+
+                          // Smoother easing function
+                          const easeInOutQuad = progress < 0.5
+                            ? 2 * progress * progress
+                            : 1 - Math.pow(-2 * progress + 2, 2) / 2
+
+                          iframeWindow.scrollTo(0, scrollDistance * easeInOutQuad)
+
+                          if (progress < 1 && autoScrollActive) {
+                            animationFrameId = requestAnimationFrame(animateScroll)
+                          } else if (autoScrollActive) {
+                            // Scroll back to top after reaching bottom
+                            setTimeout(() => {
+                              if (autoScrollActive) {
+                                iframeWindow.scrollTo({ top: 0, behavior: 'smooth' })
+                              }
+                            }, 3000) // Wait 3 seconds at bottom
+                          }
+                        }
+
+                        animationFrameId = requestAnimationFrame(animateScroll)
+                      }
+                    } catch (error) {
+                      console.error('Auto-scroll error:', error)
+                    }
+                  }, 1000) // Wait 1 second before starting
+                }
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

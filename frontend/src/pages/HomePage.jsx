@@ -58,6 +58,48 @@ const HomePage = () => {
 
   return (
     <div className="bg-white dark:bg-gray-900 font-sans antialiased selection:bg-gray-900 selection:text-white">
+      {/* Infinite Scroll CSS Styles */}
+      <style jsx>{`
+        .infinite-scroll-container {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+        }
+        
+        .infinite-scroll-track {
+          display: flex;
+          width: 500%;
+          height: 100%;
+          animation: infiniteScroll 60s linear infinite;
+        }
+        
+        .scroll-image {
+          flex: 1;
+          height: 100%;
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+        
+        @keyframes infiniteScroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-100%);
+          }
+        }
+        
+        /* Ensure smooth performance */
+        .infinite-scroll-track {
+          will-change: transform;
+          backface-visibility: hidden;
+          perspective: 1000px;
+        }
+      `}</style>
       <Header />
       <div className="overflow-x-hidden">
 
@@ -65,13 +107,28 @@ const HomePage = () => {
         <header
           className="relative w-full min-h-[90vh] md:min-h-screen flex items-center justify-center overflow-hidden bg-gray-900"
         >
-          {/* Wedding Background Image - Premium Luxury */}
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: "url('https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=2787&auto=format&fit=crop')",
-            }}
-          ></div>
+          {/* Infinite Horizontal Scrolling Background */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="infinite-scroll-container">
+              <div className="infinite-scroll-track">
+                <div className="scroll-image" style={{
+                  backgroundImage: "url('https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=2787&auto=format&fit=crop')"
+                }}></div>
+                <div className="scroll-image" style={{
+                  backgroundImage: "url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2787&auto=format&fit=crop')"
+                }}></div>
+                <div className="scroll-image" style={{
+                  backgroundImage: "url('https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=2787&auto=format&fit=crop')"
+                }}></div>
+                <div className="scroll-image" style={{
+                  backgroundImage: "url('https://images.unsplash.com/photo-1606216794074-735e91aa2c92?q=80&w=2787&auto=format&fit=crop')"
+                }}></div>
+                <div className="scroll-image" style={{
+                  backgroundImage: "url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2787&auto=format&fit=crop')"
+                }}></div>
+              </div>
+            </div>
+          </div>
 
           {/* Dark Overlay for text readability */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80"></div>
