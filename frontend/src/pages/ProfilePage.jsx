@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import Modal from '../components/Modal'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import authService from '../services/auth.service'
@@ -616,123 +617,70 @@ export const ProfileContent = ({ variant = 'page' } = {}) => {
         </div>
       </div>
 
-      {passwordModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
-          onClick={() => setPasswordModalOpen(false)}
-        >
-          <div
-            className="w-full max-w-md rounded-2xl bg-white shadow-xl border border-gray-200 p-5"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Đổi mật khẩu</h3>
-              <button
-                type="button"
-                className="text-gray-400 hover:text-gray-600"
-                onClick={() => setPasswordModalOpen(false)}
-                aria-label="Close"
-              >
-                <span className="material-symbols-outlined text-[20px]">close</span>
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm text-gray-600 mb-1">Mật khẩu hiện tại</label>
-                <input
-                  type="password"
-                  value={passwordForm.current}
-                  onChange={(e) => setPasswordForm((prev) => ({ ...prev, current: e.target.value }))}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
-                      handleSubmitPasswordChange()
-                    }
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                />
-                {passwordErrors.current && (
-                  <p className="text-xs text-red-600 mt-1">{passwordErrors.current}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-600 mb-1">Mật khẩu mới</label>
-                <input
-                  type="password"
-                  value={passwordForm.next}
-                  onChange={(e) => setPasswordForm((prev) => ({ ...prev, next: e.target.value }))}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
-                      handleSubmitPasswordChange()
-                    }
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                />
-                {passwordErrors.next && (
-                  <p className="text-xs text-red-600 mt-1">{passwordErrors.next}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-600 mb-1">Nhập lại mật khẩu mới</label>
-                <input
-                  type="password"
-                  value={passwordForm.confirm}
-                  onChange={(e) => setPasswordForm((prev) => ({ ...prev, confirm: e.target.value }))}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
-                      handleSubmitPasswordChange()
-                    }
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                />
-                {passwordErrors.confirm && (
-                  <p className="text-xs text-red-600 mt-1">{passwordErrors.confirm}</p>
-                )}
-              </div>
-
-              <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-600 space-y-1">
-                <div className={passwordForm.next.length >= 8 ? 'text-green-600' : 'text-gray-600'}>
-                  • Tối thiểu 8 ký tự
-                </div>
-                <div
-                  className={
-                    passwordForm.next &&
-                    passwordForm.confirm &&
-                    passwordForm.next === passwordForm.confirm
-                      ? 'text-green-600'
-                      : 'text-gray-600'
-                  }
-                >
-                  • Mật khẩu mới trùng khớp
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-5 flex items-center justify-end gap-2">
-              <button
-                type="button"
-                className="px-4 py-2 text-sm font-semibold text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
-                onClick={() => setPasswordModalOpen(false)}
-              >
-                Hủy
-              </button>
-              <button
-                type="button"
-                disabled={changingPassword}
-                className="px-4 py-2 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={handleSubmitPasswordChange}
-              >
-                {changingPassword ? 'Đang lưu...' : 'Cập nhật mật khẩu'}
-              </button>
-            </div>
+      <Modal
+        isOpen={passwordModalOpen}
+        onClose={() => setPasswordModalOpen(false)}
+        title="Đổi mật khẩu"
+        footer={
+          <>
+            <button
+              type="button"
+              className="px-4 py-2 text-sm font-semibold text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+              onClick={() => setPasswordModalOpen(false)}
+            >
+              Hủy
+            </button>
+            <button
+              type="button"
+              disabled={changingPassword}
+              className="px-4 py-2 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleSubmitPasswordChange}
+            >
+              {changingPassword ? 'Đang lưu...' : 'Cập nhật mật khẩu'}
+            </button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Mật khẩu hiện tại</label>
+            <input
+              type="password"
+              value={passwordForm.current}
+              onChange={(e) => setPasswordForm((prev) => ({ ...prev, current: e.target.value }))}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSubmitPasswordChange() } }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+            />
+            {passwordErrors.current && <p className="text-xs text-red-600 mt-1">{passwordErrors.current}</p>}
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Mật khẩu mới</label>
+            <input
+              type="password"
+              value={passwordForm.next}
+              onChange={(e) => setPasswordForm((prev) => ({ ...prev, next: e.target.value }))}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSubmitPasswordChange() } }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+            />
+            {passwordErrors.next && <p className="text-xs text-red-600 mt-1">{passwordErrors.next}</p>}
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Nhập lại mật khẩu mới</label>
+            <input
+              type="password"
+              value={passwordForm.confirm}
+              onChange={(e) => setPasswordForm((prev) => ({ ...prev, confirm: e.target.value }))}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSubmitPasswordChange() } }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+            />
+            {passwordErrors.confirm && <p className="text-xs text-red-600 mt-1">{passwordErrors.confirm}</p>}
+          </div>
+          <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-600 space-y-1">
+            <div className={passwordForm.next.length >= 8 ? 'text-green-600' : 'text-gray-600'}>• Tối thiểu 8 ký tự</div>
+            <div className={passwordForm.next && passwordForm.confirm && passwordForm.next === passwordForm.confirm ? 'text-green-600' : 'text-gray-600'}>• Mật khẩu mới trùng khớp</div>
           </div>
         </div>
-      )}
+      </Modal>
     </form>
   )
 }

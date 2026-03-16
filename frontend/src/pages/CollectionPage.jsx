@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import Modal from '../components/Modal'
 import templateService from '../services/template.service'
 import invitationService from '../services/invitation.service'
 import { useAuth } from '../context/AuthContext'
@@ -763,99 +764,71 @@ const CollectionPage = () => {
       `}</style>
 
 
-      {/* Editor Selection Modal - Clean & Professional */}
-      {showEditorModal && selectedTemplate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-800 shadow-2xl max-w-3xl w-full overflow-hidden rounded-xl max-h-[90vh] flex flex-col">
-            {/* Header - Clean */}
-            <div className="bg-gray-900 dark:bg-white p-4 md:p-6 text-white dark:text-black flex-shrink-0">
-              <div className="flex justify-between items-start gap-4">
-                <div className="flex-1">
-                  <h2 className="text-xl md:text-2xl font-bold mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>Chọn Loại Editor</h2>
-                  <p className="text-white/90 dark:text-black/90 text-sm md:text-base">Bạn muốn chỉnh sửa template bằng cách nào?</p>
-                </div>
-                <button
-                  onClick={() => setShowEditorModal(false)}
-                  className="text-white/80 hover:text-white dark:text-black/80 dark:hover:text-black flex-shrink-0"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+      {/* Editor Selection Modal */}
+      <Modal
+        isOpen={showEditorModal && !!selectedTemplate}
+        onClose={() => { setShowEditorModal(false); setSelectedTemplate(null) }}
+        title="Chọn Loại Editor"
+        size="2xl"
+        footer={
+          <button
+            onClick={() => { setShowEditorModal(false); setSelectedTemplate(null) }}
+            disabled={creatingInvitation}
+            className="px-4 py-2 md:px-6 md:py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 font-medium rounded-lg"
+          >
+            Hủy
+          </button>
+        }
+      >
+        <p className="text-gray-600 dark:text-gray-400 mb-4">Bạn muốn chỉnh sửa template bằng cách nào?</p>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 max-w-2xl mx-auto">
+          {/* Canvas Editor Option */}
+          <button
+            onClick={() => handleCreateInvitation('canvas')}
+            disabled={creatingInvitation}
+            className="group relative p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
+          >
+            <div className="flex flex-col items-center text-center gap-3">
+              <div className="w-14 h-14 md:w-16 md:h-16 bg-gray-900 dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black">
+                <svg className="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">Canvas Editor</h3>
+                <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">Kéo thả, chỉnh sửa từng element. Dễ dùng.</p>
+              </div>
+              <div className="flex flex-wrap gap-1.5 justify-center">
+                <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Dễ dùng</span>
+                <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Drag & Drop</span>
               </div>
             </div>
+          </button>
 
-            {/* Content - Scrollable */}
-            <div className="p-4 md:p-6 overflow-y-auto flex-1">
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 max-w-2xl mx-auto">
-                {/* Canvas Editor Option */}
-                <button
-                  onClick={() => handleCreateInvitation('canvas')}
-                  disabled={creatingInvitation}
-                  className="group relative p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
-                >
-                  <div className="flex flex-col items-center text-center gap-3">
-                    <div className="w-14 h-14 md:w-16 md:h-16 bg-gray-900 dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black">
-                      <svg className="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">Canvas Editor</h3>
-                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
-                        Kéo thả, chỉnh sửa từng element. Dễ dùng.
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 justify-center">
-                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Dễ dùng</span>
-                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Drag & Drop</span>
-                    </div>
-                  </div>
-                </button>
-
-                {/* Ultimate Editor Option */}
-                <button
-                  onClick={() => handleCreateInvitation('advanced-html')}
-                  disabled={creatingInvitation}
-                  className="group relative p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
-                >
-                  <div className="flex flex-col items-center text-center gap-3">
-                    <div className="w-14 h-14 md:w-16 md:h-16 bg-black dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black">
-                      <svg className="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">Ultimate Editor</h3>
-                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
-                        Form thông minh + Upload ảnh + Real-time preview
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 justify-center">
-                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Đỉnh cao</span>
-                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Real-time</span>
-                    </div>
-                  </div>
-                </button>
+          {/* Ultimate Editor Option */}
+          <button
+            onClick={() => handleCreateInvitation('advanced-html')}
+            disabled={creatingInvitation}
+            className="group relative p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
+          >
+            <div className="flex flex-col items-center text-center gap-3">
+              <div className="w-14 h-14 md:w-16 md:h-16 bg-black dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black">
+                <svg className="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">Ultimate Editor</h3>
+                <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">Form thông minh + Upload ảnh + Real-time preview</p>
+              </div>
+              <div className="flex flex-wrap gap-1.5 justify-center">
+                <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Đỉnh cao</span>
+                <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Real-time</span>
               </div>
             </div>
-
-            {/* Footer */}
-            <div className="p-4 md:p-6 bg-gray-50 dark:bg-gray-900 flex justify-end gap-3 flex-shrink-0 border-t border-gray-200 dark:border-gray-700">
-              <button
-                onClick={() => {
-                  setShowEditorModal(false)
-                  setSelectedTemplate(null)
-                }}
-                disabled={creatingInvitation}
-                className="px-4 py-2 md:px-6 md:py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 font-medium rounded-lg text-sm md:text-base"
-              >
-                Hủy
-              </button>
-            </div>
-          </div>
+          </button>
         </div>
-      )}
+      </Modal>
 
       {/* Full-Screen Preview Modal with Auto-Scroll */}
       {previewTemplate && (

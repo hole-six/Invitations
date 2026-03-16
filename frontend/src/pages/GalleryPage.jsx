@@ -159,31 +159,36 @@ const GalleryContent = () => {
 
   // Grouping and Sorting ---
   const groupedData = useMemo(() => {
-    const groups = {};
-    images.forEach((img) => {
-      const date = new Date(img.created_at);
-      const year = date.getFullYear();
-      const month = date.toLocaleString(locale, { month: "long" });
-      const day = date.getDate().toString().padStart(2, "0");
+  const groups = {};
 
-      let groupKey =
-        sortType === "year"
-          ? `${year}`
-          : sortType === "month"
-            ? `${month} ${year}`
-            : `${month} ${day}, ${year}`;
+  images.forEach((img) => {
+    const date = new Date(img.created_at);
 
-      if (!groups[groupKey]) groups[groupKey] = [];
-      groups[groupKey].push(img);
-    });
+    const year = date.getFullYear();
+    const month = date.toLocaleString(locale, { month: "long" });
+    const day = date.getDate().toString().padStart(2, "0");
 
-    return Object.keys(groups)
-      .sort(
-        (a, b) =>
-          new Date(groups[b][0].created_at).getTime() - new Date(groups[a][0].created_at).getTime(),
-      )
-      .map((key) => ({ label: key, items: groups[key] }));
-  }, [images, sortType, locale]);
+    const weekday = date.toLocaleDateString(locale, { weekday: "long" });
+
+    let groupKey =
+      sortType === "year"
+        ? `${year}`
+        : sortType === "month"
+        ? `${month} ${year}`
+        : `${weekday}, ${day} ${month} ${year}`;
+
+    if (!groups[groupKey]) groups[groupKey] = [];
+    groups[groupKey].push(img);
+  });
+
+  return Object.keys(groups)
+    .sort(
+      (a, b) =>
+        new Date(groups[b][0].created_at).getTime() -
+        new Date(groups[a][0].created_at).getTime()
+    )
+    .map((key) => ({ label: key, items: groups[key] }));
+}, [images, sortType, locale]);
 
   // Sidebar Timeline Data
   const timeline = useMemo(() => {
@@ -403,7 +408,8 @@ const GalleryContent = () => {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <label className="inline-flex items-center gap-2 text-sm text-gray-600">
+              {images.length > 0  && (
+                <label className="inline-flex items-center gap-2 text-sm text-gray-600">
                 <input
                   type="checkbox"
                   className="h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900"
@@ -414,6 +420,7 @@ const GalleryContent = () => {
                 />
                 {tr("common.select_all") || "Chọn tất cả"}
               </label>
+              )}
 
               <div className="relative">
                 <button
