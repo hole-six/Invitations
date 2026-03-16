@@ -81,6 +81,8 @@ export const ProfileContent = ({ variant = 'page' } = {}) => {
   const personalRows = useMemo(() => {
     const source = isEditing ? editData : profileData
     if (!source) return []
+    const is2faEnabled = source['2fa'] ?? source.twofa
+
     const rows = [
       { label: 'Họ', value: source.last_name },
       { label: 'Tên', value: source.first_name },
@@ -93,7 +95,8 @@ export const ProfileContent = ({ variant = 'page' } = {}) => {
       },
       {
         label: 'Bảo mật 2FA',
-        value: (source['2fa'] ?? source.twofa) ? 'Đang bật' : 'Đang tắt',
+        value: is2faEnabled ? 'Đang bật' : 'Đang tắt',
+        rawValue: is2faEnabled,
       },
     ]
     return rows.filter((row) => row.value !== null && row.value !== undefined && row.value !== '')
@@ -544,11 +547,29 @@ export const ProfileContent = ({ variant = 'page' } = {}) => {
           ) : (
             <div className="space-y-3">
               {personalRows.map((row) => (
-                <div key={row.label} className="flex items-center justify-between gap-4">
+                <div key={row.label} className="flex items-center justify-between gap-4 py-1">
                   <span className="text-sm text-gray-500">{row.label}</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white text-right break-all">
-                    {row.value}
-                  </span>
+                  {row.label === 'Bảo mật 2FA' ? (
+                    <button
+                      type="button"
+                      role="switch"
+                      disabled
+                      aria-checked={row.rawValue}
+                      className={`${row.rawValue ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+                        } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 hover:opacity-80`}
+                    >
+                      <span className="sr-only">Tắt/mở 2FA</span>
+                      <span
+                        aria-hidden="true"
+                        className={`${row.rawValue ? 'translate-x-5' : 'translate-x-0'
+                          } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
+                      />
+                    </button>
+                  ) : (
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white text-right break-all">
+                      {row.value}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
