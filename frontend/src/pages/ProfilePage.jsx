@@ -425,7 +425,7 @@ export const ProfileContent = ({ variant = 'page' } = {}) => {
   return (
     <form
       onSubmit={handleUpdateProfile}
-      className={isDashboard ? 'w-full space-y-6' : 'max-w-2xl mx-auto space-y-6'}
+      className={isDashboard ? 'w-full space-y-6' : 'max-w-2xl mx-auto space-y-6 pb-24 md:pb-0'}
     >
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-3">
         <div className="flex flex-col md:flex-row md:items-center gap-6">
@@ -574,9 +574,10 @@ export const ProfileContent = ({ variant = 'page' } = {}) => {
         </div>
       </div>
 
-      <div className={isDashboard ? 'mt-1' : 'fixed bottom-20 md:bottom-4 left-0 right-0 z-20 px-4'}>
+      {/* Action buttons (Footer) */}
+      <div className={isDashboard ? 'mt-1' : 'fixed bottom-20 left-0 right-0 z-20 px-4 md:relative md:bottom-auto md:z-auto md:px-0 md:mt-6'}>
         <div className={isDashboard ? 'w-full' : 'max-w-2xl mx-auto'}>
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-lg rounded-2xl p-3 flex items-center justify-end gap-2">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-xl md:shadow-sm rounded-2xl p-3 flex items-center justify-end gap-2">
             {isEditing ? (
               <>
                 <button
