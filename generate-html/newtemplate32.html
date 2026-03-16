@@ -1,0 +1,1502 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baskervville:ital,wght@0,400..700;1,400..700&family=Dancing+Script:wght@400..700&family=Great+Vibes&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Pinyon+Script&family=Raleway:ital,wght@0,100..900;1,100..900&family=The+Nautigal:wght@400;700&display=swap"
+    rel="stylesheet">
+
+
+  <!-- CDN -->
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Embla Carousel -->
+  <script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
+
+  <!-- Script -->
+
+  <!-- Timer script -->
+  <script>
+    (function () {
+      let countdownInterval;
+
+      function getTargetDate() {
+        const elH = document.querySelector("#js-hour");
+        const elD = document.querySelector("#js-day");
+        const elM = document.querySelector("#js-month");
+        const elY = document.querySelector("#js-year");
+
+        if (!elD || !elM || !elY) return null;
+
+        let hour = 0;
+        let minute = 0;
+
+        if (elH) {
+          const timeMatch = elH.innerText.match(/(\d{2}):(\d{2})/);
+          if (timeMatch) {
+            hour = parseInt(timeMatch[1], 10);
+            minute = parseInt(timeMatch[2], 10);
+          }
+        }
+
+        const day = parseInt(elD.innerText.replace(/\D/g, ''), 10);
+        const month = parseInt(elM.innerText.replace(/\D/g, ''), 10) - 1;
+        const year = parseInt(elY.innerText.replace(/\D/g, ''), 10);
+
+        const target = new Date(year, month, day, hour, minute, 0).getTime();
+        return isNaN(target) ? null : target;
+      }
+
+      function render(d, h, m, s) {
+        const pad = (n) => (n < 10 ? "0" + n : n);
+        const setVal = (id, val) => {
+          const el = document.querySelector(`${id} span`);
+          if (el) el.innerText = pad(val);
+        };
+
+        setVal("#TIMER_DAY", d);
+        setVal("#TIMER_HOUR", h);
+        setVal("#TIMER_MIN", m);
+        setVal("#TIMER_SEC", s);
+      }
+
+      function updateCountdown() {
+        const endTime = getTargetDate();
+        if (!endTime) return;
+
+        if (countdownInterval) clearInterval(countdownInterval);
+
+        const logic = () => {
+          const now = new Date().getTime();
+          const distance = endTime - now;
+
+          if (distance < 0) {
+            clearInterval(countdownInterval);
+            render(0, 0, 0, 0);
+            return;
+          }
+
+          const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const h = Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+          );
+          const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+          render(d, h, m, s);
+        };
+
+        logic();
+        countdownInterval = setInterval(logic, 1000);
+      }
+
+      window.addEventListener("load", () => {
+        updateCountdown();
+
+        const observer = new MutationObserver(updateCountdown);
+        const config = {
+          characterData: true,
+          childList: true,
+          subtree: true,
+        };
+
+        ["#js-hour", "#js-day", "#js-month", "#js-year"].forEach(
+          (selector) => {
+            const el = document.querySelector(selector);
+            if (el) observer.observe(el, config);
+          },
+        );
+      });
+    })();
+  </script>
+
+  <!-- Animation script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const animationObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const target = entry.target;
+
+              const delay = target.getAttribute("data-aos-delay") || "0";
+              const duration =
+                target.getAttribute("data-aos-duration") || "800";
+
+              target.style.transitionDelay = `${delay}ms`;
+              target.style.transitionDuration = `${duration}ms`;
+
+              target.classList.add("aos-animate");
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      document
+        .querySelectorAll("[data-aos]")
+        .forEach((el) => animationObserver.observe(el));
+    });
+  </script>
+
+  <!-- style -->
+
+  <!-- Embla Carousel -->
+  <style>
+    .embla {
+      /* max-width: 420px; */
+      /* Độ rộng tương đương mobile */
+      margin: auto;
+      --slide-spacing: 1rem;
+      --slide-size: 100%;
+    }
+
+    .embla__viewport {
+      overflow: hidden;
+    }
+
+    .embla__container {
+      display: flex;
+      touch-action: pan-y;
+      margin-left: calc(var(--slide-spacing) * -1);
+    }
+
+    .embla__slide {
+      width: 60px;
+      transform: translate3d(0, 0, 0);
+      flex: 0 0 var(--slide-size);
+      min-width: 0;
+      padding-left: var(--slide-spacing);
+    }
+
+    .embla__slide__number {
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f3f4f6;
+      border-radius: 1rem;
+      font-size: 3rem;
+      font-weight: bold;
+      color: #3481f4;
+      box-shadow: inset 0 0 0 1px #e5e7eb;
+    }
+
+    .embla__controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .embla__buttons {
+      display: flex;
+      gap: 5rem;
+    }
+
+    .embla__button {
+      background-color: transparent;
+      touch-action: manipulation;
+      display: inline-flex;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid #ffffff;
+      padding: 0;
+      margin: 0;
+      width: 3rem;
+      height: 3rem;
+      z-index: 1;
+      border-radius: 50%;
+      color: #3481f4;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .embla__button:disabled {
+      color: #d1d5db;
+      border-color: #d1d5db;
+      cursor: not-allowed;
+    }
+
+    .embla__button__svg {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+
+    #GALLERY_POPUP {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    #GALLERY_POPUP.active {
+      display: flex;
+    }
+
+    .embla__slide__number {
+      width: 100%;
+      height: 70vh;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      box-shadow: none;
+    }
+  </style>
+
+  <!-- Snowflake -->
+  <style>
+    @-webkit-keyframes snowflakes-fall {
+      0% {
+        top: -10%;
+      }
+
+      100% {
+        top: 100%;
+      }
+    }
+
+    @-webkit-keyframes snowflakes-shake {
+
+      0%,
+      100% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+      }
+
+      50% {
+        -webkit-transform: translateX(80px);
+        transform: translateX(80px);
+      }
+    }
+
+    @keyframes snowflakes-fall {
+      0% {
+        top: -10%;
+      }
+
+      100% {
+        top: 100%;
+      }
+    }
+
+    @keyframes snowflakes-shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      50% {
+        transform: translateX(80px);
+      }
+    }
+
+    .snowflake {
+      color: #fff;
+      font-size: 1em;
+      font-family: Arial, sans-serif;
+      text-shadow: 0 0 5px #000;
+      position: fixed;
+      top: -10%;
+      z-index: 9999;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      cursor: default;
+      -webkit-animation-name: snowflakes-fall, snowflakes-shake;
+      -webkit-animation-duration: 10s, 3s;
+      -webkit-animation-timing-function: linear, ease-in-out;
+      -webkit-animation-iteration-count: infinite, infinite;
+      -webkit-animation-play-state: running, running;
+      animation-name: snowflakes-fall, snowflakes-shake;
+      animation-duration: 10s, 3s;
+      animation-timing-function: linear, ease-in-out;
+      animation-iteration-count: infinite, infinite;
+      animation-play-state: running, running;
+    }
+
+    .snowflake:nth-of-type(0) {
+      left: 1%;
+      -webkit-animation-delay: 0s, 0s;
+      animation-delay: 0s, 0s;
+    }
+
+    .snowflake:nth-of-type(1) {
+      left: 10%;
+      -webkit-animation-delay: 1s, 1s;
+      animation-delay: 1s, 1s;
+    }
+
+    .snowflake:nth-of-type(2) {
+      left: 20%;
+      -webkit-animation-delay: 6s, 0.5s;
+      animation-delay: 6s, 0.5s;
+    }
+
+    .snowflake:nth-of-type(3) {
+      left: 30%;
+      -webkit-animation-delay: 4s, 2s;
+      animation-delay: 4s, 2s;
+    }
+
+    .snowflake:nth-of-type(4) {
+      left: 40%;
+      -webkit-animation-delay: 2s, 2s;
+      animation-delay: 2s, 2s;
+    }
+
+    .snowflake:nth-of-type(5) {
+      left: 50%;
+      -webkit-animation-delay: 8s, 3s;
+      animation-delay: 8s, 3s;
+    }
+
+    .snowflake:nth-of-type(6) {
+      left: 60%;
+      -webkit-animation-delay: 6s, 2s;
+      animation-delay: 6s, 2s;
+    }
+
+    .snowflake:nth-of-type(7) {
+      left: 70%;
+      -webkit-animation-delay: 2.5s, 1s;
+      animation-delay: 2.5s, 1s;
+    }
+
+    .snowflake:nth-of-type(8) {
+      left: 80%;
+      -webkit-animation-delay: 1s, 0s;
+      animation-delay: 1s, 0s;
+    }
+
+    .snowflake:nth-of-type(9) {
+      left: 90%;
+      -webkit-animation-delay: 3s, 1.5s;
+      animation-delay: 3s, 1.5s;
+    }
+
+    .snowflake:nth-of-type(10) {
+      left: 25%;
+      -webkit-animation-delay: 2s, 0s;
+      animation-delay: 2s, 0s;
+    }
+
+    .snowflake:nth-of-type(11) {
+      left: 65%;
+      -webkit-animation-delay: 4s, 2.5s;
+      animation-delay: 4s, 2.5s;
+    }
+  </style>
+
+  <!-- Animation CSS -->
+  <style>
+    /* Animation Base States */
+    [data-aos] {
+      opacity: 0;
+      transition-property: transform, opacity;
+      transition-timing-function: ease-out;
+    }
+
+    /* Fade Animations */
+    [data-aos="fade-up"] {
+      transform: translateY(30px);
+    }
+
+    [data-aos="fade-down"] {
+      transform: translateY(-30px);
+    }
+
+    [data-aos="fade-left"] {
+      transform: translateX(30px);
+    }
+
+    [data-aos="fade-right"] {
+      transform: translateX(-30px);
+    }
+
+    /* Zoom Animations */
+    [data-aos="zoom-in"] {
+      transform: scale(0.7);
+    }
+
+    [data-aos="zoom-out"] {
+      transform: scale(1.2);
+    }
+
+    /* Slide Animations */
+    [data-aos="slide-up"] {
+      transform: translateY(100%);
+    }
+
+    [data-aos="grayscale"] {
+      filter: grayscale(100%);
+      transition-property: filter, transform;
+    }
+
+    /* The Active State (Triggered by JS) */
+    .aos-animate {
+      opacity: 1 !important;
+      transform: translate(0) scale(1) !important;
+    }
+
+    .animate-kenburn {
+      animation: kenburn 15s 2s infinite alternate;
+    }
+
+    @keyframes kenburn {
+      0% {
+        scale: 1;
+      }
+
+      100% {
+        scale: 1.3;
+      }
+    }
+  </style>
+
+  <!-- data image -->
+  <style>
+    .element_bg-paper {
+      background-image: url("https://img.freepik.com/free-photo/paper-texture_1194-5999.jpg?t=st=1773628442~exp=1773632042~hmac=4750cf27914fb4e8cc9d13048af59ba6ea902c874123b061e247a83a32899006&w=2000");
+    }
+
+    .element_linebreak {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Feucalyptus%2FheroLeftTop.webp&w=750&q=75");
+    }
+
+    .element_linebreak2 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Feucalyptus%2FheroLeftBottom.webp&w=750&q=75");
+    }
+
+    .element_linebreak3 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fdecor3.webp&w=1080&q=80");
+    }
+
+    .element_linebreak4 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FstoryDecor.webp&w=256&q=75");
+    }
+
+    .element_flower {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Feucalyptus%2FheroRightTop.webp&w=828&q=75");
+    }
+
+    .element_flower2 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Feucalyptus%2FheroRightBottom.webp&w=640&q=75");
+    }
+
+    .element_flower3 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FstoryLeft.webp&w=1080&q=75");
+    }
+
+    .element_flower4 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FheroBg.webp&w=2048&q=75");
+    }
+
+    .element_flower5 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FstoryRight.webp&w=640&q=75");
+    }
+
+    .element_flower6 {
+      background-image: url("https://png.pngtree.com/png-clipart/20250613/original/pngtree-watercolor-floral-clipart-with-pale-blue-bouquet-png-image_21184457.png");
+    }
+
+    .element_flowercircle {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Feucalyptus%2FcounterFrame.webp&w=384&q=80");
+    }
+
+    .element_flowercircle2 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Fjasmine%2FstoryFrame.webp&w=1080&q=75");
+    }
+
+    .element_flowercircle3 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FheroFrame.webp&w=640&q=75");
+    }
+
+    .element_flowerheart {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fheart.webp&w=640&q=80");
+    }
+
+    .element_linebreak4 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flotus%2FstoryTop.webp&w=640&q=75");
+    }
+
+    .element_flowerwall {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flotus%2FlocationsBackground.webp&w=3840&q=75");
+    }
+
+    .element_flowerpictureframe {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flotus%2FstoryDecor.webp&w=640&q=75");
+    }
+
+    .element_9 {
+      background-image: url("https://pinvite.io/assets/images/templates/wedding/website/olive/spiral.svg");
+    }
+
+    [data-image-editable="photo_1"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2Fhe.webp&w=1920&q=75");
+    }
+
+    [data-image-editable="photo_2"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2Fshe.webp&w=1920&q=75");
+    }
+
+    [data-image-editable="photo_3"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FheroCenter.webp&w=1920&q=75");
+    }
+
+    [data-image-editable="photo_4"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FourRight.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_5"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FourLeft.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_6"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fstory0.webp&w=3840&q=80");
+    }
+
+    [data-image-editable="photo_7"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fstory1.webp&w=3840&q=80");
+    }
+
+    [data-image-editable="photo_8"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fstory2.webp&w=3840&q=80");
+    }
+
+    [data-image-editable="photo_9"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fgallery0.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_10"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fgallery1.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_11"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fgallery2.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_12"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fgallery3.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_13"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fgallery4.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_14"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fgallery5.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_15"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_16"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_17"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_18"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_19"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_1"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_2"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838474700_ae674803922601c8fe5fd6dc39839a52-20250720112655-abrzg.jpg");
+    }
+
+    [data-image-editable="photo_gallery_3"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_4"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_5"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838784286_fa9f26bf3167e3a2f668f9b524060a8b-20250720112708--0znq.jpg");
+    }
+
+    [data-image-editable="photo_gallery_6"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="qr_1"] {
+      background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
+    }
+
+    [data-image-editable="qr_2"] {
+      background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
+    }
+
+    [data-image-editable] {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  </style>
+
+  <!-- Main CSS -->
+  <style>
+    /* global css */
+
+    html {
+      font-size: 62.5%;
+    }
+
+    body {
+      margin: 0;
+      color: #212529;
+    }
+
+    main {
+      font-family: Arial, sans-serif;
+      margin: auto;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    p,
+    span {
+      /* line-height: 2.4rem; */
+      font-family: "Baskervville", serif;
+      color: #666565;
+    }
+
+    span {
+      font-size: 1.6rem;
+      display: block;
+    }
+
+    p {
+      font-size: 1.7rem;
+    }
+
+    h1,
+    .h1 {
+      font-size: 4rem;
+    }
+
+    h2,
+    .h2 {
+      font-size: 3rem;
+    }
+
+    h3,
+    .h3 {
+      font-size: 2.4rem;
+    }
+
+    h4,
+    .h4 {
+      font-size: 2rem;
+    }
+
+    h5,
+    .h5 {
+      font-size: 1.7rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: #3b3a36;
+      font-family: "Great Vibes", cursive;
+    }
+
+    picture {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+    }
+
+    section {
+      /* padding-block: 100px; */
+      margin: auto;
+      overflow: hidden;
+      background-color: #daebe4;
+    }
+
+    /* font familly */
+    .font-josefin {
+      font-family: "Josefin Sans", sans-serif;
+    }
+
+    .font-pinyon {
+      font-family: "Pinyon Script", cursive;
+    }
+
+    .font-raleway {
+      font-family: "Raleway", sans-serif;
+    }
+
+    .font-dancing {
+      font-family: "Dancing Script", cursive;
+    }
+
+    .font-baskervville {
+      font-family: "Baskervville", serif;
+    }
+
+    .font-nautigal {
+      font-family: "The Nautigal", cursive;
+    }
+
+    .font-great {
+      font-family: "Great Vibes", cursive;
+    }
+
+
+    .wrapper {
+      max-width: 575px;
+      width: 100%;
+      margin: auto;
+      padding-inline: 3rem;
+      padding-block: 3rem;
+    }
+
+    @media screen and (max-width: 768px) {
+      .wrapper {
+        padding-inline: 15px;
+      }
+
+      section {
+        /* padding-block: 50px; */
+        margin: auto;
+      }
+
+      span {
+        font-size: 1.3rem;
+      }
+
+      p {
+        font-size: 1.4rem;
+      }
+
+      h1,
+      .h1 {
+        font-size: 3rem;
+      }
+
+      h2,
+      .h2 {
+        font-size: 2.5rem;
+      }
+
+      h3,
+      .h3 {
+        font-size: 2rem;
+      }
+
+      h4,
+      .h4 {
+        font-size: 1.8rem;
+      }
+
+      h5,
+      .h5 {
+        font-size: 1.6rem;
+      }
+    }
+
+    .inverted-corners {
+      position: relative;
+      --cutout-size: 40px;
+
+      -webkit-mask-image:
+        radial-gradient(circle at top left, transparent var(--cutout-size), black calc(var(--cutout-size) + 0.5px)),
+        radial-gradient(circle at top right, transparent var(--cutout-size), black calc(var(--cutout-size) + 0.5px)),
+        radial-gradient(circle at bottom left, transparent var(--cutout-size), black calc(var(--cutout-size) + 0.5px)),
+        radial-gradient(circle at bottom right, transparent var(--cutout-size), black calc(var(--cutout-size) + 0.5px));
+
+      -webkit-mask-size: 51% 51%;
+      -webkit-mask-repeat: no-repeat;
+      -webkit-mask-position: top left, top right, bottom left, bottom right;
+    }
+
+    .inverted-corners::after {
+      content: "";
+      position: absolute;
+      inset: 2rem;
+      pointer-events: none;
+
+      --border-curve: 45px;
+      --border-color: #680e0e;
+      --border-thickness: 2px;
+
+      background-image:
+        radial-gradient(circle at top left, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+        radial-gradient(circle at top right, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+        radial-gradient(circle at bottom left, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+        radial-gradient(circle at bottom right, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+
+        linear-gradient(var(--border-color), var(--border-color)),
+        linear-gradient(var(--border-color), var(--border-color)),
+        linear-gradient(var(--border-color), var(--border-color)),
+        linear-gradient(var(--border-color), var(--border-color));
+
+      background-size:
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+
+        calc(100% - (var(--border-curve) * 2)) var(--border-thickness),
+        calc(100% - (var(--border-curve) * 2)) var(--border-thickness),
+        var(--border-thickness) calc(100% - (var(--border-curve) * 2)),
+        var(--border-thickness) calc(100% - (var(--border-curve) * 2));
+
+      background-position:
+        top left, top right, bottom left, bottom right,
+        top center, bottom center, left center, right center;
+
+      background-repeat: no-repeat;
+    }
+
+    .inverted-corners::before {
+      content: "";
+      position: absolute;
+      inset: 1.3rem;
+      pointer-events: none;
+
+      --border-curve: 65px;
+      --border-color: #680e0e;
+      --border-thickness: 1px;
+
+      background-image:
+        radial-gradient(circle at top left, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+        radial-gradient(circle at top right, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+        radial-gradient(circle at bottom left, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+        radial-gradient(circle at bottom right, transparent calc(var(--border-curve) - var(--border-thickness) - 0.5px), var(--border-color) calc(var(--border-curve) - var(--border-thickness)), var(--border-color) var(--border-curve), transparent calc(var(--border-curve) + 0.5px)),
+
+        linear-gradient(var(--border-color), var(--border-color)),
+        linear-gradient(var(--border-color), var(--border-color)),
+        linear-gradient(var(--border-color), var(--border-color)),
+        linear-gradient(var(--border-color), var(--border-color));
+
+      background-size:
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+        calc(var(--border-curve) + 2px) calc(var(--border-curve) + 2px),
+
+        calc(100% - (var(--border-curve) * 2)) var(--border-thickness),
+        calc(100% - (var(--border-curve) * 2)) var(--border-thickness),
+        var(--border-thickness) calc(100% - (var(--border-curve) * 2)),
+        var(--border-thickness) calc(100% - (var(--border-curve) * 2));
+
+      background-position:
+        top left, top right, bottom left, bottom right,
+        top center, bottom center, left center, right center;
+
+      background-repeat: no-repeat;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <!--  -->
+    <!-- Banner Section Begin-->
+    <section id="SECTION_BANNER" class="py-0">
+      <div class="wrapper shadow-lg text-center element_bg-paper">
+        <picture class="w-full m-auto max-w-[20rem] aspect-square element_flower4"></picture>
+        <h2 class="text-[3rem] text-[4rem] font-dancing mb-[3rem]" data-editable="field_1" data-aos="fade-up">A Lovely
+          Couple</h2>
+        <span class="relative w-fit m-auto mb-[1rem] px-[1rem] 
+          after:absolute after:w-[6rem] after:h-[1px] after:top-[12px] after:right-full after:bg-[#666565]
+          before:absolute before:w-[6rem] before:h-[1px] before:top-[12px] before:left-full before:bg-[#666565]"
+          data-editable="field_2" data-aos="fade-up" data-aos-delay="100">Our
+          special
+          day</span>
+        <p data-editable="field_3" data-aos="fade-up" data-aos-delay="200">Ngày <span class="inline" id="js-day"
+            data-editable="field_day">20</span> tháng <span class="inline" id="js-month"
+            data-editable="field_month">08</span> năm <span class="inline" id="js-year"
+            data-editable="field_year">2026</span></p>
+        <p class="mb-[3rem]" data-editable="field_4" data-aos="fade-up" data-aos-delay="300">We are getting married</p>
+        <h1 class="h1 font-great" data-editable="field_5" data-aos="fade-up" data-aos-delay="400">Trung Hiếu ♥ Minh
+          Nguyệt</h1>
+      </div>
+    </section>
+    <!-- Banner Section End-->
+    <!-- hero picture Section Begin -->
+    <section id="SECTION_HEROPIC" class="py-0">
+      <div class="wrapper p-0 shadow-lg">
+        <picture class="w-full aspect-[3/4]" data-image-editable="photo_1"></picture>
+      </div>
+    </section>
+    <!-- hero picture Section End -->
+    <!-- Wedding Details Section Begin -->
+    <section id="SECTION_DETAILS" class="">
+      <div class="wrapper shadow-md element_flower5 bg-[#f0f5f3] text-center">
+        <div class="inverted-corners bg-white px-[5rem] py-[10rem]">
+          <div class="mb-[3rem]" data-aos="fade-up">
+            <picture class="w-full aspect-[1080/218] element_linebreak3 mb-[2rem]"></picture>
+            <span data-editable="field_6">Lời ngỏ</span>
+          </div>
+          <div class="space-y-[2rem] mb-[3rem]" data-aos="fade-up">
+            <p data-editable="field_7">
+              Cảm ơn tất cả những người bạn thân yêu của tôi!Tôi biết các bạn rất bận rộn, bận rộn với công việc, bận
+              rộn với công việc gia đình…Nhưng tất cả đã có mặt hôm nay để chúc mừng tinh yêu và hạnh phúc của chúng
+              tôi.Một lần nữa chân thành cảm ơn tất cả các bạn!
+            </p>
+            <span data-editable="field_8">Chú rễ ABC</span>
+            <span data-editable="field_9">Cô dâu ABC</span>
+          </div>
+          <p class="mb-[5rem]" data-editable="field_10" data-aos="fade-up">Have a good day</p>
+          <picture class="w-full aspect-[25/14] element_flower6"></picture>
+          <p></p>
+        </div>
+      </div>
+    </section>
+    <!-- Wedding Details Section End -->
+    <!-- Calender Section Begin -->
+    <section id="SECTION_CALENDER">
+      <div class="wrapper bg-white shadow-lg">
+        <div class="">
+          <table class="w-full mb-[3rem] text-[#5c5c5c]">
+            <caption class="h1 py-[.8rem] mb-[2rem] font-great font-light text-[#95b9a9]" data-editable="field_10">Ngày
+              20 Tháng 4/ 2026
+            </caption>
+            <tbody class="font-josefin">
+              <tr>
+                <th class="py-[.8rem] border-[#CFCFD0] border-y-[1px] font-light text-[1.4rem] md:text-[1.5rem]"
+                  data-editable="field_11">Thứ 2
+                </th>
+                <th class="py-[.8rem] border-[#CFCFD0] border-y-[1px] font-light text-[1.4rem] md:text-[1.5rem]"
+                  data-editable="field_12">Thứ 3
+                </th>
+                <th class="py-[.8rem] border-[#CFCFD0] border-y-[1px] font-light text-[1.4rem] md:text-[1.5rem]"
+                  data-editable="field_13">Thứ 4
+                </th>
+                <th class="py-[.8rem] border-[#CFCFD0] border-y-[1px] font-light text-[1.4rem] md:text-[1.5rem]"
+                  data-editable="field_14">Thứ 5
+                </th>
+                <th class="py-[.8rem] border-[#CFCFD0] border-y-[1px] font-light text-[1.4rem] md:text-[1.5rem]"
+                  data-editable="field_15">Thứ 6
+                </th>
+                <th class="py-[.8rem] border-[#CFCFD0] border-y-[1px] font-light text-[1.4rem] md:text-[1.5rem]"
+                  data-editable="field_16">Thứ 7
+                </th>
+                <th class="py-[.8rem] border-[#CFCFD0] border-y-[1px] font-light text-[1.4rem] md:text-[1.5rem]"
+                  data-editable="field_17">Chủ
+                  Nhật</th>
+              </tr>
+              <tr>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_18">1</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_19">2</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_20">3</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_21">4</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_22">5</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_23">6</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_24">7</td>
+              </tr>
+              <tr>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_25">8</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_26">9</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_27">10</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_28">11</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_29">12</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_30">13</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_31">14</td>
+              </tr>
+              <tr>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_32">15</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_33">16</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_34">17</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_35">18</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_36">19</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_37">20</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_38">21</td>
+              </tr>
+              <tr>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_39">22</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_40">23</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_41">24</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_42">25</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_43">26</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_44">27</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_45">28</td>
+              </tr>
+              <tr>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_46">29</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_47">30</td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_48"></td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_49"></td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_50"></td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_51"></td>
+                <td class="pt-[2rem] text-[1.4rem] md:text-[1.5rem] text-center" data-editable="field_52"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="w-full pt-[2rem] drop-shadow-lg border-t">
+            <div class="relative flex max-sm:flex-col max-md:items-center m-auto p-[1rem] text-center text-[#666]">
+              <div id="TIMER_DAY" class="w-full border-r border-[#784d9d33]" data-aos="fade-up" data-aos-delay="100">
+                <span class="font-dancing text-[#668863] text-[3rem] md:text-[3.6rem]">00</span>
+                <p class="font-dancing font-light text-[1.8rem] md:text-[3rem] text-[#784d9d]">
+                  Days
+                </p>
+              </div>
+              <div id="TIMER_HOUR" class="w-full border-r border-[#784d9d33]" data-aos="fade-up" data-aos-delay="200">
+                <span class="font-dancing text-[#668863] text-[3rem] md:text-[3.6rem]">00</span>
+                <p class="font-dancing font-light text-[1.8rem] md:text-[3rem] text-[#784d9d]">
+                  Hours
+                </p>
+              </div>
+              <div id="TIMER_MIN" class="w-full border-r border-[#784d9d33]" data-aos="fade-up" data-aos-delay="300">
+                <span class="font-dancing text-[#668863] text-[3rem] md:text-[3.6rem]">00</span>
+                <p class="font-dancing font-light text-[1.8rem] md:text-[3rem] text-[#784d9d]">
+                  Minutes
+                </p>
+              </div>
+              <div id="TIMER_SEC" class="w-full" data-aos="fade-up" data-aos-delay="400">
+                <span class="font-dancing text-[#668863] text-[3rem] md:text-[3.6rem]">00</span>
+                <p class="font-dancing font-light text-[1.8rem] md:text-[3rem] text-[#784d9d]">
+                  Seconds
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Calender Section End -->
+    <!-- Love Story Section Begin -->
+    <section id="SECTION_STORY">
+      <div class="wrapper bg-[#f0f5f3] shadow-lg element_flower5">
+        <div>
+          <div class="mb-[5rem]">
+            <h2 class="h1 mb-[2rem] text-center" data-editable="field_53" data-aos="fade-up">Chuyện chúng
+              tớ</h2>
+            <p class="text-center" data-editable="field_54" data-aos="fade-up" data-aos-delay="200">Cảm ơn bạn rất nhiều
+              vì đã
+              gửi những lời chúc mừng tốt đẹp
+              nhất đến đám cưới của
+              chúng tôi!
+            </p>
+          </div>
+          <div class="space-y-[5rem] px-[3rem]">
+            <div data-aos="fade-up">
+              <span class="mb-[1rem]" data-editable="field_55">
+                June 10, 2017
+              </span>
+              <h3 class="h2 mb-[1rem]" data-editable="field_56">
+                17 bẻ gãy sừng trâu
+              </h3>
+              <p class="mb-[3rem]" data-editable="field_57">
+                17, độ tuổi với những rung động đầu đời, non nớt, trong trẻo như sớm ban mai. Anh bị thu hút bởi một cô
+                gái ngây ngô, vui vẻ và đáng mến. Em bị thu hút bởi chàng trai tóc đầu đinh, quậy quậy nhưng rất đáng
+                yêu. Và chúng mình gặp nhau nơi lòng hăng say phục vụ nhà Chúa.
+              </p>
+              <picture class="w-full aspect-square rounded-[1rem] shadow-md" data-image-editable="photo_2"></picture>
+            </div>
+            <div data-aos="fade-up">
+              <span class="mb-[1rem]" data-editable="field_58">
+                June 10, 2017
+              </span>
+              <h3 class="h2 mb-[1rem]" data-editable="field_59">
+                17 bẻ gãy sừng trâu
+              </h3>
+              <p class="mb-[3rem]" data-editable="field_60">
+                17, độ tuổi với những rung động đầu đời, non nớt, trong trẻo như sớm ban mai. Anh bị thu hút bởi một cô
+                gái ngây ngô, vui vẻ và đáng mến. Em bị thu hút bởi chàng trai tóc đầu đinh, quậy quậy nhưng rất đáng
+                yêu. Và chúng mình gặp nhau nơi lòng hăng say phục vụ nhà Chúa.
+              </p>
+              <picture class="w-full aspect-square rounded-[1rem] shadow-md" data-image-editable="photo_3"></picture>
+            </div>
+            <div data-aos="fade-up">
+              <span class="mb-[1rem]" data-editable="field_61">
+                June 10, 2017
+              </span>
+              <h3 class="h2 mb-[1rem]" data-editable="field_62">
+                17 bẻ gãy sừng trâu
+              </h3>
+              <p class="mb-[3rem]" data-editable="field_63">
+                17, độ tuổi với những rung động đầu đời, non nớt, trong trẻo như sớm ban mai. Anh bị thu hút bởi một cô
+                gái ngây ngô, vui vẻ và đáng mến. Em bị thu hút bởi chàng trai tóc đầu đinh, quậy quậy nhưng rất đáng
+                yêu. Và chúng mình gặp nhau nơi lòng hăng say phục vụ nhà Chúa.
+              </p>
+              <picture class="w-full aspect-square rounded-[1rem] shadow-md" data-image-editable="photo_4"></picture>
+            </div>
+            <div data-aos="fade-up">
+              <span class="mb-[1rem]" data-editable="field_64">
+                June 10, 2017
+              </span>
+              <h3 class="h2 mb-[1rem]" data-editable="field_65">
+                17 bẻ gãy sừng trâu
+              </h3>
+              <p class="mb-[3rem]" data-editable="field_66">
+                17, độ tuổi với những rung động đầu đời, non nớt, trong trẻo như sớm ban mai. Anh bị thu hút bởi một cô
+                gái ngây ngô, vui vẻ và đáng mến. Em bị thu hút bởi chàng trai tóc đầu đinh, quậy quậy nhưng rất đáng
+                yêu. Và chúng mình gặp nhau nơi lòng hăng say phục vụ nhà Chúa.
+              </p>
+              <picture class="w-full aspect-square rounded-[1rem] shadow-md" data-image-editable="photo_5"></picture>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Love Story Section End -->
+    <!-- Album Section Begin -->
+    <section id="SECTION_ALBUM">
+      <div class="wrapper bg-[#f0f5f3] shadow-lg">
+        <div>
+          <div class="mb-[5rem]">
+            <h2 class="h1 mb-[2rem] text-center" data-editable="field_67" data-aos="fade-up">
+              Album Hình Cưới
+            </h2>
+            <p class="text-center" data-editable="field_68" data-aos="fade-up" data-aos-delay="200">
+              Được ai đó yêu sâu sắc sẽ mang lại cho bạn sức mạnh, trong khi yêu ai đó sâu sắc sẽ cho bạn dũng khí.
+            </p>
+          </div>
+          <div class="grid grid-cols-2 h-full gap-[1.2rem] md:gap-[1.6rem] drop-shadow-lg">
+            <div>
+              <div class="shadow-lg rounded-[1rem] mb-[1.2rem] md:mb-[1.6rem]" data-aos="zoom-in" data-aos-delay="100">
+                <picture class="aspect-[25/35] rounded-[1rem]" data-image-editable="photo_6"></picture>
+              </div>
+              <div class="shadow-lg rounded-[1rem] mb-[1.2rem] md:mb-[1.6rem]" data-aos="zoom-in" data-aos-delay="300">
+                <picture class="aspect-[25/15] rounded-[1rem]" data-image-editable="photo_7"></picture>
+              </div>
+              <div class="shadow-lg rounded-[1rem] mb-[1.2rem] md:mb-[1.6rem]" data-aos="zoom-in" data-aos-delay="500">
+                <picture class="aspect-[25/35] rounded-[1rem]" data-image-editable="photo_8"></picture>
+              </div>
+              <div class="shadow-lg rounded-[1rem] mb-[1.2rem] md:mb-[1.6rem]" data-aos="zoom-in" data-aos-delay="700">
+                <picture class="aspect-[25/15] rounded-[1rem]" data-image-editable="photo_9"></picture>
+              </div>
+            </div>
+            <div>
+              <div class="shadow-lg rounded-[1rem] mb-[1.2rem] md:mb-[1.6rem]" data-aos="zoom-in" data-aos-delay="100">
+                <picture class="aspect-[25/15] rounded-[1rem]" data-image-editable="photo_10"></picture>
+              </div>
+              <div class="shadow-lg rounded-[1rem] mb-[1.2rem] md:mb-[1.6rem]" data-aos="zoom-in" data-aos-delay="200">
+                <picture class="aspect-[25/35] rounded-[1rem]" data-image-editable="photo_11"></picture>
+              </div>
+              <div class="shadow-lg rounded-[1rem] mb-[1.2rem] md:mb-[1.6rem]" data-aos="zoom-in" data-aos-delay="400">
+                <picture class="aspect-[25/15] rounded-[1rem]" data-image-editable="photo_12"></picture>
+              </div>
+              <div class="shadow-lg rounded-[1rem] mb-[1.2rem] md:mb-[1.6rem]" data-aos="zoom-in" data-aos-delay="600">
+                <picture class="aspect-[25/35] rounded-[1rem]" data-image-editable="photo_13"></picture>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Album Section End -->
+    <!-- Date Section Begin -->
+    <section id="SECTION_DATE">
+      <div class="wrapper bg-white">
+        <div>
+          <div class="mb-[5rem]">
+            <h2 class="h1 mb-[2rem] text-center" data-editable="field_69" data-aos="fade-up">Sự
+              Kiện Cưới</h2>
+            <p class="text-center" data-editable="field_70" data-aos="fade-up" data-aos-delay="200">Cảm ơn bạn rất nhiều
+              vì đã gửi những lời chúc mừng tốt đẹp
+              nhất đến đám cưới của
+              chúng tôi!
+            </p>
+          </div>
+          <div class="space-y-[3rem] drop-shadow-md">
+            <div class="flex" data-aos="fade-right">
+              <picture class="w-1/3 aspect-square rounded-l-[1rem]" data-image-editable="photo_14"></picture>
+              <div class="p-[1.6rem] bg-[#f0f5f3] rounded-r-[1rem]">
+                <h3 class="h2" data-editable="field_71">Lễ Cưới Nhà Nữ
+                </h3>
+                <span data-editable="field_72">07:30 10/02/2023
+                </span>
+                <p data-editable="field_73">TƯ GIA NHÀ NỮ - Phước Ninh, Hải Châu, Đà Nẵng
+                </p>
+              </div>
+            </div>
+            <div class="flex" data-aos="fade-right" data-aos-delay="200">
+              <picture class="w-1/3 aspect-square rounded-l-[1rem]" data-image-editable="photo_15"></picture>
+              <div class="p-[1.6rem] bg-[#f0f5f3] rounded-r-[1rem]">
+                <h3 class="h2" data-editable="field_74">Lễ Cưới Nhà Nữ
+                </h3>
+                <span data-editable="field_75">07:30 10/02/2023
+                </span>
+                <p data-editable="field_76">TƯ GIA NHÀ NỮ - Phước Ninh, Hải Châu, Đà Nẵng
+                </p>
+              </div>
+            </div>
+            <div class="flex" data-aos="fade-right" data-aos-delay="400">
+              <picture class="w-1/3 aspect-square rounded-l-[1rem]" data-image-editable="photo_16"></picture>
+              <div class="p-[1.6rem] bg-[#f0f5f3] rounded-r-[1rem]">
+                <h3 class="h2" data-editable="field_77">Lễ Cưới Nhà Nữ
+                </h3>
+                <span data-editable="field_78">07:30 10/02/2023
+                </span>
+                <p data-editable="field_79">TƯ GIA NHÀ NỮ - Phước Ninh, Hải Châu, Đà Nẵng
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Date Section End -->
+    <!-- Introduce Section Begin -->
+    <section id="SECTION_INTRODUCE">
+      <div class="wrapper element_flower5 bg-[#f0f5f3]">
+        <div>
+          <div class="mb-[3rem] text-center">
+            <picture class=""></picture>
+            <h2 class="h1" data-editable="field_80" data-aos="fade-up">- Groom & Bride -</h2>
+            <span data-editable="field_81" data-aos="fade-up" data-aos-delay="200">introducing a wonder groom and beatiful bride</span>
+          </div>
+          <div class="space-y-[3rem]">
+            <div class="text-center">
+              <picture class="w-3/4 m-auto mb-[3rem] aspect-square rounded-full" data-image-editable="photo_17">
+              </picture>
+              <span data-editable="field_82">Con ông: Hoàng Anh Kiệt</span>
+              <span class="mb-[2rem]" data-editable="field_83">Con bà: Nguyễn Thị Hoài</span>
+              <p class="mb-[2rem]" data-editable="field_84">
+                Là bác sĩ nha khoa hiện đang công tác tại một phòng khám nha khoa ở Quận 1 thành phồ Hồ Chí Minh. Là một
+                người hiền lành và ít nói. Luôn coi trọng tình cảm và yêu thương gia đình. Với anh: “Gia đình là điểm
+                tựa vững chắc nhất và là bến đỗ bình yên không đâu sánh bằng đối với mỗi con người. Đó luôn là nơi tràn
+                ngập tình yêu thương để ta trở về.”
+              </p>
+              <span class="h1 font-great" data-editable="field_85">groom Kiến Văn</span>
+            </div>
+            <div class="text-center">
+              <picture class="w-3/4 m-auto mb-[3rem] aspect-square rounded-full" data-image-editable="photo_18">
+              </picture>
+              <span data-editable="field_86">Con ông: Hoàng Anh Kiệt</span>
+              <span class="mb-[2rem]" data-editable="field_87">Con bà: Nguyễn Thị Hoài</span>
+              <p class="mb-[2rem]" data-editable="field_88">
+                Là bác sĩ nha khoa hiện đang công tác tại một phòng khám nha khoa ở Quận 1 thành phồ Hồ Chí Minh. Là một
+                người hiền lành và ít nói. Luôn coi trọng tình cảm và yêu thương gia đình. Với anh: “Gia đình là điểm
+                tựa vững chắc nhất và là bến đỗ bình yên không đâu sánh bằng đối với mỗi con người. Đó luôn là nơi tràn
+                ngập tình yêu thương để ta trở về.”
+              </p>
+              <span class="h1 font-great" data-editable="field_89">groom Kiến Văn</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Introduce Section End -->
+    <!-- Form Section Begin -->
+    <section id="SECTION_FORM">
+      <div class="w-full wrapper z-[10] relative gap-[2rem] bg-[#dbe3e2]">
+        <div class="w-2/3 m-auto max-md:mb-[2rem] text-center" data-aos="fade-left" data-aos-delay="300"
+          style="transition-delay: 300ms; transition-duration: 800ms">
+          <p class="uppercase text-[1.8rem] md:text-[2.5rem] mb-[2.4rem] tracking-[.1rem]" data-editable="form_1">
+            Sổ lưu bút
+          </p>
+          <h2 class="h1 mb-[1.2rem]" data-editable="form_2">
+            Come to attend our marriage ceremony
+          </h2>
+          <p class="mb-[2.4rem] text-[1.6rem] md:text-[1.7rem]" data-editable="form_3">
+            Congratulations on your wedding! Hope it was the most wonderful
+            day ever Now that your wedding is done and dusted, there is only
+            one more thing left to do..Oh yes the thank you cards!
+          </p>
+        </div>
+        <div class="" data-aos="fade-right">
+          <div class="flex-1 p-[3rem] rounded-2xl text-center w-full max-w-[40rem] m-auto">
+            <form action="" class="space-y-4">
+              <div class="relative">
+                <input type="text" placeholder="Tên của bạn"
+                  class="w-full px-4 py-2 rounded-[.6rem] border border-[#2B2B2B] focus:outline-none text-[1.3rem] bg-white" />
+              </div>
+
+              <div class="relative">
+                <input type="text" placeholder="Số điện thoại"
+                  class="w-full px-4 py-2 rounded-[.6rem] border border-[#2B2B2B] focus:outline-none text-[1.3rem] bg-white" />
+              </div>
+
+              <div class="relative">
+                <input type="number" min="1" max="5" placeholder="Số người tham dự"
+                  class="w-full px-4 py-2 rounded-[.6rem] border border-[#2B2B2B] focus:outline-none text-[1.3rem] bg-white" />
+              </div>
+
+              <div class="flex justify-around py-[10px] text-[1.7rem] text-gray-600">
+                <label class="flex items-center space-x-2 cursor-pointer group">
+                  <input type="radio" name="guest_type" id="side_groom" class="accent-black" />
+                  <span class="group-hover:text-black">Nhà trai</span>
+                </label>
+                <label class="flex items-center space-x-2 cursor-pointer group">
+                  <input type="radio" name="guest_type" id="side_bride" class="accent-black" />
+                  <span class="group-hover:text-black">Nhà gái</span>
+                </label>
+              </div>
+
+              <div class="relative">
+                <textarea name="congratulations" rows="3" placeholder="Lời chúc của bạn"
+                  class="w-full px-4 py-2 rounded-[.6rem] border border-[#2B2B2B] focus:outline-none text-[1.3rem] bg-white resize-none"></textarea>
+              </div>
+              <button type="submit"
+                class="rounded-[1rem] px-[2rem] py-[1rem] text-[10px] font-semibold transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60 bg-[#2B2B2B] text-white">
+                Gửi lời chúc
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Form Section End -->
+    <!-- Wedding Gift Section Begin -->
+    <section id="SECTION_GIFT">
+      <div class="wrapper text-center py-[15px] bg-[#aac9bb]">
+        <div class="mb-[2rem]" data-aos="fade-up">
+          <h2 class="h1 mb-[1rem] text-[#2B2B2B]" data-editable="gift_title">
+            Wedding box
+          </h2>
+          <p class="text-[1.6rem] md:text-[1.7rem]" data-editable="gift_des">
+            your presence is our best gift
+          </p>
+        </div>
+        <div class="justify-self-center text-black p-[10px] rounded-[10px]">
+          <div class="flex flex-col gap-[3rem] ">
+            <div class="flex-1 p-[1rem] shadow-md rounded-[1rem] bg-white">
+              <h6 class="text-[3rem] mb-[1rem] text-[#2B2B2B]" data-editable="groom_title" data-aos="fade-up"
+                data-aos-delay="100">
+                Groom
+              </h6>
+              <picture class="size-[300px] aspect-[1/1] m-auto mb-[1rem]" data-image-editable="qr_1" data-aos="fade-up"
+                data-aos-delay="200">
+              </picture>
+              <p data-aos="fade-up" data-aos-delay="300">
+                <span data-editable="groom_name">Nguyễn ABC</span>
+              </p>
+              <p data-aos="fade-up" data-aos-delay="400">
+                <span data-editable="groom_bank">Techcomebank</span>
+              </p>
+              <p data-aos="fade-up" data-aos-delay="500">
+                <span data-editable="groom_bank_nummber">0123456789</span>
+              </p>
+            </div>
+            <div class="flex-1 p-[1rem] shadow-md rounded-[1rem] bg-white">
+              <h6 class="text-[3rem] mb-[1rem] text-[#2B2B2B]" data-editable="bride_title" data-aos="fade-up"
+                data-aos-delay="100">
+                Bride
+              </h6>
+              <picture class="size-[300px] aspect-[1/1] m-auto mb-[1rem]" data-image-editable="qr_2" data-aos="fade-up"
+                data-aos-delay="200">
+              </picture>
+              <p data-aos="fade-up" data-aos-delay="300">
+                <span data-editable="bride_name">Nguyễn ABC</span>
+              </p>
+              <p data-aos="fade-up" data-aos-delay="400">
+                <span data-editable="bride_bank">Techcomebank</span>
+              </p>
+              <p data-aos="fade-up" data-aos-delay="500">
+                <span data-editable="bride_bank_number">0123456789</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Wedding Gift Section End -->
+
+    <footer>
+      <p class="bg-gray-200 text-center">Bản quyền thuộc Hiweb</p>
+    </footer>
+    <div class="snowflakes" aria-hidden="true">
+      <div class="snowflake" style="font-size: 20px">🌿</div>
+      <div class="snowflake">❅</div>
+      <div class="snowflake" style="font-size: 18px">💚</div>
+      <div class="snowflake">❅</div>
+      <div class="snowflake" style="font-size: 20px">🌿</div>
+      <div class="snowflake" style="font-size: 22px">❅</div>
+      <div class="snowflake" style="font-size: 14px">💚</div>
+      <div class="snowflake" style="font-size: 15px">❅</div>
+    </div>
+  </main>
+  <script>
+    const OPTIONS = { loop: true };
+
+    const emblaNode = document.querySelector(".embla");
+    const viewportNode = emblaNode.querySelector(".embla__viewport");
+    const prevBtnNode = emblaNode.querySelector(".embla__button--prev");
+    const nextBtnNode = emblaNode.querySelector(".embla__button--next");
+
+    const emblaApi = EmblaCarousel(viewportNode, OPTIONS);
+
+    const addPrevNextButtonClickHandlers = (emblaApi, prevBtn, nextBtn) => {
+      const scrollPrev = () => emblaApi.scrollPrev();
+      const scrollNext = () => emblaApi.scrollNext();
+
+      prevBtn.addEventListener("click", scrollPrev, false);
+      nextBtn.addEventListener("click", scrollNext, false);
+
+      const togglePrevNextButtonsState = () => {
+        if (emblaApi.canScrollPrev()) prevBtn.removeAttribute("disabled");
+        else prevBtn.setAttribute("disabled", "disabled");
+
+        if (emblaApi.canScrollNext()) nextBtn.removeAttribute("disabled");
+        else nextBtn.setAttribute("disabled", "disabled");
+      };
+
+      emblaApi
+        .on("select", togglePrevNextButtonsState)
+        .on("reinit", togglePrevNextButtonsState);
+
+      togglePrevNextButtonsState();
+    };
+
+    addPrevNextButtonClickHandlers(emblaApi, prevBtnNode, nextBtnNode);
+    addDotButtonsAndClickHandlers(emblaApi);
+    function toggleGalleryPopup(show) {
+      const popup = document.getElementById("GALLERY_POPUP");
+      const viewportNode = popup.querySelector(".embla__viewport");
+      const prevBtn = popup.querySelector(".embla__button--prev");
+      const nextBtn = popup.querySelector(".embla__button--next");
+
+      if (show) {
+        popup.classList.add("active");
+        document.body.style.overflow = "hidden";
+
+        if (!emblaApi) {
+          emblaApi = EmblaCarousel(viewportNode, { loop: true });
+
+          prevBtn.addEventListener("click", () => emblaApi.scrollPrev());
+          nextBtn.addEventListener("click", () => emblaApi.scrollNext());
+        } else {
+          setTimeout(() => {
+            emblaApi.reInit();
+          }, 10);
+        }
+      } else {
+        popup.classList.remove("active");
+        document.body.style.overflow = "auto";
+      }
+    }
+  </script>
+</body>
+
+</html>
