@@ -224,88 +224,25 @@ const UltimateHtmlEditorPage = () => {
         const style = doc.createElement('style')
         style.id = 'editor-styles'
         style.textContent = `
-            /* Ensure iframe content is fully visible */
-            html, body {
-              width: 100% !important;
-              min-height: 100vh !important;
-              overflow-x: hidden !important;
-              margin: 0 !important;
-              padding: 0 !important;
-            }
-            
-            /* Fix for templates with fixed height containers */
-            body > div:first-child,
-            body > section:first-child,
-            #root,
-            #app,
-            #__next,
-            .app,
-            .container-fluid,
-            [class*="container"] {
-              width: 100% !important;
-              min-height: auto !important;
-              height: auto !important;
-              max-width: 100% !important;
-              transform: none !important;
-              scale: 1 !important;
-            }
-
-            /* Unset specific height constraints that might clip content */
-            [class*="h-[calc(100vh"],
-            [class*="min-h-screen"],
-            [class*="h-screen"] {
-              height: auto !important;
-              min-height: 100vh !important;
-              overflow: visible !important;
-            }
-            
-            /* Remove any transform/scale that might shrink content */
-            * {
-              transform: none !important;
-              scale: 1 !important;
-            }
-            
-            /* Ensure all sections are visible */
-            section, div[class*="section"] {
-              width: 100% !important;
-              min-height: auto !important;
-            }
-            
             [data-editable] {
-              cursor: text !important;
+              cursor: text;
               outline: 1px dashed transparent;
+              transition: outline 0.2s, background 0.2s;
             }
             [data-editable]:hover {
               outline: 2px dashed #a855f7 !important;
-              background: rgba(168, 85, 247, 0.05);
+              background: rgba(168, 85, 247, 0.05) !important;
             }
             [data-editable]:focus {
               outline: 2px solid #f59e0b !important;
-              background: rgba(251, 191, 36, 0.05);
+              background: rgba(251, 191, 36, 0.05) !important;
+              content-visibility: auto;
             }
           `
         doc.head.appendChild(style)
       }
 
       injectStyles()
-
-      // Force layout recalculation for React-based templates
-      if (doc.body) {
-        // Remove any inline styles that might constrain size
-        doc.body.style.width = '100%'
-        doc.body.style.minHeight = '100vh'
-        doc.body.style.height = 'auto'
-
-        // Find and fix root containers
-        const rootContainers = doc.querySelectorAll('#root, #app, #__next, .app, [class*="App"], body > div:first-child')
-        rootContainers.forEach(el => {
-          el.style.width = '100%'
-          el.style.minHeight = '100vh'
-          el.style.height = 'auto'
-          el.style.transform = 'none'
-          el.style.scale = '1'
-        })
-      }
     }
 
     const setupEventListeners = () => {
@@ -317,9 +254,9 @@ const UltimateHtmlEditorPage = () => {
             const style = doc.createElement('style')
             style.id = 'editor-styles'
             style.textContent = `
-              [data-editable] { cursor: text !important; outline: 1px dashed transparent; }
-              [data-editable]:hover { outline: 2px dashed #a855f7 !important; background: rgba(168, 85, 247, 0.05); }
-              [data-editable]:focus { outline: 2px solid #f59e0b !important; background: rgba(251, 191, 36, 0.05); }
+              [data-editable] { cursor: text; outline: 1px dashed transparent; transition: outline 0.2s, background 0.2s; }
+              [data-editable]:hover { outline: 2px dashed #a855f7 !important; background: rgba(168, 85, 247, 0.05) !important; }
+              [data-editable]:focus { outline: 2px solid #f59e0b !important; background: rgba(251, 191, 36, 0.05) !important; }
             `
             doc.head.appendChild(style)
           }
@@ -1737,7 +1674,7 @@ const UltimateHtmlEditorPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 dark:bg-black overflow-hidden flex flex-col">
+    <div className="h-screen bg-stone-50 dark:bg-black overflow-hidden flex flex-col">
 
       {/* DESKTOP HEADER (Hidden on Mobile) */}
       <header className="hidden md:flex bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 h-16 items-center justify-between px-6 z-40">
@@ -2239,13 +2176,13 @@ if (typeof document !== 'undefined' && !document.getElementById('react-datepicke
     }
     
     .react-datepicker__time-list-item:hover {
-      background: #f3e8ff !important;
+      background: #f3e8ff;
       color: #6b21a8;
     }
     
     .react-datepicker__time-list-item--selected {
-      background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%) !important;
-      color: white !important;
+      background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+      color: white;
       font-weight: 700;
     }
     

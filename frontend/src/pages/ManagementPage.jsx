@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import Modal from '../components/Modal'
 import invitationService from '../services/invitation.service'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
@@ -421,87 +422,87 @@ const ManagementPage = () => {
       </main>
 
       {/* Confirmation Dialog */}
-      {confirmDialog.show && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full border border-gray-200 dark:border-gray-700">
-            {/* Icon & Title */}
-            <div className="p-6 text-center">
-              <div className={`mx-auto w-12 h-12 rounded-lg flex items-center justify-center mb-4 ${confirmDialog.type === 'delete'
-                  ? 'bg-red-50 dark:bg-red-900/20'
+      <Modal
+        isOpen={confirmDialog.show}
+        onClose={() => setConfirmDialog({ show: false, type: '', invitation: null })}
+        title={
+          confirmDialog.type === 'delete' ? 'Xác nhận xóa' :
+          confirmDialog.type === 'copy' ? 'Xác nhận sao chép' :
+          'Xác nhận chỉnh sửa'
+        }
+        footer={
+          <>
+            <button
+              onClick={() => setConfirmDialog({ show: false, type: '', invitation: null })}
+              className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors"
+            >
+              Hủy
+            </button>
+            <button
+              onClick={() => {
+                if (confirmDialog.type === 'delete') confirmDelete()
+                else if (confirmDialog.type === 'copy') confirmDuplicate()
+                else if (confirmDialog.type === 'edit') confirmEdit()
+              }}
+              className={`flex-1 px-4 py-2.5 rounded-lg font-semibold transition-colors ${
+                confirmDialog.type === 'delete'
+                  ? 'bg-red-600 hover:bg-red-700 text-white'
                   : confirmDialog.type === 'copy'
-                    ? 'bg-blue-50 dark:bg-blue-900/20'
-                    : 'bg-orange-50 dark:bg-orange-900/20'
-                }`}>
-                {confirmDialog.type === 'delete' ? (
-                  <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                ) : confirmDialog.type === 'copy' ? (
-                  <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                ) : (
-                  <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                )}
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                {confirmDialog.type === 'delete' && 'Xác nhận xóa'}
-                {confirmDialog.type === 'copy' && 'Xác nhận sao chép'}
-                {confirmDialog.type === 'edit' && 'Xác nhận chỉnh sửa'}
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                {confirmDialog.type === 'delete' && (
-                  <>
-                    Bạn có chắc chắn muốn xóa thiệp <span className="font-semibold">"{confirmDialog.invitation?.title}"</span>?<br />
-                    <span className="text-red-600 dark:text-red-400 font-medium">Hành động này không thể hoàn tác!</span>
-                  </>
-                )}
-                {confirmDialog.type === 'copy' && (
-                  <>
-                    Bạn có muốn sao chép thiệp <span className="font-semibold">"{confirmDialog.invitation?.title}"</span>?<br />
-                    Một bản sao mới sẽ được tạo trong danh sách của bạn.
-                  </>
-                )}
-                {confirmDialog.type === 'edit' && (
-                  <>
-                    Bạn có muốn chỉnh sửa thiệp <span className="font-semibold">"{confirmDialog.invitation?.title}"</span>?<br />
-                    Bạn sẽ được chuyển đến trang chỉnh sửa.
-                  </>
-                )}
-              </p>
-            </div>
-
-            {/* Actions */}
-            <div className="flex gap-3 p-6 pt-0">
-              <button
-                onClick={() => setConfirmDialog({ show: false, type: '', invitation: null })}
-                className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors"
-              >
-                Hủy
-              </button>
-              <button
-                onClick={() => {
-                  if (confirmDialog.type === 'delete') confirmDelete()
-                  else if (confirmDialog.type === 'copy') confirmDuplicate()
-                  else if (confirmDialog.type === 'edit') confirmEdit()
-                }}
-                className={`flex-1 px-4 py-2.5 rounded-lg font-semibold transition-colors ${confirmDialog.type === 'delete'
-                    ? 'bg-red-600 hover:bg-red-700 text-white'
-                    : confirmDialog.type === 'copy'
-                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                      : 'bg-orange-600 hover:bg-orange-700 text-white'
-                  }`}
-              >
-                {confirmDialog.type === 'delete' && 'Xóa'}
-                {confirmDialog.type === 'copy' && 'Sao chép'}
-                {confirmDialog.type === 'edit' && 'Chỉnh sửa'}
-              </button>
-            </div>
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                    : 'bg-orange-600 hover:bg-orange-700 text-white'
+              }`}
+            >
+              {confirmDialog.type === 'delete' && 'Xóa'}
+              {confirmDialog.type === 'copy' && 'Sao chép'}
+              {confirmDialog.type === 'edit' && 'Chỉnh sửa'}
+            </button>
+          </>
+        }
+      >
+        <div className="text-center">
+          <div className={`mx-auto w-12 h-12 rounded-lg flex items-center justify-center mb-4 ${
+            confirmDialog.type === 'delete'
+              ? 'bg-red-50 dark:bg-red-900/20'
+              : confirmDialog.type === 'copy'
+                ? 'bg-blue-50 dark:bg-blue-900/20'
+                : 'bg-orange-50 dark:bg-orange-900/20'
+          }`}>
+            {confirmDialog.type === 'delete' ? (
+              <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            ) : confirmDialog.type === 'copy' ? (
+              <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            )}
           </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            {confirmDialog.type === 'delete' && (
+              <>
+                Bạn có chắc chắn muốn xóa thiệp <span className="font-semibold">&quot;{confirmDialog.invitation?.title}&quot;</span>?<br />
+                <span className="text-red-600 dark:text-red-400 font-medium">Hành động này không thể hoàn tác!</span>
+              </>
+            )}
+            {confirmDialog.type === 'copy' && (
+              <>
+                Bạn có muốn sao chép thiệp <span className="font-semibold">&quot;{confirmDialog.invitation?.title}&quot;</span>?<br />
+                Một bản sao mới sẽ được tạo trong danh sách của bạn.
+              </>
+            )}
+            {confirmDialog.type === 'edit' && (
+              <>
+                Bạn có muốn chỉnh sửa thiệp <span className="font-semibold">&quot;{confirmDialog.invitation?.title}&quot;</span>?<br />
+                Bạn sẽ được chuyển đến trang chỉnh sửa.
+              </>
+            )}
+          </p>
         </div>
-      )}
+      </Modal>
 
       <Footer />
     </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
+import Modal from '../components/Modal'
 import adminService from '../services/admin.service'
 import templateService from '../services/template.service'
 import { useToast } from '../context/ToastContext'
@@ -722,38 +723,32 @@ const DashboardTemplatesPage = () => {
       </div>
 
       {/* Delete Modal */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white dark:bg-gray-800 max-w-md w-full shadow-2xl">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Xác nhận xóa template
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
-                Bạn có chắc chắn muốn xóa template "{templateToDelete?.name}"?
-                Hành động này không thể hoàn tác.
-              </p>
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={() => {
-                    setShowDeleteModal(false)
-                    setTemplateToDelete(null)
-                  }}
-                  className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                  Hủy
-                </button>
-                <button
-                  onClick={handleDeleteTemplate}
-                  className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 transition-colors"
-                >
-                  Xóa
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => { setShowDeleteModal(false); setTemplateToDelete(null) }}
+        title="Xác nhận xóa template"
+        footer={
+          <>
+            <button
+              onClick={() => { setShowDeleteModal(false); setTemplateToDelete(null) }}
+              className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 rounded-lg"
+            >
+              Hủy
+            </button>
+            <button
+              onClick={handleDeleteTemplate}
+              className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 transition-colors rounded-lg"
+            >
+              Xóa
+            </button>
+          </>
+        }
+      >
+        <p className="text-gray-600 dark:text-gray-400">
+          Bạn có chắc chắn muốn xóa template &quot;{templateToDelete?.name}&quot;?
+          Hành động này không thể hoàn tác.
+        </p>
+      </Modal>
     </DashboardLayout>
   )
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import DashboardLayout from '../components/DashboardLayout'
+import Modal from '../components/Modal'
 import adminService from '../services/admin.service'
 import { useToast } from '../context/ToastContext'
 
@@ -500,85 +501,74 @@ const DashboardUsersPage = () => {
       </div>
 
       {/* User Modal */}
-      {showUserModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white dark:bg-gray-800 max-w-md w-full shadow-2xl">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
-                {editingUser ? 'Chỉnh sửa người dùng' : 'Thêm người dùng mới'}
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Họ và tên
-                  </label>
-                  <input
-                    type="text"
-                    value={userForm.full_name}
-                    onChange={(e) => setUserForm({...userForm, full_name: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none"
-                    placeholder="Nhập họ và tên"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    value={userForm.email}
-                    onChange={(e) => setUserForm({...userForm, email: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none"
-                    placeholder="Nhập email"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Vai trò
-                  </label>
-                  <select
-                    value={userForm.role}
-                    onChange={(e) => setUserForm({...userForm, role: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none"
-                  >
-                    {roles.map(role => (
-                      <option key={role.value} value={role.value}>{role.label}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Trạng thái
-                  </label>
-                  <select
-                    value={userForm.status}
-                    onChange={(e) => setUserForm({...userForm, status: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none"
-                  >
-                    <option value="active">Hoạt động</option>
-                    <option value="inactive">Vô hiệu hóa</option>
-                    <option value="pending">Chờ xác nhận</option>
-                  </select>
-                </div>
-              </div>
-              <div className="flex justify-end gap-3 mt-6">
-                <button
-                  onClick={() => setShowUserModal(false)}
-                  className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
-                >
-                  Hủy
-                </button>
-                <button
-                  onClick={handleSaveUser}
-                  className="px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
-                >
-                  {editingUser ? 'Cập nhật' : 'Tạo mới'}
-                </button>
-              </div>
-            </div>
+      <Modal
+        isOpen={showUserModal}
+        onClose={() => setShowUserModal(false)}
+        title={editingUser ? 'Chỉnh sửa người dùng' : 'Thêm người dùng mới'}
+        footer={
+          <>
+            <button
+              onClick={() => setShowUserModal(false)}
+              className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+            >
+              Hủy
+            </button>
+            <button
+              onClick={handleSaveUser}
+              className="px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors rounded-lg"
+            >
+              {editingUser ? 'Cập nhật' : 'Tạo mới'}
+            </button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Họ và tên</label>
+            <input
+              type="text"
+              value={userForm.full_name}
+              onChange={(e) => setUserForm({...userForm, full_name: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none rounded-lg"
+              placeholder="Nhập họ và tên"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+            <input
+              type="email"
+              value={userForm.email}
+              onChange={(e) => setUserForm({...userForm, email: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none rounded-lg"
+              placeholder="Nhập email"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Vai trò</label>
+            <select
+              value={userForm.role}
+              onChange={(e) => setUserForm({...userForm, role: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none rounded-lg"
+            >
+              {roles.map(role => (
+                <option key={role.value} value={role.value}>{role.label}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Trạng thái</label>
+            <select
+              value={userForm.status}
+              onChange={(e) => setUserForm({...userForm, status: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent outline-none rounded-lg"
+            >
+              <option value="active">Hoạt động</option>
+              <option value="inactive">Vô hiệu hóa</option>
+              <option value="pending">Chờ xác nhận</option>
+            </select>
           </div>
         </div>
-      )}
+      </Modal>
     </DashboardLayout>
   )
 }

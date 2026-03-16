@@ -25,6 +25,7 @@ import TemplateTestPage from './pages/TemplateTestPage.jsx'
 import TemplateExportPage from './pages/TemplateExportPage.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
 import DashboardInvitationsPage from './pages/DashboardInvitationsPage.jsx'
+import UserInvitationsPage from './pages/UserInvitationsPage.jsx'
 import DashboardTemplatesPage from './pages/DashboardTemplatesPage.jsx'
 import DashboardTemplateEditorPage from './pages/DashboardTemplateEditorPage.jsx'
 import DashboardCategoriesPage from './pages/DashboardCategoriesPage.jsx'
@@ -34,6 +35,7 @@ import DashboardSettingsPage from './pages/DashboardSettingsPage.jsx'
 import DashboardProfilePage from './pages/DashboardProfilePage.jsx'
 import CategoryPage from './pages/CategoryPage.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
+import GalleryPage from './pages/GalleryPage.jsx'
 
 function App() {
   return (
@@ -45,16 +47,65 @@ function App() {
           <ToastContainer />
           <Routes>
             {/* Public Routes */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/collection" element={<CollectionPage />} />
-            <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/contact" element={<ContactPage />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <HomePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/collection"
+              element={
+                <ProtectedRoute>
+                  <CollectionPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pricing"
+              element={
+                <ProtectedRoute>
+                  <PricingPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/contact"
+              element={
+                <ProtectedRoute>
+                  <ContactPage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/template-test" element={<TemplateTestPage />} />
-            <Route path="/template-export" element={<TemplateExportPage />} />
+            <Route
+              path="/template-test"
+              element={
+                <ProtectedRoute>
+                  <TemplateTestPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/template-export"
+              element={
+                <ProtectedRoute>
+                  <TemplateExportPage />
+                </ProtectedRoute>
+              }
+            />
             {/* Public Invitation View */}
-            <Route path="/invitation/:slug" element={<InvitationViewPage />} />
+            <Route
+              path="/invitation/:slug"
+              element={
+                <ProtectedRoute>
+                  <InvitationViewPage />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Protected Routes */}
             <Route
@@ -113,6 +164,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+             <Route
+              path="/gallery"
+              element={
+                <ProtectedRoute>
+                  <GalleryPage />
+                </ProtectedRoute>
+              }
+            />
             {/* Admin Template Management - Requires admin permissions */}
             <Route
               path="/admin/templates"
@@ -137,6 +196,14 @@ function App() {
               element={
                 <AdminRoute>
                   <DashboardInvitationsPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/dashboard/invitations/user/:userUuid"
+              element={
+                <AdminRoute>
+                  <UserInvitationsPage />
                 </AdminRoute>
               }
             />

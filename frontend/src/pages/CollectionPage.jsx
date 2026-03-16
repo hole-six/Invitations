@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import Modal from '../components/Modal'
 import templateService from '../services/template.service'
 import invitationService from '../services/invitation.service'
 import { useAuth } from '../context/AuthContext'
@@ -135,8 +136,13 @@ const CollectionPage = () => {
         }
       }).filter(Boolean)
 
+      const rawCategories = categoriesRes?.data || []
+      const activeCategories = Array.isArray(rawCategories)
+        ? rawCategories.filter((category) => !category?.deleted_at)
+        : []
+
       setTemplates(apiTemplates)
-      setCategories(categoriesRes?.data || [])
+      setCategories(activeCategories)
 
       const paginationMeta = templatesRes?.pagination
         || templatesRes?.meta
@@ -228,12 +234,12 @@ const CollectionPage = () => {
       // API doesn't return invitation data, need to fetch the latest invitation
       // Get all invitations and find the one we just created by slug
       const invitationsResponse = await invitationService.getAll({ limit: 10, sort_by: 'created_at', sort_dir: 'DESC' });
-      
+
       console.log('📋 Fetched invitations:', invitationsResponse);
-      
+
       // Find invitation by slug (the one we just created)
       const invitations = invitationsResponse.data || invitationsResponse;
-      const newInvitation = Array.isArray(invitations) 
+      const newInvitation = Array.isArray(invitations)
         ? invitations.find(inv => inv.slug === slug)
         : null;
 
@@ -248,21 +254,21 @@ const CollectionPage = () => {
       // Check if invitation has html_content
       if (!newInvitation.html_content) {
         console.warn('⚠️ Invitation has no HTML content, need to copy from template');
-        
+
         // Get template HTML content from the selectedTemplate we already have
         let templateHtml = selectedTemplate?.html_template; // Template uses html_template
-        
+
         // If selectedTemplate has no html_template, try to get from designData
         if (!templateHtml && selectedTemplate?.designData?.html) {
           console.log('📄 Using HTML from template designData...');
           templateHtml = selectedTemplate.designData.html;
         }
-        
+
         if (templateHtml) {
           console.log('📄 Copying HTML from template to invitation...');
           console.log('🔑 Using UUID:', newInvitation.uuid);
           console.log('📝 HTML length:', templateHtml.length);
-          
+
           try {
             // Update invitation with template HTML - WAIT for completion
             // Invitation uses html_content (not html_template)
@@ -272,11 +278,11 @@ const CollectionPage = () => {
               slug: newInvitation.slug || slug,
               status: 'draft'
             };
-            
+
             console.log('📤 Sending update data:', Object.keys(updateData));
-            
+
             await invitationService.update(newInvitation.uuid, updateData);
-            
+
             console.log('✅ HTML content copied successfully');
             toast.success('✅ Đã sao chép nội dung từ template');
           } catch (err) {
@@ -758,99 +764,71 @@ const CollectionPage = () => {
       `}</style>
 
 
-      {/* Editor Selection Modal - Clean & Professional */}
-      {showEditorModal && selectedTemplate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-800 shadow-2xl max-w-3xl w-full overflow-hidden rounded-xl max-h-[90vh] flex flex-col">
-            {/* Header - Clean */}
-            <div className="bg-gray-900 dark:bg-white p-4 md:p-6 text-white dark:text-black flex-shrink-0">
-              <div className="flex justify-between items-start gap-4">
-                <div className="flex-1">
-                  <h2 className="text-xl md:text-2xl font-bold mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>Chọn Loại Editor</h2>
-                  <p className="text-white/90 dark:text-black/90 text-sm md:text-base">Bạn muốn chỉnh sửa template bằng cách nào?</p>
-                </div>
-                <button
-                  onClick={() => setShowEditorModal(false)}
-                  className="text-white/80 hover:text-white dark:text-black/80 dark:hover:text-black flex-shrink-0"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+      {/* Editor Selection Modal */}
+      <Modal
+        isOpen={showEditorModal && !!selectedTemplate}
+        onClose={() => { setShowEditorModal(false); setSelectedTemplate(null) }}
+        title="Chọn Loại Editor"
+        size="2xl"
+        footer={
+          <button
+            onClick={() => { setShowEditorModal(false); setSelectedTemplate(null) }}
+            disabled={creatingInvitation}
+            className="px-4 py-2 md:px-6 md:py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 font-medium rounded-lg"
+          >
+            Hủy
+          </button>
+        }
+      >
+        <p className="text-gray-600 dark:text-gray-400 mb-4">Bạn muốn chỉnh sửa template bằng cách nào?</p>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 max-w-2xl mx-auto">
+          {/* Canvas Editor Option */}
+          <button
+            onClick={() => handleCreateInvitation('canvas')}
+            disabled={creatingInvitation}
+            className="group relative p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
+          >
+            <div className="flex flex-col items-center text-center gap-3">
+              <div className="w-14 h-14 md:w-16 md:h-16 bg-gray-900 dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black">
+                <svg className="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">Canvas Editor</h3>
+                <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">Kéo thả, chỉnh sửa từng element. Dễ dùng.</p>
+              </div>
+              <div className="flex flex-wrap gap-1.5 justify-center">
+                <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Dễ dùng</span>
+                <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Drag & Drop</span>
               </div>
             </div>
+          </button>
 
-            {/* Content - Scrollable */}
-            <div className="p-4 md:p-6 overflow-y-auto flex-1">
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 max-w-2xl mx-auto">
-                {/* Canvas Editor Option */}
-                <button
-                  onClick={() => handleCreateInvitation('canvas')}
-                  disabled={creatingInvitation}
-                  className="group relative p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
-                >
-                  <div className="flex flex-col items-center text-center gap-3">
-                    <div className="w-14 h-14 md:w-16 md:h-16 bg-gray-900 dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black">
-                      <svg className="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">Canvas Editor</h3>
-                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
-                        Kéo thả, chỉnh sửa từng element. Dễ dùng.
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 justify-center">
-                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Dễ dùng</span>
-                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Drag & Drop</span>
-                    </div>
-                  </div>
-                </button>
-
-                {/* Ultimate Editor Option */}
-                <button
-                  onClick={() => handleCreateInvitation('advanced-html')}
-                  disabled={creatingInvitation}
-                  className="group relative p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
-                >
-                  <div className="flex flex-col items-center text-center gap-3">
-                    <div className="w-14 h-14 md:w-16 md:h-16 bg-black dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black">
-                      <svg className="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">Ultimate Editor</h3>
-                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
-                        Form thông minh + Upload ảnh + Real-time preview
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 justify-center">
-                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Đỉnh cao</span>
-                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Real-time</span>
-                    </div>
-                  </div>
-                </button>
+          {/* Ultimate Editor Option */}
+          <button
+            onClick={() => handleCreateInvitation('advanced-html')}
+            disabled={creatingInvitation}
+            className="group relative p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300 text-left disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
+          >
+            <div className="flex flex-col items-center text-center gap-3">
+              <div className="w-14 h-14 md:w-16 md:h-16 bg-black dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black">
+                <svg className="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">Ultimate Editor</h3>
+                <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">Form thông minh + Upload ảnh + Real-time preview</p>
+              </div>
+              <div className="flex flex-wrap gap-1.5 justify-center">
+                <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Đỉnh cao</span>
+                <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded">Real-time</span>
               </div>
             </div>
-
-            {/* Footer */}
-            <div className="p-4 md:p-6 bg-gray-50 dark:bg-gray-900 flex justify-end gap-3 flex-shrink-0 border-t border-gray-200 dark:border-gray-700">
-              <button
-                onClick={() => {
-                  setShowEditorModal(false)
-                  setSelectedTemplate(null)
-                }}
-                disabled={creatingInvitation}
-                className="px-4 py-2 md:px-6 md:py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 font-medium rounded-lg text-sm md:text-base"
-              >
-                Hủy
-              </button>
-            </div>
-          </div>
+          </button>
         </div>
-      )}
+      </Modal>
 
       {/* Full-Screen Preview Modal with Auto-Scroll */}
       {previewTemplate && (
@@ -875,14 +853,14 @@ const CollectionPage = () => {
           <div className="w-full h-full overflow-hidden">
             <iframe
               srcDoc={
-                previewTemplate.html_template || 
-                previewTemplate.designData?.html || 
-                (previewTemplate.designData?.elements ? 
+                previewTemplate.html_template ||
+                previewTemplate.designData?.html ||
+                (previewTemplate.designData?.elements ?
                   `<html><body style="margin:0;padding:20px;font-family:sans-serif;">
                     <h1>Canvas Template Preview</h1>
                     <p>This is a canvas-based template with ${Object.keys(previewTemplate.designData.elements || {}).length} elements.</p>
                     <p>Canvas templates need to be opened in the editor to view properly.</p>
-                  </body></html>` 
+                  </body></html>`
                   : '<html><body><div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#666;flex-direction:column;gap:20px;"><svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><div style="text-align:center;"><div style="font-size:18px;font-weight:bold;margin-bottom:8px;">Không có nội dung preview</div><div style="font-size:14px;color:#999;">Template này chưa có HTML để hiển thị</div></div></div></body></html>')
               }
               className="w-full h-full border-0 bg-white"
@@ -971,7 +949,6 @@ const CollectionPage = () => {
 }
 
 export default CollectionPage
-
 
 
 

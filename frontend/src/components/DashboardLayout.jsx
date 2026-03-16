@@ -32,14 +32,14 @@ const DashboardLayout = ({ children }) => {
       icon: (
         <span className="material-symbols-outlined">mail</span>
       ),
-      path: '/dashboard/invitations',
-      active: location.pathname === '/dashboard/invitations'
-      // children: [
-      //   { title: 'Tất cả thiệp mời', path: '/dashboard/invitations' },
-      //   { title: 'Thiệp nháp', path: '/dashboard/invitations/drafts' },
-      //   { title: 'Thiệp đã xuất bản', path: '/dashboard/invitations/published' },
-      //   { title: 'Thiệp đã lưu trữ', path: '/dashboard/invitations/archived' }
-      // ]
+      // path: '/dashboard/invitations',
+      // active: location.pathname === '/dashboard/invitations'
+      children: [
+        { title: 'Tất cả thiệp mời', path: '/dashboard/invitations' },
+        { title: 'Thiệp nháp', path: '/dashboard/invitations/drafts' },
+        { title: 'Thiệp đã xuất bản', path: '/dashboard/invitations/published' },
+        { title: 'Thiệp đã lưu trữ', path: '/dashboard/invitations/archived' }
+      ]
     },
     {
       id: 'templates',
@@ -109,7 +109,7 @@ const DashboardLayout = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
+    <div className="h-screen bg-gray-50 dark:bg-gray-900 flex overflow-hidden">
       {/* Mobile Drawer Overlay */}
       {mobileDrawerOpen && (
         <div
@@ -272,6 +272,7 @@ const DashboardLayout = ({ children }) => {
               {location.pathname.includes('/users') && 'Quản lý người dùng'}
               {location.pathname.includes('/analytics') && 'Thống kê & Báo cáo'}
               {location.pathname.includes('/settings') && 'Cài đặt hệ thống'}
+              {location.pathname.includes('/profile') && 'Hồ sơ'}
             </h1>
           </div>
 

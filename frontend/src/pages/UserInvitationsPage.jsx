@@ -196,7 +196,13 @@ const UserInvitationsPage = () => {
                       </td>
                       <td className="px-6 py-4 text-right text-sm">
                         <button
-                          onClick={() => window.open(`/${invitation.slug}`, '_blank')}
+                          onClick={() => {
+                            if (!invitation.slug) {
+                              toast.error('Không tìm thấy slug của thiệp mời')
+                              return
+                            }
+                            window.open(`/invitation/${invitation.slug}`, '_blank')
+                          }}
                           className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-3"
                         >
                           Xem
