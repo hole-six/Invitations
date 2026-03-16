@@ -1,0 +1,1391 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Pinyon+Script&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+
+
+  <!-- CDN -->
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Embla Carousel -->
+  <script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
+
+  <!-- style -->
+  <!-- Embla Carousel -->
+  <style>
+    .embla {
+      /* max-width: 420px; */
+      /* Độ rộng tương đương mobile */
+      margin: auto;
+      --slide-spacing: 1rem;
+      --slide-size: 100%;
+    }
+
+    .embla__viewport {
+      overflow: hidden;
+    }
+
+    .embla__container {
+      display: flex;
+      touch-action: pan-y;
+      margin-left: calc(var(--slide-spacing) * -1);
+    }
+
+    .embla__slide {
+      width: 60px;
+      transform: translate3d(0, 0, 0);
+      flex: 0 0 var(--slide-size);
+      min-width: 0;
+      padding-left: var(--slide-spacing);
+    }
+
+    .embla__slide__number {
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f3f4f6;
+      border-radius: 1rem;
+      font-size: 3rem;
+      font-weight: bold;
+      color: #3481f4;
+      box-shadow: inset 0 0 0 1px #e5e7eb;
+    }
+
+    .embla__controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .embla__buttons {
+      display: flex;
+      gap: 5rem;
+    }
+
+    .embla__button {
+      background-color: transparent;
+      touch-action: manipulation;
+      display: inline-flex;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid #ffffff;
+      padding: 0;
+      margin: 0;
+      width: 3rem;
+      height: 3rem;
+      z-index: 1;
+      border-radius: 50%;
+      color: #3481f4;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .embla__button:disabled {
+      color: #d1d5db;
+      border-color: #d1d5db;
+      cursor: not-allowed;
+    }
+
+    .embla__button__svg {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+
+    #GALLERY_POPUP {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    #GALLERY_POPUP.active {
+      display: flex;
+    }
+
+    .embla__slide__number {
+      width: 100%;
+      height: 70vh;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      box-shadow: none;
+    }
+  </style>
+  <!-- Snowflake -->
+  <style>
+    @-webkit-keyframes snowflakes-fall {
+      0% {
+        top: -10%;
+      }
+
+      100% {
+        top: 100%;
+      }
+    }
+
+    @-webkit-keyframes snowflakes-shake {
+
+      0%,
+      100% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+      }
+
+      50% {
+        -webkit-transform: translateX(80px);
+        transform: translateX(80px);
+      }
+    }
+
+    @keyframes snowflakes-fall {
+      0% {
+        top: -10%;
+      }
+
+      100% {
+        top: 100%;
+      }
+    }
+
+    @keyframes snowflakes-shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      50% {
+        transform: translateX(80px);
+      }
+    }
+
+    .snowflake {
+      color: #fff;
+      font-size: 1em;
+      font-family: Arial, sans-serif;
+      text-shadow: 0 0 5px #000;
+      position: fixed;
+      top: -10%;
+      z-index: 9999;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      cursor: default;
+      -webkit-animation-name: snowflakes-fall, snowflakes-shake;
+      -webkit-animation-duration: 10s, 3s;
+      -webkit-animation-timing-function: linear, ease-in-out;
+      -webkit-animation-iteration-count: infinite, infinite;
+      -webkit-animation-play-state: running, running;
+      animation-name: snowflakes-fall, snowflakes-shake;
+      animation-duration: 10s, 3s;
+      animation-timing-function: linear, ease-in-out;
+      animation-iteration-count: infinite, infinite;
+      animation-play-state: running, running;
+    }
+
+    .snowflake:nth-of-type(0) {
+      left: 1%;
+      -webkit-animation-delay: 0s, 0s;
+      animation-delay: 0s, 0s;
+    }
+
+    .snowflake:nth-of-type(1) {
+      left: 10%;
+      -webkit-animation-delay: 1s, 1s;
+      animation-delay: 1s, 1s;
+    }
+
+    .snowflake:nth-of-type(2) {
+      left: 20%;
+      -webkit-animation-delay: 6s, 0.5s;
+      animation-delay: 6s, 0.5s;
+    }
+
+    .snowflake:nth-of-type(3) {
+      left: 30%;
+      -webkit-animation-delay: 4s, 2s;
+      animation-delay: 4s, 2s;
+    }
+
+    .snowflake:nth-of-type(4) {
+      left: 40%;
+      -webkit-animation-delay: 2s, 2s;
+      animation-delay: 2s, 2s;
+    }
+
+    .snowflake:nth-of-type(5) {
+      left: 50%;
+      -webkit-animation-delay: 8s, 3s;
+      animation-delay: 8s, 3s;
+    }
+
+    .snowflake:nth-of-type(6) {
+      left: 60%;
+      -webkit-animation-delay: 6s, 2s;
+      animation-delay: 6s, 2s;
+    }
+
+    .snowflake:nth-of-type(7) {
+      left: 70%;
+      -webkit-animation-delay: 2.5s, 1s;
+      animation-delay: 2.5s, 1s;
+    }
+
+    .snowflake:nth-of-type(8) {
+      left: 80%;
+      -webkit-animation-delay: 1s, 0s;
+      animation-delay: 1s, 0s;
+    }
+
+    .snowflake:nth-of-type(9) {
+      left: 90%;
+      -webkit-animation-delay: 3s, 1.5s;
+      animation-delay: 3s, 1.5s;
+    }
+
+    .snowflake:nth-of-type(10) {
+      left: 25%;
+      -webkit-animation-delay: 2s, 0s;
+      animation-delay: 2s, 0s;
+    }
+
+    .snowflake:nth-of-type(11) {
+      left: 65%;
+      -webkit-animation-delay: 4s, 2.5s;
+      animation-delay: 4s, 2.5s;
+    }
+  </style>
+  <!-- Animation CSS -->
+  <style>
+    /* Animation Base States */
+    [data-aos] {
+      opacity: 0;
+      transition-property: transform, opacity;
+      transition-timing-function: ease-out;
+    }
+
+    /* Fade Animations */
+    [data-aos="fade-up"] {
+      transform: translateY(30px);
+    }
+
+    [data-aos="fade-down"] {
+      transform: translateY(-30px);
+    }
+
+    [data-aos="fade-left"] {
+      transform: translateX(30px);
+    }
+
+    [data-aos="fade-right"] {
+      transform: translateX(-30px);
+    }
+
+    /* Zoom Animations */
+    [data-aos="zoom-in"] {
+      transform: scale(0.7);
+    }
+
+    [data-aos="zoom-out"] {
+      transform: scale(1.2);
+    }
+
+    /* Slide Animations */
+    [data-aos="slide-up"] {
+      transform: translateY(100%);
+    }
+
+    [data-aos="grayscale"] {
+      filter: grayscale(100%);
+      transition-property: filter, transform;
+    }
+
+    /* The Active State (Triggered by JS) */
+    .aos-animate {
+      opacity: 1 !important;
+      transform: translate(0) scale(1) !important;
+    }
+
+    .animate-kenburn {
+      animation: kenburn 15s 2s infinite alternate;
+    }
+
+    @keyframes kenburn {
+      0% {
+        scale: 1;
+      }
+
+      100% {
+        scale: 1.3;
+      }
+    }
+  </style>
+  <!-- data image -->
+  <style>
+    /* .element_1 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Feucalyptus%2FheroLeftTop.webp&w=750&q=75");
+    }
+
+    .element_2 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Feucalyptus%2FheroLeftBottom.webp&w=750&q=75");
+    }
+
+    .element_3 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Feucalyptus%2FheroRightTop.webp&w=828&q=75");
+    }
+
+    .element_4 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Feucalyptus%2FheroRightBottom.webp&w=640&q=75");
+    }
+
+    .element_5 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Feucalyptus%2FcounterFrame.webp&w=384&q=80");
+    }
+
+    .element_6 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Fjasmine%2FstoryFrame.webp&w=1080&q=75");
+    } */
+
+    .element_1 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fdecor3.webp&w=1080&q=80");
+    }
+
+    .element_2 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fdecor4.webp&w=828&q=80");
+    }
+
+    .element_3 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fheart.webp&w=640&q=80");
+    }
+
+    .element_4 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flotus%2FstoryTop.webp&w=640&q=75");
+    }
+
+    .element_5 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flotus%2FlocationsBackground.webp&w=3840&q=75");
+    }
+
+    .element_6 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flotus%2FstoryDecor.webp&w=640&q=75");
+    }
+
+    .element_7 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FheroFrame.webp&w=640&q=75");
+    }
+
+    .element_8 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FstoryDecor.webp&w=256&q=75");
+    }
+
+    .element_9 {
+      background-image: url("https://pinvite.io/assets/images/templates/wedding/website/olive/spiral.svg");
+    }
+
+    .element_10 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FstoryLeft.webp&w=1080&q=75");
+    }
+
+    .element_11 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FheroBg.webp&w=2048&q=75");
+    }
+
+    .element_12 {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FstoryRight.webp&w=640&q=75");
+    }
+
+
+
+    [data-image-editable="photo_1"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2Fhe.webp&w=1920&q=75");
+    }
+
+    [data-image-editable="photo_2"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2Fshe.webp&w=1920&q=75");
+    }
+
+    [data-image-editable="photo_3"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FheroCenter.webp&w=1920&q=75");
+    }
+
+    [data-image-editable="photo_4"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FourRight.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_5"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2FourLeft.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_6"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2Fstory0.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_7"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2Fstory1.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_8"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2Fstory2.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_9"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fgallery0.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_10"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fgallery1.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_11"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fgallery2.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_12"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fgallery3.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_13"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fgallery4.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_14"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Flavender%2Fgallery5.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_15"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2Fgallery0.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_16"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2Fgallery1.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_17"] {
+      background-image: url("https://pinvite.io/_next/image?url=%2Fassets%2Fimages%2Ftemplates%2Fwedding%2Fwebsite%2Folive%2Fgallery2.webp&w=3840&q=75");
+    }
+
+    [data-image-editable="photo_18"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_19"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_1"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_2"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838474700_ae674803922601c8fe5fd6dc39839a52-20250720112655-abrzg.jpg");
+    }
+
+    [data-image-editable="photo_gallery_3"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_4"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="photo_gallery_5"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838784286_fa9f26bf3167e3a2f668f9b524060a8b-20250720112708--0znq.jpg");
+    }
+
+    [data-image-editable="photo_gallery_6"] {
+      background-image: url("https://w.ladicdn.com/s450x500/6801c7e1fbbd4d001283dac2/z6823838342243_7ea1a8d0c95cd3424b6e6b2c71aeef75-20250720112650-1dvps.jpg");
+    }
+
+    [data-image-editable="qr_1"] {
+      background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
+    }
+
+    [data-image-editable="qr_2"] {
+      background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
+    }
+  </style>
+  <!-- Main CSS -->
+  <style>
+    /* global css */
+
+    html {
+      font-size: 62.5%;
+    }
+
+    body {
+      margin: 0;
+      color: #212529;
+    }
+
+    main {
+      font-family: Arial, sans-serif;
+      margin: auto;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* p,
+    span {
+      line-height: 2.4rem;
+    } */
+
+    /* span {
+      color: #656565;
+      font-size: 1.8rem;
+    }
+
+    p {
+      font-size: 1.5rem;
+      color: #808080;
+    } */
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      /* font-family: "Raleway"; */
+      color: #4a3e5a;
+    }
+
+    picture {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+    }
+
+    section {
+      /* background-repeat: no-repeat; */
+      /* background-size: cover; */
+      padding-block: 100px;
+      margin: auto;
+      overflow: hidden;
+    }
+
+    /* font familly */
+    .font-josefin {
+      font-family: "Josefin Sans", sans-serif;
+    }
+
+    .font-pinyon {
+      font-family: "Pinyon Script", cursive;
+    }
+
+    .font-raleway {
+      font-family: "Raleway", sans-serif;
+    }
+
+    .font-dancing {
+      font-family: "Dancing Script", cursive;
+    }
+
+    [data-image-editable] {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .wrapper {
+      max-width: 1440px;
+      width: 100%;
+      margin: auto;
+      padding-inline: 30px;
+    }
+
+    @media screen and (max-width: 768px) {
+      .wrapper {
+        padding-inline: 15px;
+      }
+
+      section {
+        /* background-repeat: no-repeat; */
+        /* background-size: cover; */
+        padding-block: 50px;
+        margin: auto;
+      }
+
+      /* 
+        h1,
+        .h1 {
+          font-size: 3rem;
+        }
+
+        h2,
+        .h2 {
+          font-size: 2.5rem;
+        } */
+
+      /* h3,
+            .h3 {
+                font-size: 2.4rem;
+            }
+
+            p {
+                font-size: 1.6rem;
+            } */
+    }
+  </style>
+
+
+  <!-- Script -->
+  <!-- Timer script -->
+  <script>
+    (function () {
+      let countdownInterval;
+
+      function getTargetDate() {
+        const elH = document.querySelector("#js-hour");
+        const elD = document.querySelector("#js-day");
+        const elM = document.querySelector("#js-month");
+        const elY = document.querySelector("#js-year");
+
+        // Make elH (hour) optional by removing it from this strict check
+        if (!elD || !elM || !elY) return null;
+
+        // Default to midnight (00:00) if no hour element is provided
+        let hour = 0;
+        let minute = 0;
+
+        // If the hour element DOES exist, extract the time
+        if (elH) {
+          const timeMatch = elH.innerText.match(/(\d{2}):(\d{2})/);
+          if (timeMatch) {
+            hour = parseInt(timeMatch[1], 10);
+            minute = parseInt(timeMatch[2], 10);
+          }
+        }
+
+        // Extract day, month, year. 
+        // Using replace(/\D/g, '') safely removes the &nbsp; or hidden spaces around the numbers
+        const day = parseInt(elD.innerText.replace(/\D/g, ''), 10);
+        const month = parseInt(elM.innerText.replace(/\D/g, ''), 10) - 1; // Month in JS is 0-11
+        const year = parseInt(elY.innerText.replace(/\D/g, ''), 10);
+
+        const target = new Date(year, month, day, hour, minute, 0).getTime();
+        return isNaN(target) ? null : target;
+      }
+
+      function render(d, h, m, s) {
+        const pad = (n) => (n < 10 ? "0" + n : n);
+        const setVal = (id, val) => {
+          const el = document.querySelector(`${id} span`);
+          if (el) el.innerText = pad(val);
+        };
+
+        setVal("#TIMER_DAY", d);
+        setVal("#TIMER_HOUR", h);
+        setVal("#TIMER_MIN", m);
+        setVal("#TIMER_SEC", s);
+      }
+
+      function updateCountdown() {
+        const endTime = getTargetDate();
+        if (!endTime) return;
+
+        if (countdownInterval) clearInterval(countdownInterval);
+
+        const logic = () => {
+          const now = new Date().getTime();
+          const distance = endTime - now;
+
+          if (distance < 0) {
+            clearInterval(countdownInterval);
+            render(0, 0, 0, 0);
+            return;
+          }
+
+          const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const h = Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+          );
+          const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+          render(d, h, m, s);
+        };
+
+        logic();
+        countdownInterval = setInterval(logic, 1000);
+      }
+
+      // Khởi tạo và theo dõi thay đổi
+      window.addEventListener("load", () => {
+        updateCountdown();
+
+        const observer = new MutationObserver(updateCountdown);
+        const config = {
+          characterData: true,
+          childList: true,
+          subtree: true,
+        };
+
+        // Theo dõi tất cả các nguồn dữ liệu thời gian
+        ["#js-hour", "#js-day", "#js-month", "#js-year"].forEach(
+          (selector) => {
+            const el = document.querySelector(selector);
+            if (el) observer.observe(el, config);
+          },
+        );
+      });
+    })();
+  </script>
+  <!-- Animation script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const animationObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const target = entry.target;
+
+              const delay = target.getAttribute("data-aos-delay") || "0";
+              const duration =
+                target.getAttribute("data-aos-duration") || "800";
+
+              target.style.transitionDelay = `${delay}ms`;
+              target.style.transitionDuration = `${duration}ms`;
+
+              target.classList.add("aos-animate");
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      document
+        .querySelectorAll("[data-aos]")
+        .forEach((el) => animationObserver.observe(el));
+    });
+  </script>
+</head>
+
+<body>
+  <main>
+    <!-- Banner Section Begin-->
+    <section id="SECTION_BANNER" class="relative">
+      <div class="wrapper flex max-md:flex-col h-full">
+        <div class="relative flex w-full flex-col items-center justify-center xl:w-1/2 text-center">
+          <p class="mb-[2.4rem] font-josefin font-light text-[3rem] md:text-[4.8rem] text-[#e18037]"
+            data-editable="field_343">
+            Together Forever</p>
+          <p class="mb-[1.2rem] md:mb-[2.4rem] font-pinyon font-light text-[7.2rem] md:text-[16rem] text-[#738766] leading-[1]"
+            data-editable="field_3432">
+            Emma & John</p>
+          <p class="flex items-center gap-[1rem] w-fit mx-auto mb-[2.4rem] font-josefin text-[3.6rem] md:text-[3.6rem] text-[#e18037]"
+            data-editable="field_353">
+            &nbsp;&nbsp;<span id="js-day">28</span> <span
+              class="font-light text-[7.2rem] md:text-[12.8rem] text-[#738766]" id="js-month">12</span> <span
+              id="js-year">2026</span>
+          </p>
+        </div>
+        <div class="relative flex md:w-1/2 h-fit md:m-auto">
+          <div class="relative flex flex-col items-center md:flex-row md:items-start w-full">
+                <picture class="inset-0 absolute element_11"></picture>
+
+            <div
+              class="relative left-0 top-[4rem] z-[1] flex  items-center justify-center drop-shadow-md md:left-[9.6rem] md:top-0 md:w-3/12">
+              <div class="relative flex overflow-hidden w-full rounded-full">
+                <picture class="absolute inset-0 element_7"></picture>
+                <picture class="aspect-square rounded-full m-[1rem]" data-image-editable="photo_1"></picture>
+              </div>
+            </div>
+            <div class="relative flex justify-center rounded-full border-[0.5px] w-full md:w-6/12">
+              <div
+                class="relative flex size-full max-w-[35rem] overflow-hidden rounded-full border-[10px] border-white drop-shadow-md">
+                <picture class="w-full aspect-[329/511]" data-image-editable="photo_3"></picture>
+              </div>
+            </div>
+            <div
+              class="relative mt-auto  bottom-[4rem] flex h-full items-end md:bottom-[4rem] md:right-[9.6rem] md:w-3/12 drop-shadow-md">
+              <div class="relative flex overflow-hidden w-full rounded-full">
+                <picture class="absolute inset-0 element_7"></picture>
+                <picture class="aspect-square rounded-full m-[1rem]" data-image-editable="photo_2"></picture>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Banner Section End-->
+    <!-- Wedding Timeline Section Begin -->
+    <section id="SECTION_TIMELINE" class="relative">
+      <div class="wrapper relative z-[1]">
+        <div class="flex flex-col gap-[1.6rem] md:flex-row lg:gap-[3.2rem]">
+          <div class="flex flex-1 flex-col gap-6 md:w-3/12">
+            <div class="p-[1.6rem] text-center">
+              <p class="font-josefin font-light text-[#e18037] text-[1.8rem] md:text-[2.4rem]" data-editable="field_20">
+                SMITH</p>
+              <p class="mb-[2.4rem] font-josefin font-light text-[#738766] text-[2.4rem] md:text-[3.6rem]"
+                data-editable="field_21">
+                EMMA</p>
+              <p class="font-josefin font-light text-[#666] text-[1.4rem] md:text-[1.8rem]" data-editable="field_22">I have
+                always brought color and art
+                into the
+                lives of those around me. Every detail
+                for me is an opportunity to create something beautiful, and I hope my smile brings you light, just as
+                John brings light into my life every day.</p>
+            </div>
+          </div>
+          <div class="flex h-full w-full flex-col md:max-h-[450px] md:flex-row lg:w-4/12 xl:w-6/12">
+            <div class="group relative w-full max-w-[36.6rem] flex overflow-hidden rounded-full 
+              after:absolute after:inset-0 after:m-[5%] after:rounded-full after:border after:border-white/40">
+              <picture class="size-full animate-kenburn aspect-square" data-image-editable="photo_4"></picture>
+            </div>
+            <div
+              class="group relative w-full max-w-[36.6rem] -mt-24 flex overflow-hidden rounded-full 
+              after:absolute after:inset-0 after:m-[5%] after:rounded-full after:border after:border-white/40 md:-ml-24 md:mt-0">
+              <picture class="size-full animate-kenburn aspect-square" data-image-editable="photo_5"></picture>
+            </div>
+          </div>
+          <div class="flex flex-1 flex-col gap-6 md:w-3/12">
+            <div class="p-[1.6rem] text-center">
+              <p class="font-josefin font-light text-[#e18037] text-[1.8rem] md:text-[2.4rem]" data-editable="field_20">
+                SMITH</p>
+              <p class="mb-[2.4rem] font-josefin font-light text-[#738766] text-[2.4rem] md:text-[3.6rem]"
+                data-editable="field_21">
+                EMMA</p>
+              <p class="font-josefin font-light text-[#666] text-[1.4rem] md:text-[1.8rem]" data-editable="field_22">I have
+                always brought color and art
+                into the
+                lives of those around me. Every detail
+                for me is an opportunity to create something beautiful, and I hope my smile brings you light, just as
+                John brings light into my life every day.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Wedding Timeline Section End -->
+    <!-- Timer Section Begin -->
+    <section id="SECTION_TIMER">
+      <div class="wrapper">
+        <div
+          class="z-[1] relative flex w-full flex-col items-center justify-center border bg-white px-10 py-16 text-center before:absolute before:inset-0 before:-left-1 before:top-1 before:-z-[1] before:-rotate-3 before:bg-[#fafafa] before:shadow-[0_0_8px_rgba(0,0,0,0.2)] before:content-['']">
+          <div class="mt-[2.4rem] max-w-[76.9rem]">
+            <p class="font-josefin font-light text-[2.4rem] md:text-[3.6rem] text-[#784d9d]" data-editable="field_17"
+              data-aos="fade-up">Join Our
+              Joy!</p>
+            <p class="mb-[2.4rem] font-josefin text-[3rem] md:text-[4.8rem] text-[#668863]" data-editable="field_18"
+              data-aos="fade-up" data-aos-delay="200">The Wedding Countdown</p>
+            <p class="mb-[2.4rem] font-josefin font-light text-[1.8rem] md:text-[2.4rem] text-[#464f5d]"
+              data-editable="field_19" data-aos="fade-up" data-aos-delay="400">We warmly
+              invite you to be
+              part of the most
+              important
+              chapter of our lives. Let's unite our hearts and
+              celebrate together, in a storybook setting.</p>
+          </div>
+          <div class="w-full drop-shadow-lg">
+            <div class="relative flex max-sm:flex-col max-md:items-center m-auto p-[1rem] text-center text-[#666]">
+              <div id="TIMER_DAY"
+                class="w-1/2 md:w-full max-sm:mb-[1.6rem] max-sm:border-b sm:border-r sm:border-[#784d9d33]"
+                data-aos="fade-up" data-aos-delay="100">
+                <span class="font-dancing text-[#668863] text-[3.6rem] md:text-[6rem]">00</span>
+                <p class="font-dancing font-light text-[1.8rem] md:text-[3rem] text-[#784d9d]">
+                  Days
+                </p>
+              </div>
+              <div id="TIMER_HOUR"
+                class="w-1/2 md:w-full max-sm:mb-[1.6rem] max-sm:border-b sm:border-r sm:border-[#784d9d33]"
+                data-aos="fade-up" data-aos-delay="200">
+                <span class="font-dancing text-[#668863] text-[3.6rem] md:text-[6rem]">00</span>
+                <p class="font-dancing font-light text-[1.8rem] md:text-[3rem] text-[#784d9d]">
+                  Hours
+                </p>
+              </div>
+              <div id="TIMER_MIN"
+                class="w-1/2 md:w-full max-sm:mb-[1.6rem] max-sm:border-b sm:border-r sm:border-[#784d9d33]"
+                data-aos="fade-up" data-aos-delay="300">
+                <span class="font-dancing text-[#668863] text-[3.6rem] md:text-[6rem]">00</span>
+                <p class="font-dancing font-light text-[1.8rem] md:text-[3rem] text-[#784d9d]">
+                  Minutes
+                </p>
+              </div>
+              <div id="TIMER_SEC" class="w-1/2 md:w-full" data-aos="fade-up" data-aos-delay="400">
+                <span class="font-dancing text-[#668863] text-[3.6rem] md:text-[6rem]">00</span>
+                <p class="font-dancing font-light text-[1.8rem] md:text-[3rem] text-[#784d9d]">
+                  Seconds
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Timer Section End -->
+    <!-- love Story Section Begin -->
+    <section id="SECTION_STORY" class="relative z-[1] bg-[#e1803733]">
+      <picture class="absolute top-0 left-0 max-w-[51.7rem] aspect-[517/434] bg-contain bg-no-repeat element_10">
+      </picture>
+      <picture
+        class="absolute h-fit bottom-0 right-0 max-w-[30rem] aspect-[300/822] bg-contain bg-no-repeat element_12">
+      </picture>
+      <div class="wrapper">
+        <div class="relative m-auto text-center">
+          <div class="mb-[2.4rem] py-[.8rem] px-[1.6rem]">
+            <p class="mb-[1.2rem] md:mb-[2.4rem] font-josefin font-light leading-[1] text-[3rem] md:text-[3.6rem] text-[#e18037]"
+              data-editable="field_26" data-aos="fade-up">Our Story
+            </p>
+            <p class="font-pinyon text-[2rem] md:text-[4.8rem] text-[#738766]" data-editable="field_27"
+              data-aos="fade-up" data-aos-delay="200">
+              How We Met and Decided to Journey Through
+              Life Together
+            </p>
+          </div>
+        </div>
+        <div>
+          <div class="relative flex flex-col items-center w-full m-auto ">
+            <ol class="flex flex-col w-full gap-[4rem] md:gap-[8rem]">
+              <li
+                class="group group/story relative flex flex-col-reverse justify-start md:flex-row md:odd:flex-row-reverse gap-[1.6rem]">
+                <picture
+                  class="w-full max-md:hidden h-auto top-0 bottom-0 left-1/2 -translate-x-1/2 z-[10] max-w-[6rem] my-[1.6rem] absolute element_9">
+                </picture>
+                <div class="relative z-[1] flex md:w-1/2 justify-center md:group-odd:justify-start p-[2.8rem] bg-white">
+                  <div class="relative flex size-full overflow-hidden">
+                    <picture
+                      class="w-full aspect-[6/4] scale-100 grayscale-0 transition-all duration-700 group-hover:scale-110 group-hover:grayscale"
+                      data-image-editable="photo_6">
+                    </picture>
+                  </div>
+                </div>
+                <div class="relative md:w-1/2 md:px-[4.8rem] py-[1.6rem] md:py-[6.4rem] bg-white">
+                  <div class="group-odd:md:text-right">
+                    <div class="px-[1.6rem] py-[.8rem]">
+                      <p class="text-[#738766] font-josefin font-light text-[2.4rem] md:text-[3.6rem]"
+                        data-editable="field_28">The
+                        Beginning of a New Adventure
+                      </p>
+                      <p class="mb-[2.4rem] font-josefin font-light text-[#e18037] text-[1.6rem] md:text-[2rem]"
+                        data-editable="field_271">An Ordinary Evening,
+                        An Extraordinary
+                        Destiny</p>
+                      <p class="font-dancing font-light text-[#666] text-[1.4rem] md:text-[1.8rem]"
+                        data-editable="field_29">On a
+                        seemingly ordinary evening,
+                        our destinies
+                        met. A spontaneous conversation, shared laughter,
+                        and an instant connection transformed a chance encounter into the first chapter of our life
+                        together.</p>
+                      <picture class="max-w-[10rem] group-odd:ml-auto aspect-[100/62] element_8"></picture>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="group group/story relative flex flex-col-reverse justify-start md:flex-row md:odd:flex-row-reverse gap-[1.6rem]">
+                <picture
+                  class="w-full max-md:hidden h-auto top-0 bottom-0 left-1/2 -translate-x-1/2 z-[10] max-w-[6rem] my-[1.6rem] absolute element_9">
+                </picture>
+                <div class="relative z-[1] flex md:w-1/2 justify-center md:group-odd:justify-start p-[2.8rem] bg-white">
+                  <div class="relative flex size-full overflow-hidden">
+                    <picture
+                      class="w-full aspect-[6/4] scale-100 grayscale-0 transition-all duration-700 group-hover:scale-110 group-hover:grayscale"
+                      data-image-editable="photo_7">
+                    </picture>
+                  </div>
+                </div>
+                <div class="relative md:w-1/2 md:px-[4.8rem] py-[1.6rem] md:py-[6.4rem] bg-white">
+                  <div class="group-odd:md:text-right">
+                    <div class="px-[1.6rem] py-[.8rem]">
+                      <p class="text-[#738766] font-josefin font-light text-[2.4rem] md:text-[3.6rem]"
+                        data-editable="field_30">The Moment We Said 'Yes'
+                      </p>
+                      <p class="mb-[2.4rem] font-josefin font-light text-[#e18037] text-[1.6rem] md:text-[2rem]"
+                        data-editable="field_272">A Promise Under the Stars
+                        Destiny</p>
+                      <p class="font-dancing font-light text-[#666] text-[1.4rem] md:text-[1.8rem]"
+                        data-editable="field_31">On a
+                        Under the starlit sky of a perfect evening, surrounded by the magic of nature, John knelt, his
+                        heart full of hope and love. His sincere and moving words were music to my soul. By saying
+                        'Yes', we promised to sail the seas of life together, no matter the storms.</p>
+                      <picture class="max-w-[10rem] group-odd:ml-auto aspect-[100/62] element_8"></picture>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li
+                class="group group/story relative flex flex-col-reverse justify-start md:flex-row md:odd:flex-row-reverse gap-[1.6rem]">
+                <picture
+                  class="w-full max-md:hidden h-auto top-0 bottom-0 left-1/2 -translate-x-1/2 z-[10] max-w-[6rem] my-[1.6rem] absolute element_9">
+                </picture>
+                <div class="relative z-[1] flex md:w-1/2 justify-center md:group-odd:justify-start p-[2.8rem] bg-white">
+                  <div class="relative flex size-full overflow-hidden">
+                    <picture
+                      class="w-full aspect-[6/4] scale-100 grayscale-0 transition-all duration-700 group-hover:scale-110 group-hover:grayscale"
+                      data-image-editable="photo_8">
+                    </picture>
+                  </div>
+                </div>
+                <div class="relative md:w-1/2 md:px-[4.8rem] py-[1.6rem] md:py-[6.4rem] bg-white">
+                  <div class="group-odd:md:text-right">
+                    <div class="px-[1.6rem] py-[.8rem]">
+                      <p class="text-[#738766] font-josefin font-light text-[2.4rem] md:text-[3.6rem]"
+                        data-editable="field_32">Adventures Together
+                      </p>
+                      <p class="mb-[2.4rem] font-josefin font-light text-[#e18037] text-[1.6rem] md:text-[2rem]"
+                        data-editable="field_273">Exploring the World, Discovering Each Other
+                        Destiny</p>
+                      <p class="font-dancing font-light text-[#666] text-[1.4rem] md:text-[1.8rem]"
+                        data-editable="field_33">On a
+                        Every trip we've taken together has been an opportunity to discover the beauty of the world and
+                        the depths of our love. From the eternal snows of the Alps to the golden beaches of Greece, each
+                        adventure has strengthened our bond and prepared us for the journey of life as husband and wife.
+                      </p>
+                      <picture class="max-w-[10rem] group-odd:ml-auto aspect-[100/62] element_8"></picture>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- love Story Section End -->
+    <!-- Wedidng Timeline Begin -->
+    <section id="SECTION_TIMELINE">
+      <div class="wrapper">
+        <div class="relative">
+          <div class="pt-[5rem] max-w-[76.9rem] mx-auto mb-[2.4rem] text-center">
+            <p class="font-josefin font-light text-[2.4rem] md:text-[3.6rem] text-[#e18037]" data-editable="field_17"
+              data-aos="fade-up">Join Our
+              Joy!</p>
+            <p class="mb-[2.4rem] font-josefin text-[3rem] md:text-[4.8rem] text-[#738766]" data-editable="field_18"
+              data-aos="fade-up" data-aos-delay="200">Celebrating Love in a Magical Setting</p>
+            <p class="mb-[2.4rem] font-josefin font-light text-[1.8rem] md:text-[2.4rem] text-[#7c7c7c]" data-editable="field_19"
+              data-aos="fade-up" data-aos-delay="400">We warmly
+              invite you to be
+              part of the most
+              important
+              chapter of our lives. Let's unite our hearts and
+              celebrate together, in a storybook setting.</p>
+          </div>
+          <div class="flex max-md:flex-col translate-y-[10rem] gap-[4rem] mx-[3rem] mb-[4rem] text-center">
+            <div class="flex-1 p-[2rem]" data-image-editable="photo_9">
+              <div class="size-full p-[4rem] border shadow-md bg-white/80" data-aos="fade-up">
+                <div class="size-full p-[1.2rem]">
+                  <p class="font-josefin font-light text-[2rem] md:text-[3rem] text-[#738766]" data-editable="field_9">
+                    City Hall</p>
+                  <p class="mb-[2.4rem] font-josefin text-[1.8rem] md:text-[2.4rem] text-[#e18037]"
+                    data-editable="field_10">
+                    03 PM - 04
+                    PM
+                  </p>
+                  <p class="font-josefin font-light text-[1.6rem] md:text-[2rem] text-[#464f5d]"
+                    data-editable="field_11">
+                    123 Main Street, Springfield</p>
+                </div>
+              </div>
+            </div>
+            <div class="flex-1 p-[2rem]" data-image-editable="photo_10">
+              <div class="size-full p-[4rem] border shadow-md bg-white/80" data-aos="fade-up" data-aos-delay="200">
+                <div class="size-full p-[1.2rem]">
+                  <p class="font-josefin font-light text-[2rem] md:text-[3rem] text-[#738766]" data-editable="field_12">
+                    St. Michael's Church</p>
+                  <p class="mb-[2.4rem] font-josefin text-[1.8rem] md:text-[2.4rem] text-[#e18037]"
+                    data-editable="field_13">
+                    04 PM - 05
+                    PM
+                  </p>
+                  <p class="font-josefin font-light text-[1.6rem] md:text-[2rem] text-[#464f5d]"
+                    data-editable="field_14">
+                    Union Square,
+                    Springfield</p>
+                </div>
+              </div>
+            </div>
+            <div class="flex-1 p-[2rem]" data-image-editable="photo_11">
+              <div class="size-full p-[4rem] border shadow-md bg-white/80" data-aos="fade-up" data-aos-delay="400">
+                <div class="size-full p-[1.2rem]">
+                  <p class="font-josefin font-light text-[2rem] md:text-[3rem] text-[#738766]" data-editable="field_15">
+                    Bohemian House</p>
+                  <p class="mb-[2.4rem] font-josefin text-[1.8rem] md:text-[2.4rem] text-[#e18037]"
+                    data-editable="field_102">
+                    05 PM - 06
+                    PM
+                  </p>
+                  <p class="font-josefin font-light text-[1.6rem] md:text-[2rem] text-[#464f5d]"
+                    data-editable="field_16">
+                    12 Julius
+                    Maniu Street, Springfield</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Gallery Section Begin -->
+    <section id="SECTION_GALLERY" class="relative z-[1]">
+      <div class="wrapper">
+        <div class="relative m-auto px-[1.6rem] py-[.8rem] text-center">
+          <div class="mb-[2.4rem] py-[.8rem] px-[1.6rem]">
+            <p class="font-josefin font-light text-[1.8rem] md:text-[2.4rem] text-[#e18037]" data-editable="field_26"
+              data-aos="fade-up">Precious Memories
+            </p>
+            <p class="font-pinyon text-[3rem] md:text-[4.8rem] text-[#668863]" data-editable="field_27"
+              data-aos="fade-up" data-aos-delay="200">
+              Unique Moments from Our Lives
+            </p>
+        </div>
+        <div class="grid gap-4 lg:grid-cols-4">
+          <div class="group relative flex md:col-span-2">
+            <picture class="aspect-square lg:aspect-[2/1]" data-image-editable="photo_12"></picture>
+            <span
+              class="absolute inset-0 m-[20px] scale-0 bg-[#66666] opacity-0 transition-all  duration-500 content-[''] group-hover:scale-100 group-hover:opacity-100"></span>
+          </div>
+          <div class="group relative col-span-1 flex">
+            <picture class="aspect-square" data-image-editable="photo_13"></picture>
+            <span
+              class="absolute inset-0 m-[20px] scale-0 bg-[#66666] opacity-0 transition-all  duration-500 content-[''] group-hover:scale-100 group-hover:opacity-100"></span>
+          </div>
+          <div class="group relative col-span-1 flex">
+            <picture class="aspect-square" data-image-editable="photo_14"></picture>
+            <span
+              class="absolute inset-0 m-[20px] scale-0 bg-[#66666] opacity-0 transition-all  duration-500 content-[''] group-hover:scale-100 group-hover:opacity-100"></span>
+          </div>
+          <div class="group relative col-span-1 flex">
+            <picture class="aspect-square" data-image-editable="photo_15"></picture>
+            <span
+              class="absolute inset-0 m-[20px] scale-0 bg-[#66666] opacity-0 transition-all  duration-500 content-[''] group-hover:scale-100 group-hover:opacity-100"></span>
+          </div>
+          <div class="group relative col-span-1 flex">
+            <picture class="aspect-square" data-image-editable="photo_16"></picture>
+            <span
+              class="absolute inset-0 m-[20px] scale-0 bg-[#66666] opacity-0 transition-all  duration-500 content-[''] group-hover:scale-100 group-hover:opacity-100"></span>
+          </div>
+          <div class="group relative flex md:col-span-2">
+            <picture class="aspect-square lg:aspect-[2/1]" data-image-editable="photo_17"></picture>
+            <span
+              class="absolute inset-0 m-[20px] scale-0 bg-[#66666] opacity-0 transition-all  duration-500 content-[''] group-hover:scale-100 group-hover:opacity-100"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Gallery Section End -->
+    <!-- Form Section Begin -->
+    <section id="SECTION_FORM">
+      <div class="wrapper">
+        <div
+          class="z-[1] relative flex w-full flex-col items-center justify-center border bg-white px-10 py-16 text-center before:absolute before:inset-0 before:-left-1 before:top-1 before:-z-[1] before:-rotate-3 before:bg-[#fafafa] before:shadow-[0_0_8px_rgba(0,0,0,0.2)] before:content-['']">
+          <div class="max-w-[76.9rem] py-[.8rem] px-[1.6rem] mt-[2.4rem]">
+            <p class="font-josefin font-light text-[1.8rem] md:text-[3.6rem] text-[#e18037]" data-editable="field_34">
+              We Look Forward to Your Confirmation</p>
+            <p class="mb-[2.4rem] font-josefin font-light text-[1.8rem] md:text-[2rem] text-[#7c7c7c]" data-editable="field_36">
+              Every detail matters to us, and your presence is the most precious gift. Please confirm your attendance by
+              July 1, 2025, to ensure everything is as we have dreamed.
+            </p>
+            <p class="mb-[2.4rem] font-pinyon text-[3.6rem] md:text-[4.8rem] text-[#738766]" data-editable="field_35">
+              Help us plan the perfect day
+            </p>
+          </div>
+          <div class="w-full">
+            <div class="flex-1 p-[3rem] rounded-2xl text-center w-full max-w-[40rem] m-auto">
+              <form action="" class="space-y-4">
+                <div class="relative">
+                  <input type="text" placeholder="Tên của bạn"
+                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#666] focus:outline-none text-[1.3rem] bg-transparent" />
+                </div>
+
+                <div class="relative">
+                  <input type="text" placeholder="Số điện thoại"
+                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#666] focus:outline-none text-[1.3rem] bg-transparent" />
+                </div>
+
+                <div class="relative">
+                  <input type="number" min="1" max="5" placeholder="Số người tham dự"
+                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#666] focus:outline-none text-[1.3rem] bg-transparent" />
+                </div>
+
+                <div class="flex justify-around py-[10px] text-[1.7rem] text-gray-600">
+                  <label class="flex items-center space-x-2 cursor-pointer group">
+                    <input type="radio" name="guest_type" id="side_groom" class="accent-black" />
+                    <span class="group-hover:text-black">Nhà trai</span>
+                  </label>
+                  <label class="flex items-center space-x-2 cursor-pointer group">
+                    <input type="radio" name="guest_type" id="side_bride" class="accent-black" />
+                    <span class="group-hover:text-black">Nhà gái</span>
+                  </label>
+                </div>
+
+                <div class="relative">
+                  <textarea name="congratulations" rows="3" placeholder="Lời chúc của bạn"
+                    class="w-full px-4 py-2 rounded-[.6rem] border border-[#666] focus:outline-none text-[1.3rem] bg-transparent resize-none"></textarea>
+                </div>
+                <button type="submit"
+                  class="rounded-[1rem] px-[2rem] py-[1rem] text-[10px] font-semibold transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60 bg-[#666] text-white">
+                  Gửi lời chúc
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Form Section End -->
+    <!-- Gift Section Begin -->
+    <section id="SECTION_ABOUTUS" class="bg-white relative z-[1] overflow-visible">
+      <div class="wrapper ">
+        <div>
+          <div class="wrapper text-center py-[15px]">
+            <div class="mb-[2rem]" data-aos="fade-up">
+              <p class="mb-[1.2rem] md:mb-[2.4rem] font-pinyon text-[3rem] md:text-[4.8rem] text-[#668863]"
+                data-editable="gift_title">
+                Wedding box
+              </p>
+              <p class="mb-[2.4rem] font-josefin text-[1.6rem] md:text-[2rem] text-[#464f5d]" data-editable="gift_des">
+                your presence is our best gift
+              </p>
+            </div>
+            <div class="justify-self-center text-black p-[10px] rounded-[10px]">
+              <div class="flex max-md:flex-col gap-[3rem]">
+                <div class="flex-1 p-[1rem] shadow-md rounded-[1rem]">
+                  <h6 class="mb-[1rem] text-[#666] font-josefin font-light text-[3rem] md:text-[3.6rem]"
+                    data-editable="groom_title" data-aos="fade-right" data-aos-delay="100">
+                    Groom
+                  </h6>
+                  <picture class="size-[300px] aspect-[1/1] m-auto mb-[1rem]" data-image-editable="qr_1"
+                    data-aos="fade-right" data-aos-delay="200">
+                  </picture>
+                  <p class="font-josefin text-[#668863] text-[2rem] md:text-[2.4rem]" data-aos="fade-right"
+                    data-aos-delay="300">
+                    <span data-editable="groom_name">Nguyễn ABC</span>
+                  </p>
+                  <p class="font-josefin text-[#668863] text-[2rem] md:text-[2.4rem]" data-aos="fade-right"
+                    data-aos-delay="400">
+                    <span data-editable="groom_bank">Techcomebank</span>
+                  </p>
+                  <p class="font-josefin text-[#668863] text-[2rem] md:text-[2.4rem]" data-aos="fade-right"
+                    data-aos-delay="500">
+                    <span data-editable="groom_bank_nummber">0123456789</span>
+                  </p>
+                </div>
+                <div class="flex-1 p-[1rem] shadow-md rounded-[1rem]">
+                  <h6 class="mb-[1rem] text-[#666] font-josefin font-light text-[3rem] md:text-[3.6rem]"
+                    data-editable="bride_title" data-aos="fade-left" data-aos-delay="100">
+                    Bride
+                  </h6>
+                  <picture class="size-[300px] aspect-[1/1] m-auto mb-[1rem]" data-image-editable="qr_2"
+                    data-aos="fade-left" data-aos-delay="200">
+                  </picture>
+                  <p class="font-josefin text-[#668863] text-[2rem] md:text-[2.4rem]" data-aos="fade-left"
+                    data-aos-delay="300">
+                    <span data-editable="bride_name">Nguyễn ABC</span>
+                  </p>
+                  <p class="font-josefin text-[#668863] text-[2rem] md:text-[2.4rem]" data-aos="fade-left"
+                    data-aos-delay="400">
+                    <span data-editable="bride_bank">Techcomebank</span>
+                  </p>
+                  <p class="font-josefin text-[#668863] text-[2rem] md:text-[2.4rem]" data-aos="fade-left"
+                    data-aos-delay="500">
+                    <span data-editable="bride_bank_number">0123456789</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Gift Section End -->
+    <footer>
+      <p class="bg-gray-200 text-center">Bản quyền thuộc Hiweb</p>
+    </footer>
+    <div class="snowflakes" aria-hidden="true">
+      <div class="snowflake" style="font-size: 20px">🌿</div>
+      <div class="snowflake">❅</div>
+      <div class="snowflake" style="font-size: 18px">💚</div>
+      <div class="snowflake">❅</div>
+      <div class="snowflake" style="font-size: 20px">🌿</div>
+      <div class="snowflake" style="font-size: 22px">❅</div>
+      <div class="snowflake" style="font-size: 14px">💚</div>
+      <div class="snowflake" style="font-size: 15px">❅</div>
+    </div>
+  </main>
+  <script>
+    const OPTIONS = { loop: true };
+
+    const emblaNode = document.querySelector(".embla");
+    const viewportNode = emblaNode.querySelector(".embla__viewport");
+    const prevBtnNode = emblaNode.querySelector(".embla__button--prev");
+    const nextBtnNode = emblaNode.querySelector(".embla__button--next");
+
+    const emblaApi = EmblaCarousel(viewportNode, OPTIONS);
+
+    const addPrevNextButtonClickHandlers = (emblaApi, prevBtn, nextBtn) => {
+      const scrollPrev = () => emblaApi.scrollPrev();
+      const scrollNext = () => emblaApi.scrollNext();
+
+      prevBtn.addEventListener("click", scrollPrev, false);
+      nextBtn.addEventListener("click", scrollNext, false);
+
+      const togglePrevNextButtonsState = () => {
+        if (emblaApi.canScrollPrev()) prevBtn.removeAttribute("disabled");
+        else prevBtn.setAttribute("disabled", "disabled");
+
+        if (emblaApi.canScrollNext()) nextBtn.removeAttribute("disabled");
+        else nextBtn.setAttribute("disabled", "disabled");
+      };
+
+      emblaApi
+        .on("select", togglePrevNextButtonsState)
+        .on("reinit", togglePrevNextButtonsState);
+
+      togglePrevNextButtonsState();
+    };
+
+    addPrevNextButtonClickHandlers(emblaApi, prevBtnNode, nextBtnNode);
+    addDotButtonsAndClickHandlers(emblaApi);
+    function toggleGalleryPopup(show) {
+      const popup = document.getElementById("GALLERY_POPUP");
+      const viewportNode = popup.querySelector(".embla__viewport");
+      const prevBtn = popup.querySelector(".embla__button--prev");
+      const nextBtn = popup.querySelector(".embla__button--next");
+
+      if (show) {
+        popup.classList.add("active");
+        document.body.style.overflow = "hidden";
+
+        if (!emblaApi) {
+          emblaApi = EmblaCarousel(viewportNode, { loop: true });
+
+          prevBtn.addEventListener("click", () => emblaApi.scrollPrev());
+          nextBtn.addEventListener("click", () => emblaApi.scrollNext());
+        } else {
+          setTimeout(() => {
+            emblaApi.reInit();
+          }, 10);
+        }
+      } else {
+        popup.classList.remove("active");
+        document.body.style.overflow = "auto";
+      }
+    }
+  </script>
+</body>
+
+</html>
