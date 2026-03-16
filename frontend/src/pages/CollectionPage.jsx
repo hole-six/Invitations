@@ -234,12 +234,12 @@ const CollectionPage = () => {
       // API doesn't return invitation data, need to fetch the latest invitation
       // Get all invitations and find the one we just created by slug
       const invitationsResponse = await invitationService.getAll({ limit: 10, sort_by: 'created_at', sort_dir: 'DESC' });
-      
+
       console.log('📋 Fetched invitations:', invitationsResponse);
-      
+
       // Find invitation by slug (the one we just created)
       const invitations = invitationsResponse.data || invitationsResponse;
-      const newInvitation = Array.isArray(invitations) 
+      const newInvitation = Array.isArray(invitations)
         ? invitations.find(inv => inv.slug === slug)
         : null;
 
@@ -254,21 +254,21 @@ const CollectionPage = () => {
       // Check if invitation has html_content
       if (!newInvitation.html_content) {
         console.warn('⚠️ Invitation has no HTML content, need to copy from template');
-        
+
         // Get template HTML content from the selectedTemplate we already have
         let templateHtml = selectedTemplate?.html_template; // Template uses html_template
-        
+
         // If selectedTemplate has no html_template, try to get from designData
         if (!templateHtml && selectedTemplate?.designData?.html) {
           console.log('📄 Using HTML from template designData...');
           templateHtml = selectedTemplate.designData.html;
         }
-        
+
         if (templateHtml) {
           console.log('📄 Copying HTML from template to invitation...');
           console.log('🔑 Using UUID:', newInvitation.uuid);
           console.log('📝 HTML length:', templateHtml.length);
-          
+
           try {
             // Update invitation with template HTML - WAIT for completion
             // Invitation uses html_content (not html_template)
@@ -278,11 +278,11 @@ const CollectionPage = () => {
               slug: newInvitation.slug || slug,
               status: 'draft'
             };
-            
+
             console.log('📤 Sending update data:', Object.keys(updateData));
-            
+
             await invitationService.update(newInvitation.uuid, updateData);
-            
+
             console.log('✅ HTML content copied successfully');
             toast.success('✅ Đã sao chép nội dung từ template');
           } catch (err) {
@@ -853,14 +853,14 @@ const CollectionPage = () => {
           <div className="w-full h-full overflow-hidden">
             <iframe
               srcDoc={
-                previewTemplate.html_template || 
-                previewTemplate.designData?.html || 
-                (previewTemplate.designData?.elements ? 
+                previewTemplate.html_template ||
+                previewTemplate.designData?.html ||
+                (previewTemplate.designData?.elements ?
                   `<html><body style="margin:0;padding:20px;font-family:sans-serif;">
                     <h1>Canvas Template Preview</h1>
                     <p>This is a canvas-based template with ${Object.keys(previewTemplate.designData.elements || {}).length} elements.</p>
                     <p>Canvas templates need to be opened in the editor to view properly.</p>
-                  </body></html>` 
+                  </body></html>`
                   : '<html><body><div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#666;flex-direction:column;gap:20px;"><svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><div style="text-align:center;"><div style="font-size:18px;font-weight:bold;margin-bottom:8px;">Không có nội dung preview</div><div style="font-size:14px;color:#999;">Template này chưa có HTML để hiển thị</div></div></div></body></html>')
               }
               className="w-full h-full border-0 bg-white"
