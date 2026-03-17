@@ -481,7 +481,9 @@ const DashboardTemplateEditorPage = () => {
                           category_id: formData.category_id,
                           is_premium: formData.is_premium
                         }));
-                        window.open('/ultimate-html-editor?previewMode=true', '_blank');
+                        const currentPath = window.location.pathname;
+                        sessionStorage.setItem('ultimate_preview_return_url', currentPath);
+                        window.open(`/ultimate-html-editor?previewMode=true&isAdminPreview=true&returnUrl=${encodeURIComponent(currentPath)}`, '_blank');
                       }}
                       className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 transition-all rounded-lg text-xs font-bold flex items-center justify-center gap-2 shadow-sm"
                     >

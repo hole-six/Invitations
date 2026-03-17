@@ -28,20 +28,20 @@ const CategoryPage = () => {
   const [templateToDelete, setTemplateToDelete] = useState(null)
   const [showFilters, setShowFilters] = useState(false) // Collapsed by default
   const [templatesCount, setTemplatesCount] = useState(0)
-    const [categories, setCategories] = useState([])
-    const [openModalCategory, setOpenModalCategory] = useState(false)
-const [editingCategory, setEditingCategory] = useState(null)
+  const [categories, setCategories] = useState([])
+  const [openModalCategory, setOpenModalCategory] = useState(false)
+  const [editingCategory, setEditingCategory] = useState(null)
 
-const handleCreateCategory = async (data) => {
-  await templateService.createCategory(data)
-  loadCategories()
-}
+  const handleCreateCategory = async (data) => {
+    await templateService.createCategory(data)
+    loadCategories()
+  }
 
-const handleUpdateCategory = async (data) => {
-  await templateService.updateCategory(editingCategory.value, data)
-  setEditingCategory(null)
-  loadCategories()
-}
+  const handleUpdateCategory = async (data) => {
+    await templateService.updateCategory(editingCategory.value, data)
+    setEditingCategory(null)
+    loadCategories()
+  }
 
   // Auto list view on mobile
   const getInitialViewMode = () => {
@@ -49,23 +49,23 @@ const handleUpdateCategory = async (data) => {
   }
   const [viewMode, setViewMode] = useState(getInitialViewMode())
 
-const loadCategories = async () => {
-  try {
-    const response = await templateService.getCategories()
+  const loadCategories = async () => {
+    try {
+      const response = await templateService.getCategories()
 
-    const categoryData = (response.data || []).map(cat => ({
+      const categoryData = (response.data || []).map(cat => ({
         id: cat.id,
         name: cat.name,
         description: cat.description,
         display_order: cat.display_order,
         slug: cat.slug,
         deleted_at: cat.deleted_at
-    }))
+      }))
 
-    // const filteredData = categoryData.filter(cat => !cat.deleted_at)
+      // const filteredData = categoryData.filter(cat => !cat.deleted_at)
 
-    setCategories(categoryData)
-    setTemplates(data)
+      setCategories(categoryData)
+      setTemplates(data)
       setTemplatesCount(pagination.total || data.length) // Use total from API if available, otherwise fallback to data length
 
       const paginationMeta = response.pagination || response.meta || {}
@@ -76,16 +76,16 @@ const loadCategories = async () => {
         currentPage: currentPageFromApi > 0 ? currentPageFromApi : currentPage,
         totalPages: totalPagesFromApi > 0 ? totalPagesFromApi : Math.max(1, currentPage)
       })
-  } catch (error) {
-    console.error('Failed to load categories:', error)
+    } catch (error) {
+      console.error('Failed to load categories:', error)
+    }
   }
-}
 
   useEffect(() => {
     loadTemplates()
   }, [filters, currentPage])
 
-    useEffect(() => {
+  useEffect(() => {
     loadCategories()
     // if (decodedId) {
     //   loadTemplate(decodedId)
@@ -104,13 +104,12 @@ const loadCategories = async () => {
       setLoading(true)
       const response = await adminService.getAllTemplates({ ...filters, page: currentPage })
       let data = response.data || []
-      let pagination = response.pagination || []
 
       data = data.map(template => ({
-  ...template,
-  category: template.category_id, // dùng id luôn
-  thumbnail: template.thumbnail_url
-}))
+        ...template,
+        category: template.category_id, // dùng id luôn
+        thumbnail: template.thumbnail_url
+      }))
     } catch (error) {
       console.error('Failed to load templates:', error)
       toast.error('Không thể tải danh sách templates')
@@ -120,23 +119,21 @@ const loadCategories = async () => {
   }
 
   const handleDeleteCategory = async (id) => {
-  if (!window.confirm("Bạn có chắc muốn xóa category này?")) return
+    if (!window.confirm("Bạn có chắc muốn xóa category này?")) return
 
-  try {
-    await templateService.deleteCategory(id)
-    toast.success("Xóa category thành công")
-    loadCategories()
-  } catch (error) {
-    console.error(error)
-    toast.error("Không thể xóa category")
+    try {
+      await templateService.deleteCategory(id)
+      toast.success("Xóa category thành công")
+      loadCategories()
+    } catch (error) {
+      console.error(error)
+      toast.error("Không thể xóa category")
+    }
   }
-}
 
-const handleEditCategory = (category) => {
-  navigate(`/dashboard/categories/edit/${category.value}`)
-}
-
-  console.log('Selected templates:', categories)
+  const handleEditCategory = (category) => {
+    navigate(`/dashboard/categories/edit/${category.value}`)
+  }
 
   const handleBulkAction = async (action) => {
     if (selectedTemplates.length === 0) {
@@ -274,7 +271,7 @@ const handleEditCategory = (category) => {
         {/* Filters - Collapsible */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           {/* Header with toggle */}
-          <div 
+          <div
             className="p-3 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
             onClick={() => setShowFilters(!showFilters)}
           >
@@ -400,7 +397,7 @@ const handleEditCategory = (category) => {
                   />
                 </div>
               </div>
-              
+
               {/* Clear filters button */}
               {(filters.category !== 'all' || filters.status !== 'all' || filters.search) && (
                 <button
@@ -454,109 +451,107 @@ const handleEditCategory = (category) => {
           ) : (
             <div className="p-6">
               {/* Grid View */}
-           {viewMode === 'grid' && (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
-    {categories.map((category) => (
-      <div
-        key={category.value}
-className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition flex flex-col h-full"      >
-        {(() => {
-          const isDeleted = Boolean(category.deleted_at)
-          return (
-            <>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {category.name}
-        </h3>
+              {viewMode === 'grid' && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+                  {categories.map((category) => (
+                    <div
+                      key={category.value}
+                      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition flex flex-col h-full"      >
+                      {(() => {
+                        const isDeleted = Boolean(category.deleted_at)
+                        return (
+                          <>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                              {category.name}
+                            </h3>
 
-        <p className="text-sm text-gray-500 mt-1">
-          slug: {category.slug}
-        </p>
+                            <p className="text-sm text-gray-500 mt-1">
+                              slug: {category.slug}
+                            </p>
 
-        <div className="mt-3 text-xs text-gray-400">
-          mô tả: {category.description}
-        </div>
+                            <div className="mt-3 text-xs text-gray-400">
+                              mô tả: {category.description}
+                            </div>
 
-        <div className="mt-auto pt-3 space-y-2">
-          <span className={`text-[11px] ${isDeleted ? 'text-red-600 dark:text-red-400 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
-            Delete at : {category.deleted_at ? formatDate(category.deleted_at) : 'N/A'}
-          </span>
+                            <div className="mt-auto pt-3 space-y-2">
+                              <span className={`text-[11px] ${isDeleted ? 'text-red-600 dark:text-red-400 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
+                                Delete at : {category.deleted_at ? formatDate(category.deleted_at) : 'N/A'}
+                              </span>
 
-          {/* ACTIONS */}
-          <div className="flex gap-2">
-            <button
-              onClick={() => {
-                if (isDeleted) return
-                setEditingCategory(category)
-                setOpenModalCategory(true)
-              }}
-              disabled={isDeleted}
-              className={`flex-1 px-2 py-1 text-xs rounded ${
-                isDeleted
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-              }`}
-            >
-              <span className="material-symbols-outlined text-sm">edit</span>
-            </button>
+                              {/* ACTIONS */}
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => {
+                                    if (isDeleted) return
+                                    setEditingCategory(category)
+                                    setOpenModalCategory(true)
+                                  }}
+                                  disabled={isDeleted}
+                                  className={`flex-1 px-2 py-1 text-xs rounded ${isDeleted
+                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                    : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                                    }`}
+                                >
+                                  <span className="material-symbols-outlined text-sm">edit</span>
+                                </button>
 
-            <button
-              onClick={() => {
-                if (isDeleted) return
-                handleDeleteCategory(category.id)
-              }}
-              disabled={isDeleted}
-              className={`flex-1 px-2 py-1 text-xs rounded ${
-                isDeleted
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-red-100 text-red-700 hover:bg-red-200'
-              }`}
-            >
-              <span className="material-symbols-outlined text-sm">delete</span>
-            </button>
-          </div>
-        </div>
-            </>
-          )
-        })()}
-      </div>
-    ))}
-  </div>
-)}
+                                <button
+                                  onClick={() => {
+                                    if (isDeleted) return
+                                    handleDeleteCategory(category.id)
+                                  }}
+                                  disabled={isDeleted}
+                                  className={`flex-1 px-2 py-1 text-xs rounded ${isDeleted
+                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                    : 'bg-red-100 text-red-700 hover:bg-red-200'
+                                    }`}
+                                >
+                                  <span className="material-symbols-outlined text-sm">delete</span>
+                                </button>
+                              </div>
+                            </div>
+                          </>
+                        )
+                      })()}
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* List View */}
-          {viewMode === 'list' && (
-  <div className="space-y-2">
-    {categories.map((category) => (
-      <div
-        key={category.value}
-        className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/40 transition"
-      >
-        {/* Left */}
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg">
-            <span className="material-symbols-outlined text-gray-600 dark:text-gray-300">
-              folder
-            </span>
-          </div>
+              {viewMode === 'list' && (
+                <div className="space-y-2">
+                  {categories.map((category) => (
+                    <div
+                      key={category.value}
+                      className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/40 transition"
+                    >
+                      {/* Left */}
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg">
+                          <span className="material-symbols-outlined text-gray-600 dark:text-gray-300">
+                            folder
+                          </span>
+                        </div>
 
-          <div>
-            <div className="font-medium text-gray-900 dark:text-white">
-              {category.name}
-            </div>
-            <div className="text-xs text-gray-500">
-              slug: {category.slug}
-            </div>
-          </div>
-        </div>
+                        <div>
+                          <div className="font-medium text-gray-900 dark:text-white">
+                            {category.name}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            slug: {category.slug}
+                          </div>
+                        </div>
+                      </div>
 
-        {/* Right */}
-        <div className="text-xs text-gray-400">
-          description: {category.description}
-        </div>
-      </div>
-    ))}
-  </div>
-)}
+                      {/* Right */}
+                      <div className="text-xs text-gray-400">
+                        description: {category.description}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {categories.length > 0 && (
                 <div className="mt-6 flex items-center justify-center gap-2">
@@ -572,11 +567,10 @@ className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
                     <button
                       key={page}
                       onClick={() => handlePageChange(page)}
-                      className={`px-3 py-1.5 text-sm rounded-md border ${
-                        page === (pagination.currentPage || currentPage)
-                          ? 'bg-gray-900 text-white dark:bg-white dark:text-black border-gray-900 dark:border-white'
-                          : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300'
-                      }`}
+                      className={`px-3 py-1.5 text-sm rounded-md border ${page === (pagination.currentPage || currentPage)
+                        ? 'bg-gray-900 text-white dark:bg-white dark:text-black border-gray-900 dark:border-white'
+                        : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300'
+                        }`}
                     >
                       {page}
                     </button>
@@ -596,15 +590,15 @@ className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
         </div>
       </div>
 
-        <CategoryManageModal
-            isOpen={openModalCategory}
-            initialData={editingCategory}
-            onClose={() => {
-                setOpenModalCategory(false)
-                setEditingCategory(null)
-            }}
-            onCreate={editingCategory ? handleUpdateCategory : handleCreateCategory}
-        />
+      <CategoryManageModal
+        isOpen={openModalCategory}
+        initialData={editingCategory}
+        onClose={() => {
+          setOpenModalCategory(false)
+          setEditingCategory(null)
+        }}
+        onCreate={editingCategory ? handleUpdateCategory : handleCreateCategory}
+      />
 
       {/* Delete Modal */}
       <Modal

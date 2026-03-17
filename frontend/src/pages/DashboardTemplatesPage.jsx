@@ -60,8 +60,6 @@ const DashboardTemplatesPage = () => {
     const filteredData = categoryData.filter(cat => !cat.deleted_at)
 
     setCategories(filteredData)
-    setTemplates(data)
-      setTemplatesCount(pagination.total || data.length) // Use total from API if available, otherwise fallback to data length
 
       const paginationMeta = response.pagination || response.meta || {}
       const totalPagesFromApi = Number(paginationMeta.total_pages || paginationMeta.last_page || 0)
@@ -419,7 +417,7 @@ const DashboardTemplatesPage = () => {
                   >
                     <option value="all">Tất cả</option>
                     {categories.map(cat => (
-                      <option key={cat.value} value={cat.value}>{cat.name}</option>
+                      <option key={`cat-${cat.id}`} value={cat.id}>{cat.name}</option>
                     ))}
                   </select>
                 </div>

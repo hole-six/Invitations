@@ -2001,7 +2001,19 @@ const UltimateHtmlEditorPage = () => {
           <div className="w-px h-6 bg-gray-700"></div>
 
           <button
-            onClick={() => navigate('/management')}
+            onClick={() => {
+              const isAdminPreview = searchParams.get('isAdminPreview') === 'true';
+              const returnUrl = searchParams.get('returnUrl') || sessionStorage.getItem('ultimate_preview_return_url');
+              
+              if (isAdminPreview) {
+                if (window.opener) {
+                  window.close(); // Đóng tab nếu được mở từ _blank
+                }
+                navigate(returnUrl || '/dashboard/templates');
+              } else {
+                navigate('/management');
+              }
+            }}
             className="flex flex-col items-center gap-1 text-gray-500 active:text-white"
           >
             <span className="material-symbols-outlined text-2xl">arrow_back</span>
