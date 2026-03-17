@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>The Wedding of Eleanor &amp; Julian</title>
+  <!-- Tailwind CSS with Forms and Container Queries -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Google Fonts: Playfair Display for Serifs, Montserrat for Sans-Serif -->
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;display=swap"
+    rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            sans: ['Montserrat', 'sans-serif'],
+          },
+          colors: {
+            'wedding-gold': '#C5A059',
+            'wedding-dark': '#1A1A1A',
+            'wedding-gray': '#F9F9F9',
+          }
+        }
+      }
+    }
+  </script>
+  <style data-purpose="typography">
+    body {
+      font-family: 'Montserrat', sans-serif;
+      color: #1A1A1A;
+      scroll-behavior: smooth;
+    }
+
+    h1,
+    h2,
+    h3,
+    .font-serif {
+      font-family: 'Playfair Display', serif;
+    }
+
+    .letter-spacing-widest {
+      letter-spacing: 0.2em;
+    }
+  </style>
+  <style data-purpose="layout-animations">
+    .fade-in {
+      animation: fadeIn 1.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 1px solid #eee;
+    }
+  </style>
+  <!-- Animation CSS -->
+  <style>
+    /* Animation Base States */
+    [data-aos] {
+      opacity: 0;
+      transition-property: transform, opacity;
+      transition-timing-function: ease-out;
+    }
+
+    /* Fade Animations */
+    [data-aos="fade-up"] {
+      transform: translateY(30px);
+    }
+
+    [data-aos="fade-down"] {
+      transform: translateY(-30px);
+    }
+
+    [data-aos="fade-left"] {
+      transform: translateX(30px);
+    }
+
+    [data-aos="fade-right"] {
+      transform: translateX(-30px);
+    }
+
+    /* Zoom Animations */
+    [data-aos="zoom-in"] {
+      transform: scale(0.7);
+    }
+
+    [data-aos="zoom-out"] {
+      transform: scale(1.2);
+    }
+
+    /* Slide Animations */
+    [data-aos="slide-up"] {
+      transform: translateY(100%);
+    }
+
+    [data-aos="grayscale"] {
+      filter: grayscale(100%);
+      transition-property: filter, transform;
+    }
+
+    /* The Active State (Triggered by JS) */
+    .aos-animate {
+      opacity: 1 !important;
+      transform: translate(0) scale(1) !important;
+    }
+
+    .animate-kenburn {
+      animation: kenburn 15s 2s infinite alternate;
+    }
+
+    @keyframes kenburn {
+      0% {
+        scale: 1;
+      }
+
+      100% {
+        scale: 1.3;
+      }
+    }
+  </style>
+  <style>
+    picture {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+    }
+
+    [data-image-editable="photo_1"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBnLiYdgDUw9i8sdOnpOq6fvHmO9yYJkTdxEFxSqfKZmbCpxoP7L5NqKuidZHnaSEgFRbVIh78Sj5vvVKTJnFvkDwhhkC1Rn1TWEVj4Cy7O2tGJHFEwRrJQepUU49_qJrOZnmDrfZEgZelSewEys_75p7B-pObcJGDJ2oTojQMdr9QL9IMOeRU6PDR_q3BsJv2U5a8S8NYq6TDwNBO9iPh4pJM0-JJUiHX4kQ0Ly4T1IRWDGtNYnx9nkQPxfZo4TERHx-khjTXdeyY");
+    }
+
+    [data-image-editable="photo_2"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAHh7Gy1CcFFZLK9p4s_Kw-kUToWxEGxVyHIqGwUUMrPXvobRx8Uub18pbkcNEQEUNZHfyUZ4qBUmkzByZXTUDkMGML2SeuWgNECJiUt_YbL7PCNmRR5Vg-UyOCP6lR3auyYDLEvFjmvuO4nqKnioixZgejBAqUxNmuTLWL628S8CK15rgOiBoqCwKQ9UC-oVSkm1tASWvJoFdPfOvOBWchldKjlcJtslyTiqrKVJYLC6C5zlwublUTH7QMTLCnGb47vzbgFEZXoio");
+    }
+
+    [data-image-editable="photo_3"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCPoGQ0lpAwlDmrRNBtkb3rzxuZwQkLMtxxhrzsZgh18Mz84mY9r36Nl2TTVCtqJ-TayBgzAEdsjcppPBqjqQUGFDWExa4TfoU5f4_NYHO_l6xCS0Z06FbyHs_z4giIddsxHnxvFtD8nboP-dKZDQXpm3KyEpbPf9uqE-Xs0JYarP2zB2gMuJNISxg8sP7IkmwPp9wMR0me3XGAOF7hSIpSktlQ57UylNCvLe95QU_VH3jzqNiX8GqYAUJWDLE-JsxG_XfNWZv4hS0");
+    }
+
+    [data-image-editable="photo_4"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAu_X_3uVfTZmrTIiezmKyENvT1P_bq0QMDr9JySzuD4A8OpqFBn7JWmESzu-VcYmcOvJP3vE0OJxNG2wPztLkA8OJeOFQIME10GtnttVxZZP73f0I4DsTsMCk0NEPWoP71IaIiJ7gtvtsBDTsSpj1-rbpO5fpJYevpCkquOqL4S1ICu4kJrSGBFgOMmSbnCF-Agi1lAlBMDN1uBjJ9b7ServpjkaluCzWkKpE5vt54wG6oQ2plS6MWG7aR7SBL2Pox0b0x16HnfYo");
+    }
+
+    [data-image-editable="photo_5"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDuuA4d6sIo4DU8fPxa7xsa89yeX0X6efppJYeZjQEr_OceLJA42CLK1oVXaPlJ0H-vH02ZDypyrgX9umi7kWZINz_th0J6Y8gfso6slhu1yJ6M-gQeuqhKSfXF4lAC06mGrsWwQoekQRaXgBFzADMlr6jkWPgrX8w8DUk5KrBa4SOCkPMnNb0s_-sb624bo1H8GuydDBf0nflgF-9Yjocx45RDiMGk8_b0IDmACCx9quuLyf8uEhNLqFnZUcS1rB2LlS6NHlf-J2A");
+    }
+
+
+    [data-image-editable="photo_6"] {
+      background-image: url("");
+    }
+
+    [data-image-editable="photo_7"] {
+      background-image: url("");
+    }
+
+    [data-image-editable="photo_8"] {
+      background-image: url("");
+    }
+
+    [data-image-editable="qr_1"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAVB8rPD2H8DyO56UPamETs7WjBlJwjROLK_hKU3Yxjh9zYX-OoWsSFGmr_2VPH76tivw3S4TRbTjAeS0dRHKj1TU4rVRjAi_Wwte2E6_0yk09l5nSYSeoCQfPTWQv3IsUaw6j9pvHPw4KG7SQeaAeONwfHo5IswDSzkj1cBrg_tOK52Vd4mBswPNprLrOoJZ3ZwuHhxAnyIInm1bS6mqYC1ZaxAXWywQWh5jNN9W42Jgi86r27zuy8SKdADUAKJjNbhRbvalUIfNU");
+    }
+
+    [data-image-editable="qr_2"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAVB8rPD2H8DyO56UPamETs7WjBlJwjROLK_hKU3Yxjh9zYX-OoWsSFGmr_2VPH76tivw3S4TRbTjAeS0dRHKj1TU4rVRjAi_Wwte2E6_0yk09l5nSYSeoCQfPTWQv3IsUaw6j9pvHPw4KG7SQeaAeONwfHo5IswDSzkj1cBrg_tOK52Vd4mBswPNprLrOoJZ3ZwuHhxAnyIInm1bS6mqYC1ZaxAXWywQWh5jNN9W42Jgi86r27zuy8SKdADUAKJjNbhRbvalUIfNU");
+    }
+
+    [data-image-editable] {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  </style>
+  <script>
+      (function () {
+        let countdownInterval;
+
+        function getTargetDate() {
+          const elH = document.querySelector("#js-hour");
+          const elD = document.querySelector("#js-day");
+          const elM = document.querySelector("#js-month");
+          const elY = document.querySelector("#js-year");
+
+          if (!elD || !elM || !elY) return null;
+
+          let hour = 0;
+          let minute = 0;
+
+          if (elH) {
+            const timeMatch = elH.innerText.match(/(\d{2}):(\d{2})/);
+            if (timeMatch) {
+              hour = parseInt(timeMatch[1], 10);
+              minute = parseInt(timeMatch[2], 10);
+            }
+          }
+
+          const day = parseInt(elD.innerText.replace(/\D/g, ''), 10);
+          const month = parseInt(elM.innerText.replace(/\D/g, ''), 10) - 1;
+          const year = parseInt(elY.innerText.replace(/\D/g, ''), 10);
+
+          const target = new Date(year, month, day, hour, minute, 0).getTime();
+          return isNaN(target) ? null : target;
+        }
+
+        function render(d, h, m, s) {
+          const pad = (n) => (n < 10 ? "0" + n : n);
+          const setVal = (id, val) => {
+            const el = document.querySelector(`${id} span`);
+            if (el) el.innerText = pad(val);
+          };
+
+          setVal("#TIMER_DAY", d);
+          setVal("#TIMER_HOUR", h);
+          setVal("#TIMER_MIN", m);
+          setVal("#TIMER_SEC", s);
+        }
+
+        function updateCountdown() {
+          const endTime = getTargetDate();
+          if (!endTime) return;
+
+          if (countdownInterval) clearInterval(countdownInterval);
+
+          const logic = () => {
+            const now = new Date().getTime();
+            const distance = endTime - now;
+
+            if (distance < 0) {
+              clearInterval(countdownInterval);
+              render(0, 0, 0, 0);
+              return;
+            }
+
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor(
+              (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+            );
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+            render(d, h, m, s);
+          };
+
+          logic();
+          countdownInterval = setInterval(logic, 1000);
+        }
+
+        window.addEventListener("load", () => {
+          updateCountdown();
+
+          const observer = new MutationObserver(updateCountdown);
+          const config = {
+            characterData: true,
+            childList: true,
+            subtree: true,
+          };
+
+          ["#js-hour", "#js-day", "#js-month", "#js-year"].forEach(
+            (selector) => {
+              const el = document.querySelector(selector);
+              if (el) observer.observe(el, config);
+            },
+          );
+        });
+      })();
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const animationObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const target = entry.target;
+
+              const delay = target.getAttribute("data-aos-delay") || "0";
+              const duration =
+                target.getAttribute("data-aos-duration") || "800";
+
+              target.style.transitionDelay = `${delay}ms`;
+              target.style.transitionDuration = `${duration}ms`;
+
+              target.classList.add("aos-animate");
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      document
+        .querySelectorAll("[data-aos]")
+        .forEach((el) => animationObserver.observe(el));
+    });
+  </script>
+</head>
+
+<body class="bg-white">
+  <!-- BEGIN: Navigation -->
+  <nav class="sticky-nav px-6 py-4 flex justify-between items-center" data-purpose="main-navigation">
+    <div class="text-xl font-serif font-bold tracking-tighter">E &amp; J</div>
+    <ul class="hidden md:flex space-x-8 text-[10px] uppercase tracking-widest font-medium">
+      <li><a class="hover:text-wedding-gold transition" href="#story">Our Story</a></li>
+      <li><a class="hover:text-wedding-gold transition" href="#details">Details</a></li>
+      <li><a class="hover:text-wedding-gold transition" href="#gallery">Gallery</a></li>
+      <li><a class="hover:text-wedding-gold transition" href="#rsvp">RSVP</a></li>
+      <li><a class="hover:text-wedding-gold transition" href="#registry">Registry</a></li>
+    </ul>
+    <div class="md:hidden">
+      <!-- Simple mobile menu icon placeholder -->
+      <button class="p-2">
+        <div class="w-6 h-0.5 bg-black mb-1"></div>
+        <div class="w-6 h-0.5 bg-black"></div>
+      </button>
+    </div>
+  </nav>
+  <!-- END: Navigation -->
+  <!-- BEGIN: Hero Section -->
+  <header class="relative min-h-screen flex items-center justify-center overflow-hidden bg-wedding-gray"
+    data-purpose="hero-banner">
+    <div class="container mx-auto px-6 grid md:grid-cols-2 items-center gap-12 z-10">
+      <div class="text-center md:text-left">
+        <p class="uppercase tracking-[0.4em] text-xs mb-6 text-wedding-gold font-semibold" data-aos="fade-up">Save the
+          Date</p>
+        <h1 class="text-6xl md:text-8xl mb-4 leading-tight" data-aos="fade-up" data-aos-delay="100">Eleanor <br />&amp;
+          Julian</h1>
+        <p class="text-lg italic font-serif text-gray-600 mb-8" data-aos="fade-up" data-aos-delay="200"><span
+            id="js-month">10</span> <span id="js-day">24</span>,
+          <span id="js-year">2026</span> • Tuscany, Italy
+        </p>
+        <!-- Countdown Container -->
+        <div class="flex justify-center md:justify-start space-x-6 md:space-x-10 mt-12 border-t border-gray-200 pt-8">
+          <div id="TIMER_DAY" class="text-center" data-aos="fade-up">
+            <span class="block text-3xl font-serif">00</span>
+            <span class="text-[10px] uppercase tracking-widest text-gray-500">Days</span>
+          </div>
+          <div id="TIMER_HOUR" class="text-center" data-aos="fade-up" data-aos-delay="200">
+            <span class="block text-3xl font-serif">00</span>
+            <span class="text-[10px] uppercase tracking-widest text-gray-500">Hours</span>
+          </div>
+          <div id="TIMER_MIN" class="text-center" data-aos="fade-up" data-aos-delay="400">
+            <span class="block text-3xl font-serif">00</span>
+            <span class="text-[10px] uppercase tracking-widest text-gray-500">Mins</span>
+          </div>
+          <div id="TIMER_SEC" class="text-center" data-aos="fade-up" data-aos-delay="600">
+            <span class="block text-3xl font-serif">00</span>
+            <span class="text-[10px] uppercase tracking-widest text-gray-500">Secs</span>
+          </div>
+        </div>
+      </div>
+      <picture class="relative h-[500px] md:h-[700px] w-full bg-cover bg-center shadow-2xl rounded-sm"
+      data-image-editable="photo_1"
+        data-aos="fade-left">
+        <!-- Overlay decorative frame -->
+        <div class="absolute inset-4 border border-white/30 pointer-events-none"></div>
+      </picture>
+    </div>
+  </header>
+  <!-- END: Hero Section -->
+  <!-- BEGIN: Our Story -->
+  <section class="py-24 md:py-40 bg-white" data-purpose="our-story-section" id="story">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="text-center mb-20" data-aos="fade-up">
+        <h2 class="text-4xl md:text-5xl mb-4">Our Story</h2>
+        <div class="w-12 h-px bg-wedding-gold mx-auto mb-6"></div>
+        <p class="text-gray-500 max-w-lg mx-auto leading-relaxed">From a chance meeting in a London cafe to a sunset
+          proposal in the Amalfi Coast, here is how we got to where we are today.</p>
+      </div>
+      <!-- Timeline -->
+      <div
+        class="space-y-24 relative before:content-[''] before:absolute before:left-1/2 before:w-px before:h-full before:bg-gray-100 before:-translate-x-1/2 hidden md:block"
+        data-purpose="story-timeline">
+        <!-- Story Item 1 -->
+        <div class="flex items-center justify-between w-full" data-aos="fade-up">
+          <div class="w-5/12 text-right pr-12">
+            <h3 class="text-2xl mb-2 italic">The First Encounter</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">It was a rainy Tuesday at Monmouth Coffee. Two strangers,
+              one empty table, and a shared love for Ethiopian pour-overs.</p>
+          </div>
+          <div class="w-2 h-2 rounded-full bg-wedding-gold z-10"></div>
+          <div class="w-5/12 pl-12">
+            <span class="text-wedding-gold font-serif italic">October 2018</span>
+          </div>
+        </div>
+        <!-- Story Item 2 -->
+        <div class="flex items-center justify-between w-full flex-row-reverse" data-aos="fade-up" data-aos-delay="200">
+          <div class="w-5/12 text-left pl-12">
+            <h3 class="text-2xl mb-2 italic">First Journey Together</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">A weekend in Paris that turned into a lifetime commitment.
+              We knew then that we were better as a pair.</p>
+          </div>
+          <div class="w-2 h-2 rounded-full bg-wedding-gold z-10"></div>
+          <div class="w-5/12 text-right pr-12">
+            <span class="text-wedding-gold font-serif italic">June 2020</span>
+          </div>
+        </div>
+        <!-- Story Item 3 -->
+        <div class="flex items-center justify-between w-full" data-aos="fade-up" data-aos-delay="300">
+          <div class="w-5/12 text-right pr-12">
+            <h3 class="text-2xl mb-2 italic">The Yes</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">Under the stars of Ravello, Julian finally asked the
+              question. Through tears of joy, Eleanor said 'Always'.</p>
+          </div>
+          <div class="w-2 h-2 rounded-full bg-wedding-gold z-10"></div>
+          <div class="w-5/12 pl-12">
+            <span class="text-wedding-gold font-serif italic">August 2023</span>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile Timeline -->
+      <div class="md:hidden space-y-12">
+        <div class="border-l-2 border-wedding-gold/20 pl-6 py-2">
+          <span class="text-wedding-gold font-serif italic block mb-2">October 2018</span>
+          <h3 class="text-xl mb-1 italic">The First Encounter</h3>
+          <p class="text-sm text-gray-500">It was a rainy Tuesday at Monmouth Coffee.</p>
+        </div>
+        <div class="border-l-2 border-wedding-gold/20 pl-6 py-2">
+          <span class="text-wedding-gold font-serif italic block mb-2">June 2020</span>
+          <h3 class="text-xl mb-1 italic">First Journey Together</h3>
+          <p class="text-sm text-gray-500">A weekend in Paris that turned into a lifetime commitment.</p>
+        </div>
+        <div class="border-l-2 border-wedding-gold/20 pl-6 py-2">
+          <span class="text-wedding-gold font-serif italic block mb-2">August 2023</span>
+          <h3 class="text-xl mb-1 italic">The Yes</h3>
+          <p class="text-sm text-gray-500">Under the stars of Ravello, Julian asked the question.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END: Our Story -->
+  <!-- BEGIN: Event Details -->
+  <section class="py-24 bg-wedding-gray" data-purpose="event-details" id="details">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <h2 class="text-4xl md:text-5xl mb-4">The Wedding Day</h2>
+        <p class="text-[10px] uppercase tracking-[0.3em] font-medium text-gray-500">Join us for the celebration</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+        <!-- Ceremony -->
+        <div class="bg-white p-12 text-center shadow-sm border border-gray-100 flex flex-col justify-between"
+          data-aos="fade-up">
+          <div>
+            <h3 class="text-3xl font-serif italic mb-6">The Ceremony</h3>
+            <div class="space-y-4 mb-8">
+              <p class="text-sm uppercase tracking-widest text-wedding-gold">4:00 PM</p>
+              <p class="text-gray-600">Castello di Vicarello<br />Grosseto, Tuscany</p>
+            </div>
+            <p class="text-xs text-gray-400 italic">Formal Attire</p>
+          </div>
+          <div class="mt-8">
+            <button
+              class="px-8 py-3 border border-wedding-gold text-wedding-gold text-xs uppercase tracking-widest hover:bg-wedding-gold hover:text-white transition">View
+              Map</button>
+          </div>
+        </div>
+        <!-- Reception -->
+        <div class="bg-white p-12 text-center shadow-sm border border-gray-100 flex flex-col justify-between"
+          data-aos="fade-up" data-aos-delay="200">
+          <div>
+            <h3 class="text-3xl font-serif italic mb-6">The Reception</h3>
+            <div class="space-y-4 mb-8">
+              <p class="text-sm uppercase tracking-widest text-wedding-gold">6:30 PM - Late</p>
+              <p class="text-gray-600">The Olive Grove<br />Followed by Dining &amp; Dancing</p>
+            </div>
+            <p class="text-xs text-gray-400 italic">Bring your dancing shoes</p>
+          </div>
+          <div class="mt-8">
+            <button
+              class="px-8 py-3 border border-wedding-gold text-wedding-gold text-xs uppercase tracking-widest hover:bg-wedding-gold hover:text-white transition">Transport
+              Info</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END: Event Details -->
+  <!-- BEGIN: Gallery Section -->
+  <section class="py-24 bg-white" data-purpose="photo-gallery" id="gallery">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <h2 class="text-4xl md:text-5xl mb-4">Moments</h2>
+        <div class="w-12 h-px bg-wedding-gold mx-auto"></div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" data-purpose="gallery-grid">
+        <div class="h-64 md:h-96 bg-gray-100 overflow-hidden">
+          <picture class="w-full h-full object-cover hover:scale-105 transition duration-700"
+            data-image-editable="photo_2" data-aos="fade-up"></picture>
+        </div>
+        <div class="h-64 md:h-96 bg-gray-100 overflow-hidden md:mt-12">
+          <picture class="w-full h-full object-cover hover:scale-105 transition duration-700"
+            data-image-editable="photo_3" data-aos="fade-up" data-aos-delay="150"></picture>
+        </div>
+        <div class="h-64 md:h-96 bg-gray-100 overflow-hidden">
+          <picture class="w-full h-full object-cover hover:scale-105 transition duration-700"
+            data-image-editable="photo_4" data-aos="fade-up" data-aos-delay="300"></picture>
+        </div>
+        <div class="h-64 md:h-96 bg-gray-100 overflow-hidden md:mt-12">
+          <picture class="w-full h-full object-cover hover:scale-105 transition duration-700"
+            data-image-editable="photo_5" data-aos="fade-up" data-aos-delay="450"></picture>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END: Gallery Section -->
+  <!-- BEGIN: RSVP Form -->
+  <section class="py-24 md:py-40 bg-wedding-gray" data-purpose="rsvp-section" id="rsvp">
+    <div class="max-w-2xl mx-auto px-6">
+      <div class="bg-white p-8 md:p-16 shadow-xl rounded-sm" data-aos="fade-up">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl mb-4 italic">Will You Join Us?</h2>
+          <p class="text-xs uppercase tracking-[0.2em] text-gray-500">Please respond by August 1st, 2024</p>
+        </div>
+        <form class="space-y-8" data-purpose="rsvp-form">
+          <div>
+            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">Your Full Name</label>
+            <input
+              class="w-full border-0 border-b border-gray-200 focus:ring-0 focus:border-wedding-gold px-0 py-2 text-lg placeholder-gray-300"
+              placeholder="e.g. John Doe" type="text" />
+          </div>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">Attendance</label>
+              <select
+                class="w-full border-0 border-b border-gray-200 focus:ring-0 focus:border-wedding-gold px-0 py-2 bg-transparent text-lg">
+                <option>Joyfully Accepts</option>
+                <option>Regretfully Declines</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">Number of Guests</label>
+              <input
+                class="w-full border-0 border-b border-gray-200 focus:ring-0 focus:border-wedding-gold px-0 py-2 text-lg"
+                max="5" min="1" type="number" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">Dietary Requirements</label>
+            <input
+              class="w-full border-0 border-b border-gray-200 focus:ring-0 focus:border-wedding-gold px-0 py-2 text-lg placeholder-gray-300"
+              placeholder="e.g. Vegan, Gluten-Free" type="text" />
+          </div>
+          <div class="pt-8">
+            <button
+              class="w-full bg-wedding-dark text-white py-4 uppercase tracking-[0.3em] text-[10px] font-bold hover:bg-wedding-gold transition duration-300"
+              type="submit">Submit Response</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+  <!-- END: RSVP Form -->
+  <!-- BEGIN: Gift Registry -->
+  <section class="py-24 bg-white" data-purpose="gift-registry" id="registry">
+    <div class="container mx-auto px-6 text-center">
+      <div class="max-w-xl mx-auto">
+        <h2 class="text-4xl mb-6" data-aos="fade-up">Gift Registry</h2>
+        <p class="text-gray-500 leading-relaxed mb-12" data-aos="fade-up" data-aos-delay="200">Your presence at our
+          wedding is the greatest gift of all.
+          However, if you wish to honor us with a gift, we have a registry for our honeymoon and new home.</p>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-12 mb-5" data-aos="fade-up">
+          <!-- QR Code Placeholder -->
+          <div class="w-full p-6 border border-gray-100 shadow-sm bg-wedding-gray">
+            <picture class="aspect-square mb-4" data-image-editable="qr_1"></picture>
+          </div>
+          <div class="space-y-4 text-left">
+            <a class="block group" href="#">
+              <span
+                class="text-xs uppercase tracking-widest text-gray-400 group-hover:text-wedding-gold transition">Groom</span>
+              <p class="text-xl font-serif italic">Eleanor</p>
+            </a>
+            <a class="block group" href="#">
+              <span
+                class="text-xs uppercase tracking-widest text-gray-400 group-hover:text-wedding-gold transition">Bank</span>
+              <p class="text-xl font-serif italic">123456789</p>
+            </a>
+          </div>
+        </div>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-12" data-aos="fade-up">
+          <!-- QR Code Placeholder -->
+          <div class="w-full p-6 border border-gray-100 shadow-sm bg-wedding-gray">
+            <picture class="aspect-square mb-4" data-image-editable="qr_2"></picture>
+          </div>
+          <div class="space-y-4 text-left">
+            <a class="block group" href="#">
+              <span
+                class="text-xs uppercase tracking-widest text-gray-400 group-hover:text-wedding-gold transition">Bride</span>
+              <p class="text-xl font-serif italic">Julian</p>
+            </a>
+            <a class="block group" href="#">
+              <span
+                class="text-xs uppercase tracking-widest text-gray-400 group-hover:text-wedding-gold transition">Bank</span>
+              <p class="text-xl font-serif italic">123456789</p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END: Gift Registry -->
+  <!-- BEGIN: Footer -->
+  <footer class="py-20 border-t border-gray-100 bg-white" data-purpose="site-footer">
+    <div class="container mx-auto px-6 text-center" data-aos="fade-up">
+      <p class="text-5xl font-serif italic mb-8">E &amp; J</p>
+      <p class="text-[10px] uppercase tracking-[0.5em] text-gray-400">#EleanorAndJulian2024</p>
+      <div class="mt-12 text-gray-400 text-[10px] uppercase tracking-widest">
+        Made with love for our family &amp; friends
+      </div>
+    </div>
+  </footer>
+  <!-- END: Footer -->
+</body>
+
+</html>
