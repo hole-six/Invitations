@@ -5,14 +5,12 @@
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>The Wedding of Eleanor &amp; Julian</title>
-  <!-- Tailwind CSS with Forms and Container Queries -->
+  <title>The Wedding of Eleanor & Julian</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <!-- Google Fonts: Playfair Display for Serifs, Montserrat for Sans-Serif -->
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
   <link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;display=swap"
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
     rel="stylesheet" />
   <script>
     tailwind.config = {
@@ -74,8 +72,11 @@
       border-bottom: 1px solid #eee;
     }
   </style>
-  <!-- Animation CSS -->
+  <!-- animation css -->
   <style>
+        html {
+      scroll-behavior: smooth;
+    }
     /* Animation Base States */
     [data-aos] {
       opacity: 0;
@@ -139,6 +140,7 @@
       }
     }
   </style>
+  <!-- picture data -->
   <style>
     picture {
       display: block;
@@ -194,6 +196,7 @@
       background-repeat: no-repeat;
     }
   </style>
+  <!-- timer script -->
   <script>
       (function () {
         let countdownInterval;
@@ -287,6 +290,7 @@
         });
       })();
   </script>
+  <!-- animation script -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const animationObserver = new IntersectionObserver(
@@ -317,189 +321,188 @@
 </head>
 
 <body class="bg-white">
-  <!-- BEGIN: Navigation -->
   <nav class="sticky-nav px-6 py-4 flex justify-between items-center" data-purpose="main-navigation">
-    <div class="text-xl font-serif font-bold tracking-tighter">E &amp; J</div>
+    <div class="text-xl font-serif font-bold tracking-tighter" data-editable="nav_logo">E & J</div>
     <ul class="hidden md:flex space-x-8 text-[10px] uppercase tracking-widest font-medium">
-      <li><a class="hover:text-wedding-gold transition" href="#story">Our Story</a></li>
-      <li><a class="hover:text-wedding-gold transition" href="#details">Details</a></li>
-      <li><a class="hover:text-wedding-gold transition" href="#gallery">Gallery</a></li>
-      <li><a class="hover:text-wedding-gold transition" href="#rsvp">RSVP</a></li>
-      <li><a class="hover:text-wedding-gold transition" href="#registry">Registry</a></li>
+      <li><a class="hover:text-wedding-gold transition" href="#story" data-editable="nav_item_1">Our Story</a></li>
+      <li><a class="hover:text-wedding-gold transition" href="#details" data-editable="nav_item_2">Details</a></li>
+      <li><a class="hover:text-wedding-gold transition" href="#gallery" data-editable="nav_item_3">Gallery</a></li>
+      <li><a class="hover:text-wedding-gold transition" href="#rsvp" data-editable="nav_item_4">RSVP</a></li>
+      <li><a class="hover:text-wedding-gold transition" href="#registry" data-editable="nav_item_5">Registry</a></li>
     </ul>
     <div class="md:hidden">
-      <!-- Simple mobile menu icon placeholder -->
       <button class="p-2">
         <div class="w-6 h-0.5 bg-black mb-1"></div>
         <div class="w-6 h-0.5 bg-black"></div>
       </button>
     </div>
   </nav>
-  <!-- END: Navigation -->
-  <!-- BEGIN: Hero Section -->
   <header class="relative min-h-screen flex items-center justify-center overflow-hidden bg-wedding-gray"
     data-purpose="hero-banner">
     <div class="container mx-auto px-6 grid md:grid-cols-2 items-center gap-12 z-10">
       <div class="text-center md:text-left">
-        <p class="uppercase tracking-[0.4em] text-xs mb-6 text-wedding-gold font-semibold" data-aos="fade-up">Save the
+        <p class="uppercase tracking-[0.4em] text-xs mb-6 text-wedding-gold font-semibold" data-aos="fade-up"
+          data-editable="hero_subtitle">Save the
           Date</p>
-        <h1 class="text-6xl md:text-8xl mb-4 leading-tight" data-aos="fade-up" data-aos-delay="100">Eleanor <br />&amp;
+        <h1 class="text-6xl md:text-8xl mb-4 leading-tight" data-aos="fade-up" data-aos-delay="100"
+          data-editable="hero_title">Eleanor <br />&
           Julian</h1>
-        <p class="text-lg italic font-serif text-gray-600 mb-8" data-aos="fade-up" data-aos-delay="200"><span
-            id="js-month">10</span> <span id="js-day">24</span>,
-          <span id="js-year">2026</span> • Tuscany, Italy
+        <p class="text-lg italic font-serif text-gray-600 mb-8" data-aos="fade-up" data-aos-delay="200">
+          <span id="js-month" data-editable="hero_month">10</span>
+          <span id="js-day" data-editable="hero_day">24</span>,
+          <span id="js-year" data-editable="hero_year">2026</span>
+          <span data-editable="hero_location">• Tuscany, Italy</span>
         </p>
-        <!-- Countdown Container -->
         <div class="flex justify-center md:justify-start space-x-6 md:space-x-10 mt-12 border-t border-gray-200 pt-8">
           <div id="TIMER_DAY" class="text-center" data-aos="fade-up">
             <span class="block text-3xl font-serif">00</span>
-            <span class="text-[10px] uppercase tracking-widest text-gray-500">Days</span>
+            <span class="text-[10px] uppercase tracking-widest text-gray-500" data-editable="label_days">Days</span>
           </div>
           <div id="TIMER_HOUR" class="text-center" data-aos="fade-up" data-aos-delay="200">
             <span class="block text-3xl font-serif">00</span>
-            <span class="text-[10px] uppercase tracking-widest text-gray-500">Hours</span>
+            <span class="text-[10px] uppercase tracking-widest text-gray-500" data-editable="label_hours">Hours</span>
           </div>
           <div id="TIMER_MIN" class="text-center" data-aos="fade-up" data-aos-delay="400">
             <span class="block text-3xl font-serif">00</span>
-            <span class="text-[10px] uppercase tracking-widest text-gray-500">Mins</span>
+            <span class="text-[10px] uppercase tracking-widest text-gray-500" data-editable="label_mins">Mins</span>
           </div>
           <div id="TIMER_SEC" class="text-center" data-aos="fade-up" data-aos-delay="600">
             <span class="block text-3xl font-serif">00</span>
-            <span class="text-[10px] uppercase tracking-widest text-gray-500">Secs</span>
+            <span class="text-[10px] uppercase tracking-widest text-gray-500" data-editable="label_secs">Secs</span>
           </div>
         </div>
+        <span id="js-hour" class="hidden">18:00</span>
       </div>
       <picture class="relative h-[500px] md:h-[700px] w-full bg-cover bg-center shadow-2xl rounded-sm"
-      data-image-editable="photo_1"
-        data-aos="fade-left">
-        <!-- Overlay decorative frame -->
+        data-image-editable="photo_1" data-aos="fade-left">
         <div class="absolute inset-4 border border-white/30 pointer-events-none"></div>
       </picture>
     </div>
   </header>
-  <!-- END: Hero Section -->
-  <!-- BEGIN: Our Story -->
   <section class="py-24 md:py-40 bg-white" data-purpose="our-story-section" id="story">
     <div class="max-w-4xl mx-auto px-6">
       <div class="text-center mb-20" data-aos="fade-up">
-        <h2 class="text-4xl md:text-5xl mb-4">Our Story</h2>
+        <h2 class="text-4xl md:text-5xl mb-4" data-editable="story_header">Our Story</h2>
         <div class="w-12 h-px bg-wedding-gold mx-auto mb-6"></div>
-        <p class="text-gray-500 max-w-lg mx-auto leading-relaxed">From a chance meeting in a London cafe to a sunset
+        <p class="text-gray-500 max-w-lg mx-auto leading-relaxed" data-editable="story_description">From a chance
+          meeting in a London cafe to a sunset
           proposal in the Amalfi Coast, here is how we got to where we are today.</p>
       </div>
-      <!-- Timeline -->
       <div
         class="space-y-24 relative before:content-[''] before:absolute before:left-1/2 before:w-px before:h-full before:bg-gray-100 before:-translate-x-1/2 hidden md:block"
         data-purpose="story-timeline">
-        <!-- Story Item 1 -->
         <div class="flex items-center justify-between w-full" data-aos="fade-up">
           <div class="w-5/12 text-right pr-12">
-            <h3 class="text-2xl mb-2 italic">The First Encounter</h3>
-            <p class="text-sm text-gray-500 leading-relaxed">It was a rainy Tuesday at Monmouth Coffee. Two strangers,
+            <h3 class="text-2xl mb-2 italic" data-editable="timeline_title_1">The First Encounter</h3>
+            <p class="text-sm text-gray-500 leading-relaxed" data-editable="timeline_desc_1">It was a rainy Tuesday at
+              Monmouth Coffee. Two strangers,
               one empty table, and a shared love for Ethiopian pour-overs.</p>
           </div>
           <div class="w-2 h-2 rounded-full bg-wedding-gold z-10"></div>
           <div class="w-5/12 pl-12">
-            <span class="text-wedding-gold font-serif italic">October 2018</span>
+            <span class="text-wedding-gold font-serif italic" data-editable="timeline_date_1">October 2018</span>
           </div>
         </div>
-        <!-- Story Item 2 -->
         <div class="flex items-center justify-between w-full flex-row-reverse" data-aos="fade-up" data-aos-delay="200">
           <div class="w-5/12 text-left pl-12">
-            <h3 class="text-2xl mb-2 italic">First Journey Together</h3>
-            <p class="text-sm text-gray-500 leading-relaxed">A weekend in Paris that turned into a lifetime commitment.
+            <h3 class="text-2xl mb-2 italic" data-editable="timeline_title_2">First Journey Together</h3>
+            <p class="text-sm text-gray-500 leading-relaxed" data-editable="timeline_desc_2">A weekend in Paris that
+              turned into a lifetime commitment.
               We knew then that we were better as a pair.</p>
           </div>
           <div class="w-2 h-2 rounded-full bg-wedding-gold z-10"></div>
           <div class="w-5/12 text-right pr-12">
-            <span class="text-wedding-gold font-serif italic">June 2020</span>
+            <span class="text-wedding-gold font-serif italic" data-editable="timeline_date_2">June 2020</span>
           </div>
         </div>
-        <!-- Story Item 3 -->
         <div class="flex items-center justify-between w-full" data-aos="fade-up" data-aos-delay="300">
           <div class="w-5/12 text-right pr-12">
-            <h3 class="text-2xl mb-2 italic">The Yes</h3>
-            <p class="text-sm text-gray-500 leading-relaxed">Under the stars of Ravello, Julian finally asked the
+            <h3 class="text-2xl mb-2 italic" data-editable="timeline_title_3">The Yes</h3>
+            <p class="text-sm text-gray-500 leading-relaxed" data-editable="timeline_desc_3">Under the stars of Ravello,
+              Julian finally asked the
               question. Through tears of joy, Eleanor said 'Always'.</p>
           </div>
           <div class="w-2 h-2 rounded-full bg-wedding-gold z-10"></div>
           <div class="w-5/12 pl-12">
-            <span class="text-wedding-gold font-serif italic">August 2023</span>
+            <span class="text-wedding-gold font-serif italic" data-editable="timeline_date_3">August 2023</span>
           </div>
         </div>
       </div>
-      <!-- Mobile Timeline -->
       <div class="md:hidden space-y-12">
         <div class="border-l-2 border-wedding-gold/20 pl-6 py-2">
-          <span class="text-wedding-gold font-serif italic block mb-2">October 2018</span>
-          <h3 class="text-xl mb-1 italic">The First Encounter</h3>
-          <p class="text-sm text-gray-500">It was a rainy Tuesday at Monmouth Coffee.</p>
+          <span class="text-wedding-gold font-serif italic block mb-2" data-editable="m_timeline_date_1">October
+            2018</span>
+          <h3 class="text-xl mb-1 italic" data-editable="m_timeline_title_1">The First Encounter</h3>
+          <p class="text-sm text-gray-500" data-editable="m_timeline_desc_1">It was a rainy Tuesday at Monmouth Coffee.
+          </p>
         </div>
         <div class="border-l-2 border-wedding-gold/20 pl-6 py-2">
-          <span class="text-wedding-gold font-serif italic block mb-2">June 2020</span>
-          <h3 class="text-xl mb-1 italic">First Journey Together</h3>
-          <p class="text-sm text-gray-500">A weekend in Paris that turned into a lifetime commitment.</p>
+          <span class="text-wedding-gold font-serif italic block mb-2" data-editable="m_timeline_date_2">June
+            2020</span>
+          <h3 class="text-xl mb-1 italic" data-editable="m_timeline_title_2">First Journey Together</h3>
+          <p class="text-sm text-gray-500" data-editable="m_timeline_desc_2">A weekend in Paris that turned into a
+            lifetime commitment.</p>
         </div>
         <div class="border-l-2 border-wedding-gold/20 pl-6 py-2">
-          <span class="text-wedding-gold font-serif italic block mb-2">August 2023</span>
-          <h3 class="text-xl mb-1 italic">The Yes</h3>
-          <p class="text-sm text-gray-500">Under the stars of Ravello, Julian asked the question.</p>
+          <span class="text-wedding-gold font-serif italic block mb-2" data-editable="m_timeline_date_3">August
+            2023</span>
+          <h3 class="text-xl mb-1 italic" data-editable="m_timeline_title_3">The Yes</h3>
+          <p class="text-sm text-gray-500" data-editable="m_timeline_desc_3">Under the stars of Ravello, Julian asked
+            the question.</p>
         </div>
       </div>
     </div>
   </section>
-  <!-- END: Our Story -->
-  <!-- BEGIN: Event Details -->
   <section class="py-24 bg-wedding-gray" data-purpose="event-details" id="details">
     <div class="container mx-auto px-6">
       <div class="text-center mb-16" data-aos="fade-up">
-        <h2 class="text-4xl md:text-5xl mb-4">The Wedding Day</h2>
-        <p class="text-[10px] uppercase tracking-[0.3em] font-medium text-gray-500">Join us for the celebration</p>
+        <h2 class="text-4xl md:text-5xl mb-4" data-editable="details_header">The Wedding Day</h2>
+        <p class="text-[10px] uppercase tracking-[0.3em] font-medium text-gray-500" data-editable="details_subtitle">
+          Join us for the celebration</p>
       </div>
       <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-        <!-- Ceremony -->
         <div class="bg-white p-12 text-center shadow-sm border border-gray-100 flex flex-col justify-between"
           data-aos="fade-up">
           <div>
-            <h3 class="text-3xl font-serif italic mb-6">The Ceremony</h3>
+            <h3 class="text-3xl font-serif italic mb-6" data-editable="event_title_1">The Ceremony</h3>
             <div class="space-y-4 mb-8">
-              <p class="text-sm uppercase tracking-widest text-wedding-gold">4:00 PM</p>
-              <p class="text-gray-600">Castello di Vicarello<br />Grosseto, Tuscany</p>
+              <p class="text-sm uppercase tracking-widest text-wedding-gold" data-editable="event_time_1">4:00 PM</p>
+              <p class="text-gray-600" data-editable="event_loc_1">Castello di Vicarello<br />Grosseto, Tuscany</p>
             </div>
-            <p class="text-xs text-gray-400 italic">Formal Attire</p>
+            <p class="text-xs text-gray-400 italic" data-editable="event_attire_1">Formal Attire</p>
           </div>
           <div class="mt-8">
             <button
-              class="px-8 py-3 border border-wedding-gold text-wedding-gold text-xs uppercase tracking-widest hover:bg-wedding-gold hover:text-white transition">View
+              class="px-8 py-3 border border-wedding-gold text-wedding-gold text-xs uppercase tracking-widest hover:bg-wedding-gold hover:text-white transition"
+              data-editable="event_btn_1">View
               Map</button>
           </div>
         </div>
-        <!-- Reception -->
         <div class="bg-white p-12 text-center shadow-sm border border-gray-100 flex flex-col justify-between"
           data-aos="fade-up" data-aos-delay="200">
           <div>
-            <h3 class="text-3xl font-serif italic mb-6">The Reception</h3>
+            <h3 class="text-3xl font-serif italic mb-6" data-editable="event_title_2">The Reception</h3>
             <div class="space-y-4 mb-8">
-              <p class="text-sm uppercase tracking-widest text-wedding-gold">6:30 PM - Late</p>
-              <p class="text-gray-600">The Olive Grove<br />Followed by Dining &amp; Dancing</p>
+              <p class="text-sm uppercase tracking-widest text-wedding-gold" data-editable="event_time_2">6:30 PM - Late
+              </p>
+              <p class="text-gray-600" data-editable="event_loc_2">The Olive Grove<br />Followed by Dining & Dancing</p>
             </div>
-            <p class="text-xs text-gray-400 italic">Bring your dancing shoes</p>
+            <p class="text-xs text-gray-400 italic" data-editable="event_attire_2">Bring your dancing shoes</p>
           </div>
           <div class="mt-8">
             <button
-              class="px-8 py-3 border border-wedding-gold text-wedding-gold text-xs uppercase tracking-widest hover:bg-wedding-gold hover:text-white transition">Transport
+              class="px-8 py-3 border border-wedding-gold text-wedding-gold text-xs uppercase tracking-widest hover:bg-wedding-gold hover:text-white transition"
+              data-editable="event_btn_2">Transport
               Info</button>
           </div>
         </div>
       </div>
     </div>
   </section>
-  <!-- END: Event Details -->
-  <!-- BEGIN: Gallery Section -->
   <section class="py-24 bg-white" data-purpose="photo-gallery" id="gallery">
     <div class="container mx-auto px-6">
       <div class="text-center mb-16" data-aos="fade-up">
-        <h2 class="text-4xl md:text-5xl mb-4">Moments</h2>
+        <h2 class="text-4xl md:text-5xl mb-4" data-editable="gallery_header">Moments</h2>
         <div class="w-12 h-px bg-wedding-gold mx-auto"></div>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4" data-purpose="gallery-grid">
@@ -522,40 +525,43 @@
       </div>
     </div>
   </section>
-  <!-- END: Gallery Section -->
-  <!-- BEGIN: RSVP Form -->
   <section class="py-24 md:py-40 bg-wedding-gray" data-purpose="rsvp-section" id="rsvp">
     <div class="max-w-2xl mx-auto px-6">
       <div class="bg-white p-8 md:p-16 shadow-xl rounded-sm" data-aos="fade-up">
         <div class="text-center mb-12">
-          <h2 class="text-4xl mb-4 italic">Will You Join Us?</h2>
-          <p class="text-xs uppercase tracking-[0.2em] text-gray-500">Please respond by August 1st, 2024</p>
+          <h2 class="text-4xl mb-4 italic" data-editable="rsvp_header">Will You Join Us?</h2>
+          <p class="text-xs uppercase tracking-[0.2em] text-gray-500" data-editable="rsvp_deadline">Please respond by
+            August 1st, 2024</p>
         </div>
         <form class="space-y-8" data-purpose="rsvp-form">
           <div>
-            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">Your Full Name</label>
+            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2"
+              data-editable="rsvp_label_name">Your Full Name</label>
             <input
               class="w-full border-0 border-b border-gray-200 focus:ring-0 focus:border-wedding-gold px-0 py-2 text-lg placeholder-gray-300"
               placeholder="e.g. John Doe" type="text" />
           </div>
           <div class="grid md:grid-cols-2 gap-8">
             <div>
-              <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">Attendance</label>
+              <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2"
+                data-editable="rsvp_label_attend">Attendance</label>
               <select
                 class="w-full border-0 border-b border-gray-200 focus:ring-0 focus:border-wedding-gold px-0 py-2 bg-transparent text-lg">
-                <option>Joyfully Accepts</option>
-                <option>Regretfully Declines</option>
+                <option data-editable="rsvp_opt_1">Joyfully Accepts</option>
+                <option data-editable="rsvp_opt_2">Regretfully Declines</option>
               </select>
             </div>
             <div>
-              <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">Number of Guests</label>
+              <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2"
+                data-editable="rsvp_label_count">Number of Guests</label>
               <input
                 class="w-full border-0 border-b border-gray-200 focus:ring-0 focus:border-wedding-gold px-0 py-2 text-lg"
                 max="5" min="1" type="number" />
             </div>
           </div>
           <div>
-            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">Dietary Requirements</label>
+            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2"
+              data-editable="rsvp_label_diet">Dietary Requirements</label>
             <input
               class="w-full border-0 border-b border-gray-200 focus:ring-0 focus:border-wedding-gold px-0 py-2 text-lg placeholder-gray-300"
               placeholder="e.g. Vegan, Gluten-Free" type="text" />
@@ -563,72 +569,67 @@
           <div class="pt-8">
             <button
               class="w-full bg-wedding-dark text-white py-4 uppercase tracking-[0.3em] text-[10px] font-bold hover:bg-wedding-gold transition duration-300"
-              type="submit">Submit Response</button>
+              type="submit" data-editable="rsvp_btn_text">Submit Response</button>
           </div>
         </form>
       </div>
     </div>
   </section>
-  <!-- END: RSVP Form -->
-  <!-- BEGIN: Gift Registry -->
   <section class="py-24 bg-white" data-purpose="gift-registry" id="registry">
     <div class="container mx-auto px-6 text-center">
       <div class="max-w-xl mx-auto">
-        <h2 class="text-4xl mb-6" data-aos="fade-up">Gift Registry</h2>
-        <p class="text-gray-500 leading-relaxed mb-12" data-aos="fade-up" data-aos-delay="200">Your presence at our
+        <h2 class="text-4xl mb-6" data-aos="fade-up" data-editable="registry_header">Gift Registry</h2>
+        <p class="text-gray-500 leading-relaxed mb-12" data-aos="fade-up" data-aos-delay="200"
+          data-editable="registry_description">Your presence at our
           wedding is the greatest gift of all.
           However, if you wish to honor us with a gift, we have a registry for our honeymoon and new home.</p>
         <div class="flex flex-col md:flex-row items-center justify-center gap-12 mb-5" data-aos="fade-up">
-          <!-- QR Code Placeholder -->
           <div class="w-full p-6 border border-gray-100 shadow-sm bg-wedding-gray">
             <picture class="aspect-square mb-4" data-image-editable="qr_1"></picture>
           </div>
           <div class="space-y-4 text-left">
-            <a class="block group" href="#">
-              <span
-                class="text-xs uppercase tracking-widest text-gray-400 group-hover:text-wedding-gold transition">Groom</span>
-              <p class="text-xl font-serif italic">Eleanor</p>
-            </a>
-            <a class="block group" href="#">
-              <span
-                class="text-xs uppercase tracking-widest text-gray-400 group-hover:text-wedding-gold transition">Bank</span>
-              <p class="text-xl font-serif italic">123456789</p>
-            </a>
+            <div class="block group">
+              <span class="text-xs uppercase tracking-widest text-gray-400 group-hover:text-wedding-gold transition"
+                data-editable="qr_label_1">Groom</span>
+              <p class="text-xl font-serif italic" data-editable="qr_name_1">Eleanor</p>
+            </div>
+            <div class="block group">
+              <span class="text-xs uppercase tracking-widest text-gray-400 group-hover:text-wedding-gold transition"
+                data-editable="qr_bank_label_1">Bank</span>
+              <p class="text-xl font-serif italic" data-editable="qr_acc_1">123456789</p>
+            </div>
           </div>
         </div>
         <div class="flex flex-col md:flex-row items-center justify-center gap-12" data-aos="fade-up">
-          <!-- QR Code Placeholder -->
           <div class="w-full p-6 border border-gray-100 shadow-sm bg-wedding-gray">
             <picture class="aspect-square mb-4" data-image-editable="qr_2"></picture>
           </div>
           <div class="space-y-4 text-left">
-            <a class="block group" href="#">
-              <span
-                class="text-xs uppercase tracking-widest text-gray-400 group-hover:text-wedding-gold transition">Bride</span>
-              <p class="text-xl font-serif italic">Julian</p>
-            </a>
-            <a class="block group" href="#">
-              <span
-                class="text-xs uppercase tracking-widest text-gray-400 group-hover:text-wedding-gold transition">Bank</span>
-              <p class="text-xl font-serif italic">123456789</p>
-            </a>
+            <div class="block group">
+              <span class="text-xs uppercase tracking-widest text-gray-400 group-hover:text-wedding-gold transition"
+                data-editable="qr_label_2">Bride</span>
+              <p class="text-xl font-serif italic" data-editable="qr_name_2">Julian</p>
+            </div>
+            <div class="block group">
+              <span class="text-xs uppercase tracking-widest text-gray-400 group-hover:text-wedding-gold transition"
+                data-editable="qr_bank_label_2">Bank</span>
+              <p class="text-xl font-serif italic" data-editable="qr_acc_2">123456789</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
-  <!-- END: Gift Registry -->
-  <!-- BEGIN: Footer -->
   <footer class="py-20 border-t border-gray-100 bg-white" data-purpose="site-footer">
     <div class="container mx-auto px-6 text-center" data-aos="fade-up">
-      <p class="text-5xl font-serif italic mb-8">E &amp; J</p>
-      <p class="text-[10px] uppercase tracking-[0.5em] text-gray-400">#EleanorAndJulian2024</p>
-      <div class="mt-12 text-gray-400 text-[10px] uppercase tracking-widest">
-        Made with love for our family &amp; friends
+      <p class="text-5xl font-serif italic mb-8" data-editable="footer_logo">E & J</p>
+      <p class="text-[10px] uppercase tracking-[0.5em] text-gray-400" data-editable="footer_hashtag">
+        #EleanorAndJulian2024</p>
+      <div class="mt-12 text-gray-400 text-[10px] uppercase tracking-widest" data-editable="footer_credit">
+        Made with love for our family & friends
       </div>
     </div>
   </footer>
-  <!-- END: Footer -->
 </body>
 
 </html>

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Evelyn & James | Một Đêm Đáng Nhớ</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#ec5b13", // Gold/Amber accent equivalent from theme
+            "accent-gold": "#d4af37",
+            "background-light": "#f8f6f6",
+            "background-dark": "#0a1208", // Deep Emerald Black
+            "emerald-deep": "#061a0d",
+            "emerald-glow": "#1a3a2a",
+          },
+          fontFamily: {
+            "display": ["Public Sans", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Public Sans", sans-serif;
+      background-color: #0a1208
+    }
+
+    .floral-overlay {
+      background-image: linear-gradient(to bottom, rgba(6, 26, 13, 0.8), rgba(10, 18, 8, 0.95)), url(https://lh3.googleusercontent.com/aida-public/AB6AXuBUQysSB51EHu1CFap6dc82N3YDjIDJl8-N80lWPZSDY05SENSGLhcIq4nDe6utMOr-iEQpT-uiRGna1EXTOc8lHg04AQKKmN0eGc8iT0EPPknFwYxv14NLFMa_oIkKPGJ03P0LTRoC1OEruUSsryMc6KAL84WqCt-SLDmFZXzzuqO9maOHAdVqbkjMZvboOb8NVklKoBNeQObyvm_e6R9JqFzb5e8jmQUu695D7l6FBz0VKMwfc5esSV50w-JkSYY4fCMAhJKMKaQ);
+      background-size: cover;
+      background-position: center
+    }
+  </style>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Animation Base States */
+    [data-aos] {
+      opacity: 0;
+      transition-property: transform, opacity;
+      transition-timing-function: ease-out;
+    }
+
+    /* Fade Animations */
+    [data-aos="fade-up"] {
+      transform: translateY(30px);
+    }
+
+    [data-aos="fade-down"] {
+      transform: translateY(-30px);
+    }
+
+    [data-aos="fade-left"] {
+      transform: translateX(30px);
+    }
+
+    [data-aos="fade-right"] {
+      transform: translateX(-30px);
+    }
+
+    /* Zoom Animations */
+    [data-aos="zoom-in"] {
+      transform: scale(0.7);
+    }
+
+    [data-aos="zoom-out"] {
+      transform: scale(1.2);
+    }
+
+    /* Slide Animations */
+    [data-aos="slide-up"] {
+      transform: translateY(100%);
+    }
+
+    [data-aos="grayscale"] {
+      filter: grayscale(100%);
+      transition-property: filter, transform;
+    }
+
+    /* The Active State (Triggered by JS) */
+    .aos-animate {
+      opacity: 1 !important;
+      transform: translate(0) scale(1) !important;
+    }
+
+    .animate-kenburn {
+      animation: kenburn 15s 2s infinite alternate;
+    }
+
+    @keyframes kenburn {
+      0% {
+        scale: 1;
+      }
+
+      100% {
+        scale: 1.3;
+      }
+    }
+  </style>
+  <style>
+    picture {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+    }
+
+    [data-image-editable="photo_1"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD80yQfbmhlRtAiNi0-nEgS5p7g82ycv1wtN4nnmPcJoHjXMf1igv1QscoTCt1VOAZfXlIaCoPibCLwWI9Nmx9fof2xeySfExPatREUadml30dHFl06Dmt0RD4SEDsj3sFfRphFgZu5cbDPRbqiHlrmxanEWl1HyqOnAHt3bn-wLy-bu9yoATLOvXXYgG1BtEeMRuYtTQfuPDdEXKfbAa-hKmIu_H7OU5G8bZk9MnF6-7LgQF4MukzyXmBucIlMEOhnxU04EjP8AJA");
+    }
+
+    [data-image-editable="photo_2"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCY6zZpRAAnf72gfMbXdjlgXYW2m2WrC3Dpw9pGAds7NSEoAnYzPpLgb9tskzLWRSLKZsRxbrPrgRFWA136lwe7SwIpJBfmnimlCW43jby4TKenPELfCVAMr2rcypbX4AB9XxeH8UpwG4LKu4Qldywd463iedHSw9ZHEHeXqsdLksv0yKARw1SQSeUyREe50Wv1bWGZoYSnutJIO1VpBdUVVC6alXO7yoq3GZMdFgR3F8mSY9tmcW8aOiyEeiYKHwGaNODLzRJ3Nw4");
+    }
+
+    [data-image-editable="photo_3"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBLUC9hMNJOObWDizCyZiPArFADG69Y4wMmYedpBxDCaBldmCuJlPByhNr6rJP1OtaIR5G9LNFvB7OH2UEkJ418ASWu-1ndVG8W6uyCyp4TjyAncPW5FMKsbS-EUf9vIzwUNN-Q0kBToXCYJYRXjSrrFTg62jp_tY6W4Td_HBx1uaZFDHmVEcunP9AlX3RppRq3zRe04xOrMR_AqCsGLRACAIDzhbMxqv47rZ7X8CrN1x0mi4SWfwdDDohn1riR3oszg41XkeF2vzQ");
+    }
+
+    [data-image-editable="photo_4"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDO98YpQ9sz0HV5AWHcI2VwP-UjaKqawy4lItLSsMwJ_LET6BKDa06nRzw6jghVxcYDaW41-IId9vyIWlCZc7DToc4Dh8wikrc1HzI4sBsr9jiDK8Bp5mAyoOasX4837i4S2f60vPLSR37zqrm45gcjLs3cRpp50CaAKzbRau3O01qJh7oDPxq2ASqhHBvCo1c7hWzqqe8Kr7NFp2auu24lYevgy-rMs-Px70JTDd2PWvLyRwFxHBu0cF-dmL_rBzgD-B1LtB-Yhfc");
+    }
+
+    [data-image-editable="photo_5"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDpaLEAKS4tRcgTeHmEbkXgcac9lTXh0qYzUuZFyqEInems-4AQeVB5gln9_dLHREGalMgtTSxxS-yu4SJrd-DiY1zlwkceIVZ6wsgAkgNpkRaT4_gHn9-hdMaA1Mky8T9wAzgX1__KXICGQlXOCRsHhisJF4l0nKZFJqXppYB7Y0G-qKtpBQRN1JL_39mbnpY_iIfGjsQQxiFDW4C4I1VyIggit6x_lMLEDIOU0zy70sKU5kdV2K5Hl1TDOhkytmh4ZEb5H4TBw-0");
+    }
+
+
+    [data-image-editable="photo_6"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCgwIepB7YZVN0wbm7vmrnFfRbo-ODXk8Nill8y6tANA3I7y4cmkTPQxN03asn6Q6hKQZJyDZOQuHdYf2Si10V1t4awHjc1IIfa_D6Lide1DDXPn47BvyW9f--_WKbxXIndXCS8Kvj57-Dcu9MNO9WcX65YLGrdQi8d9BI76ypyR0i5-thsX34vdc3qCE6CgqXTBkyPcHcmUkJkIeIympKoco1U8mIWTgHhyS_t9q3xHo-XUe1bCw4UrsqU1AYHD1YobF6XUIKN904");
+    }
+
+    [data-image-editable="photo_7"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB-ltwcpWiUiqNeOo57H-kN7pxbc_EoEkLy4eAYx9puTTKe8CyXiLn1KfyZKisgb2GSTV7uiodHIpHl_Z2-uUAVPdQpnCvTu5BVYnjv-8eRGd9ghGjcsAjIqIQuQyUaFkG7dcEau-a_I-b_Ocx54Dd4Qs3cEuG7dSClcTB_IU867_qtpYldgxw4TCcKygO5itrrvGEY4S-sGCjovCGAcpT41rcm3JbZAEb6oM8TJUb7TQQqZNz-71q5VLQLvyC68dG4s41nX8ph3OI");
+    }
+
+    [data-image-editable="photo_8"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD9OdSITZHMszBMdTuWt7-Y_ex7PFigZwIC8G53BOkm8nL4Jobl_HsFKdjL5OPQsivrQxAibMUwzj2BlXsCd2Bf9naMcuJMiTOkXeDlHtL3cwdrQG7hJJpToUt3d5XgLe-Hsjx-9ZTYt_idTJ0_VK9UuoFM1HQ5HHDinlHYyUy0RCfTnOPXkitFSs8mwdQQSlzan7vkXloSTtemRfXjMAGp-53jId4x1OZAODZVQacg0oaKlBXQwSM9fL0-MMUF2Eykht5FWGx8W6k");
+    }
+
+    [data-image-editable="photo_9"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD7YofLRHJZF-CJxqaslVVVXrecWwvDKYWKLO31JUcCu0eG9G6BD0KTjrVYBgHOvrjW83v2WAEhWL2NeV8dN1juBwL1w_LRl40gMF7m3syf6tHEDl5qv2UvCnB58KGnzziArwimM1kFCEj2QpLydKa3Ax1EVdeCjTIo0jevBiWssscoOyN6Ad2uAOLis4cobtkbRqHDFA0C82TM25Xtv6lOb4vrmM8byLdGI5IA5AHXx_-JSNAK87I5U89Bm-NL__258ZOyBahA3t0");
+    }
+
+    [data-image-editable="photo_10"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCtUG1Z9FxOY49N7rGgAyT8JX-hk8bW4ShzMnFKv5viRSy1komzibBgPko04JZ3RaOaUG5Ts3IZoylQAuhn6aXdYm7X-iG19e39vimgDXRosR60Zr7JQQxZiOJld-TQWg357hBiWOaIaayoDH3cxVV9kUKE4JXfZe62U4dvsgrpbwiemxKGsoPM_udaBgwww5U6rpxVvUCFsuGRJt4ucS7KPFlUphZFTgyy8p0eFRagKt0Xj6Gr5__ppbgQjbNWaCLrSakRPfD0LuU");
+    }
+
+    [data-image-editable="photo_11"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBbYVRqMBW5ReW0m04pN5-5PLc2kkrh83YdW4I1Mv1e55KLa-qWBiPAWaefJFhhVJZYfTFYmsSULUqkpHeQa79MLoeZwual0ZooUxGLmH08LNsegaJ360_07EjXN3qzE2V1jwtGdPZt8u16cKf8-asTgeCC4WdcgFfOBGp-Cde3JaZ71z6sN2vngJZ2SfTUcEQfleTVd4OW0A0TuW_bh9sAeN1acbZFpJfeilPRsrlGsnbS3M4tjNVYTIFMzcXJnV-LZNcOefSJlGI");
+    }
+
+    [data-image-editable="photo_12"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC_f1O1Q0MqpSJefif7ykMl5P5u6GhTMorsZENxp4HBXjH08rOPtl8sPHwnFNYHpjwS-8lkl52OpWeSmdagUmW7VAuSLQ1rLvmXIBlxkjVp4A5MbBYYyHlhSKdDIJM8np-eB80ScX-M7Ma33F-73vDWimGNWRtIZTQFZmE2fWHArlYtRSizJfe8piRethmm5xs871Qnm_1T4CbnYXomCXuvIVK3Xp9VJoio2A9sVmVdv0bjLnvScoKSjYItU3exnjQBqEMJ92OjoNA");
+    }
+
+    [data-image-editable="qr_1"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAVB8rPD2H8DyO56UPamETs7WjBlJwjROLK_hKU3Yxjh9zYX-OoWsSFGmr_2VPH76tivw3S4TRbTjAeS0dRHKj1TU4rVRjAi_Wwte2E6_0yk09l5nSYSeoCQfPTWQv3IsUaw6j9pvHPw4KG7SQeaAeONwfHo5IswDSzkj1cBrg_tOK52Vd4mBswPNprLrOoJZ3ZwuHhxAnyIInm1bS6mqYC1ZaxAXWywQWh5jNN9W42Jgi86r27zuy8SKdADUAKJjNbhRbvalUIfNU");
+    }
+
+    [data-image-editable="qr_2"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAVB8rPD2H8DyO56UPamETs7WjBlJwjROLK_hKU3Yxjh9zYX-OoWsSFGmr_2VPH76tivw3S4TRbTjAeS0dRHKj1TU4rVRjAi_Wwte2E6_0yk09l5nSYSeoCQfPTWQv3IsUaw6j9pvHPw4KG7SQeaAeONwfHo5IswDSzkj1cBrg_tOK52Vd4mBswPNprLrOoJZ3ZwuHhxAnyIInm1bS6mqYC1ZaxAXWywQWh5jNN9W42Jgi86r27zuy8SKdADUAKJjNbhRbvalUIfNU");
+    }
+
+    [data-image-editable] {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  </style>
+  <script>
+      (function () {
+        let countdownInterval;
+
+        function getTargetDate() {
+          const elH = document.querySelector("#js-hour");
+          const elD = document.querySelector("#js-day");
+          const elM = document.querySelector("#js-month");
+          const elY = document.querySelector("#js-year");
+
+          if (!elD || !elM || !elY) return null;
+
+          let hour = 0;
+          let minute = 0;
+
+          if (elH) {
+            const timeMatch = elH.innerText.match(/(\d{2}):(\d{2})/);
+            if (timeMatch) {
+              hour = parseInt(timeMatch[1], 10);
+              minute = parseInt(timeMatch[2], 10);
+            }
+          }
+
+          const day = parseInt(elD.innerText.replace(/\D/g, ''), 10);
+          const month = parseInt(elM.innerText.replace(/\D/g, ''), 10) - 1;
+          const year = parseInt(elY.innerText.replace(/\D/g, ''), 10);
+
+          const target = new Date(year, month, day, hour, minute, 0).getTime();
+          return isNaN(target) ? null : target;
+        }
+
+        function render(d, h, m, s) {
+          const pad = (n) => (n < 10 ? "0" + n : n);
+          const setVal = (id, val) => {
+            const el = document.querySelector(`${id} span`);
+            if (el) el.innerText = pad(val);
+          };
+
+          setVal("#TIMER_DAY", d);
+          setVal("#TIMER_HOUR", h);
+          setVal("#TIMER_MIN", m);
+          setVal("#TIMER_SEC", s);
+        }
+
+        function updateCountdown() {
+          const endTime = getTargetDate();
+          if (!endTime) return;
+
+          if (countdownInterval) clearInterval(countdownInterval);
+
+          const logic = () => {
+            const now = new Date().getTime();
+            const distance = endTime - now;
+
+            if (distance < 0) {
+              clearInterval(countdownInterval);
+              render(0, 0, 0, 0);
+              return;
+            }
+
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor(
+              (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+            );
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+            render(d, h, m, s);
+          };
+
+          logic();
+          countdownInterval = setInterval(logic, 1000);
+        }
+
+        window.addEventListener("load", () => {
+          updateCountdown();
+
+          const observer = new MutationObserver(updateCountdown);
+          const config = {
+            characterData: true,
+            childList: true,
+            subtree: true,
+          };
+
+          ["#js-hour", "#js-day", "#js-month", "#js-year"].forEach(
+            (selector) => {
+              const el = document.querySelector(selector);
+              if (el) observer.observe(el, config);
+            },
+          );
+        });
+      })();
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const animationObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const target = entry.target;
+
+              const delay = target.getAttribute("data-aos-delay") || "0";
+              const duration =
+                target.getAttribute("data-aos-duration") || "800";
+
+              target.style.transitionDelay = `${delay}ms`;
+              target.style.transitionDuration = `${duration}ms`;
+
+              target.classList.add("aos-animate");
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      document
+        .querySelectorAll("[data-aos]")
+        .forEach((el) => animationObserver.observe(el));
+    });
+  </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+  <header
+    class="fixed top-0 w-full z-50 bg-emerald-deep/80 backdrop-blur-md border-b border-white/10 px-6 lg:px-20 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary text-3xl">filter_vintage</span>
+        <h2 class="text-xl font-bold tracking-tighter text-slate-100 uppercase" data-editable="field_nav_initials">E & J
+        </h2>
+      </div>
+      <nav class="hidden md:flex items-center gap-8">
+        <a class="text-sm font-medium hover:text-primary transition-colors text-slate-200" href="#story"
+          data-editable="field_nav_story">Câu chuyện</a>
+        <a class="text-sm font-medium hover:text-primary transition-colors text-slate-200" href="#details"
+          data-editable="field_nav_ceremony">Lễ cưới</a>
+        <a class="text-sm font-medium hover:text-primary transition-colors text-slate-200" href="#gallery"
+          data-editable="field_nav_gallery">Album ảnh</a>
+        <a class="bg-primary hover:bg-primary/80 text-white px-6 py-2 rounded-full text-sm font-bold transition-all"
+          href="#rsvp" data-editable="field_nav_rsvp_btn">Xác nhận</a>
+      </nav>
+      <button class="md:hidden text-slate-100">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+    </div>
+  </header>
+  <main>
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-emerald-deep/60 to-background-dark"></div>
+        <picture class="w-full h-full object-cover" data-image-editable="photo_1"></picture>
+      </div>
+      <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+        <p class="text-primary font-semibold tracking-[0.3em] uppercase mb-4" data-aos="fade-up"
+          data-editable="field_hero_subtitle">Trân trọng kính mời quý khách</p>
+        <h1 class="text-6xl md:text-9xl font-black text-white mb-6 tracking-tighter drop-shadow-2xl" data-aos="fade-up"
+          data-aos-delay="150" data-editable="field_hero_title">
+          Evelyn <span class="text-primary font-light">&</span> James
+        </h1>
+        <p class="text-xl md:text-2xl text-slate-300 font-light mb-8 italic" data-aos="fade-up" data-aos-delay="150"
+          data-editable="field_hero_vibe">Lễ thành hôn được cử hành dưới ánh sao huyền diệu</p>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 border-y border-white/10 py-6"
+          data-aos="fade-up" data-aos-delay="300">
+          <div class="text-center px-8">
+            <p class="text-xs uppercase tracking-widest text-primary mb-1" data-editable="field_hero_when_label">Thời
+              gian
+            </p>
+            <p class="text-lg font-bold">
+              <span id="js-day" data-editable="field_hero_day">20</span>/
+              <span id="js-month" data-editable="field_hero_month">10</span>/
+              <span id="js-year" data-editable="field_hero_year">2026</span>
+            </p>
+          </div>
+          <div class="hidden md:block w-px h-12 bg-white/10"></div>
+          <div class="text-center px-8" data-aos="fade-up" data-aos-delay="450">
+            <p class="text-xs uppercase tracking-widest text-primary mb-1" data-editable="field_hero_where_label">Địa
+              điểm
+            </p>
+            <p class="text-lg font-bold" data-editable="field_hero_location">Dinh thự Blackwood, Anh Quốc</p>
+          </div>
+        </div>
+      </div>
+      <div id="js-hour" class="hidden">18:00</div>
+    </section>
+    <section class="py-12 bg-emerald-deep/50 border-y border-white/5">
+      <div class="max-w-4xl mx-auto px-4">
+        <div class="flex justify-around gap-4">
+          <div class="flex flex-col items-center" data-aos="fade-up">
+            <div id="TIMER_DAY"
+              class="w-20 h-20 md:w-28 md:h-28 rounded-xl bg-background-dark border border-primary/20 flex items-center justify-center shadow-2xl">
+              <span class="text-3xl md:text-5xl font-black text-primary">00</span>
+            </div>
+            <p class="mt-3 text-xs uppercase tracking-widest text-slate-400" data-editable="field_timer_days_label">Ngày
+            </p>
+          </div>
+          <div class="flex flex-col items-center" data-aos="fade-up" data-aos-delay="150">
+            <div id="TIMER_HOUR"
+              class="w-20 h-20 md:w-28 md:h-28 rounded-xl bg-background-dark border border-primary/20 flex items-center justify-center shadow-2xl">
+              <span class="text-3xl md:text-5xl font-black text-primary">00</span>
+            </div>
+            <p class="mt-3 text-xs uppercase tracking-widest text-slate-400" data-editable="field_timer_hours_label">
+              Giờ</p>
+          </div>
+          <div class="flex flex-col items-center" data-aos="fade-up" data-aos-delay="300">
+            <div id="TIMER_MIN"
+              class="w-20 h-20 md:w-28 md:h-28 rounded-xl bg-background-dark border border-primary/20 flex items-center justify-center shadow-2xl">
+              <span class="text-3xl md:text-5xl font-black text-primary">00</span>
+            </div>
+            <p class="mt-3 text-xs uppercase tracking-widest text-slate-400" data-editable="field_timer_mins_label">Phút
+            </p>
+          </div>
+          <div class="flex flex-col items-center" data-aos="fade-up" data-aos-delay="450">
+            <div id="TIMER_SEC"
+              class="w-20 h-20 md:w-28 md:h-28 rounded-xl bg-background-dark border border-primary/20 flex items-center justify-center shadow-2xl">
+              <span class="text-3xl md:text-5xl font-black text-primary">00</span>
+            </div>
+            <p class="mt-3 text-xs uppercase tracking-widest text-slate-400" data-editable="field_timer_secs_label">Giây
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="py-24 px-4 bg-background-dark relative overflow-hidden" id="story">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px]"></div>
+      <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+        <div class="relative" data-aos="fade-right">
+          <div class="aspect-[4/5] rounded-xl overflow-hidden border-2 border-primary/20 rotate-2">
+            <picture class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+              data-image-editable="photo_2"></picture>
+          </div>
+          <div
+            class="absolute -bottom-8 -left-8 w-48 h-48 rounded-xl overflow-hidden border-4 border-background-dark -rotate-6 hidden lg:block shadow-2xl">
+            <img alt="Ring close up" class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAShkuPtZuM_xQnm7HNa-l3m3deMlVh7ysbP_E53ecTFwTljKLUkWcdRaQLAAA2UnDeC75sKdhl8BnS7-G5LUDv-m9ejeudhRatc4GKKAzHmj2gnrwe0K3GLpA4wNyzacDN00OfnCaplkLDkVVxbreypYUeLfoEQ8u_QwMLJyw2EBIvdnKDxrL5V7UsfROFoJaq2HCf4XOrdn1Pk5N8OEyIgPA3TnqyxJ1owDSgCjNo4879PpDVcGpi7J6tm07YBBH6VN4TCBmbK7o" />
+          </div>
+        </div>
+        <div data-aos="fade-left">
+          <span class="material-symbols-outlined text-primary text-5xl mb-6">auto_awesome</span>
+          <h2 class="text-4xl md:text-5xl font-bold mb-8 text-white leading-tight" data-editable="field_story_header">
+            Câu chuyện của chúng tôi</h2>
+          <div class="space-y-6 text-slate-400 text-lg leading-relaxed font-light">
+            <p data-editable="field_story_p1">Dưới bóng mát của khu vườn ngập tràn ánh trăng tại London, chúng tôi đã
+              tìm thấy một tình yêu nở rộ vĩnh cửu. Từ những cuộc gặp gỡ tình cờ bên những chiếc đĩa nhạc cũ, hành trình
+              của chúng tôi đã băng qua những châu lục và chạm đến chiều sâu của tâm hồn.</p>
+            <p data-editable="field_story_p2">Tình yêu của chúng tôi không chỉ là những ngày nắng đẹp; đó còn là việc
+              tìm thấy ánh sáng trong những đêm tối nhất. Từ những bước chân dưới mưa ở Paris đến lời cầu hôn thầm lặng
+              dưới ánh cực quang, mỗi khoảnh khắc đều là một nét vẽ trên bức tranh định mệnh chung.</p>
+            <p data-editable="field_story_p3">Chúng tôi trân trọng mời bạn cùng chứng kiến khoảnh khắc chúng tôi thề
+              nguyện sẽ cùng nhau bước qua bóng tối và ánh sáng, mãi mãi về sau.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="py-24 px-4 bg-emerald-deep relative" id="details">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-4xl font-bold text-center text-white mb-16 uppercase tracking-[0.2em]" data-aos="fade-up"
+          data-editable="field_details_header">Thông tin buổi lễ</h2>
+        <div class="grid md:grid-cols-2 gap-12">
+          <div
+            class="bg-background-dark/50 border border-white/10 p-10 rounded-xl hover:border-primary/50 transition-all group"
+            data-aos="fade-up">
+            <div class="flex items-center gap-4 mb-8">
+              <span class="material-symbols-outlined text-primary text-4xl">church</span>
+              <h3 class="text-2xl font-bold text-white" data-editable="field_ceremony_title">Lễ Thành Hôn</h3>
+            </div>
+            <p class="text-slate-400 mb-6" data-editable="field_ceremony_desc">Cùng chứng kiến lời thề nguyện của chúng
+              tôi tại giáo đường lịch sử Blackwood. Một buổi lễ dưới ánh nến lung linh, đầy âm nhạc và sự trang trọng.
+            </p>
+            <div class="space-y-4">
+              <div class="flex items-center gap-3 text-slate-300">
+                <span class="material-symbols-outlined text-primary">schedule</span>
+                <span data-editable="field_ceremony_time">16:00 - Đón khách & Nhập tiệc</span>
+              </div>
+              <div class="flex items-center gap-3 text-slate-300">
+                <span class="material-symbols-outlined text-primary">location_on</span>
+                <span data-editable="field_ceremony_loc">Giáo đường St. Jude, Dinh thự Blackwood</span>
+              </div>
+            </div>
+            <div class="mt-10 rounded-lg overflow-hidden h-48 border border-white/5">
+              <picture class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity"
+                data-image-editable="photo_3"></picture>
+            </div>
+          </div>
+          <div
+            class="bg-background-dark/50 border border-white/10 p-10 rounded-xl hover:border-primary/50 transition-all group"
+            data-aos="fade-up" data-aos-delay="200">
+            <div class="flex items-center gap-4 mb-8">
+              <span class="material-symbols-outlined text-primary text-4xl">nightlife</span>
+              <h3 class="text-2xl font-bold text-white" data-editable="field_reception_title">Tiệc Chiêu Đãi</h3>
+            </div>
+            <p class="text-slate-400 mb-6" data-editable="field_reception_desc">Hãy cùng chung vui đến tận đêm khuya với
+              ẩm thực tinh tế, hoa hồng thẫm và sàn khiêu vũ rực rỡ dưới ánh trăng.</p>
+            <div class="space-y-4">
+              <div class="flex items-center gap-3 text-slate-300">
+                <span class="material-symbols-outlined text-primary">schedule</span>
+                <span data-editable="field_reception_time">19:00 - Tiệc tối & Khiêu vũ</span>
+              </div>
+              <div class="flex items-center gap-3 text-slate-300">
+                <span class="material-symbols-outlined text-primary">restaurant</span>
+                <span data-editable="field_reception_loc">Sảnh Grand Gothic, Dinh thự Blackwood</span>
+              </div>
+            </div>
+            <div class="mt-10 rounded-lg overflow-hidden h-48 border border-white/5">
+              <picture class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity"
+                data-image-editable="photo_4"></picture>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="py-24 px-4 bg-background-dark" id="gallery">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16" data-aos="fade-up">
+          <h2 class="text-4xl font-bold text-white mb-4" data-editable="field_gallery_header">Album ảnh</h2>
+          <p class="text-slate-500 max-w-2xl mx-auto" data-editable="field_gallery_desc">Những khoảnh khắc được ghi lại
+            trong ánh sáng và bóng tối trên hành trình của chúng tớ.
+          </p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="space-y-4">
+            <picture
+              class="w-full h-64 object-cover rounded-xl border border-white/5 grayscale hover:grayscale-0 transition-all"
+              data-image-editable="photo_5" data-aos="zoom-in"></picture>
+            <picture
+              class="w-full h-96 object-cover rounded-xl border border-white/5 grayscale hover:grayscale-0 transition-all"
+              data-image-editable="photo_6" data-aos="zoom-in" data-aos-delay="100"></picture>
+          </div>
+          <div class="space-y-4">
+            <picture
+              class="w-full h-96 object-cover rounded-xl border border-white/5 grayscale hover:grayscale-0 transition-all"
+              data-image-editable="photo_7" data-aos="zoom-in" data-aos-delay="200"></picture>
+            <picture
+              class="w-full h-64 object-cover rounded-xl border border-white/5 grayscale hover:grayscale-0 transition-all"
+              data-image-editable="photo_8" data-aos="zoom-in" data-aos-delay="300"></picture>
+          </div>
+          <div class="space-y-4">
+            <picture
+              class="w-full h-64 object-cover rounded-xl border border-white/5 grayscale hover:grayscale-0 transition-all"
+              data-image-editable="photo_9" data-aos="zoom-in" data-aos-delay="400"></picture>
+            <picture
+              class="w-full h-96 object-cover rounded-xl border border-white/5 grayscale hover:grayscale-0 transition-all"
+              data-image-editable="photo_10" data-aos="zoom-in" data-aos-delay="500"></picture>
+          </div>
+          <div class="space-y-4">
+            <picture
+              class="w-full h-96 object-cover rounded-xl border border-white/5 grayscale hover:grayscale-0 transition-all"
+              data-image-editable="photo_11" data-aos="zoom-in" data-aos-delay="600"></picture>
+            <picture
+              class="w-full h-64 object-cover rounded-xl border border-white/5 grayscale hover:grayscale-0 transition-all"
+              data-image-editable="photo_12" data-aos="zoom-in" data-aos-delay="700"></picture>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="py-24 px-4 bg-emerald-deep relative floral-overlay" id="rsvp">
+      <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-16 items-center">
+        <div
+          class="w-full lg:w-1/2 bg-background-dark/80 backdrop-blur-xl p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl"
+          data-aos="fade-right">
+          <h2 class="text-3xl font-bold text-white mb-2" data-editable="field_rsvp_header">Xác nhận tham dự</h2>
+          <p class="text-slate-400 mb-8 font-light italic" data-editable="field_rsvp_subtitle">Sự hiện diện của bạn là
+            món quà quý giá nhất đối với chúng tớ.</p>
+          <form class="space-y-6">
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-xs uppercase tracking-widest text-primary mb-2"
+                  data-editable="field_rsvp_fn_label">Họ</label>
+                <input
+                  class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors"
+                  type="text" />
+              </div>
+              <div>
+                <label class="block text-xs uppercase tracking-widest text-primary mb-2"
+                  data-editable="field_rsvp_ln_label">Tên</label>
+                <input
+                  class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors"
+                  type="text" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs uppercase tracking-widest text-primary mb-2"
+                data-editable="field_rsvp_att_label">Xác tham dự</label>
+              <select
+                class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors appearance-none">
+                <option class="bg-emerald-deep" data-editable="field_rsvp_opt1">Tớ sẽ tham dự</option>
+                <option class="bg-emerald-deep" data-editable="field_rsvp_opt2">Rất tiếc, tớ không thể đến</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs uppercase tracking-widest text-primary mb-2"
+                data-editable="field_rsvp_diet_label">Gửi lời chúc đến chúng tớ</label>
+              <textarea
+                class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors"
+                placeholder="Dị ứng thực phẩm, ăn chay..." rows="3"></textarea>
+            </div>
+            <button
+              class="w-full bg-primary hover:bg-primary/80 text-white py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-primary/20"
+              type="submit" data-editable="field_rsvp_btn">
+              Gửi xác nhận
+            </button>
+          </form>
+        </div>
+        <div class="w-full lg:w-1/2 text-center space-y-10">
+          <div class="p-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 inline-block"
+            data-aos="fade-up">
+            <div class="bg-white p-4 rounded-lg mb-6 shadow-2xl inline-block">
+              <picture class="w-32 h-32 md:w-48 md:h-48" data-image-editable="qr_1"></picture>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-2 tracking-tight" data-editable="field_gift_groom_label">Chú rể
+            </h3>
+            <p class="text-slate-400 font-light mb-0" data-editable="field_gift_groom_name">
+              James Smith</p>
+          </div>
+          <div class="p-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 inline-block"
+            data-aos="fade-up" data-aos-delay="200">
+            <div class="bg-white p-4 rounded-lg mb-6 shadow-2xl inline-block">
+              <picture class="w-32 h-32 md:w-48 md:h-48" data-image-editable="qr_2"></picture>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-2 tracking-tight" data-editable="field_gift_bride_label">Cô dâu
+            </h3>
+            <p class="text-slate-400 font-light mb-0" data-editable="field_gift_bride_name"> Evelyn Williams
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="py-12 bg-background-dark border-t border-white/5 px-4 text-center">
+    <div class="flex items-center justify-center gap-2 mb-6">
+      <span class="material-symbols-outlined text-primary">favorite</span>
+      <span class="text-slate-300 font-medium tracking-widest uppercase" data-editable="field_footer_names">Evelyn &
+        James</span>
+    </div>
+    <p class="text-slate-500 text-sm italic font-light" data-editable="field_footer_quote">"Anh sẽ tìm thấy em trong bất
+      kỳ kiếp nào, trong bất kỳ thế giới nào, dưới bất kỳ ánh trăng nào."</p>
+    <div class="mt-8 text-xs text-slate-600 uppercase tracking-widest" data-editable="field_footer_copy">
+      Thiết kế cho tình yêu © 2026
+    </div>
+  </footer>
+</body>
+
+</html>
