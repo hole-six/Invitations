@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="vi">
 
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>The Royal Union | Luxury Wedding Invitation</title>
+  <title>Lễ Thành Hôn Hoàng Gia | Eleanor & Julian</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Montserrat:wght@300;400;600&display=swap"
@@ -46,11 +46,11 @@
       text-shadow: 1px 1px 2px rgba(212, 175, 55, 0.3);
     }
   </style>
-  <!-- Animation CSS -->
   <style>
-        html {
+    html {
       scroll-behavior: smooth;
     }
+
     /* Animation Base States */
     [data-aos] {
       opacity: 0;
@@ -58,7 +58,6 @@
       transition-timing-function: ease-out;
     }
 
-    /* Fade Animations */
     [data-aos="fade-up"] {
       transform: translateY(30px);
     }
@@ -320,11 +319,11 @@
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
       <div class="font-serif text-2xl font-bold font-gold-shimmer" data-editable="nav_initials">E & J</div>
       <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest font-semibold">
-        <a class="hover:text-gold transition-colors" href="#story" data-editable="nav_story">Our Story</a>
-        <a class="hover:text-gold transition-colors" href="#gallery" data-editable="nav_gallery">Gallery</a>
-        <a class="hover:text-gold transition-colors" href="#itinerary" data-editable="nav_itinerary">Itinerary</a>
+        <a class="hover:text-gold transition-colors" href="#story" data-editable="nav_story">Câu Chuyện</a>
+        <a class="hover:text-gold transition-colors" href="#gallery" data-editable="nav_gallery">Album Hình</a>
+        <a class="hover:text-gold transition-colors" href="#itinerary" data-editable="nav_itinerary">Lịch Trình</a>
         <a class="hover:text-gold transition-colors text-gold border border-gold px-4 py-1" href="#rsvp"
-          data-editable="nav_rsvp">RSVP</a>
+          data-editable="nav_rsvp">Xác Nhận</a>
       </div>
     </div>
   </nav>
@@ -334,22 +333,24 @@
       <div class="absolute inset-0 bg-gradient-to-b from-burgundy/40 via-burgundy/60 to-burgundy"></div>
     </div>
     <div class="relative z-10 text-center px-4 max-w-4xl animate-fade-in">
-      <p class="text-gold tracking-[0.3em] uppercase mb-6 font-semibold" data-editable="hero_subtitle" data-aos="fade-up">The Wedding
-        Celebration of</p>
-      <h1 class="font-serif text-6xl md:text-9xl font-gold-shimmer mb-8 py-2" data-editable="hero_title" data-aos="fade-up" data-aos-delay="150">Eleanor &
+      <p class="text-gold tracking-[0.3em] uppercase mb-6 font-semibold" data-editable="hero_subtitle"
+        data-aos="fade-up">Trân Trọng Kính Mời Quý Khách Đến Dự Buổi Lễ</p>
+      <h1 class="font-serif text-6xl md:text-9xl font-gold-shimmer mb-8 py-2" data-editable="hero_title"
+        data-aos="fade-up" data-aos-delay="150">Eleanor &
         Julian</h1>
       <div class="flex items-center justify-center space-x-4 mb-8" data-aos="fade-up" data-aos-delay="300">
         <div class="h-[1px] w-12 bg-gold"></div>
         <p class="text-xl md:text-2xl font-serif italic text-gold-light" data-editable="hero_date">
-          <span id="js-day">24</span>|
-          <span id="js-month">12</span>| <span id="js-year">2026</span>
+          <span id="js-day">24</span> /
+          <span id="js-month">12</span> / <span id="js-year">2026</span>
         </p>
         <div class="h-[1px] w-12 bg-gold"></div>
       </div>
-      <p class="text-lg tracking-widest uppercase" data-editable="hero_location" data-aos="fade-up" data-aos-delay="450">The Grand Palace, Tuscany</p>
+      <p class="text-lg tracking-widest uppercase" data-editable="hero_location" data-aos="fade-up"
+        data-aos-delay="450">The Grand Palace, Tuscany</p>
     </div>
+    <span id="js-hour" class="hidden">18:00</span>
   </header>
-  <!-- <main class="bg-texture"> -->
   <main>
     <section class="py-16 px-4" data-purpose="countdown-container">
       <div class="max-w-3xl mx-auto text-center" data-aos="fade-up">
@@ -357,19 +358,19 @@
           <div class="grid grid-cols-4 gap-4 md:gap-12 px-6 py-4">
             <div id="TIMER_DAY" class="flex flex-col">
               <span class="text-3xl md:text-5xl font-serif font-bold text-gold">00</span>
-              <span class="text-[10px] uppercase tracking-widest" data-editable="timer_days_label">Days</span>
+              <span class="text-[10px] uppercase tracking-widest" data-editable="timer_days_label">Ngày</span>
             </div>
             <div id="TIMER_HOUR" class="flex flex-col">
               <span class="text-3xl md:text-5xl font-serif font-bold text-gold">00</span>
-              <span class="text-[10px] uppercase tracking-widest" data-editable="timer_hours_label">Hrs</span>
+              <span class="text-[10px] uppercase tracking-widest" data-editable="timer_hours_label">Giờ</span>
             </div>
             <div id="TIMER_MIN" class="flex flex-col">
               <span class="text-3xl md:text-5xl font-serif font-bold text-gold">00</span>
-              <span class="text-[10px] uppercase tracking-widest" data-editable="timer_mins_label">Min</span>
+              <span class="text-[10px] uppercase tracking-widest" data-editable="timer_mins_label">Phút</span>
             </div>
             <div id="TIMER_SEC" class="flex flex-col">
               <span class="text-3xl md:text-5xl font-serif font-bold text-gold">00</span>
-              <span class="text-[10px] uppercase tracking-widest" data-editable="timer_secs_label">Sec</span>
+              <span class="text-[10px] uppercase tracking-widest" data-editable="timer_secs_label">Giây</span>
             </div>
           </div>
         </div>
@@ -384,100 +385,98 @@
                 data-image-editable="photo_2"></picture>
               <div
                 class="absolute -bottom-6 -right-6 w-32 h-32 bg-gold/10 border border-gold flex items-center justify-center p-4 text-center">
-                <span class="font-serif text-sm italic" data-editable="story_badge">Est. 2018</span>
+                <span class="font-serif text-sm italic" data-editable="story_badge">Ra Đời 2018</span>
               </div>
             </div>
           </div>
           <div class="w-full md:w-1/2 space-y-6">
-            <h2 class="font-serif text-4xl font-bold font-gold-shimmer" data-editable="story_title">Our Classic
-              Narrative
+            <h2 class="font-serif text-4xl font-bold font-gold-shimmer" data-editable="story_title">Câu Chuyện Của Chúng
+              Tôi
             </h2>
             <div class="w-20 h-1 bg-gold mb-8"></div>
             <p class="text-lg leading-relaxed text-gold-light/90 italic" data-editable="story_p1">
-              It began on a rainy afternoon in London, where two souls found warmth in a shared umbrella. What started
-              as
-              a chance encounter blossomed into a journey spanning three continents and countless memories.
+              Mọi chuyện bắt đầu vào một buổi chiều mưa tại London, nơi hai tâm hồn tình cờ tìm thấy sự ấm áp dưới một
+              chiếc ô chung. Khởi đầu từ một cuộc gặp gỡ định mệnh đã nở rộ thành một hành trình trải dài qua ba châu
+              lục.
             </p>
             <p class="text-lg leading-relaxed text-gold-light/90" data-editable="story_p2">
-              Julian proposed under the golden hour of the Amalfi Coast, promising a lifetime of devotion. Today, we
-              invite you to be part of the most significant chapter in our story yet.
+              Julian đã cầu hôn dưới ánh hoàng hôn vàng rực của bờ biển Amalfi, hứa hẹn một đời gắn bó. Hôm nay, chúng
+              mình trân trọng mời bạn trở thành một phần trong chương rực rỡ nhất của câu chuyện này.
             </p>
             <div class="pt-6">
               <p class="font-serif text-2xl text-gold italic" data-editable="story_signature">- Eleanor & Julian</p>
             </div>
           </div>
         </div>
-        <div class="flex flex-col md:flex-row items-center gap-16" data-aos="fade-up" data-aos-delay="150">
+        <div class="flex flex-col md:flex-row items-center gap-16" data-aos="fade-up">
           <div class="w-full md:w-1/2">
             <div class="relative p-2 border-2 border-gold/50 rounded-sm">
               <picture class="aspect-square grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl"
                 data-image-editable="photo_3"></picture>
               <div
                 class="absolute -bottom-6 -right-6 w-32 h-32 bg-gold/10 border border-gold flex items-center justify-center p-4 text-center">
-                <span class="font-serif text-sm italic" data-editable="story_badge">Est. 2018</span>
+                <span class="font-serif text-sm italic" data-editable="story_badge2">Ra Đời 2018</span>
               </div>
             </div>
           </div>
           <div class="w-full md:w-1/2 space-y-6">
-            <h2 class="font-serif text-4xl font-bold font-gold-shimmer" data-editable="story_title2">Our Classic
-              Narrative
+            <h2 class="font-serif text-4xl font-bold font-gold-shimmer" data-editable="story_title2">Câu Chuyện Của Chúng
+              Tôi
             </h2>
             <div class="w-20 h-1 bg-gold mb-8"></div>
             <p class="text-lg leading-relaxed text-gold-light/90 italic" data-editable="story_p12">
-              It began on a rainy afternoon in London, where two souls found warmth in a shared umbrella. What started
-              as
-              a chance encounter blossomed into a journey spanning three continents and countless memories.
+              Mọi chuyện bắt đầu vào một buổi chiều mưa tại London, nơi hai tâm hồn tình cờ tìm thấy sự ấm áp dưới một
+              chiếc ô chung. Khởi đầu từ một cuộc gặp gỡ định mệnh đã nở rộ thành một hành trình trải dài qua ba châu
+              lục.
             </p>
             <p class="text-lg leading-relaxed text-gold-light/90" data-editable="story_p22">
-              Julian proposed under the golden hour of the Amalfi Coast, promising a lifetime of devotion. Today, we
-              invite you to be part of the most significant chapter in our story yet.
+              Julian đã cầu hôn dưới ánh hoàng hôn vàng rực của bờ biển Amalfi, hứa hẹn một đời gắn bó. Hôm nay, chúng
+              mình trân trọng mời bạn trở thành một phần trong chương rực rỡ nhất của câu chuyện này.
             </p>
             <div class="pt-6">
               <p class="font-serif text-2xl text-gold italic" data-editable="story_signature2">- Eleanor & Julian</p>
             </div>
           </div>
         </div>
-        <div class="flex flex-col md:flex-row items-center gap-16" data-aos="fade-up" data-aos-delay="300">
+        <div class="flex flex-col md:flex-row items-center gap-16" data-aos="fade-up">
           <div class="w-full md:w-1/2">
             <div class="relative p-2 border-2 border-gold/50 rounded-sm">
               <picture class="aspect-square grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl"
                 data-image-editable="photo_4"></picture>
               <div
                 class="absolute -bottom-6 -right-6 w-32 h-32 bg-gold/10 border border-gold flex items-center justify-center p-4 text-center">
-                <span class="font-serif text-sm italic" data-editable="story_badge3">Est. 2018</span>
+                <span class="font-serif text-sm italic" data-editable="story_badge3">Ra Đời 2018</span>
               </div>
             </div>
           </div>
           <div class="w-full md:w-1/2 space-y-6">
-            <h2 class="font-serif text-4xl font-bold font-gold-shimmer" data-editable="story_title3">Our Classic
-              Narrative
+            <h2 class="font-serif text-4xl font-bold font-gold-shimmer" data-editable="story_title3">Câu Chuyện Của Chúng
+              Tôi
             </h2>
             <div class="w-20 h-1 bg-gold mb-8"></div>
             <p class="text-lg leading-relaxed text-gold-light/90 italic" data-editable="story_p13">
-              It began on a rainy afternoon in London, where two souls found warmth in a shared umbrella. What started
-              as
-              a chance encounter blossomed into a journey spanning three continents and countless memories.
+              Mọi chuyện bắt đầu vào một buổi chiều mưa tại London, nơi hai tâm hồn tình cờ tìm thấy sự ấm áp dưới một
+              chiếc ô chung. Khởi đầu từ một cuộc gặp gỡ định mệnh đã nở rộ thành một hành trình trải dài qua ba châu
+              lục.
             </p>
             <p class="text-lg leading-relaxed text-gold-light/90" data-editable="story_p23">
-              Julian proposed under the golden hour of the Amalfi Coast, promising a lifetime of devotion. Today, we
-              invite you to be part of the most significant chapter in our story yet.
+              Julian đã cầu hôn dưới ánh hoàng hôn vàng rực của bờ biển Amalfi, hứa hẹn một đời gắn bó. Hôm nay, chúng
+              mình trân trọng mời bạn trở thành một phần trong chương rực rỡ nhất của câu chuyện này.
             </p>
             <div class="pt-6">
               <p class="font-serif text-2xl text-gold italic" data-editable="story_signature3">- Eleanor & Julian</p>
             </div>
           </div>
         </div>
-
-
       </div>
     </section>
     <section class="py-24 bg-burgundy-dark" data-purpose="photo-gallery" id="gallery">
       <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16" data-aos="fade-up">
-          <h2 class="font-serif text-5xl font-bold font-gold-shimmer mb-4" data-editable="gallery_title">Capturing
-            Moments</h2>
-          <p class="uppercase tracking-[0.3em] text-sm text-gold/60" data-editable="gallery_subtitle">A glimpse into our
-            world</p>
+          <h2 class="font-serif text-5xl font-bold font-gold-shimmer mb-4" data-editable="gallery_title">Lưu Giữ Khoảnh
+            Khắc</h2>
+          <p class="uppercase tracking-[0.3em] text-sm text-gold/60" data-editable="gallery_subtitle">Một thoáng nhìn
+            vào thế giới của chúng mình</p>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4" data-purpose="gallery-grid">
           <picture
@@ -498,86 +497,89 @@
     <section class="py-24 px-6" data-purpose="wedding-itinerary" id="itinerary">
       <div class="max-w-4xl mx-auto">
         <h2 class="font-serif text-5xl text-center font-bold font-gold-shimmer mb-16 italic"
-          data-editable="itinerary_title">The Grand Itinerary</h2>
+          data-editable="itinerary_title">Lịch Trình Buổi Lễ</h2>
         <div class="space-y-12 border-l border-gold/40 pl-8 ml-4">
           <div class="relative" data-aos="fade-up">
             <div class="absolute -left-[41px] top-1 w-5 h-5 bg-gold rounded-full border-4 border-burgundy"></div>
-            <h3 class="font-serif text-2xl text-gold mb-2" data-editable="event1_title">The Vows</h3>
-            <p class="text-sm uppercase tracking-widest text-gold/70 mb-2" data-editable="event1_time">14:00 - The Royal
-              Chapel</p>
-            <p class="text-gold-light/80" data-editable="event1_desc">Witness the union of souls in an intimate ceremony
-              of tradition and love.</p>
+            <h3 class="font-serif text-2xl text-gold mb-2" data-editable="event1_title">Lễ Thành Hôn</h3>
+            <p class="text-sm uppercase tracking-widest text-gold/70 mb-2" data-editable="event1_time">14:00 - Giáo
+              Đường Hoàng Gia</p>
+            <p class="text-gold-light/80" data-editable="event1_desc">Chứng kiến sự kết hợp của hai tâm hồn trong một
+              nghi lễ trang trọng của truyền thống và tình yêu.</p>
           </div>
           <div class="relative" data-aos="fade-up" data-aos-delay="100">
             <div class="absolute -left-[41px] top-1 w-5 h-5 bg-gold rounded-full border-4 border-burgundy"></div>
-            <h3 class="font-serif text-2xl text-gold mb-2" data-editable="event2_title">Cocktail Hour</h3>
-            <p class="text-sm uppercase tracking-widest text-gold/70 mb-2" data-editable="event2_time">16:30 - The
-              Terrace Garden</p>
-            <p class="text-gold-light/80" data-editable="event2_desc">Premium drinks and delicate hors d'oeuvres served
-              overlooking the valley.</p>
+            <h3 class="font-serif text-2xl text-gold mb-2" data-editable="event2_title">Tiệc Cocktail</h3>
+            <p class="text-sm uppercase tracking-widest text-gold/70 mb-2" data-editable="event2_time">16:30 - Sân Vườn
+              Terrance</p>
+            <p class="text-gold-light/80" data-editable="event2_desc">Thưởng thức những ly đồ uống cao cấp và khai vị
+              tinh tế trong không gian thơ mộng.</p>
           </div>
           <div class="relative" data-aos="fade-up" data-aos-delay="200">
             <div class="absolute -left-[41px] top-1 w-5 h-5 bg-gold rounded-full border-4 border-burgundy"></div>
-            <h3 class="font-serif text-2xl text-gold mb-2" data-editable="event3_title">The Grand Feast</h3>
-            <p class="text-sm uppercase tracking-widest text-gold/70 mb-2" data-editable="event3_time">19:00 - Ballroom
-              Royale</p>
-            <p class="text-gold-light/80" data-editable="event3_desc">A 7-course gourmet experience followed by toasts
-              and cake cutting.</p>
+            <h3 class="font-serif text-2xl text-gold mb-2" data-editable="event3_title">Đại Tiệc Tối</h3>
+            <p class="text-sm uppercase tracking-widest text-gold/70 mb-2" data-editable="event3_time">19:00 - Sảnh
+              Ballroom Royale</p>
+            <p class="text-gold-light/80" data-editable="event3_desc">Trải nghiệm ẩm thực 7 món thượng hạng cùng những
+              lời chúc tụng và nghi thức cắt bánh.</p>
           </div>
           <div class="relative" data-aos="fade-up" data-aos-delay="300">
             <div class="absolute -left-[41px] top-1 w-5 h-5 bg-gold rounded-full border-4 border-burgundy"></div>
-            <h3 class="font-serif text-2xl text-gold mb-2" data-editable="event4_title">Dancing Under Stars</h3>
-            <p class="text-sm uppercase tracking-widest text-gold/70 mb-2" data-editable="event4_time">22:00 - Courtyard
-              Lounge</p>
-            <p class="text-gold-light/80" data-editable="event4_desc">Celebrate late into the night with our live
-              orchestra and firework display.</p>
+            <h3 class="font-serif text-2xl text-gold mb-2" data-editable="event4_title">Khiêu Vũ Dưới Ánh Sao</h3>
+            <p class="text-sm uppercase tracking-widest text-gold/70 mb-2" data-editable="event4_time">22:00 - Lounge
+              Sân Trong</p>
+            <p class="text-gold-light/80" data-editable="event4_desc">Cùng chung vui đến tận đêm khuya với dàn nhạc sống
+              và màn trình diễn pháo hoa đặc sắc.</p>
           </div>
         </div>
       </div>
     </section>
     <section class="py-24 bg-burgundy-light/10" data-purpose="rsvp-form" id="rsvp">
-      <div class="max-w-2xl mx-auto px-6 border-2 border-gold p-12 bg-burgundy-dark/50 relative shadow-2xl" data-aos="fade-up">
+      <div class="max-w-2xl mx-auto px-6 border-2 border-gold p-12 bg-burgundy-dark/50 relative shadow-2xl"
+        data-aos="fade-up">
         <div class="absolute top-2 left-2 text-gold text-2xl">✥</div>
         <div class="absolute top-2 right-2 text-gold text-2xl">✥</div>
         <div class="absolute bottom-2 left-2 text-gold text-2xl">✥</div>
         <div class="absolute bottom-2 right-2 text-gold text-2xl">✥</div>
         <div class="text-center mb-10">
           <h2 class="font-serif text-4xl font-bold font-gold-shimmer mb-4 uppercase tracking-tighter"
-            data-editable="rsvp_title">RSVP</h2>
-          <p class="text-sm tracking-widest text-gold-light/70 uppercase" data-editable="rsvp_deadline">Kindly respond
-            by September 15th</p>
+            data-editable="rsvp_title">Xác Nhận Tham Dự</h2>
+          <p class="text-sm tracking-widest text-gold-light/70 uppercase" data-editable="rsvp_deadline">Vui lòng phản
+            hồi trước ngày 15 tháng 9</p>
         </div>
         <form class="space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-xs uppercase tracking-widest text-gold mb-2" data-editable="rsvp_label_name">Full
-                Name</label>
+              <label class="block text-xs uppercase tracking-widest text-gold mb-2" data-editable="rsvp_label_name">Họ
+                và Tên</label>
               <input
                 class="w-full bg-transparent border-b border-gold/50 border-t-0 border-l-0 border-r-0 focus:ring-0 focus:border-gold text-gold-light p-2"
-                placeholder="Your Name" type="text" />
+                placeholder="Tên của bạn" type="text" />
             </div>
             <div>
-              <label class="block text-xs uppercase tracking-widest text-gold mb-2"
-                data-editable="rsvp_label_guests">Number of Guests</label>
+              <label class="block text-xs uppercase tracking-widest text-gold mb-2" data-editable="rsvp_label_guests">Số
+                lượng khách</label>
               <select
                 class="w-full bg-transparent border-b border-gold/50 border-t-0 border-l-0 border-r-0 focus:ring-0 focus:border-gold text-gold-light p-2 appearance-none">
-                <option class="bg-burgundy" data-editable="rsvp_opt_1">1 Guest</option>
-                <option class="bg-burgundy" data-editable="rsvp_opt_2">2 Guests</option>
+                <option class="bg-burgundy" data-editable="rsvp_opt_1">01 Khách</option>
+                <option class="bg-burgundy" data-editable="rsvp_opt_2">02 Khách</option>
+                <option class="bg-burgundy" data-editable="rsvp_opt_3">03 Khách</option>
+                <option class="bg-burgundy" data-editable="rsvp_opt_4">04 Khách</option>
+                <option class="bg-burgundy" data-editable="rsvp_opt_5">05 Khách</option>
               </select>
             </div>
           </div>
           <div>
-            <label class="block text-xs uppercase tracking-widest text-gold mb-2"
-              data-editable="rsvp_label_diet">Dietary Preferences</label>
+            <label class="block text-xs uppercase tracking-widest text-gold mb-2" data-editable="rsvp_label_diet">Gửi lời chúc đến chúng tớ</label>
             <textarea
               class="w-full bg-transparent border border-gold/30 focus:ring-1 focus:ring-gold text-gold-light p-4 h-24"
-              placeholder="Vegan, Gluten Free, etc."></textarea>
+              placeholder="..."></textarea>
           </div>
           <div class="text-center pt-6">
             <button
               class="bg-gold text-burgundy-dark font-bold uppercase tracking-[0.2em] px-12 py-4 hover:bg-gold-light transition-colors duration-300 shadow-lg"
               type="submit" data-editable="rsvp_btn_text">
-              Confirm Attendance
+              Xác Nhận Dự Tiệc
             </button>
           </div>
         </form>
@@ -585,41 +587,45 @@
     </section>
     <section class="py-24 px-6 text-center" data-purpose="gift-registry">
       <div class="max-w-xl mx-auto" data-aos="fade-up">
-        <h2 class="font-serif text-3xl font-bold font-gold-shimmer mb-8" data-editable="gift_title">Wedding Gifts</h2>
+        <h2 class="font-serif text-3xl font-bold font-gold-shimmer mb-8" data-editable="gift_title">Mừng Cưới Hạnh Phúc
+        </h2>
         <p class="text-gold-light/80 mb-10 leading-relaxed italic" data-editable="gift_desc">
-          Your presence at our wedding is the greatest gift we could ask for. Should you wish to honor us with a gift,
-          we have a digital registry or a traditional card chest available.
+          Sự hiện diện của bạn là món quà tuyệt vời nhất đối với chúng mình. Nếu bạn muốn gửi lời chúc mừng qua quà
+          tặng, chúng mình có chuẩn bị hộp mừng cưới kỹ thuật số bên dưới.
         </p>
-        <div class="inline-block p-4 border-4 border-gold bg-white/5 shadow-2xl">
-          <div class="p-2 border border-gold">
-            <div class="w-48 h-48 bg-gold-light flex items-center justify-center">
-              <div class="p-4 bg-white">
-                <picture class="size-32 aspect-square" data-image-editable="qr_1"></picture>
+        <div class="flex flex-col md:flex-row justify-center gap-6">
+          <div class="inline-block p-4 border-4 border-gold bg-white/5 shadow-2xl">
+            <div class="p-2 border border-gold">
+              <div class="w-48 h-48 bg-gold-light flex items-center justify-center">
+                <div class="p-4 bg-white">
+                  <picture class="size-32 aspect-square" data-image-editable="qr_1"></picture>
+                </div>
               </div>
             </div>
+            <p class="mt-4 text-xs uppercase tracking-[0.3em] font-bold text-gold" data-editable="gift_qr_label1">
+              Chú Rể</p>
           </div>
-          <p class="mt-4 text-xs uppercase tracking-[0.3em] font-bold text-gold" data-editable="gift_qr_label">
-            Groom</p>
-        </div>
-        <div class="inline-block p-4 border-4 border-gold bg-white/5 shadow-2xl">
-          <div class="p-2 border border-gold">
-            <div class="w-48 h-48 bg-gold-light flex items-center justify-center">
-              <div class="p-4 bg-white">
-                <picture class="size-32 aspect-square" data-image-editable="qr_1"></picture>
+          <div class="inline-block p-4 border-4 border-gold bg-white/5 shadow-2xl">
+            <div class="p-2 border border-gold">
+              <div class="w-48 h-48 bg-gold-light flex items-center justify-center">
+                <div class="p-4 bg-white">
+                  <picture class="size-32 aspect-square" data-image-editable="qr_2"></picture>
+                </div>
               </div>
             </div>
+            <p class="mt-4 text-xs uppercase tracking-[0.3em] font-bold text-gold" data-editable="gift_qr_label2">Cô Dâu
+            </p>
           </div>
-          <p class="mt-4 text-xs uppercase tracking-[0.3em] font-bold text-gold" data-editable="gift_qr_label">Bride</p>
         </div>
       </div>
     </section>
   </main>
   <footer class="py-12 border-t border-gold/20 text-center">
     <div class="font-serif text-3xl font-gold-shimmer mb-4" data-editable="footer_names">Eleanor & Julian</div>
-    <p class="text-xs uppercase tracking-widest text-gold/40" data-editable="footer_details">October 24, 2024 • Tuscany,
-      Italy</p>
-    <div class="mt-8 text-[10px] text-gold/20 tracking-tighter uppercase" data-editable="footer_copyright">Created with
-      Elegance • © 2024</div>
+    <p class="text-xs uppercase tracking-widest text-gold/40" data-editable="footer_details">Ngày 24 tháng 12, 2026 •
+      Tuscany, Italy</p>
+    <div class="mt-8 text-[10px] text-gold/20 tracking-tighter uppercase" data-editable="footer_copyright">Thiết kế đầy
+      tinh tế • © 2026</div>
   </footer>
 </body>
 
