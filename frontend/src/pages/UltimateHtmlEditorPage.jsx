@@ -10,7 +10,7 @@ import mediaService from '../services/media.service'
 import MediaLibraryModal from '../components/MediaLibraryModal'
 
 
-// Custom debounce hook for smooth preview
+// Custom debounce hook 
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value)
 
@@ -52,12 +52,17 @@ const UltimateHtmlEditorPage = () => {
   // HISTORY MANAGEMENT
   const [history, setHistory] = useState([])
   const [historyIndex, setHistoryIndex] = useState(-1)
-  const isUndoRedoAction = useRef(false) // Flag to prevent pushing history during undo/redo
+  const isUndoRedoAction = useRef(false)
 
   const [htmlCode, setHtmlCode] = useState('')
   const [previewHtml, setPreviewHtml] = useState('')
   const [imageData, setImageData] = useState({})
   const [customFieldData, setCustomFieldData] = useState({})
+  const [mapData, setMapData] = useState({})
+  const [userLocation, setUserLocation] = useState(null)
+  const [addressSuggestions, setAddressSuggestions] = useState({})
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1)
+  const [expandedFields, setExpandedFields] = useState(new Set())
 
   const [formData, setFormData] = useState({
     title: '',
@@ -69,18 +74,17 @@ const UltimateHtmlEditorPage = () => {
     event_address: '',
     music_url: '',
     music_autoplay: true,
-    slug: '', // Use slug instead of subdomain
-    visibility: 'private' // Add visibility field (public/private/password)
+    slug: '',
+    visibility: 'private'
   })
 
   // Debounce Hooks
   const debouncedFormData = useDebounce(formData, 500)
   const debouncedImageData = useDebounce(imageData, 500)
   const debouncedCustomFieldData = useDebounce(customFieldData, 500)
+  const debouncedMapData = useDebounce(mapData, 500)
 
-  // Push to history when state stabilizes
   useEffect(() => {
-    // Skip if this effect update was caused by undo/redo itself
     if (isUndoRedoAction.current) {
       isUndoRedoAction.current = false
       return
@@ -92,38 +96,34 @@ const UltimateHtmlEditorPage = () => {
     const currentState = {
       formData: debouncedFormData,
       imageData: debouncedImageData,
-      customFieldData: debouncedCustomFieldData
+      customFieldData: debouncedCustomFieldData,
+      mapData: debouncedMapData
     }
 
-    // Get current head
     const currentHead = history[historyIndex]
 
-    // Only push if different (JSON compare is safe here)
+    // Only push if different 
     if (JSON.stringify(currentHead) !== JSON.stringify(currentState)) {
       console.log("📸 Saving History Snapshot", historyIndex + 1)
       const newHistory = history.slice(0, historyIndex + 1)
       newHistory.push(currentState)
-
-      // Limit history size to 50
       if (newHistory.length > 50) newHistory.shift()
-
       setHistory(newHistory)
       setHistoryIndex(newHistory.length - 1)
     }
-  }, [debouncedFormData, debouncedImageData, debouncedCustomFieldData, invitation])
+  }, [debouncedFormData, debouncedImageData, debouncedCustomFieldData, debouncedMapData, invitation])
 
   const performUndo = useCallback(() => {
     if (historyIndex > 0) {
       console.log("↺ Undoing...")
-      isUndoRedoAction.current = true // Set flag to ignore next debounce update
+      isUndoRedoAction.current = true
       const prevState = history[historyIndex - 1]
       setHistoryIndex(prev => prev - 1)
 
       setFormData(prevState.formData)
       setImageData(prevState.imageData)
       setCustomFieldData(prevState.customFieldData)
-
-      // Force Iframe Refresh
+      setMapData(prevState.mapData || {})
       if (lastRenderedHtmlRef.current) lastRenderedHtmlRef.current = ''
     }
   }, [history, historyIndex])
@@ -138,13 +138,12 @@ const UltimateHtmlEditorPage = () => {
       setFormData(nextState.formData)
       setImageData(nextState.imageData)
       setCustomFieldData(nextState.customFieldData)
-
-      // Force Iframe Refresh
+      setMapData(nextState.mapData || {})
       if (lastRenderedHtmlRef.current) lastRenderedHtmlRef.current = ''
     }
   }, [history, historyIndex])
 
-  // Keyboard Shortcuts (Main Window)
+  // Keyboard Shortcuts 
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
@@ -164,11 +163,63 @@ const UltimateHtmlEditorPage = () => {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [performUndo, performRedo])
 
-  // Ref for preview iframe
+  // Handle messages from Iframe
+  useEffect(() => {
+    const handleMessage = (e) => {
+      if (!e.data) return
+
+      if (e.data.type === 'FOCUS_FIELD') {
+        const { id, tab } = e.data
+        if (id) {
+          if (tab === 'maps' && isMobile) {
+            setActiveMobileTab('maps')
+          } else if (tab && !isMobile) {
+            setActiveMobileTab(tab)
+          }
+          // Mark as expanded/active (Show only one at a time as requested)
+          setExpandedFields(new Set([id]))
+        } else {
+          // Clear selection if id is null/empty
+          setExpandedFields(new Set())
+        }
+
+        // Use a slight delay to ensure UI transition completes
+        setTimeout(() => {
+          const sidebarEl = document.querySelector(`.sidebar-field-${id}`)
+          if (sidebarEl) {
+            sidebarEl.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            sidebarEl.classList.add('highlight-sidebar-field')
+            // If it's an input or textarea, focus it
+            const input = sidebarEl.querySelector('input, textarea')
+            if (input) input.focus()
+
+            setTimeout(() => sidebarEl.classList.remove('highlight-sidebar-field'), 2000)
+          }
+        }, 300)
+      }
+
+      if (e.data.type === 'UPDATE_CONTENT') {
+        const { id, content } = e.data
+        setCustomFieldData(prev => ({ ...prev, [id]: content }))
+      }
+
+      if (e.data.type === 'KEY_COMMAND') {
+        const { key, ctrlKey, metaKey, shiftKey } = e.data
+        if ((ctrlKey || metaKey) && key === 'z') {
+          if (shiftKey) performRedo()
+          else performUndo()
+        }
+        if ((ctrlKey || metaKey) && key === 'y') performRedo()
+      }
+    }
+
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [performUndo, performRedo])
+
   const iframeRef = useRef(null)
   const lastRenderedHtmlRef = useRef('')
 
-  // WYSIWYG Editor - Direct Edit Only (No Drag & Drop)
   useEffect(() => {
     const iframe = iframeRef.current
     if (!iframe || !previewHtml) return
@@ -177,25 +228,17 @@ const UltimateHtmlEditorPage = () => {
     const win = iframe.contentWindow
     if (!doc || !win) return
 
-    // 1. Check if user is currently editing (User Interaction Shield)
-    // If they are typing, we DO NOT want to re-render the iframe, 
-    // because that would kill their focus and cursor position.
-    // The visual update will happen naturally when they Blur/Click away.
     if (doc.activeElement &&
       (doc.activeElement.getAttribute('contenteditable') === 'true' ||
         doc.activeElement.tagName === 'INPUT' ||
         doc.activeElement.tagName === 'TEXTAREA')) {
-      // Only skip if the content is functionally different to avoid stale locks?
-      // Ideally we just skip. The user is "busy".
       return
     }
 
-    // 2. Diff Check: Don't re-render if content is identical
     if (previewHtml === lastRenderedHtmlRef.current) {
       return
     }
 
-    // 3. Render Procedure
     const scrollX = win.scrollX || 0
     const scrollY = win.scrollY || 0
 
@@ -203,14 +246,11 @@ const UltimateHtmlEditorPage = () => {
     doc.write(previewHtml)
     doc.close()
 
-    // Update Ref
     lastRenderedHtmlRef.current = previewHtml
 
-    // Define functions first (before calling them)
     const injectViewportAndStyles = () => {
-      // Inject viewport meta tag if not exists
       const injectViewport = () => {
-        if (doc.querySelector('meta[name="viewport"]')) return; // Already exists
+        if (doc.querySelector('meta[name="viewport"]')) return;
         const viewport = doc.createElement('meta')
         viewport.name = 'viewport'
         viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes'
@@ -220,25 +260,17 @@ const UltimateHtmlEditorPage = () => {
       injectViewport()
 
       const injectStyles = () => {
-        if (doc.getElementById('editor-styles')) return; // Already exists
+        if (doc.getElementById('editor-styles')) return;
         const style = doc.createElement('style')
         style.id = 'editor-styles'
         style.textContent = `
-            [data-editable] {
-              cursor: text;
-              outline: 1px dashed transparent;
-              transition: outline 0.2s, background 0.2s;
-            }
-            [data-editable]:hover {
-              outline: 2px dashed #a855f7 !important;
-              background: rgba(168, 85, 247, 0.05) !important;
-            }
-            [data-editable]:focus {
-              outline: 2px solid #f59e0b !important;
-              background: rgba(251, 191, 36, 0.05) !important;
-              content-visibility: auto;
-            }
-          `
+          [data-editable] { cursor: text; outline: 1px dashed transparent; transition: outline 0.2s, background 0.2s; }
+          [data-editable]:hover { outline: 2px dashed #a855f7 !important; background: rgba(168, 85, 247, 0.05) !important; }
+          [data-editable]:focus { outline: 2px solid #f59e0b !important; background: rgba(251, 191, 36, 0.05) !important; }
+          
+          [data-image-editable], [data-edit-map], [data-edit-map-href] { cursor: pointer; outline: 1px dashed transparent; transition: outline 0.2s; }
+          [data-image-editable]:hover, [data-edit-map]:hover, [data-edit-map-href]:hover { outline: 2px dashed #a855f7 !important; box-shadow: 0 0 10px rgba(168, 85, 247, 0.3) !important; }
+        `
         doc.head.appendChild(style)
       }
 
@@ -265,25 +297,36 @@ const UltimateHtmlEditorPage = () => {
       })
       observer.observe(doc.head, { childList: true })
 
-      // EVENT DELEGATION: Listen on Body to handle dynamic DOM replacements
       const handleInteraction = (e) => {
-        const el = e.target.closest('[data-editable]')
+        const el = e.target.closest('[data-editable], [data-image-editable], [data-edit-map], [data-edit-map-href]')
         if (!el) return
 
         const fieldId = el.getAttribute('data-editable')
+        const imageId = el.getAttribute('data-image-editable')
+        const mapId = el.getAttribute('data-edit-map') || el.getAttribute('data-edit-map-href')
 
         if (e.type === 'click' || e.type === 'dblclick') {
-          e.stopPropagation()
-          if (el.contentEditable !== 'true') {
-            e.preventDefault()
-            el.contentEditable = 'true'
-            el.focus()
-            console.log(`Activated edit for: ${fieldId} (via ${e.type})`)
+          if (!el) {
+            // Clicked on background/non-editable area
+            window.parent.postMessage({ type: 'FOCUS_FIELD', id: null }, '*');
+            return
+          }
 
-            window.parent.postMessage({
-              type: 'FOCUS_FIELD',
-              id: fieldId
-            }, '*');
+          e.stopPropagation()
+
+          if (fieldId && !imageId && !mapId) {
+            if (el.contentEditable !== 'true') {
+              e.preventDefault()
+              el.contentEditable = 'true'
+              el.focus()
+              window.parent.postMessage({ type: 'FOCUS_FIELD', id: fieldId, tab: 'info' }, '*');
+            }
+          } else if (imageId) {
+            e.preventDefault()
+            window.parent.postMessage({ type: 'FOCUS_FIELD', id: imageId, tab: 'images' }, '*');
+          } else if (mapId) {
+            e.preventDefault()
+            window.parent.postMessage({ type: 'FOCUS_FIELD', id: mapId, tab: 'maps' }, '*');
           }
         }
 
@@ -304,7 +347,6 @@ const UltimateHtmlEditorPage = () => {
       doc.body.addEventListener('dblclick', handleInteraction)
       doc.body.addEventListener('focusout', handleInteraction)
 
-      // Global Key Listener for Undo/Redo inside Iframe
       doc.addEventListener('keydown', (e) => {
         if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'y')) {
           e.preventDefault();
@@ -319,14 +361,12 @@ const UltimateHtmlEditorPage = () => {
       });
     };
 
-    // Wait for DOM to be fully loaded before injecting styles
     const waitForBody = () => {
       if (!doc || !doc.body) {
         setTimeout(waitForBody, 10)
         return
       }
 
-      // Inject styles & listeners after body is ready
       try {
         injectViewportAndStyles()
         setupEventListeners()
@@ -353,9 +393,6 @@ const UltimateHtmlEditorPage = () => {
 
   }, [previewHtml]);
 
-
-  // (Removed Duplicate State Declarations - They are now moved to top for history access)
-
   // Function to scroll preview to specific field
   const scrollPreviewToField = useCallback((fieldName) => {
     if (!iframeRef.current) return
@@ -366,7 +403,6 @@ const UltimateHtmlEditorPage = () => {
 
       let element = null
 
-      // 1. Try predefined selector map
       const selectorMap = {
         'title': '[data-field="title"], h1, .title',
         'groom_name': '[data-field="groom_name"], .groom-name, .groom',
@@ -385,25 +421,24 @@ const UltimateHtmlEditorPage = () => {
         }
       }
 
-      // 2. If not found, try data-editable attribute (Generated by Mapper Tool)
       if (!element) {
         element = iframeDoc.querySelector(`[data-editable="${fieldName}"]`)
       }
 
-      // 3. Try data-image-editable attribute
       if (!element) {
         element = iframeDoc.querySelector(`[data-image-editable="${fieldName}"]`)
       }
 
-      // 4. Try scanning for ID match (Direct match or case-insensitive)
+      if (!element) {
+        element = iframeDoc.querySelector(`[data-edit-map="${fieldName}"]`) ||
+          iframeDoc.querySelector(`[data-edit-map-href="${fieldName}"]`)
+      }
+
       if (!element) {
         element = iframeDoc.getElementById(fieldName)
       }
 
-      // 5. Try partial ID match or class match for images
       if (!element) {
-        // Try finding any element that might relate to this ID
-        // e.g. fieldName="image_1" -> id="IMAGE1" or id="image1"
         const normalizedId = fieldName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
         const allElements = iframeDoc.querySelectorAll('[id]')
         for (let el of allElements) {
@@ -418,7 +453,6 @@ const UltimateHtmlEditorPage = () => {
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
-        // Add highlight effect
         const originalTransition = element.style.transition
         const originalOutline = element.style.outline
         const originalBoxShadow = element.style.boxShadow
@@ -448,22 +482,18 @@ const UltimateHtmlEditorPage = () => {
     }
   }, [])
 
-  // Phân tích template using DOMParser for accuracy
   const templateAnalysis = useMemo(() => {
-    if (!htmlCode) return { placeholders: [], images: [], customFields: [] }
+    if (!htmlCode) return { placeholders: [], images: [], customFields: [], maps: [] }
 
     const parser = new DOMParser()
     const doc = parser.parseFromString(htmlCode, 'text/html')
 
-    // 1. Text Placeholders (Regex is still best for {{mustache}})
     const placeholderRegex = /\{\{([a-z_]+)\}\}/gi
     const matches = [...htmlCode.matchAll(placeholderRegex)]
     const placeholders = [...new Set(matches.map(m => m[1]))]
 
-    // 2. Images Analysis
-    const imageMap = new Map() // Use Map to prevent duplicates
+    const imageMap = new Map()
 
-    // 2a. Scan images with data-editable
     const editableImgs = doc.querySelectorAll('img[data-editable]')
     editableImgs.forEach((img, idx) => {
       const id = img.getAttribute('data-editable')
@@ -478,13 +508,10 @@ const UltimateHtmlEditorPage = () => {
       })
     })
 
-    // 2b. PRE-SCAN CSS: Identify background images defined in style blocks
-    // This allows us to link elements with data-image-editable to their CSS-defined URLs
     const cssBgMap = {}
     const styleTags = doc.querySelectorAll('style')
     styleTags.forEach(style => {
       const cssContent = style.innerHTML
-      // Regex to find #IMAGE... defined in CSS with a background image
       const ladiRegex = /#(IMAGE\w+)[^{]*\{[\s\S]*?background(?:-image)?:\s*url\(['"]?([^'"\)]+)['"]?\)/gi
       let match
       while ((match = ladiRegex.exec(cssContent)) !== null) {
@@ -494,27 +521,23 @@ const UltimateHtmlEditorPage = () => {
 
         const element = doc.getElementById(id);
         if (!element || !element.hasAttribute('data-image-editable')) {
-          continue; // Skip if element doesn't exist or isn't editable
+          continue;
         }
         cssBgMap[id] = url
       }
     })
 
-    // 2c. Scan background images with data-image-editable (Managed Backgrounds)
     const bgEditableEls = doc.querySelectorAll('[data-image-editable]')
     bgEditableEls.forEach((el) => {
-      // IGNORE invalid tags and extension junk
       if (['style', 'script', 'head', 'meta', 'link', 'title'].includes(el.tagName.toLowerCase())) return
       if (el.id && (el.id.includes('eJOY') || el.id.includes('extension'))) return
 
       const attrId = el.getAttribute('data-image-editable')
 
-      // Filter out SECTION elements to avoid duplicates
       if (attrId.toUpperCase().includes('SECTION')) return
 
       let bgUrl = ''
 
-      // Try 1: Ladipage element (Inline Style override)
       const isLadipage = el.classList.contains('ladi-element') || el.querySelector('.ladi-image-background') !== null
       if (isLadipage) {
         const bgChild = el.querySelector('.ladi-image-background')
@@ -524,31 +547,23 @@ const UltimateHtmlEditorPage = () => {
         }
       }
 
-      // Try 2: Standard Inline Style
       if (!bgUrl && el.style.backgroundImage) {
         const match = el.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/)
         if (match) bgUrl = match[1]
       }
 
-      // Try 3: Fallback to CSS Pre-scan
-      // This bridges the gap where an element has data-image-editable but its image is in CSS
       if (!bgUrl && el.id && cssBgMap[el.id]) {
         bgUrl = cssBgMap[el.id]
-        // Mark as consumed so we don't add it again in step 2d
         delete cssBgMap[el.id]
       }
 
-      // CRITICAL: If element has data-image-editable, ALWAYS add it to the list
-      // Even if no URL is found yet - user should be able to upload an image for it
-      // Use empty string as placeholder if no URL found
       if (!bgUrl) {
-        bgUrl = '' // Empty placeholder - will be replaced when user uploads
+        bgUrl = ''
       }
 
-      // Use the Custom Name (attrId) as the key
       imageMap.set(attrId, {
         id: attrId,
-        htmlId: el.id, // Store HTML ID for DOM lookup
+        htmlId: el.id,
         originalSrc: bgUrl,
         currentSrc: bgUrl,
         alt: attrId.replace(/_/g, ' '),
@@ -558,9 +573,6 @@ const UltimateHtmlEditorPage = () => {
       })
     })
 
-
-
-    // 2d. Add remaining CSS images that weren't managed (didn't have data-image-editable)
     Object.keys(cssBgMap).forEach(id => {
       const url = cssBgMap[id]
       if (!imageMap.has(id)) {
@@ -576,44 +588,33 @@ const UltimateHtmlEditorPage = () => {
       }
     })
 
-    // 2d. ENHANCED: Scan ALL img tags and auto-detect editable images
     const allImgs = doc.querySelectorAll('img')
     allImgs.forEach((img, idx) => {
-      // Skip if already captured via data-editable
       if (img.hasAttribute('data-editable')) return
 
-      // FILTER JUNK IMAGES
       const src = img.getAttribute('src') || ''
       if (!src || src.startsWith('data:') || src.startsWith('chrome-extension:') || src.includes('extension')) return
       if (img.id && img.id.includes('eJOY')) return
       if (img.className && typeof img.className === 'string' && img.className.includes('extension')) return
 
-      // Skip very small images (likely icons or decorations)
       if (img.width && img.height && (img.width < 50 || img.height < 50)) return
 
-      // Generate an ID if not present
       let id = img.id || ''
       if (!id) {
-        // Try to derive from class
         if (img.className && typeof img.className === 'string') {
           const classList = img.className.split(' ')
           id = classList.find(cls => cls.match(/^[a-zA-Z]/)) || classList[0]
         }
-        // Try to derive from alt
         if (!id && img.alt) id = img.alt.replace(/[^a-zA-Z0-9]/gi, '_').toLowerCase()
-        // Try to derive from src filename
         if (!id && src) {
           const filename = src.split('/').pop().split('.')[0]
           if (filename && filename.length > 0) id = filename
         }
-        // Fallback to index
         if (!id) id = `image_${idx + 1}`
       }
 
-      // Clean up ID
       id = id.replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase()
 
-      // Ensure ID is unique
       let originalId = id
       let counter = 1
       while (imageMap.has(id)) {
@@ -621,7 +622,6 @@ const UltimateHtmlEditorPage = () => {
         counter++
       }
 
-      // Auto-add data-editable attribute for future reference
       img.setAttribute('data-editable', id)
 
       imageMap.set(id, {
@@ -630,22 +630,19 @@ const UltimateHtmlEditorPage = () => {
         currentSrc: src,
         alt: img.getAttribute('alt') || `Ảnh ${idx + 1}`,
         className: img.className || '',
-        index: idx, // Keep index for fallback replacement
+        index: idx,
         type: 'img',
-        isManaged: true, // Now managed after auto-detection
-        autoDetected: true // Flag to indicate this was auto-detected
+        isManaged: true,
+        autoDetected: true
       })
     })
 
-    // 2e. ENHANCED: Auto-detect background images in CSS without data-image-editable
     const allElements = doc.querySelectorAll('*')
     allElements.forEach((el, idx) => {
-      // Skip if already processed or invalid
       if (el.hasAttribute('data-image-editable')) return
       if (['style', 'script', 'head', 'meta', 'link', 'title', 'img'].includes(el.tagName.toLowerCase())) return
       if (el.id && (el.id.includes('eJOY') || el.id.includes('extension'))) return
 
-      // Check for background image in inline style
       let bgUrl = ''
       if (el.style.backgroundImage) {
         const match = el.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/)
@@ -655,7 +652,6 @@ const UltimateHtmlEditorPage = () => {
         }
       }
 
-      // Check computed style for background image
       if (!bgUrl && window.getComputedStyle) {
         try {
           const computedStyle = window.getComputedStyle(el)
@@ -667,12 +663,10 @@ const UltimateHtmlEditorPage = () => {
             }
           }
         } catch (e) {
-          // Ignore computed style errors
         }
       }
 
       if (bgUrl) {
-        // Generate ID for background image
         let id = el.id || ''
         if (!id) {
           if (el.className && typeof el.className === 'string') {
@@ -686,10 +680,8 @@ const UltimateHtmlEditorPage = () => {
           if (!id) id = `background_${idx + 1}`
         }
 
-        // Clean up ID
         id = id.replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase()
 
-        // Ensure ID is unique
         let originalId = id
         let counter = 1
         while (imageMap.has(id)) {
@@ -697,7 +689,6 @@ const UltimateHtmlEditorPage = () => {
           counter++
         }
 
-        // Auto-add data-image-editable attribute
         el.setAttribute('data-image-editable', id)
 
         const isLadipage = el.classList.contains('ladi-element') || el.querySelector('.ladi-image-background') !== null
@@ -715,99 +706,41 @@ const UltimateHtmlEditorPage = () => {
         })
       }
     })
-    //   if (img.className && typeof img.className === 'string' && img.className.includes('extension')) return
-
-    //   // Generate an ID if not present
-    //   let id = img.id || ''
-    //   if (!id) {
-    //     // Try to derive from class
-    //     if (img.className && typeof img.className === 'string') id = img.className.split(' ')[0]
-    //     // Try to derive from alt
-    //     if (!id && img.alt) id = img.alt.replace(/[^a-zA-Z0-9]/gi, '_').toLowerCase()
-    //     // Fallback to index
-    //     if (!id) id = `image_auto_${idx + 1}`
-    //   }
-
-    //   // Ensure ID is unique
-    //   let originalId = id
-    //   let counter = 1
-    //   while (imageMap.has(id)) {
-    //     id = `${originalId}_${counter}`
-    //     counter++
-    //   }
-
-    //   imageMap.set(id, {
-    //     id: id,
-    //     originalSrc: src,
-    //     currentSrc: src,
-    //     alt: img.getAttribute('alt') || `Ảnh ${idx + 1}`,
-    //     className: img.className || '',
-    //     index: idx, // Keep index for fallback replacement
-    //     type: 'img',
-    //     isManaged: false
-    //   })
-    // })
 
     const images = Array.from(imageMap.values())
 
-    // 3. Custom Text Fields (data-editable on non-img tags)
     const customFields = []
 
-    // Map to track content for deduplication (Shadow Layer Handling)
     const contentToIdMap = new Map();
 
     const editableTexts = doc.querySelectorAll('[data-editable]:not(img)')
     editableTexts.forEach((el, idx) => {
       let id = el.getAttribute('data-editable')
-
-      // FILTER STRUCTURAL ELEMENTS (User Friendly Filter)
-      // Ignore containers like Sections, Boxes, Shapes, Groups which contain raw HTML
       if (/^(Section|Box|Shape|Group|Line|Item|Overlay|Container)/i.test(id)) return
 
-      // Ignore elements with too much HTML content (likely a wrapper)
       if (el.children.length > 5 || el.innerHTML.length > 2000) return
-
-      // Ignore if it looks like an SVG or Code block
       if (el.tagName === 'SVG' || el.tagName === 'PATH' || el.tagName === 'STYLE' || el.tagName === 'SCRIPT') return
 
-      // SMART VALUE EXTRACTION: Get clean text, ignoring HTML tags
       let cleanValue = (el.innerText || '').trim()
 
-      // FIX: Filter out NON-TEXT elements (Decorations, Lines, Empty Boxes, Layout Containers)
       if (!cleanValue) return
 
-      // FIX 2a: STRUCTURAL SAFETY CHECK
-      // If element contains media (Image, SVG) or layout (Iframe), it is a CONTAINER.
       if (el.querySelector('img, svg, iframe, video, canvas')) return;
-
-      // Also check for Ladipage specific background image classes or overlays to screen out decoration containers
       if (el.querySelector('.ladi-image, .ladi-image-background, .ladi-overlay')) return;
-
-      // FIX 2c: FORM SAFETY CHECK (Crucial for RSVP sections)
-      // If element contains form controls (Input, Button, etc.), it is a functional wrapper.
       if (el.querySelector('input, select, textarea, button, form')) return;
 
-      // FIX 2b: PREVENT PARENT CONTAINERS (Aggregation Issue)
-      // LEAF NODE POLICY: If it has ANY block-level children, it is a wrapper -> SKIP IT.
-      // We rely on the inner elements (H3, P, etc.) being picked up individually.
       const hasBlockChildren = Array.from(el.children).some(c =>
         ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'LI', 'TABLE', 'SECTION', 'FORM', 'BLOCKQUOTE'].includes(c.tagName)
       )
 
       if (hasBlockChildren) return;
 
-      // Allow up to 3 children only if they are inline (br, b, span, icon)
-      // But if we passed the block check, we are mostly safe.
       if (el.children.length > 5) return
 
-      // SHADOW LAYER & DUPLICATE DETECTION
-      // If we saw this exact text content before, REUSE the ID.
-      // This ensures editing one instance updates all identical instances (Shadows, Etc.)
       if (cleanValue.length > 4 && contentToIdMap.has(cleanValue)) {
-        // Reuse ID
         const existingId = contentToIdMap.get(cleanValue);
-        el.setAttribute('data-editable', existingId); // Update DOM to match
-        return; // Don't add a new field to sidebar, just link DOM
+        el.setAttribute('data-editable', existingId);
+        return;
       }
 
       // Store primarily mapped ID
@@ -818,37 +751,102 @@ const UltimateHtmlEditorPage = () => {
       customFields.push({
         id: id,
         label: id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-        value: cleanValue, // Always use clean text
+        value: cleanValue,
         type: 'text'
       })
     })
 
-    return { placeholders, images, customFields }
+    const maps = []
+    const mapLinks = doc.querySelectorAll('a[href*="maps.google.com"], a[href*="goo.gl/maps"], a[data-edit-map-href]')
+    mapLinks.forEach((a, idx) => {
+      const id = a.getAttribute('data-edit-map-href') || `map_link_${idx + 1}`
+      if (!maps.find(m => m.id === id)) {
+        maps.push({
+          id: id,
+          type: 'link',
+          originalHref: a.getAttribute('href'),
+          label: a.innerText.trim() || `Link bản đồ ${idx + 1}`,
+          isManaged: true
+        })
+      }
+    })
+
+    const mapIframes = doc.querySelectorAll('iframe[src*="google.com/maps"], iframe[data-edit-map]')
+    mapIframes.forEach((iframe, idx) => {
+      const id = iframe.getAttribute('data-edit-map') || `map_iframe_${idx + 1}`
+      if (!maps.find(m => m.id === id)) {
+        maps.push({
+          id: id,
+          type: 'iframe',
+          originalSrc: iframe.getAttribute('src'),
+          label: `Bản đồ nhúng ${idx + 1}`,
+          isManaged: true
+        })
+      }
+    })
+
+    return { placeholders, images, customFields, maps }
   }, [htmlCode])
 
-  // (Removed Duplicate State Declarations - Moved to top)
+  // Auto-populate custom fields with template defaults if not already set
+  useEffect(() => {
+    if (!loading && templateAnalysis.customFields.length > 0) {
+      const missingFields = templateAnalysis.customFields.filter(
+        field => customFieldData[field.id] === undefined && field.value
+      )
 
-  // AUTO-SAVE: State for auto-save functionality
+      if (missingFields.length > 0) {
+        setCustomFieldData(prev => {
+          const updated = { ...prev }
+          missingFields.forEach(field => {
+            if (updated[field.id] === undefined) {
+              updated[field.id] = field.value
+            }
+          })
+          return updated
+        })
+      }
+    }
+  }, [templateAnalysis.customFields, loading])
 
-  // AUTO-SAVE: State for auto-save functionality
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords
+          try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+            const data = await response.json()
+            const city = data.address.city || data.address.town || data.address.village || data.address.state || ''
+            setUserLocation({ lat: latitude, lon: longitude, city })
+          } catch (err) {
+            console.error('Failed to get city from coords:', err)
+            setUserLocation({ lat: latitude, lon: longitude, city: '' })
+          }
+        },
+        (error) => console.warn('Geolocation error:', error)
+      )
+    }
+  }, [])
+
   const [autoSaveTimer, setAutoSaveTimer] = useState(null)
   const [lastSavedData, setLastSavedData] = useState(null)
-  const [isUserEditing, setIsUserEditing] = useState(false) // Track if user is actively editing
-  const editingTimerRef = useRef(null) // Timer for editing state
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false) // Track unsaved changes
+  const [isUserEditing, setIsUserEditing] = useState(false)
+  const editingTimerRef = useRef(null)
+  const suggestionTimerRef = useRef(null)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
 
-  // (Removed Duplicate Debounce hooks - Moved to top)
 
   useEffect(() => {
     loadInvitation()
   }, [])
 
   useEffect(() => {
-    // Don't update preview if user is actively editing to prevent focus loss
     if (!isUserEditing) {
       updatePreview()
     }
-  }, [debouncedFormData, debouncedImageData, debouncedCustomFieldData, htmlCode, isUserEditing])
+  }, [debouncedFormData, debouncedImageData, debouncedCustomFieldData, debouncedMapData, htmlCode, isUserEditing])
 
   // Update preview when user stops editing
   useEffect(() => {
@@ -859,20 +857,16 @@ const UltimateHtmlEditorPage = () => {
 
   // AUTO-SAVE: Debounced auto-save when data changes
   useEffect(() => {
-    // Skip auto-save if invitation not loaded yet or in preview mode
     if ((!invitation && !searchParams.get('previewMode')) || loading) return
 
-    // Skip if data hasn't changed
-    const currentData = JSON.stringify({ formData, imageData, customFieldData, htmlCode })
+    const currentData = JSON.stringify({ formData, imageData, customFieldData, mapData, htmlCode })
     if (currentData === lastSavedData) {
       setHasUnsavedChanges(false)
       return
     }
 
-    // Mark as having unsaved changes
     setHasUnsavedChanges(true)
 
-    // Clear previous timer
     if (autoSaveTimer) {
       clearTimeout(autoSaveTimer)
     }
@@ -880,33 +874,29 @@ const UltimateHtmlEditorPage = () => {
     // Set new timer for auto-save after 5 minutes (300 seconds) of inactivity
     const timer = setTimeout(async () => {
       try {
-        console.log('🔄 Auto-saving...')
 
-        // Compress HTML
         const compressedHtml = htmlCode
           .replace(/\s+/g, ' ')
           .replace(/>\s+</g, '><')
           .trim()
 
-        // Auto-save without blocking UI (don't use setSaving)
         await invitationService.update(invitation.uuid, {
           ...formData,
-          event_date: formData.event_date || null, // Fix: Send null if empty to avoid SQL error
-          html_content: compressedHtml, // Invitation uses html_content
+          event_date: formData.event_date || null,
+          html_content: compressedHtml,
           image_data: JSON.stringify(imageData),
           custom_field_data: JSON.stringify(customFieldData),
-          status: invitation.status // Keep current status
+          map_data: JSON.stringify(mapData),
+          status: invitation.status
         })
 
         setLastSavedData(currentData)
         setHasUnsavedChanges(false)
-        console.log('✅ Auto-saved successfully')
         toast.success('✅ Đã tự động lưu')
       } catch (error) {
         console.error('❌ Auto-save failed:', error)
-        // Don't show error toast for auto-save failures to avoid annoying user
       }
-    }, 300000) // 5 minutes delay (300 seconds)
+    }, 300000)
 
     setAutoSaveTimer(timer)
 
@@ -914,7 +904,7 @@ const UltimateHtmlEditorPage = () => {
     return () => {
       if (timer) clearTimeout(timer)
     }
-  }, [formData, imageData, customFieldData, htmlCode, invitation, loading])
+  }, [formData, imageData, customFieldData, mapData, htmlCode, invitation, loading])
 
   const loadInvitation = async () => {
     try {
@@ -923,7 +913,6 @@ const UltimateHtmlEditorPage = () => {
       const isPreviewMode = searchParams.get('previewMode') === 'true'
 
       if (isPreviewMode) {
-        console.log('🚀 Entering Ultimate Editor PREVIEW MODE')
         const previewHtml = sessionStorage.getItem('ultimate_preview_html')
         const previewTemplateData = JSON.parse(sessionStorage.getItem('ultimate_preview_template') || '{}')
 
@@ -985,24 +974,18 @@ const UltimateHtmlEditorPage = () => {
         console.log('📦 Loaded invitation:', res.data);
         console.log('📄 html_content from API:', res.data.html_content?.substring(0, 100) || 'EMPTY');
 
-        // Handle html_content - Invitation uses html_content (not html_template)
         const htmlContent = res.data.html_content || ''
         setHtmlCode(htmlContent)
 
-        console.log('✅ Set htmlCode length:', htmlContent.length);
-
-        // If html_content is empty but we have a template, try to load template HTML
         if (!htmlContent && res.data.template_id) {
           console.warn('⚠️ Invitation has no HTML content, attempting to load from template...')
 
           try {
-            // Import template service
             const templateService = (await import('../services/template.service')).default
             const templateRes = await templateService.getById(res.data.template_id)
 
-            let templateHtml = templateRes.data?.html_template; // Template uses html_template
+            let templateHtml = templateRes.data?.html_template;
 
-            // Fallback to designData if html_template is empty
             if (!templateHtml && templateRes.data?.design_data) {
               try {
                 const designData = typeof templateRes.data.design_data === 'string'
@@ -1010,7 +993,6 @@ const UltimateHtmlEditorPage = () => {
                   : templateRes.data.design_data;
 
                 if (designData?.html) {
-                  console.log('📄 Using HTML from template designData');
                   templateHtml = designData.html;
                 }
               } catch (parseErr) {
@@ -1022,15 +1004,12 @@ const UltimateHtmlEditorPage = () => {
               console.log('✅ Loaded HTML from template:', templateRes.data.name)
               setHtmlCode(templateHtml)
 
-              // Auto-save the HTML to the invitation
               try {
-                // Include multiple fields - Invitation uses html_content
                 await invitationService.update(invitationId, {
-                  html_content: templateHtml, // Invitation uses html_content
+                  html_content: templateHtml,
                   title: res.data.title,
                   status: res.data.status || 'draft'
                 })
-                console.log('✅ Saved template HTML to invitation')
                 toast.success('✅ Đã tải nội dung từ template')
               } catch (saveErr) {
                 console.error('Failed to save template HTML:', saveErr)
@@ -1055,8 +1034,8 @@ const UltimateHtmlEditorPage = () => {
           event_address: res.data.event_address || '',
           music_url: res.data.music_url || '',
           music_autoplay: res.data.music_autoplay !== undefined ? res.data.music_autoplay : true,
-          slug: res.data.slug || '', // Load slug from backend
-          visibility: res.data.visibility || 'private' // Load visibility from backend
+          slug: res.data.slug || '',
+          visibility: res.data.visibility || 'private'
         }
 
         setFormData(loadedFormData)
@@ -1077,11 +1056,19 @@ const UltimateHtmlEditorPage = () => {
           }
         }
 
-        // IMPORTANT: Set lastSavedData to prevent auto-save from running immediately
+        if (res.data.map_data) {
+          try {
+            setMapData(JSON.parse(res.data.map_data))
+          } catch (e) {
+            console.error('Failed to parse map_data:', e)
+          }
+        }
+
         const initialData = JSON.stringify({
           formData: loadedFormData,
           imageData: res.data.image_data ? JSON.parse(res.data.image_data) : {},
           customFieldData: res.data.custom_field_data ? JSON.parse(res.data.custom_field_data) : {},
+          mapData: res.data.map_data ? JSON.parse(res.data.map_data) : {},
           htmlCode: htmlContent
         })
         setLastSavedData(initialData)
@@ -1106,7 +1093,7 @@ const UltimateHtmlEditorPage = () => {
   }
 
   // Helper to compile HTML with current data (Synchronous)
-  const compileHtml = (templateHtml, currentFormData, currentImageData, currentCustomFieldData) => {
+  const compileHtml = (templateHtml, currentFormData, currentImageData, currentCustomFieldData, currentMapData = {}, options = { isPreview: false }) => {
     let html = templateHtml || ''
 
     // 1. Text Replacements (Regex is fine/faster for placeholders)
@@ -1166,54 +1153,143 @@ const UltimateHtmlEditorPage = () => {
 
       // 2b. Image Replacements
       templateAnalysis.images.forEach(img => {
-        if (currentImageData[img.id]) {
-          const newSrc = currentImageData[img.id]
+        const newSrc = currentImageData[img.id]
+        const lookupId = img.htmlId || img.id
 
-          if (img.type === 'ladi-background') {
-            // Use htmlId for DOM lookup if available (e.g., IMAGE11), otherwise fall back to img.id
-            const lookupId = img.htmlId || img.id
-            const container = doc.getElementById(lookupId)
-            if (container) {
-              let bgEl = container.querySelector('.ladi-image-background')
-              if (!bgEl) bgEl = container.querySelector('[class*="ladi-image-background"]')
-              if (bgEl) bgEl.style.setProperty('background-image', `url('${newSrc}')`, 'important')
-            } else {
-              const bgEl = doc.querySelector(`#${lookupId} .ladi-image-background`)
-              if (bgEl) bgEl.style.setProperty('background-image', `url('${newSrc}')`, 'important')
+        if (img.type === 'ladi-background') {
+          const container = doc.getElementById(lookupId)
+          if (container) {
+            // Tag container for interaction/scroll
+            if (options.isPreview) container.setAttribute('data-image-editable', img.id)
+
+            let bgEl = container.querySelector('.ladi-image-background')
+            if (!bgEl) bgEl = container.querySelector('[class*="ladi-image-background"]')
+            if (bgEl && newSrc) bgEl.style.setProperty('background-image', `url('${newSrc}')`, 'important')
+          } else {
+            const bgEl = doc.querySelector(`#${lookupId} .ladi-image-background`)
+            if (bgEl) {
+              if (options.isPreview) bgEl.setAttribute('data-image-editable', img.id)
+              if (newSrc) bgEl.style.setProperty('background-image', `url('${newSrc}')`, 'important')
             }
           }
-          else if (img.type === 'background') {
-            const elements = doc.querySelectorAll(`[data-image-editable="${img.id}"]`)
-            elements.forEach(el => {
-              el.style.backgroundImage = `url('${newSrc}')`
-            })
-          } else {
-            let imgEl = doc.querySelector(`img[data-editable="${img.id}"]`)
-            if (!imgEl) {
-              imgEl = doc.getElementById(img.id)
-              if (imgEl && imgEl.tagName !== 'IMG') imgEl = null
-            }
-            if (!imgEl && img.originalSrc) {
-              const allImgs = doc.querySelectorAll('img')
-              for (let el of allImgs) {
-                if (el.getAttribute('src') === img.originalSrc) {
-                  imgEl = el
-                  break
-                }
+        }
+        else if (img.type === 'background') {
+          const elements = doc.querySelectorAll(`[data-image-editable="${img.id}"]`)
+          elements.forEach(el => {
+            if (newSrc) el.style.backgroundImage = `url('${newSrc}')`
+          })
+        } else {
+          let imgEl = doc.querySelector(`img[data-editable="${img.id}"]`) || doc.querySelector(`img[data-image-editable="${img.id}"]`)
+          if (!imgEl) {
+            imgEl = doc.getElementById(img.id)
+            if (imgEl && imgEl.tagName !== 'IMG') imgEl = null
+          }
+          if (!imgEl && img.originalSrc) {
+            const allImgs = doc.querySelectorAll('img')
+            for (let el of allImgs) {
+              if (el.getAttribute('src') === img.originalSrc) {
+                imgEl = el
+                break
               }
             }
-            if (!imgEl && typeof img.index === 'number') {
-              const allImgs = doc.querySelectorAll('img')
-              if (allImgs[img.index]) imgEl = allImgs[img.index]
-            }
+          }
+          if (!imgEl && typeof img.index === 'number') {
+            const allImgs = doc.querySelectorAll('img')
+            if (allImgs[img.index]) imgEl = allImgs[img.index]
+          }
 
-            if (imgEl) {
+          if (imgEl) {
+            // Always tag for interaction and scrolling in preview
+            if (options.isPreview && !imgEl.hasAttribute('data-image-editable')) {
+              imgEl.setAttribute('data-image-editable', img.id)
+            }
+            if (newSrc) {
               imgEl.src = newSrc
               imgEl.setAttribute('src', newSrc)
             }
           }
         }
       })
+
+      // 2c. Map Replacements
+      templateAnalysis.maps.forEach(map => {
+        const data = currentMapData[map.id]
+        if (data) {
+          let newUrl = ''
+          const address = data.address || ''
+          const lat = data.lat
+          const lng = data.lng
+
+          if (lat && lng) {
+            newUrl = map.type === 'link'
+              ? `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
+              : `https://maps.google.com/maps?q=${lat},${lng}&output=embed`
+          } else if (address) {
+            newUrl = map.type === 'link'
+              ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
+              : `https://maps.google.com/maps?q=${encodeURIComponent(address)}&output=embed`
+          }
+
+          if (newUrl) {
+            if (map.type === 'link') {
+              const els = doc.querySelectorAll(`a[data-edit-map-href="${map.id}"]`)
+              if (els.length > 0) {
+                els.forEach(el => el.href = newUrl)
+              } else {
+                const allLinks = doc.querySelectorAll('a')
+                allLinks.forEach(el => {
+                  if (el.getAttribute('href') === map.originalHref) el.href = newUrl
+                })
+              }
+            } else {
+              const els = doc.querySelectorAll(`iframe[data-edit-map="${map.id}"]`)
+              if (els.length > 0) {
+                els.forEach(el => el.src = newUrl)
+              } else {
+                const allIframes = doc.querySelectorAll('iframe')
+                allIframes.forEach(el => {
+                  if (el.getAttribute('src') === map.originalSrc) el.src = newUrl
+                })
+              }
+            }
+          }
+        }
+      })
+
+      // 2d. Add Click Catchers for Iframes (Maps) - Only in Preview
+      if (options.isPreview) {
+        const allIframes = doc.querySelectorAll('iframe')
+        allIframes.forEach(iframe => {
+          const mapId = iframe.getAttribute('data-edit-map') ||
+            (iframe.src.includes('google.com/maps') ? 'wedding-map' : null) // Fallback for auto-detection
+
+          if (mapId) {
+            const wrapper = doc.createElement('div')
+            wrapper.className = 'map-editor-wrapper'
+            wrapper.style.position = 'relative'
+            wrapper.style.width = iframe.getAttribute('width') || '100%'
+            wrapper.style.height = iframe.getAttribute('height') || (iframe.style.height || '450px')
+            wrapper.style.display = iframe.style.display || 'block'
+
+            iframe.parentNode.insertBefore(wrapper, iframe)
+            wrapper.appendChild(iframe)
+
+            const overlay = doc.createElement('div')
+            overlay.setAttribute('data-edit-map', mapId)
+            overlay.className = 'map-click-catcher'
+            overlay.style.position = 'absolute'
+            overlay.style.top = '0'
+            overlay.style.left = '0'
+            overlay.style.width = '100%'
+            overlay.style.height = '100%'
+            overlay.style.zIndex = '1000'
+            overlay.style.cursor = 'pointer'
+            overlay.style.backgroundColor = 'rgba(168, 85, 247, 0)' // Transparent but exists
+
+            wrapper.appendChild(overlay)
+          }
+        })
+      }
 
       // Music Player Injection
       if (currentFormData.music_url) {
@@ -1244,17 +1320,87 @@ const UltimateHtmlEditorPage = () => {
                             audio.pause();
                             if(playIcon) playIcon.style.display = 'block';
                             if(pauseIcon) pauseIcon.style.display = 'none';
-                          }
-                        });
-                    }
+                            toggle.style.transform = 'scale(0.9)';
+                      setTimeout(function() { toggle.style.transform = 'scale(1)'; }, 100);
+                    });
+
+                    // Scroll To Element Helper
+                    var style = document.createElement('style');
+                    style.textContent = ' @keyframes editor-ping { 0% { outline: 4px solid #a855f7; outline-offset: 0; } 50% { outline: 10px solid #a855f7; outline-offset: 15px; } 100% { outline: 4px solid #a855f7; outline-offset: 0; } } .editor-highlight-active { animation: editor-ping 0.6s ease-in-out 3 !important; z-index: 99999 !important; position: relative !important; outline: 4px solid #a855f7 !important; border-radius: 4px !important; }';
+                    document.head.appendChild(style);
+
+                    window.addEventListener('message', function(e) {
+                      if (e.data.type === 'SCROLL_TO') {
+                        var id = e.data.id;
+                        var el = document.querySelector('[data-editable="' + id + '"]') || 
+                                 document.querySelector('[data-image-editable="' + id + '"]') ||
+                                 document.querySelector('[data-edit-map="' + id + '"]') ||
+                                 document.getElementById(id);
+                        
+                        // Fallback: search by class or partial match
+                        if (!el) {
+                           el = document.querySelector('.' + id) || 
+                                document.querySelector('[id*="' + id + '"]') ||
+                                document.querySelector('[class*="' + id + '"]');
+                        }
+
+                        if (el) {
+                          // Force a scroll even if close
+                          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          
+                          // High-visibility flash
+                          el.classList.add('editor-highlight-active');
+                          setTimeout(function() {
+                            el.classList.remove('editor-highlight-active');
+                          }, 3000);
+                        } else {
+                          console.warn('Scroll target not found:', id);
+                        }
+                      }
+                    });
                   })();
                 </script>
               `
-        const tempDiv = doc.createElement('div');
-        tempDiv.innerHTML = musicPlayer;
-        while (tempDiv.firstChild) {
-          doc.body.appendChild(tempDiv.firstChild);
-        }
+        doc.body.insertAdjacentHTML('beforeend', musicPlayer)
+      } else {
+        // Even if no music, inject the scroll listener
+        const scrollScript = `
+          <script>
+            (function() {
+              var style = document.createElement('style');
+              style.textContent = ' @keyframes editor-ping { 0% { outline: 4px solid #a855f7; outline-offset: 0; } 50% { outline: 10px solid #a855f7; outline-offset: 15px; } 100% { outline: 4px solid #a855f7; outline-offset: 0; } } .editor-highlight-active { animation: editor-ping 0.6s ease-in-out 3 !important; z-index: 99999 !important; position: relative !important; outline: 4px solid #a855f7 !important; border-radius: 4px !important; }';
+              document.head.appendChild(style);
+
+              window.addEventListener('message', function(e) {
+                if (e.data.type === 'SCROLL_TO') {
+                  var id = e.data.id;
+                  var el = document.querySelector('[data-editable="' + id + '"]') || 
+                           document.querySelector('[data-image-editable="' + id + '"]') ||
+                           document.querySelector('[data-edit-map="' + id + '"]') ||
+                           document.getElementById(id);
+                  
+                  // Fallback
+                  if (!el) {
+                     el = document.querySelector('.' + id) || 
+                          document.querySelector('[id*="' + id + '"]') ||
+                          document.querySelector('[class*="' + id + '"]');
+                  }
+
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el.classList.add('editor-highlight-active');
+                    setTimeout(function() {
+                      el.classList.remove('editor-highlight-active');
+                    }, 3000);
+                  } else {
+                    console.warn('Scroll target not found:', id);
+                  }
+                }
+              });
+            })();
+          </script>
+        `
+        doc.body.insertAdjacentHTML('beforeend', scrollScript)
       }
 
       html = '<!DOCTYPE html>' + doc.documentElement.outerHTML
@@ -1266,71 +1412,24 @@ const UltimateHtmlEditorPage = () => {
 
 
   const updatePreview = () => {
-    const html = compileHtml(htmlCode, debouncedFormData, debouncedImageData, debouncedCustomFieldData)
+    const html = compileHtml(htmlCode, debouncedFormData, debouncedImageData, debouncedCustomFieldData, mapData, { isPreview: true })
     setPreviewHtml(html)
   }
 
-  // LISTEN FOR MESSAGES FROM IFRA (Direct Edit)
-  useEffect(() => {
-    const handleMessage = (event) => {
-      if (!event.data) return;
-
-      if (event.data.type === 'UPDATE_CONTENT') {
-        const { id, content } = event.data;
-        setCustomFieldData(prev => ({
-          ...prev,
-          [id]: content
-        }));
-      }
-
-      if (event.data.type === 'KEY_COMMAND') {
-        const { key, ctrlKey, metaKey, shiftKey } = event.data;
-
-        if ((ctrlKey || metaKey) && key === 'z') {
-          if (shiftKey) {
-            performRedo()
-          } else {
-            performUndo()
-          }
-        }
-        if ((ctrlKey || metaKey) && key === 'y') {
-          performRedo()
-        }
-      }
-
-      if (event.data.type === 'FOCUS_FIELD') {
-        // Highlight sidebar input
-        const sidebarInput = document.getElementById(`field-${event.data.id}`);
-        if (sidebarInput) {
-          sidebarInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          sidebarInput.focus();
-        }
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target
-    console.log('📝 Input changed:', name, '=', value)
 
-    // Mark user as editing
     setIsUserEditing(true)
 
-    // Clear previous timer
     if (editingTimerRef.current) {
       clearTimeout(editingTimerRef.current)
     }
 
-    // Special handling for slug field - sanitize input
     let sanitizedValue = value
     if (name === 'slug') {
-      // Simple sanitization: lowercase and replace spaces with hyphens
       sanitizedValue = value
         .toLowerCase()
-        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/\s+/g, '-') 
         .replace(/[àáạảãâầấậẩẫăằắặẳẵ]/g, 'a')
         .replace(/[èéẹẻẽêềếệểễ]/g, 'e')
         .replace(/[ìíịỉĩ]/g, 'i')
@@ -1338,9 +1437,9 @@ const UltimateHtmlEditorPage = () => {
         .replace(/[ùúụủũưừứựửữ]/g, 'u')
         .replace(/[ỳýỵỷỹ]/g, 'y')
         .replace(/đ/g, 'd')
-        .replace(/[^a-z0-9-]/g, '-') // Replace invalid chars with hyphen
-        .replace(/-+/g, '-') // Replace multiple hyphens with single
-        .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
+        .replace(/[^a-z0-9-]/g, '-') 
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '') 
     }
 
     setFormData(prev => {
@@ -1372,6 +1471,126 @@ const UltimateHtmlEditorPage = () => {
     }, 1000)
   }
 
+  const handleScrollToPreviewElement = (id) => {
+    if (iframeRef.current && iframeRef.current.contentWindow) {
+      iframeRef.current.contentWindow.postMessage({ type: 'SCROLL_TO', id }, '*')
+    }
+  }
+
+  const handleMapChange = (mapId, field, value) => {
+    // Mark user as editing
+    setIsUserEditing(true)
+    if (editingTimerRef.current) clearTimeout(editingTimerRef.current)
+
+    setMapData(prev => ({
+      ...prev,
+      [mapId]: {
+        ...(prev[mapId] || {}),
+        [field]: value
+      }
+    }))
+
+    // Fetch suggestions if field is address (debounced)
+    if (field === 'address') {
+      if (suggestionTimerRef.current) clearTimeout(suggestionTimerRef.current)
+
+      if (value.length > 2) {
+        suggestionTimerRef.current = setTimeout(() => {
+          fetchMapSuggestions(mapId, value)
+        }, 500)
+      } else {
+        setAddressSuggestions(prev => ({ ...prev, [mapId]: [] }))
+      }
+    }
+
+    editingTimerRef.current = setTimeout(() => {
+      setIsUserEditing(false)
+    }, 1000)
+  }
+
+  const fetchMapSuggestions = async (mapId, query) => {
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=5`)
+      const data = await response.json()
+      const suggestions = data.map(item => ({
+        label: item.display_name,
+        lat: item.lat,
+        lng: item.lon,
+        address: item.display_name
+      }))
+      setAddressSuggestions(prev => ({ ...prev, [mapId]: suggestions }))
+      setSelectedSuggestionIndex(-1)
+    } catch (error) {
+      console.error('Error fetching map suggestions:', error)
+    }
+  }
+
+  const handleAddressKeyDown = (e, mapId) => {
+    const suggestions = addressSuggestions[mapId] || []
+    if (suggestions.length === 0) return
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setSelectedSuggestionIndex(prev => (prev < suggestions.length - 1 ? prev + 1 : prev))
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setSelectedSuggestionIndex(prev => (prev > 0 ? prev - 1 : prev))
+    } else if (e.key === 'Enter') {
+      if (selectedSuggestionIndex >= 0 && selectedSuggestionIndex < suggestions.length) {
+        e.preventDefault()
+        handleSelectSuggestion(mapId, suggestions[selectedSuggestionIndex])
+      }
+    } else if (e.key === 'Escape') {
+      setAddressSuggestions(prev => ({ ...prev, [mapId]: [] }))
+      setSelectedSuggestionIndex(-1)
+    }
+  }
+
+  const handleSelectSuggestion = (mapId, suggestion) => {
+    setMapData(prev => ({
+      ...prev,
+      [mapId]: {
+        ...(prev[mapId] || {}),
+        address: suggestion.label,
+        lat: parseFloat(suggestion.lat).toFixed(6),
+        lng: parseFloat(suggestion.lng).toFixed(6)
+      }
+    }))
+    setAddressSuggestions(prev => ({ ...prev, [mapId]: [] }))
+    setSelectedSuggestionIndex(-1)
+    updatePreview()
+    toast.success('📍 Đã cập nhật địa chỉ và tọa độ!')
+  }
+
+  const handleCheckLocation = (mapId) => {
+    const data = mapData[mapId] || {}
+    let query = ''
+    if (data.lat && data.lng) {
+      query = `${data.lat},${data.lng}`
+    } else {
+      query = data.address || ''
+    }
+
+    if (query) {
+      // Clear suggestions when checking
+      setAddressSuggestions(prev => ({ ...prev, [mapId]: [] }))
+      setSelectedSuggestionIndex(-1)
+      window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, '_blank')
+    } else {
+      toast.info('Vui lòng nhập địa chỉ hoặc tọa độ để kiểm tra.')
+    }
+  }
+
+  const handleUseCurrentLocation = (mapId) => {
+    if (userLocation) {
+      handleMapChange(mapId, 'lat', userLocation.lat)
+      handleMapChange(mapId, 'lng', userLocation.lng)
+      toast.info(`📍 Đã lấy tọa độ tại ${userLocation.city || 'vị trí của bạn'}`)
+    } else {
+      toast.error('Không tìm thấy tọa độ hiện tại. Vui lòng bật quyền truy cập vị trí.')
+    }
+  }
+
   const handleImageUpload = async (imageId, file) => {
     if (!file) return
 
@@ -1386,7 +1605,6 @@ const UltimateHtmlEditorPage = () => {
     }
 
     try {
-      console.log('🚀 Uploading image to S3:', file.name)
       const uploadResult = await mediaService.upload(file)
 
       setImageData(prev => ({
@@ -1415,10 +1633,8 @@ const UltimateHtmlEditorPage = () => {
     }
   }
 
-  // Generate subdomain URL with random suffix
   const generateSubdomainUrl = (subdomain) => {
     if (!subdomain) return ''
-    // Generate 2 random uppercase characters
     const randomSuffix = Math.random().toString(36).substring(2, 4).toUpperCase()
     return `${window.location.origin}/invitation/${subdomain}-${randomSuffix}`
   }
@@ -1433,25 +1649,24 @@ const UltimateHtmlEditorPage = () => {
     try {
       setSaving(true)
 
-      // COMPILE HTML with CURRENT state (not debounced) to capture latest edits
-      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData)
+      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData, mapData)
 
       // Remove editor-styles
       cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
 
       // Compress HTML
       const compressedHtml = cleanHtml
-        .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
-        .replace(/>\s+</g, '><')  // Remove spaces between tags
+        .replace(/\s+/g, ' ')  
+        .replace(/>\s+</g, '><') 
         .trim()
 
       await invitationService.update(invitation.uuid, {
         ...formData,
-        event_date: formData.event_date || null, // Fix: Send null if empty
-        html_content: compressedHtml, // Invitation uses html_content
+        event_date: formData.event_date || null, 
+        html_content: compressedHtml, 
         image_data: JSON.stringify(imageData),
         custom_field_data: JSON.stringify(customFieldData),
-        status: invitation.status // Keep current status
+        status: invitation.status 
       })
 
       toast.success('✅ Đã lưu thành công!')
@@ -1483,28 +1698,28 @@ const UltimateHtmlEditorPage = () => {
       setSaving(true)
 
       // COMPILE HTML with CURRENT state
-      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData)
+      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData, mapData)
 
       // Remove editor-styles
       cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
 
       // Compress HTML
       const compressedHtml = cleanHtml
-        .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
-        .replace(/>\s+</g, '><')  // Remove spaces between tags
+        .replace(/\s+/g, ' ')  
+        .replace(/>\s+</g, '><')  
         .trim()
 
       await invitationService.update(invitation.uuid, {
         ...formData,
-        event_date: formData.event_date || null, // Fix: Send null if empty
-        html_content: compressedHtml, // Invitation uses html_content
+        event_date: formData.event_date || null,
+        html_content: compressedHtml,
         image_data: JSON.stringify(imageData),
         custom_field_data: JSON.stringify(customFieldData),
-        status: invitation.status // Keep current status (published/draft)
+        map_data: JSON.stringify(mapData),
+        status: invitation.status
       })
 
-      // Update lastSavedData and clear unsaved changes flag
-      const currentData = JSON.stringify({ formData, imageData, customFieldData, htmlCode })
+      const currentData = JSON.stringify({ formData, imageData, customFieldData, mapData, htmlCode })
       setLastSavedData(currentData)
       setHasUnsavedChanges(false)
 
@@ -1528,7 +1743,6 @@ const UltimateHtmlEditorPage = () => {
     }
     if (!invitation) return
 
-    // Auto-save before publishing if there are unsaved changes
     if (hasUnsavedChanges) {
       toast.info('💾 Đang lưu thay đổi trước khi xuất bản...')
       await handleSave()
@@ -1548,29 +1762,23 @@ const UltimateHtmlEditorPage = () => {
     try {
       setSaving(true)
 
-      // COMPILE HTML with CURRENT state
-      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData)
-
-      // Remove editor-styles
+      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData, mapData)
       cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
 
-      // Compress HTML
       const compressedHtml = cleanHtml
-        .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
-        .replace(/>\s+</g, '><')  // Remove spaces between tags
+        .replace(/\s+/g, ' ')
+        .replace(/>\s+</g, '><')
         .trim()
 
-      // Update invitation with published status AND public visibility
-      // CRITICAL FIX: Backend checks 'visibility' field, not just 'status'
-      // Database has TWO fields: status (draft/published) and visibility (public/private/password)
       const updateResponse = await invitationService.update(invitation.uuid, {
         ...formData,
         event_date: formData.event_date || null,
         html_content: compressedHtml,
         image_data: JSON.stringify(imageData),
         custom_field_data: JSON.stringify(customFieldData),
-        status: 'published', // Set lifecycle status
-        visibility: 'public' // Set access control - REQUIRED for public view!
+        map_data: JSON.stringify(mapData),
+        status: 'published',
+        visibility: 'public'
       })
 
       toast.success('✅ Đã xuất bản thiệp mời!')
@@ -1594,13 +1802,11 @@ const UltimateHtmlEditorPage = () => {
 
   const handlePreview = async () => {
     if (searchParams.get('previewMode') === 'true') {
-      // In preview mode, just open the same page or do nothing since we are already in an editor preview
       toast.info('Bạn đang ở chế độ xem trước của Ultimate Editor.')
       return
     }
     if (!invitation) return
 
-    // Auto-save before preview if there are unsaved changes
     if (hasUnsavedChanges) {
       toast.info('💾 Đang lưu thay đổi trước khi xem trước...')
       await handleSave()
@@ -1609,35 +1815,26 @@ const UltimateHtmlEditorPage = () => {
     try {
       setSaving(true)
 
-      // COMPILE HTML with CURRENT state
-      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData)
-
-      // Remove editor-styles
+      let cleanHtml = compileHtml(htmlCode, formData, imageData, customFieldData, mapData)
       cleanHtml = cleanHtml.replace(/<style[^>]*id=["']editor-styles["'][^>]*>[\s\S]*?<\/style>/gi, '')
 
       // Compress HTML
       const compressedHtml = cleanHtml
-        .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
-        .replace(/>\s+</g, '><')  // Remove spaces between tags
+        .replace(/\s+/g, ' ')
+        .replace(/>\s+</g, '><')
         .trim()
 
-      // Update and get subdomain
-      console.log('📤 Sending update with subdomain:', formData.subdomain)
       const updateResponse = await invitationService.update(invitation.uuid, {
         ...formData,
-        event_date: formData.event_date || null, // Fix: Send null if empty
-        html_content: compressedHtml, // Invitation uses html_content
+        event_date: formData.event_date || null,
+        html_content: compressedHtml,
         image_data: JSON.stringify(imageData),
         custom_field_data: JSON.stringify(customFieldData),
-        status: invitation.status // Keep current status
+        status: invitation.status
       })
-
-      console.log('📥 Update response:', updateResponse)
 
       // Get slug for preview
       const slug = formData.slug || invitation.slug
-
-      console.log('🔗 Opening preview with slug:', slug)
 
       toast.success('✅ Đã lưu! Đang mở xem trước...')
 
@@ -1719,7 +1916,6 @@ const UltimateHtmlEditorPage = () => {
       </header>
 
       {/* MOBILE TITLE BAR (Floating) */}
-      {/* MOBILE TITLE BAR (Fixed Top) */}
       <div className="md:hidden fixed top-0 left-0 w-full z-30 px-4 pt- safe-top bg-white/90 dark:bg-black/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 flex items-center justify-between h-[60px]">
         <div className="flex items-center gap-2">
           <button onClick={() => navigate('/management')} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
@@ -1749,11 +1945,11 @@ const UltimateHtmlEditorPage = () => {
       {/* MAIN WORKSPACE */}
       <div className="flex-1 flex overflow-hidden relative pt-[60px] md:pt-0">
 
-        {/* 1. EDITING PANEL (Desktop: Left Splite | Mobile: Bottom Sheet) */}
+        {/* 1. EDITING PANEL */}
         <div className={`
-                    absolute md:relative z-20 
-                    w-full md:w-[400px] lg:w-[450px] flex-shrink-0 
-                    bg-white dark:bg-gray-900 
+                    absolute md:relative z-20
+                    w-full md:w-[400px] lg:w-[450px] flex-shrink-0
+                    bg-white dark:bg-gray-900
                     transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]
                     shadow-2xl md:shadow-none border-r border-gray-200 dark:border-gray-800
                     ${isMobile
@@ -1772,8 +1968,15 @@ const UltimateHtmlEditorPage = () => {
             {/* TAB: INFO FORM */}
             <div className={`${(isMobile && activeMobileTab !== 'info') ? 'hidden' : 'block'} space-y-8 animate-fade-in`}>
               <div>
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <span className="material-symbols-outlined text-purple-600">edit_note</span> Thông tin
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-purple-600">edit_note</span> Thông tin
+                  </div>
+                  {isMobile && (
+                    <button onClick={() => setActiveMobileTab('preview')} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+                      <span className="material-symbols-outlined text-sm">close</span>
+                    </button>
+                  )}
                 </h3>
                 <div className="space-y-4">
                   {/* Slug Input - Editable */}
@@ -1801,6 +2004,59 @@ const UltimateHtmlEditorPage = () => {
                       </div>
                     )}
                   </div>
+
+                  {/* Map placeholders and custom fields */}
+                  {templateAnalysis.placeholders.map(field => {
+                    const isExpanded = expandedFields.has(field)
+                    if (!isExpanded) return null
+
+                    return (
+                      <div key={field} className={`p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 sidebar-field-${field} animate-fade-in`}>
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 block">
+                          {field.replace(/_/g, ' ')}
+                        </label>
+                        {field === 'event_date' ? (
+                          <DatePicker
+                            selected={formData.event_date ? new Date(formData.event_date) : null}
+                            onChange={(date) => handleChange({ target: { name: 'event_date', value: date } })}
+                            dateFormat="dd/MM/yyyy"
+                            className="w-full bg-white dark:bg-gray-900 text-sm font-medium text-gray-900 dark:text-white px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 focus:border-purple-500 outline-none transition-all"
+                            placeholderText="Chọn ngày"
+                          />
+                        ) : (
+                          <input
+                            type="text"
+                            name={field}
+                            value={formData[field] || ''}
+                            onChange={handleChange}
+                            placeholder={`Nhập ${field.replace(/_/g, ' ')}...`}
+                            className="w-full bg-white dark:bg-gray-900 text-sm font-medium text-gray-900 dark:text-white px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 focus:border-purple-500 outline-none transition-all"
+                          />
+                        )}
+                      </div>
+                    )
+                  })}
+
+                  {templateAnalysis.customFields.map(field => {
+                    const isExpanded = expandedFields.has(field.id)
+                    if (!isExpanded) return null
+
+                    return (
+                      <div key={field.id} className={`p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 sidebar-field-${field.id} animate-fade-in`}>
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 block">
+                          Vùng soạn thảo ({field.id})
+                        </label>
+                        <textarea
+                          value={customFieldData[field.id] !== undefined ? customFieldData[field.id] : field.value}
+                          onChange={(e) => handleCustomFieldChange(field.id, e.target.value)}
+                          placeholder="Nhập nội dung văn bản..."
+                          rows={3}
+                          className="w-full bg-white dark:bg-gray-900 text-sm font-medium text-gray-900 dark:text-white px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 focus:border-purple-500 outline-none transition-all resize-none"
+                        />
+                      </div>
+                    )
+                  })}
+
                 </div>
               </div>
             </div>
@@ -1808,10 +2064,15 @@ const UltimateHtmlEditorPage = () => {
             {/* TAB: IMAGES */}
             <div className={`${(isMobile && activeMobileTab !== 'images') ? 'hidden' : 'block'} space-y-4 animate-fade-in`}>
               {/* Desktop only header for images section */}
-              <div className="hidden md:block">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <div className="mt-4 mb-4 flex items-center justify-between gap-2">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                   <span className="material-symbols-outlined text-pink-600">image</span> Thư viện ảnh
                 </h3>
+                {isMobile && (
+                  <button onClick={() => setActiveMobileTab('preview')} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+                    <span className="material-symbols-outlined text-sm">close</span>
+                  </button>
+                )}
               </div>
 
               {templateAnalysis.images.length === 0 ? (
@@ -1853,7 +2114,7 @@ const UltimateHtmlEditorPage = () => {
                   {/* Image Grid */}
                   <div className="grid grid-cols-2 gap-3">
                     {templateAnalysis.images.map(img => (
-                      <div key={img.id} className="relative">
+                      <div key={img.id} className={`relative sidebar-field-${img.id}`}>
                         <div className="group relative aspect-square rounded-xl overflow-hidden border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-primary dark:hover:border-primary bg-gray-50 dark:bg-gray-800 transition-all">
                           <img
                             src={imageData[img.id] || img.originalSrc}
@@ -1896,14 +2157,24 @@ const UltimateHtmlEditorPage = () => {
                           </div>
                         </div>
 
-                        {/* Button: Chọn từ thư viện */}
-                        <button
-                          onClick={() => handleOpenMediaLibrary(img.id)}
-                          className="mt-2 w-full px-3 py-2 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-1.5"
-                        >
-                          <span className="material-symbols-outlined text-[16px]">photo_library</span>
-                          Chọn từ thư viện
-                        </button>
+                        {/* Button Group */}
+                        <div className="mt-2 flex gap-2">
+                          <button
+                            onClick={() => handleOpenMediaLibrary(img.id)}
+                            className="flex-1 px-3 py-2 rounded-lg bg-primary text-white text-[11px] font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-1.5"
+                          >
+                            <span className="material-symbols-outlined text-[16px]">photo_library</span>
+                            Thay ảnh
+                          </button>
+                          <button
+                            onClick={() => handleScrollToPreviewElement(img.id)}
+                            className="px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-[11px] font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors flex items-center justify-center gap-1"
+                            title="Xem vị trí ảnh trên thiệp"
+                          >
+                            <span className="material-symbols-outlined text-[16px]">location_searching</span>
+                            Vị trí
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1929,7 +2200,147 @@ const UltimateHtmlEditorPage = () => {
               )}
             </div>
 
-            {/* Always visible on Desktop: Instructions */}
+            {/* TAB: MAPS */}
+            {templateAnalysis.maps.length > 0 && (activeMobileTab === 'maps' || Array.from(expandedFields).some(id => templateAnalysis.maps.some(m => m.id === id))) && (
+              <div className={`${(isMobile && activeMobileTab !== 'maps') ? 'hidden' : 'block'} space-y-4 animate-fade-in`}>
+                <div className="mt-4 mb-4 flex items-center justify-between gap-2">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span className="material-symbols-outlined text-green-600">map</span> Bản đồ & Địa điểm
+                  </h3>
+                  {isMobile && (
+                    <button onClick={() => setActiveMobileTab('preview')} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+                      <span className="material-symbols-outlined text-sm">close</span>
+                    </button>
+                  )}
+                </div>
+
+                <div className="space-y-6">
+                  {templateAnalysis.maps.map(map => {
+                    const isExpanded = expandedFields.has(map.id)
+                    if (!isExpanded) return null
+
+                    return (
+                      <div key={map.id} className={`p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 space-y-4 sidebar-field-${map.id} animate-fade-in`}>
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
+                            {map.label}
+                          </label>
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-bold">
+                            {map.type === 'link' ? 'LINK' : 'IFRAME'}
+                          </span>
+                        </div>
+
+                        <div className="space-y-3">
+                          {/* Address Input */}
+                          <div>
+                            <label className="text-[10px] text-gray-500 font-bold uppercase mb-1 block">Địa chỉ hiển thị</label>
+                            <div className="flex gap-2">
+                              <div className="relative flex-1">
+                                <input
+                                  type="text"
+                                  value={mapData[map.id]?.address || ''}
+                                  onChange={(e) => handleMapChange(map.id, 'address', e.target.value)}
+                                  onKeyDown={(e) => handleAddressKeyDown(e, map.id)}
+                                  placeholder="Nhập địa chỉ (vd: 116 Lê Duẩn...)"
+                                  className="w-full bg-white dark:bg-gray-900 text-sm px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 focus:border-purple-500 outline-none transition-all pr-10"
+                                />
+                                {userLocation?.city && !mapData[map.id]?.address?.includes(userLocation.city) && !addressSuggestions[map.id]?.length && (
+                                  <button
+                                    onClick={() => handleMapChange(map.id, 'address', (mapData[map.id]?.address || '') + ' ' + userLocation.city)}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] bg-purple-50 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 px-2 py-1 rounded-md font-bold hover:bg-purple-100 transition-colors"
+                                  >
+                                    + {userLocation.city}
+                                  </button>
+                                )}
+
+                                {/* Suggestions Dropdown */}
+                                {addressSuggestions[map.id]?.length > 0 && (
+                                  <div className="absolute left-0 right-0 top-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-[100] overflow-hidden animate-fade-in">
+                                    {addressSuggestions[map.id].map((suggestion, sIdx) => (
+                                      <button
+                                        key={sIdx}
+                                        onClick={() => handleSelectSuggestion(map.id, suggestion)}
+                                        onMouseEnter={() => setSelectedSuggestionIndex(sIdx)}
+                                        className={`w-full text-left px-3 py-2 text-xs text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-gray-700 last:border-0 transition-colors flex items-start gap-2 ${selectedSuggestionIndex === sIdx ? 'bg-purple-50 dark:bg-purple-900/40 border-l-2 border-l-purple-500' : 'hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+                                      >
+                                        <span className="material-symbols-outlined text-[16px] text-gray-400 mt-0.5">location_on</span>
+                                        <span>{suggestion.label}</span>
+                                      </button>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                              {addressSuggestions[map.id]?.length > 0 && (
+                                <button
+                                  onClick={() => {
+                                    setAddressSuggestions(prev => ({ ...prev, [map.id]: [] }))
+                                    setSelectedSuggestionIndex(-1)
+                                  }}
+                                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center shrink-0 shadow-lg shadow-purple-500/20"
+                                >
+                                  Xong
+                                </button>
+                              )}
+                            </div>
+                            {userLocation?.city && (
+                              <p className="text-[9px] text-gray-500 mt-1 italic">
+                                📍 Gợi ý: Bạn đang ở {userLocation.city}. Thêm thành phố để bản đồ chính xác hơn.
+                              </p>
+                            )}
+                          </div>
+
+                          {/* Coordinates */}
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="text-[10px] text-gray-500 font-bold uppercase mb-1 block">Kinh độ (Lat)</label>
+                              <input
+                                type="text"
+                                value={mapData[map.id]?.lat || ''}
+                                onChange={(e) => handleMapChange(map.id, 'lat', e.target.value)}
+                                placeholder="vd: 10.123"
+                                className="w-full bg-white dark:bg-gray-900 text-sm px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 outline-none"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-[10px] text-gray-500 font-bold uppercase mb-1 block">Vĩ độ (Lng)</label>
+                              <input
+                                type="text"
+                                value={mapData[map.id]?.lng || ''}
+                                onChange={(e) => handleMapChange(map.id, 'lng', e.target.value)}
+                                placeholder="vd: 106.123"
+                                className="w-full bg-white dark:bg-gray-900 text-sm px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 outline-none"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-3">
+                            <button
+                              onClick={() => handleUseCurrentLocation(map.id)}
+                              className="w-full py-2 flex items-center justify-center gap-2 rounded-lg border border-purple-200 dark:border-purple-800 text-purple-600 dark:text-purple-400 text-xs font-bold hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all"
+                            >
+                              <span className="material-symbols-outlined text-[18px]">location_on</span>
+                              Vị trí của tôi
+                            </button>
+                            <button
+                              onClick={() => handleCheckLocation(map.id)}
+                              className="w-full py-2 flex items-center justify-center gap-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all border border-gray-200 dark:border-gray-600"
+                            >
+                              <span className="material-symbols-outlined text-[18px]">search</span>
+                              Kiểm tra vị trí
+                            </button>
+                          </div>
+
+                          <p className="text-[9px] text-gray-400 text-center leading-relaxed">
+                            Hệ thống sẽ ưu tiên Tọa Độ nếu có. Nếu không có tọa độ, hệ thống sẽ tìm kiếm theo Địa Chỉ.
+                          </p>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
             <div className="hidden md:block mt-8 p-4 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-800">
               <h4 className="font-bold text-blue-900 dark:text-blue-200 text-sm mb-2">💡 Tips Pro</h4>
               <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
@@ -1957,8 +2368,6 @@ const UltimateHtmlEditorPage = () => {
               ref={iframeRef}
               className="w-full h-full border-0 bg-white"
               title="Invitation Preview"
-              // On Desktop: Full Width. On Mobile: Full Width.
-              // We remove the intentional phone frame on Desktop.
               style={{ width: '100%', height: '100%' }}
             />
           </div>
@@ -1967,7 +2376,18 @@ const UltimateHtmlEditorPage = () => {
         {/* 3. MOBILE BOTTOM NAVIGATION */}
         <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 px-6 py-3 bg-black/90 backdrop-blur-xl rounded-full shadow-2xl z-50 transition-transform duration-300">
           <button
-            onClick={() => setActiveMobileTab('info')}
+            onClick={() => {
+              if (activeMobileTab === 'info') {
+                setActiveMobileTab('preview')
+              } else {
+                setActiveMobileTab('info')
+                const allFieldIds = [
+                  ...templateAnalysis.placeholders,
+                  ...templateAnalysis.customFields.map(f => f.id)
+                ]
+                setExpandedFields(new Set(allFieldIds))
+              }
+            }}
             className={`flex flex-col items-center gap-1 ${activeMobileTab === 'info' ? 'text-white' : 'text-gray-500'}`}
           >
             <span className={`material-symbols-outlined text-2xl transition-all ${activeMobileTab === 'info' ? '-translate-y-1' : ''}`}>edit_note</span>
@@ -1976,11 +2396,39 @@ const UltimateHtmlEditorPage = () => {
           <div className="w-px h-6 bg-gray-700"></div>
 
           <button
-            onClick={() => setActiveMobileTab('images')}
+            onClick={() => {
+              if (activeMobileTab === 'images') {
+                setActiveMobileTab('preview')
+              } else {
+                setActiveMobileTab('images')
+                const allImageIds = templateAnalysis.images.map(img => img.id)
+                setExpandedFields(prev => new Set([...prev, ...allImageIds]))
+              }
+            }}
             className={`flex flex-col items-center gap-1 ${activeMobileTab === 'images' ? 'text-white' : 'text-gray-500'}`}
           >
             <span className={`material-symbols-outlined text-2xl transition-all ${activeMobileTab === 'images' ? '-translate-y-1' : ''}`}>image</span>
           </button>
+
+          {templateAnalysis.maps.length > 0 && (
+            <>
+              <div className="w-px h-6 bg-gray-700"></div>
+              <button
+                onClick={() => {
+                  if (activeMobileTab === 'maps') {
+                    setActiveMobileTab('preview')
+                  } else {
+                    setActiveMobileTab('maps')
+                    const allMapIds = templateAnalysis.maps.map(m => m.id)
+                    setExpandedFields(prev => new Set([...prev, ...allMapIds]))
+                  }
+                }}
+                className={`flex flex-col items-center gap-1 ${activeMobileTab === 'maps' ? 'text-white' : 'text-gray-500'}`}
+              >
+                <span className={`material-symbols-outlined text-2xl transition-all ${activeMobileTab === 'maps' ? '-translate-y-1' : ''}`}>map</span>
+              </button>
+            </>
+          )}
 
           <div className="w-px h-6 bg-gray-700"></div>
 
@@ -2077,18 +2525,29 @@ const UltimateHtmlEditorPage = () => {
           currentImageId={selectedImageId}
         />
       )}
-
     </div>
   )
 }
 
 export default UltimateHtmlEditorPage
 
-// Custom CSS for react-datepicker
+// Custom CSS 
 if (typeof document !== 'undefined' && !document.getElementById('react-datepicker-styles')) {
   const style = document.createElement('style')
   style.id = 'react-datepicker-styles'
   style.textContent = `
+    @keyframes highlightPulse {
+      0% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4); border-color: #a855f7; }
+      50% { box-shadow: 0 0 0 10px rgba(168, 85, 247, 0); border-color: #a855f7; }
+      100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0); }
+    }
+
+    .highlight-sidebar-field {
+      animation: highlightPulse 2s cubic-bezier(0.4, 0, 0.6, 1);
+      border-color: #a855f7 !important;
+      background-color: rgba(168, 85, 247, 0.05) !important;
+    }
+
     /* Custom DatePicker Styles */
     .react-datepicker {
       font-family: inherit;
@@ -2211,11 +2670,10 @@ if (typeof document !== 'undefined' && !document.getElementById('react-datepicke
       color: #e7e5e4;
     }
   `
-
-  // Safely append to head
   try {
     document.head.appendChild(style)
   } catch (error) {
     console.warn('Could not inject DatePicker styles:', error)
   }
 }
+
