@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>The Royal Union | Luxury Wedding Invitation</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Montserrat:wght@300;400;600&display=swap"
+    rel="stylesheet" />
+  <script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            burgundy: {
+              DEFAULT: '#4D0011',
+              dark: '#2D000A',
+              light: '#800020'
+            },
+            gold: {
+              DEFAULT: '#D4AF37',
+              light: '#F9E4B7',
+              dark: '#996515'
+            }
+          },
+          fontFamily: {
+            serif: ['Playfair Display', 'serif'],
+            sans: ['Montserrat', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style data-purpose="typography">
+    .font-gold-shimmer {
+      background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .text-shadow-gold {
+      text-shadow: 1px 1px 2px rgba(212, 175, 55, 0.3);
+    }
+  </style>
+  <!-- Animation CSS -->
+  <style>
+    /* Animation Base States */
+    [data-aos] {
+      opacity: 0;
+      transition-property: transform, opacity;
+      transition-timing-function: ease-out;
+    }
+
+    /* Fade Animations */
+    [data-aos="fade-up"] {
+      transform: translateY(30px);
+    }
+
+    [data-aos="fade-down"] {
+      transform: translateY(-30px);
+    }
+
+    [data-aos="fade-left"] {
+      transform: translateX(30px);
+    }
+
+    [data-aos="fade-right"] {
+      transform: translateX(-30px);
+    }
+
+    /* Zoom Animations */
+    [data-aos="zoom-in"] {
+      transform: scale(0.7);
+    }
+
+    [data-aos="zoom-out"] {
+      transform: scale(1.2);
+    }
+
+    /* Slide Animations */
+    [data-aos="slide-up"] {
+      transform: translateY(100%);
+    }
+
+    [data-aos="grayscale"] {
+      filter: grayscale(100%);
+      transition-property: filter, transform;
+    }
+
+    /* The Active State (Triggered by JS) */
+    .aos-animate {
+      opacity: 1 !important;
+      transform: translate(0) scale(1) !important;
+    }
+
+    .animate-kenburn {
+      animation: kenburn 15s 2s infinite alternate;
+    }
+
+    @keyframes kenburn {
+      0% {
+        scale: 1;
+      }
+
+      100% {
+        scale: 1.3;
+      }
+    }
+  </style>
+  <style data-purpose="decorative-borders">
+    .ornate-border {
+      border: 8px double #D4AF37;
+      padding: 20px;
+      position: relative
+    }
+
+    .ornate-border::before {
+      content: "❦";
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translatex(-50%);
+      background: #4D0011;
+      color: #D4AF37;
+      padding: 0 10px;
+      font-size: 24px
+    }
+
+    .bg-texture {
+      background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBcKaKBmOlBkp3JLXi1sb23Fnw6vLHJG_ig5leU6SIIiK7AB_b7j1aQ33QCBb93oEBS8R8MPxaqMI2SViGdqoFratmY-2aCn4_YJlomVT1y9vy-AHpPRkZV57ovqfWhKG-gNu4BXXfY9Ywhc0h7o8VKElLu9jDId9iecnmHT4LAOy7H8tJiyn-x5vYBAygJv-53LXyaKrKOKY8lfqPiE-3YXHHGKxHKyoSfWG9VIBchPccpLoDydwJjex_X2zq__75zgQXWnSAIwxQ)
+    }
+  </style>
+  <style>
+    picture {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+    }
+
+    [data-image-editable="photo_1"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDcc0BUxWPIQDKItmOloRb2IuRh0tgYn5LmGMAOXReMESaiSQiRyyzxCj8CNBw88LOxFmDLH8FN3_uJSgApXc9UceDbESxr1F3K6fMLpUG42wEYcCh5RYGze54EREk9BFLN6IU3ZFheHPiTKJY-QoxHrNy8dgtncxMjnwAuVjx9-vCzhUNydBqnUmcWcktBthPrj21t6ky6yj4aFRny8MiqJrtKtoEDAnQJmB2SY-qy-5D--xVYp2oCymlEdajx50rLJN5OSvDWNno");
+    }
+
+    [data-image-editable="photo_2"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBsnYKdPeUs4xg3QBFnhIHo_dFcEvky_g2HHJtoJE63GqOoIk_o9jY9k-eXC4-8ZFJP6rFgNRhOu34vafGqoNkJv2F9yr7qxTh1hzfqCSakuHfWw0Kh-PaxbMVu0FwptXDaNXpXD-Glqcm9kR7Q2KIsInjbXtfm8ZWCVXg2_2nXEJwhL28Jm7yviMrCY1Hpi77paVofRtcQ6JfYeclbpGVqEmeITWeSaNqxaPMQ53veF_es-AD9leHdw1RynA5LXjkAQUf-LNqzIyw");
+    }
+
+    [data-image-editable="photo_3"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBsnYKdPeUs4xg3QBFnhIHo_dFcEvky_g2HHJtoJE63GqOoIk_o9jY9k-eXC4-8ZFJP6rFgNRhOu34vafGqoNkJv2F9yr7qxTh1hzfqCSakuHfWw0Kh-PaxbMVu0FwptXDaNXpXD-Glqcm9kR7Q2KIsInjbXtfm8ZWCVXg2_2nXEJwhL28Jm7yviMrCY1Hpi77paVofRtcQ6JfYeclbpGVqEmeITWeSaNqxaPMQ53veF_es-AD9leHdw1RynA5LXjkAQUf-LNqzIyw");
+    }
+
+    [data-image-editable="photo_4"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBV-21iJ5q5qzcW7G-NcJPNshPxqc8Q0ER3zcylsHRWR4tZ-VIEURltle_mpn2ft7dsRd99xLEja3ZdQZ2KpPQF2qp7c5A6ZXVaRUK6zvPKz1W8WKQo65bNNk4C3nBI6sQrT6LxqM1xT2M1cP419cveVF3vuhq6sygcaGAxrF3g_sJBDB6ESLE2h9rBDAQCIyixlM3-EBMEX7oGZgn0qDMGGi3yGiNzzrx640ayCDYU542MSpGiXlDxZ_aMA4i_RECdIT6ao7QxZzI");
+    }
+
+    [data-image-editable="photo_5"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA4_kdq32RWP0y6FkE273wZhxZQ2xv9p4NZE9SpiLmvbauMS5pb360y-pl7CxM2WllBHqihkMDjU9IrPQpnFcX9LI3begfbD8NipRm6NzxazCwFHvKoUrCTN3GhbKgTX_rRu5Ng_OP9kslIbqPYtFVtwr5bGaVMuSekCmxo72DmGV0_iKuYxWQBj1eoBGdV2pWQniH-L5FVKG9m8-vAQefJX0DIot9Itsp3gMVbMih9MpoW0vH7_BXGidK93395DFyrXPQi9Jp5syc");
+    }
+
+    [data-image-editable="photo_6"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA_TH4ltrg5NrQINrHzWAR_XmPVtTknhJpnUmbU9fQjc9HIqHmgb3eNCVwNxScw9noDOSqf2ns6Giufb8nxWPTZPIsFIdeyM1wZwulclf1e8oPo3E1oJpaMiNvqIhmc4Y-PwX_0JRY2BmgddIjh4JW73ggO5d8IaRk_rmW675X_HGse15a5B4Wme_8-QGZoOFGxMaQfU1IayOugOV5zB77qN-kFZH6Nt0Eez-wlUhlkEQH_Acw0ZJj70i2dkVZqDKnxjPnYFUy8miM");
+    }
+
+    [data-image-editable="photo_7"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBqY0rXykKDM5cROAS3pm-3Y6vN2e1VedRo9ffq_gxfcVAHwMqjYCRf7YxPbH7PsieVAADTmoG6JZspFDNLWHzaM58A0IoWwKgqFqfEcuwnq3hCN0vdDxU-WTGbxphkn1WdfA9pWD9bcqQ7voLpFl3r3a50_cUy4ubsACxtRTuxYoZv_P1z93aqffgmVnVjUBoZxRRQF3C_4srsy0F1EpgkqD9zAyPIPMuOPNyuW-tjQkVfI29DYVRXxeC6iHM6zNqeR5Iqp3tGYyI");
+    }
+
+    [data-image-editable="photo_8"] {
+      background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAqTPaURgMqOTMGH_0shzBtZccAi1DFnj8T54hAhGIjqGYy6N0sCxns3J7fSxtHsp4Aq863ZWOXIVoZ_I3XDuX9O3l-FNf0wVnt8_qvbUxm-7g5m0J4RqoPnoG9Thrve-SFBLFE93kQsGQe7vbPHErvCodBJ6Vi5-Mu-dfctl8XGxPXWUlL_DXPOyd36V6oixNyRdNRlb_g9YsXx11pFMkhA18zK2fC8yt-hG-jFWHTIzPwP-rKqlxMtKYBEa3DXVR8HlJfrmFQZwI");
+    }
+
+    [data-image-editable="qr_1"] {
+      background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
+    }
+
+    [data-image-editable="qr_2"] {
+      background-image: url("https://w.ladicdn.com/s550x550/5c728619c417ab07e5194baa/qr-code-amico-20240113100554-yb9oj-20240312090319-waz5x.png");
+    }
+
+    [data-image-editable] {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  </style>
+  <script>
+      (function () {
+        let countdownInterval;
+
+        function getTargetDate() {
+          const elH = document.querySelector("#js-hour");
+          const elD = document.querySelector("#js-day");
+          const elM = document.querySelector("#js-month");
+          const elY = document.querySelector("#js-year");
+
+          if (!elD || !elM || !elY) return null;
+
+          let hour = 0;
+          let minute = 0;
+
+          if (elH) {
+            const timeMatch = elH.innerText.match(/(\d{2}):(\d{2})/);
+            if (timeMatch) {
+              hour = parseInt(timeMatch[1], 10);
+              minute = parseInt(timeMatch[2], 10);
+            }
+          }
+
+          const day = parseInt(elD.innerText.replace(/\D/g, ''), 10);
+          const month = parseInt(elM.innerText.replace(/\D/g, ''), 10) - 1;
+          const year = parseInt(elY.innerText.replace(/\D/g, ''), 10);
+
+          const target = new Date(year, month, day, hour, minute, 0).getTime();
+          return isNaN(target) ? null : target;
+        }
+
+        function render(d, h, m, s) {
+          const pad = (n) => (n < 10 ? "0" + n : n);
+          const setVal = (id, val) => {
+            const el = document.querySelector(`${id} span`);
+            if (el) el.innerText = pad(val);
+          };
+
+          setVal("#TIMER_DAY", d);
+          setVal("#TIMER_HOUR", h);
+          setVal("#TIMER_MIN", m);
+          setVal("#TIMER_SEC", s);
+        }
+
+        function updateCountdown() {
+          const endTime = getTargetDate();
+          if (!endTime) return;
+
+          if (countdownInterval) clearInterval(countdownInterval);
+
+          const logic = () => {
+            const now = new Date().getTime();
+            const distance = endTime - now;
+
+            if (distance < 0) {
+              clearInterval(countdownInterval);
+              render(0, 0, 0, 0);
+              return;
+            }
+
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor(
+              (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+            );
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+            render(d, h, m, s);
+          };
+
+          logic();
+          countdownInterval = setInterval(logic, 1000);
+        }
+
+        window.addEventListener("load", () => {
+          updateCountdown();
+
+          const observer = new MutationObserver(updateCountdown);
+          const config = {
+            characterData: true,
+            childList: true,
+            subtree: true,
+          };
+
+          ["#js-hour", "#js-day", "#js-month", "#js-year"].forEach(
+            (selector) => {
+              const el = document.querySelector(selector);
+              if (el) observer.observe(el, config);
+            },
+          );
+        });
+      })();
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const animationObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const target = entry.target;
+
+              const delay = target.getAttribute("data-aos-delay") || "0";
+              const duration =
+                target.getAttribute("data-aos-duration") || "800";
+
+              target.style.transitionDelay = `${delay}ms`;
+              target.style.transitionDuration = `${duration}ms`;
+
+              target.classList.add("aos-animate");
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      document
+        .querySelectorAll("[data-aos]")
+        .forEach((el) => animationObserver.observe(el));
+    });
+  </script>
+</head>
+
+<body class="bg-burgundy text-gold-light font-sans selection:bg-gold selection:text-burgundy">
+  <nav class="fixed top-0 w-full z-50 bg-burgundy/90 backdrop-blur-md border-b border-gold/30"
+    data-purpose="main-navigation">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="font-serif text-2xl font-bold font-gold-shimmer" data-editable="nav_initials">E & J</div>
+      <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest font-semibold">
+        <a class="hover:text-gold transition-colors" href="#story" data-editable="nav_story">Our Story</a>
+        <a class="hover:text-gold transition-colors" href="#gallery" data-editable="nav_gallery">Gallery</a>
+        <a class="hover:text-gold transition-colors" href="#itinerary" data-editable="nav_itinerary">Itinerary</a>
+        <a class="hover:text-gold transition-colors text-gold border border-gold px-4 py-1" href="#rsvp"
+          data-editable="nav_rsvp">RSVP</a>
+      </div>
+    </div>
+  </nav>
+  <header class="relative h-screen flex items-center justify-center overflow-hidden" data-purpose="hero-section">
+    <div class="absolute inset-0 z-0">
+      <picture class="size-full aspect-square" data-image-editable="photo_1"></picture>
+      <div class="absolute inset-0 bg-gradient-to-b from-burgundy/40 via-burgundy/60 to-burgundy"></div>
+    </div>
+    <div class="relative z-10 text-center px-4 max-w-4xl animate-fade-in">
+      <p class="text-gold tracking-[0.3em] uppercase mb-6 font-semibold" data-editable="hero_subtitle" data-aos="fade-up">The Wedding
+        Celebration of</p>
+      <h1 class="font-serif text-6xl md:text-9xl font-gold-shimmer mb-8 py-2" data-editable="hero_title" data-aos="fade-up" data-aos-delay="150">Eleanor &
+        Julian</h1>
+      <div class="flex items-center justify-center space-x-4 mb-8" data-aos="fade-up" data-aos-delay="300">
+        <div class="h-[1px] w-12 bg-gold"></div>
+        <p class="text-xl md:text-2xl font-serif italic text-gold-light" data-editable="hero_date">
+          <span id="js-day">24</span>|
+          <span id="js-month">12</span>| <span id="js-year">2026</span>
+        </p>
+        <div class="h-[1px] w-12 bg-gold"></div>
+      </div>
+      <p class="text-lg tracking-widest uppercase" data-editable="hero_location" data-aos="fade-up" data-aos-delay="450">The Grand Palace, Tuscany</p>
+    </div>
+  </header>
+  <!-- <main class="bg-texture"> -->
+  <main>
+    <section class="py-16 px-4" data-purpose="countdown-container">
+      <div class="max-w-3xl mx-auto text-center" data-aos="fade-up">
+        <div class="ornate-border inline-block">
+          <div class="grid grid-cols-4 gap-4 md:gap-12 px-6 py-4">
+            <div id="TIMER_DAY" class="flex flex-col">
+              <span class="text-3xl md:text-5xl font-serif font-bold text-gold">00</span>
+              <span class="text-[10px] uppercase tracking-widest" data-editable="timer_days_label">Days</span>
+            </div>
+            <div id="TIMER_HOUR" class="flex flex-col">
+              <span class="text-3xl md:text-5xl font-serif font-bold text-gold">00</span>
+              <span class="text-[10px] uppercase tracking-widest" data-editable="timer_hours_label">Hrs</span>
+            </div>
+            <div id="TIMER_MIN" class="flex flex-col">
+              <span class="text-3xl md:text-5xl font-serif font-bold text-gold">00</span>
+              <span class="text-[10px] uppercase tracking-widest" data-editable="timer_mins_label">Min</span>
+            </div>
+            <div id="TIMER_SEC" class="flex flex-col">
+              <span class="text-3xl md:text-5xl font-serif font-bold text-gold">00</span>
+              <span class="text-[10px] uppercase tracking-widest" data-editable="timer_secs_label">Sec</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="py-24 px-6 md:px-12" data-purpose="narrative-section" id="story">
+      <div class="max-w-6xl mx-auto space-y-10">
+        <div class="flex flex-col md:flex-row items-center gap-16" data-aos="fade-up">
+          <div class="w-full md:w-1/2">
+            <div class="relative p-2 border-2 border-gold/50 rounded-sm">
+              <picture class="aspect-square grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl"
+                data-image-editable="photo_2"></picture>
+              <div
+                class="absolute -bottom-6 -right-6 w-32 h-32 bg-gold/10 border border-gold flex items-center justify-center p-4 text-center">
+                <span class="font-serif text-sm italic" data-editable="story_badge">Est. 2018</span>
+              </div>
+            </div>
+          </div>
+          <div class="w-full md:w-1/2 space-y-6">
+            <h2 class="font-serif text-4xl font-bold font-gold-shimmer" data-editable="story_title">Our Classic
+              Narrative
+            </h2>
+            <div class="w-20 h-1 bg-gold mb-8"></div>
+            <p class="text-lg leading-relaxed text-gold-light/90 italic" data-editable="story_p1">
+              It began on a rainy afternoon in London, where two souls found warmth in a shared umbrella. What started
+              as
+              a chance encounter blossomed into a journey spanning three continents and countless memories.
+            </p>
+            <p class="text-lg leading-relaxed text-gold-light/90" data-editable="story_p2">
+              Julian proposed under the golden hour of the Amalfi Coast, promising a lifetime of devotion. Today, we
+              invite you to be part of the most significant chapter in our story yet.
+            </p>
+            <div class="pt-6">
+              <p class="font-serif text-2xl text-gold italic" data-editable="story_signature">- Eleanor & Julian</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col md:flex-row items-center gap-16" data-aos="fade-up" data-aos-delay="150">
+          <div class="w-full md:w-1/2">
+            <div class="relative p-2 border-2 border-gold/50 rounded-sm">
+              <picture class="aspect-square grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl"
+                data-image-editable="photo_3"></picture>
+              <div
+                class="absolute -bottom-6 -right-6 w-32 h-32 bg-gold/10 border border-gold flex items-center justify-center p-4 text-center">
+                <span class="font-serif text-sm italic" data-editable="story_badge">Est. 2018</span>
+              </div>
+            </div>
+          </div>
+          <div class="w-full md:w-1/2 space-y-6">
+            <h2 class="font-serif text-4xl font-bold font-gold-shimmer" data-editable="story_title2">Our Classic
+              Narrative
+            </h2>
+            <div class="w-20 h-1 bg-gold mb-8"></div>
+            <p class="text-lg leading-relaxed text-gold-light/90 italic" data-editable="story_p12">
+              It began on a rainy afternoon in London, where two souls found warmth in a shared umbrella. What started
+              as
+              a chance encounter blossomed into a journey spanning three continents and countless memories.
+            </p>
+            <p class="text-lg leading-relaxed text-gold-light/90" data-editable="story_p22">
+              Julian proposed under the golden hour of the Amalfi Coast, promising a lifetime of devotion. Today, we
+              invite you to be part of the most significant chapter in our story yet.
+            </p>
+            <div class="pt-6">
+              <p class="font-serif text-2xl text-gold italic" data-editable="story_signature2">- Eleanor & Julian</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col md:flex-row items-center gap-16" data-aos="fade-up" data-aos-delay="300">
+          <div class="w-full md:w-1/2">
+            <div class="relative p-2 border-2 border-gold/50 rounded-sm">
+              <picture class="aspect-square grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl"
+                data-image-editable="photo_4"></picture>
+              <div
+                class="absolute -bottom-6 -right-6 w-32 h-32 bg-gold/10 border border-gold flex items-center justify-center p-4 text-center">
+                <span class="font-serif text-sm italic" data-editable="story_badge3">Est. 2018</span>
+              </div>
+            </div>
+          </div>
+          <div class="w-full md:w-1/2 space-y-6">
+            <h2 class="font-serif text-4xl font-bold font-gold-shimmer" data-editable="story_title3">Our Classic
+              Narrative
+            </h2>
+            <div class="w-20 h-1 bg-gold mb-8"></div>
+            <p class="text-lg leading-relaxed text-gold-light/90 italic" data-editable="story_p13">
+              It began on a rainy afternoon in London, where two souls found warmth in a shared umbrella. What started
+              as
+              a chance encounter blossomed into a journey spanning three continents and countless memories.
+            </p>
+            <p class="text-lg leading-relaxed text-gold-light/90" data-editable="story_p23">
+              Julian proposed under the golden hour of the Amalfi Coast, promising a lifetime of devotion. Today, we
+              invite you to be part of the most significant chapter in our story yet.
+            </p>
+            <div class="pt-6">
+              <p class="font-serif text-2xl text-gold italic" data-editable="story_signature3">- Eleanor & Julian</p>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </section>
+    <section class="py-24 bg-burgundy-dark" data-purpose="photo-gallery" id="gallery">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16" data-aos="fade-up">
+          <h2 class="font-serif text-5xl font-bold font-gold-shimmer mb-4" data-editable="gallery_title">Capturing
+            Moments</h2>
+          <p class="uppercase tracking-[0.3em] text-sm text-gold/60" data-editable="gallery_subtitle">A glimpse into our
+            world</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" data-purpose="gallery-grid">
+          <picture
+            class="aspect-square w-full h-80 object-cover border border-gold/20 hover:scale-[1.02] transition-transform duration-500"
+            data-image-editable="photo_5" data-aos="fade-up"></picture>
+          <picture
+            class="aspect-square w-full h-80 object-cover border border-gold/20 hover:scale-[1.02] transition-transform duration-500 md:mt-12"
+            data-image-editable="photo_6" data-aos="fade-up" data-aos-delay="100"></picture>
+          <picture
+            class="aspect-square w-full h-80 object-cover border border-gold/20 hover:scale-[1.02] transition-transform duration-500"
+            data-image-editable="photo_7" data-aos="fade-up" data-aos-delay="200"></picture>
+          <picture
+            class="aspect-square w-full h-80 object-cover border border-gold/20 hover:scale-[1.02] transition-transform duration-500 md:mt-12"
+            data-image-editable="photo_8" data-aos="fade-up" data-aos-delay="300"></picture>
+        </div>
+      </div>
+    </section>
+    <section class="py-24 px-6" data-purpose="wedding-itinerary" id="itinerary">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="font-serif text-5xl text-center font-bold font-gold-shimmer mb-16 italic"
+          data-editable="itinerary_title">The Grand Itinerary</h2>
+        <div class="space-y-12 border-l border-gold/40 pl-8 ml-4">
+          <div class="relative" data-aos="fade-up">
+            <div class="absolute -left-[41px] top-1 w-5 h-5 bg-gold rounded-full border-4 border-burgundy"></div>
+            <h3 class="font-serif text-2xl text-gold mb-2" data-editable="event1_title">The Vows</h3>
+            <p class="text-sm uppercase tracking-widest text-gold/70 mb-2" data-editable="event1_time">14:00 - The Royal
+              Chapel</p>
+            <p class="text-gold-light/80" data-editable="event1_desc">Witness the union of souls in an intimate ceremony
+              of tradition and love.</p>
+          </div>
+          <div class="relative" data-aos="fade-up" data-aos-delay="100">
+            <div class="absolute -left-[41px] top-1 w-5 h-5 bg-gold rounded-full border-4 border-burgundy"></div>
+            <h3 class="font-serif text-2xl text-gold mb-2" data-editable="event2_title">Cocktail Hour</h3>
+            <p class="text-sm uppercase tracking-widest text-gold/70 mb-2" data-editable="event2_time">16:30 - The
+              Terrace Garden</p>
+            <p class="text-gold-light/80" data-editable="event2_desc">Premium drinks and delicate hors d'oeuvres served
+              overlooking the valley.</p>
+          </div>
+          <div class="relative" data-aos="fade-up" data-aos-delay="200">
+            <div class="absolute -left-[41px] top-1 w-5 h-5 bg-gold rounded-full border-4 border-burgundy"></div>
+            <h3 class="font-serif text-2xl text-gold mb-2" data-editable="event3_title">The Grand Feast</h3>
+            <p class="text-sm uppercase tracking-widest text-gold/70 mb-2" data-editable="event3_time">19:00 - Ballroom
+              Royale</p>
+            <p class="text-gold-light/80" data-editable="event3_desc">A 7-course gourmet experience followed by toasts
+              and cake cutting.</p>
+          </div>
+          <div class="relative" data-aos="fade-up" data-aos-delay="300">
+            <div class="absolute -left-[41px] top-1 w-5 h-5 bg-gold rounded-full border-4 border-burgundy"></div>
+            <h3 class="font-serif text-2xl text-gold mb-2" data-editable="event4_title">Dancing Under Stars</h3>
+            <p class="text-sm uppercase tracking-widest text-gold/70 mb-2" data-editable="event4_time">22:00 - Courtyard
+              Lounge</p>
+            <p class="text-gold-light/80" data-editable="event4_desc">Celebrate late into the night with our live
+              orchestra and firework display.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="py-24 bg-burgundy-light/10" data-purpose="rsvp-form" id="rsvp">
+      <div class="max-w-2xl mx-auto px-6 border-2 border-gold p-12 bg-burgundy-dark/50 relative shadow-2xl" data-aos="fade-up">
+        <div class="absolute top-2 left-2 text-gold text-2xl">✥</div>
+        <div class="absolute top-2 right-2 text-gold text-2xl">✥</div>
+        <div class="absolute bottom-2 left-2 text-gold text-2xl">✥</div>
+        <div class="absolute bottom-2 right-2 text-gold text-2xl">✥</div>
+        <div class="text-center mb-10">
+          <h2 class="font-serif text-4xl font-bold font-gold-shimmer mb-4 uppercase tracking-tighter"
+            data-editable="rsvp_title">RSVP</h2>
+          <p class="text-sm tracking-widest text-gold-light/70 uppercase" data-editable="rsvp_deadline">Kindly respond
+            by September 15th</p>
+        </div>
+        <form class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs uppercase tracking-widest text-gold mb-2" data-editable="rsvp_label_name">Full
+                Name</label>
+              <input
+                class="w-full bg-transparent border-b border-gold/50 border-t-0 border-l-0 border-r-0 focus:ring-0 focus:border-gold text-gold-light p-2"
+                placeholder="Your Name" type="text" />
+            </div>
+            <div>
+              <label class="block text-xs uppercase tracking-widest text-gold mb-2"
+                data-editable="rsvp_label_guests">Number of Guests</label>
+              <select
+                class="w-full bg-transparent border-b border-gold/50 border-t-0 border-l-0 border-r-0 focus:ring-0 focus:border-gold text-gold-light p-2 appearance-none">
+                <option class="bg-burgundy" data-editable="rsvp_opt_1">1 Guest</option>
+                <option class="bg-burgundy" data-editable="rsvp_opt_2">2 Guests</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs uppercase tracking-widest text-gold mb-2"
+              data-editable="rsvp_label_diet">Dietary Preferences</label>
+            <textarea
+              class="w-full bg-transparent border border-gold/30 focus:ring-1 focus:ring-gold text-gold-light p-4 h-24"
+              placeholder="Vegan, Gluten Free, etc."></textarea>
+          </div>
+          <div class="text-center pt-6">
+            <button
+              class="bg-gold text-burgundy-dark font-bold uppercase tracking-[0.2em] px-12 py-4 hover:bg-gold-light transition-colors duration-300 shadow-lg"
+              type="submit" data-editable="rsvp_btn_text">
+              Confirm Attendance
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+    <section class="py-24 px-6 text-center" data-purpose="gift-registry">
+      <div class="max-w-xl mx-auto" data-aos="fade-up">
+        <h2 class="font-serif text-3xl font-bold font-gold-shimmer mb-8" data-editable="gift_title">Wedding Gifts</h2>
+        <p class="text-gold-light/80 mb-10 leading-relaxed italic" data-editable="gift_desc">
+          Your presence at our wedding is the greatest gift we could ask for. Should you wish to honor us with a gift,
+          we have a digital registry or a traditional card chest available.
+        </p>
+        <div class="inline-block p-4 border-4 border-gold bg-white/5 shadow-2xl">
+          <div class="p-2 border border-gold">
+            <div class="w-48 h-48 bg-gold-light flex items-center justify-center">
+              <div class="p-4 bg-white">
+                <picture class="size-32 aspect-square" data-image-editable="qr_1"></picture>
+              </div>
+            </div>
+          </div>
+          <p class="mt-4 text-xs uppercase tracking-[0.3em] font-bold text-gold" data-editable="gift_qr_label">
+            Groom</p>
+        </div>
+        <div class="inline-block p-4 border-4 border-gold bg-white/5 shadow-2xl">
+          <div class="p-2 border border-gold">
+            <div class="w-48 h-48 bg-gold-light flex items-center justify-center">
+              <div class="p-4 bg-white">
+                <picture class="size-32 aspect-square" data-image-editable="qr_1"></picture>
+              </div>
+            </div>
+          </div>
+          <p class="mt-4 text-xs uppercase tracking-[0.3em] font-bold text-gold" data-editable="gift_qr_label">Bride</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="py-12 border-t border-gold/20 text-center">
+    <div class="font-serif text-3xl font-gold-shimmer mb-4" data-editable="footer_names">Eleanor & Julian</div>
+    <p class="text-xs uppercase tracking-widest text-gold/40" data-editable="footer_details">October 24, 2024 • Tuscany,
+      Italy</p>
+    <div class="mt-8 text-[10px] text-gold/20 tracking-tighter uppercase" data-editable="footer_copyright">Created with
+      Elegance • © 2024</div>
+  </footer>
+</body>
+
+</html>
